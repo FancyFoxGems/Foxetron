@@ -4,11 +4,11 @@
 #include <avr/pgmspace.h>
 
 // ARDUINO LIBS
-#include <Wire.h>
 
 // 3RD-PARTY LIBS
-#include <LiquidCrystal_I2C.h>
-#include <Encoder.h>
+#include "BigCrystalTWI.h"
+#include "VaRGB.h"
+#include "VaRGBCurves.h"
 
 
 
@@ -75,6 +75,12 @@
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #endif
+
+#define READ_PORT(port_letter, state_variable)			\
+	asm volatile("\t"									\
+		"push %0"	"\n\t"								\
+		"in %0, %1"	"\n"								\
+	: "=&r" (current) : "I" (_SFR_IO_ADDR(PINC)) );
 
 
 
@@ -149,10 +155,6 @@ PROGMEM const char LCD_CHAR_SHAPE_SPECIAL[8]		= { 0x0, 0x0, 0xa, 0x15, 0x11, 0xa
 
 // INPUTS
 
-volatile byte _pinStatesB		= 0;
-volatile byte _pinStatesC		= 0;
-volatile byte _pinStatesD		= 0;
-
 volatile bool _angleEncoderA	= 0;	// Pin 2 / PD2 (INT0)
 volatile bool _angleEncoderB	= 0;	// Pin 3 / PD3 (INT1)
 //volatile bool _angleEncoderZ	= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
@@ -163,31 +165,29 @@ volatile uint32_t _angleReading	= 0;
 word _angleDelta				= 0;
 word _angleVelocity				= 0;
 
-bool _ledButton1				= 0;	// Pin 4 / PD4 (PCINT20)
-bool _ledButton2				= 0;	// Pin 5 / PD5 (PCINT21)
-bool _ledButton3				= 0;	// Pin 6 / PD6 (PCINT22)
-bool _ledButton4				= 0;	// Pin 7 / PD7 (PCINT23)
-bool _ledButton5				= 0;	// Pin 8 / PB0 (PCINT0)
+volatile bool _ledButton1		= 0;	// Pin 4 / PD4 (PCINT20)
+volatile bool _ledButton2		= 0;	// Pin 5 / PD5 (PCINT21)
+volatile bool _ledButton3		= 0;	// Pin 6 / PD6 (PCINT22)
+volatile bool _ledButton4		= 0;	// Pin 7 / PD7 (PCINT23)
+volatile bool _ledButton5		= 0;	// Pin 8 / PB0 (PCINT0)
 
 // [FREE PIN: Pin 12 / PB4 (PCINT4)]
 
 // [FREE PIN: Pin A6 / ADC6]
-//bool _ledButton5				= 0;	// A6 / ADC6				- [UNUSED]
-//volatile word _ledButton5Val	= 0;
 
-volatile bool _modeSwitch		= 0;	// A7 / ADC7
-volatile word _modeSwitchVal	= 0;
+bool _modeSwitch				= 0;	// A7 / ADC7
+word _modeSwitchVal				= 0;
 
-bool _menuEncoderA				= 0;	// Pin 14/A0 / PC0 (PCINT8)
-bool _menuEncoderB				= 0;	// Pin 15/A1 / PC1 (PCINT9)
+volatile bool _menuEncoderA		= 0;	// Pin 14/A0 / PC0 (PCINT8)
+volatile bool _menuEncoderB		= 0;	// Pin 15/A1 / PC1 (PCINT9)
 
 bool _menuUp					= 0;
 uint32_t _menuReading			= 0;
 word _menuDelta					= 0;
 word _menuVelocity				= 0;
 
-bool _selectButton				= 0;	// Pin 16/A2 / PC2 (PCINT10)
-bool _shiftButton				= 0;	// Pin 17/A3 / PC3 (PCINT11)
+volatile bool _selectButton		= 0;	// Pin 16/A2 / PC2 (PCINT10)
+volatile bool _shiftButton		= 0;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
@@ -198,10 +198,48 @@ byte _rgbBlue					= 0;	// Pin 11 / PB3
 
 bool _statusLED					= 0;	// Pin 13 / PB5
 
+BigCrystalTWI lcd(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
 
-// OBJECTS
 
-LiquidCrystal_I2C lcd(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);
+// VaRGB CONFIGURATION
+
+using namespace vargb;
+
+void _RGB_callback_setColor(ColorSettings *);
+void _RGB_callback_scheduleComplete(Schedule *);
+VaRGB _vaRGB(_RGB_callback_setColor, _RGB_callback_scheduleComplete);
+
+Schedule * _rgbSchedule =  new Schedule();
+
+Curve::Flasher * _rgbCurveFlasher = new Curve::Flasher(VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, 6, 20);
+
+Curve::Sine * _rgbCurveSine = new Curve::Sine(500, VaRGB_COLOR_MAXVALUE, 500, 6, 2);
+
+Curve::Linear * _rgbCurves[] = { 
+	// start black
+	new Curve::Linear(0, 0, 0, 0), 
+	// go to ~1/2 red, over one 5 seconds
+	new Curve::Linear(500, 0, 0, 5), 
+	// go to red+blue, over 2s
+	new Curve::Linear(1000, 0, 1000, 2), 
+	// back down to ~1/2 red over 2s
+	new Curve::Linear(500, 0, 0, 2), 
+	// fade to black for 5s
+	new Curve::Linear(0, 0, 0, 5), 
+};
+
+void setColorCB(ColorSettings * colors)
+{
+	analogWrite(PIN_PWM_RGB_LED_RED, colors->red);
+	analogWrite(PIN_PWM_RGB_LED_GREEN, colors->green);
+	analogWrite(PIN_PWM_RGB_LED_BLUE, colors->blue);
+}
+
+void scheduleCompleteCB(Schedule * schedule)
+{
+  _vaRGB.resetTicks();
+  _vaRGB.setSchedule(schedule);  
+}
 
 
 
@@ -218,11 +256,24 @@ void setup()
 	initializePins();
 	initializeLCD();
 	initializeInterrupts();
+
+	lcd.printBig("Fox", 2, 0);
+
+	_rgbSchedule->addTransition(_rgbCurveFlasher);
+	_rgbSchedule->addTransition(_rgbCurveSine);
+
+	for (uint8_t i = 0; i < 5; i++)
+		_rgbSchedule->addTransition(_rgbCurves[i]);
+  
+	_vaRGB.setSchedule(_rgbSchedule);
 }
 
 void loop()
 {
+	_vaRGB.tick();
+
 	Serial.println(_angleReading);
+
 #ifdef DEBUG_INPUTS
 
 	_DEBUG_printInputValues();
@@ -255,11 +306,13 @@ static inline void _ISR_angleEncoder_updateAngleReading()
 		--_angleReading;
 }
 
+// CHANNEL A
 ISR(INT0_vect)
 {
 	_ISR_ANGLE_ENCODER_READ_CHANNEL(A, B, ==);
 }
 
+// CHANNEL B
 ISR(INT1_vect)
 {
 	_ISR_ANGLE_ENCODER_READ_CHANNEL(B, A, !=);
@@ -268,11 +321,30 @@ ISR(INT1_vect)
 
 // PCINT0/PCINT1/PCINT2: LED BUTTONS, MENU ENCODER, and MENU BUTTONS
 
+// PORT B (PCINT0:7): LED BUTTON 5
+ISR(PCINT0_vect, ISR_NOBLOCK)
+{
+	_ledButton5 = PINB && (1 >> 0);
+	//_pin12var = PINB && (1 >> 4);
+}
 
-/*asm volatile("\t"	
-		"push %0"	"\n\t"
-		"in %0, %1"	"\n"
-	: "=&r" (current) : "I" (_SFR_IO_ADDR(PINC)) );*/
+// PORT C (PCINT8:14): MENU ENCODER & BUTTONS
+ISR(PCINT1_vect, ISR_NOBLOCK)
+{
+	_menuEncoderA = PINC && (1 >> 3);
+	_menuEncoderB = PINC && (1 >> 2);
+	_selectButton = PINC && (1 >> 1);
+	_shiftButton = PINC && (1 >> 0);
+}
+
+// PORT D (PCINT16:23): LED BUTTONS 1-4
+ISR(PCINT2_vect, ISR_NOBLOCK)
+{
+	_ledButton1 = PIND && (1 >> 4);
+	_ledButton2 = PIND && (1 >> 5);
+	_ledButton3 = PIND && (1 >> 6);
+	_ledButton4 = PIND && (1 >> 7);
+}// TIMER EVENTS// TIMER 2 OVERFLOWISR(TIMER2_OVF_vect, ISR_NOBLOCK){}// SERIAL EVENTS// USART RECEIVE/*ISR(USART_RX_vect, ISR_NOBLOCK){}*/
 
 // PROGRAM FUNCTIONS
 
@@ -328,14 +400,29 @@ void initializeLCD()
 	lcd.init();
 	lcd.backlight();
 	lcd.home();
+
+	// Load large font
+	uint8_t customChar[8];
+	for (uint8_t i = 0; i < 8; i++)
+	{
+		for (uint8_t j = 0; j < 8; j++)
+			customChar[j] = pgm_read_byte(BF_fontShapes + (i * 8) + j);
+		lcd.createChar(i, customChar);
+	}
 }
 
 void initializeInterrupts()
 {
-	// Angle encoder
+	// External interrupts: Angle encoder
 	EIMSK |= 0b00000011;
 	EICRA &= 0b11110101;
 	EICRA |= 0b00000101;
+
+	// Pin change interrupts: LED buttons, menu encoder, and menu buttons
+	PCICR |= 0b00000111;
+	PCMSK0 = 0b00010001;
+	PCMSK1 = 0b00001111;
+	PCMSK2 = 0b11110000;
 }
 
 
