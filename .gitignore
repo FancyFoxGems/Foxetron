@@ -27,3 +27,14 @@
 *.exe
 *.out
 *.app
+
+Foxetron.tws
+.gcc-flags.json
+
+*.gitignore
+*.gitattributes
+
+Release/
+
+*.suo
+*.vmps.xml
