@@ -6,7 +6,7 @@
 // ARDUINO LIBS
 
 // 3RD-PARTY LIBS
-#include "BigCrystalTWI.h"
+#include "BigCrystal_I2C.h"
 #include "VaRGB.h"
 #include "VaRGBCurves.h"
 
@@ -27,6 +27,31 @@
 		#define SERIAL_ENABLE
 	#endif
 #endif
+
+
+// LCD SYMBOL CHARACTERS
+
+// ARROWS
+#define LCD_SYMBOL_SCROLL_RIGHT			0x10
+#define LCD_SYMBOL_SCROLL_LEFT			0x11
+#define LCD_SYMBOL_DOUBLE_ARROW_UP		0x15
+#define LCD_SYMBOL_DOUBLE_ARROW_DOWN	0x16
+#define LCD_SYMBOL_SPLIT_CIRCLE			0x17
+#define LCD_SYMBOL_ARROW_RETURN			0x18
+#define LCD_SYMBOL_ARROW_UP				0x19
+#define LCD_SYMBOL_ARROW_DOWN			0x1A
+#define LCD_SYMBOL_ARROW_RIGHT			0x1A
+#define LCD_SYMBOL_ARROW_LEFT			0x1B
+#define LCD_SYMBOL_SCROLL_UP			0x1E
+#define LCD_SYMBOL_SCROLL_DOWN			0x1F
+
+
+#define LCD_SYMBOL_HOUSE				0x7f
+#define LCD_SYMBOL_NOTE					0x91
+#define LCD_SYMBOL_BELL					0x98
+#define LCD_SYMBOL_HEART				0x9d
+#define LCD_SYMBOL_COPYRIGHT			0xa9
+#define LCD_SYMBOL_RESERVED				0xae
 
 
 // LCD CONSTANTS
@@ -76,11 +101,13 @@
 #if defined(ARDUINO) && ARDUINO >= 100
 #endif
 
+/*
 #define READ_PORT(port_letter, state_variable)			\
 	asm volatile("\t"									\
 		"push %0"	"\n\t"								\
 		"in %0, %1"	"\n"								\
 	: "=&r" (current) : "I" (_SFR_IO_ADDR(PINC)) );
+*/
 
 
 
@@ -96,35 +123,23 @@ PROGMEM const char LCD_CHAR_GEM_SMALL[8]			= { 0x0, 0x0, 0x0, 0xe, 0x11, 0xa, 0x
 // Angle symbols
 PROGMEM const char LCD_CHAR_ANGLE[8]				= { 0x1, 0x3, 0x6, 0xc, 0x1a, 0x12, 0x1f, 0x0 };
 PROGMEM const char LCD_CHAR_ANGLE_2[8]				= { 0x0, 0x1, 0x2, 0x4, 0xa, 0x12, 0x1f, 0x0 };
-PROGMEM const char LCD_CHAR_DEGREES[8]				= { 0x6, 0x9, 0x9, 0x6, 0x0, 0x0, 0x0, 0x0 };
-PROGMEM const char LCD_CHAR_DEGREES_SMALL[8]		= { 0x4, 0xa, 0x4, 0x0, 0x0, 0x0, 0x0, 0x0 };
 PROGMEM const char LCD_CHAR_CLOCKWISE[8]			= { 0x0, 0xe, 0x1b, 0x11, 0x5, 0xf, 0x4, 0x0 };
 PROGMEM const char LCD_CHAR_COUNTER_CCW[8]			= { 0x0, 0xe, 0x1b, 0x11, 0x14, 0x1e, 0x4, 0x0 };
 
 // Miscellaneous symbols
-PROGMEM const char LCD_CHAR_RETURN_ARROW[8]			= { 0x1, 0x1, 0x5, 0x9, 0x1f, 0x8, 0x4 };
-PROGMEM const char LCD_CHAR_CHECKMARK[8]			= { 0x0, 0x1, 0x3, 0x16, 0x1c, 0x8, 0x0 };
-PROGMEM const char LCD_CHAR_CLOCK[8]				= { 0x0, 0xe, 0x15, 0x17, 0xb, 0xe, 0x0 };
-PROGMEM const char LCD_CHAR_NOTE[8]					= { 0x2, 0x3, 0x2, 0xe, 0x1e, 0xc, 0x0 };
-PROGMEM const char LCD_CHAR_HEART[8]				= { 0x0, 0xa, 0x1f, 0x1f, 0xe, 0x4, 0x0 };
-
-// Small arrow icons
-PROGMEM const char LCD_CHAR_ARROW_UP_SMALL[8]		= { 0x0, 0x0, 0x4, 0xe, 0x4, 0x4, 0x0, 0x0 };
-PROGMEM const char LCD_CHAR_ARROW_DOWN_SMALL[8]		= { 0x0, 0x0, 0x4, 0x4, 0xe, 0x4, 0x0, 0x0 };
-PROGMEM const char LCD_CHAR_ARROW_LEFT_SMALL[8]		= { 0x0, 0x0, 0x0, 0x8, 0x1e, 0x8, 0x0, 0x0 };
-PROGMEM const char LCD_CHAR_ARROW_RIGHT_SMALL[8]	= { 0x0, 0x0, 0x0, 0x2, 0xf, 0x2, 0x0, 0x0 };
-
-// Medium arrow icons
-PROGMEM const char LCD_CHAR_ARROW_UP[8]				= { 0x0, 0x4, 0xe, 0x15, 0x4, 0x4, 0x4, 0x0 };
-PROGMEM const char LCD_CHAR_ARROW_DOWN[8]			= { 0x0, 0x4, 0x4, 0x4, 0x15, 0xe, 0x4, 0x0 };
-PROGMEM const char LCD_CHAR_ARROW_LEFT[8]			= { 0x0, 0x0, 0x4, 0x2, 0x1f, 0x2, 0x4, 0x0 };
-PROGMEM const char LCD_CHAR_ARROW_RIGHT[8]			= { 0x0, 0x0, 0x4, 0x8, 0x1f, 0x8, 0x4, 0x0 };
-
-// Large arrow icons
-PROGMEM const char LCD_CHAR_ARROW_UP_LARGE[8]		= { 0x4, 0xe, 0x15, 0x4, 0x4, 0x4, 0x4, 0x0 };
-PROGMEM const char LCD_CHAR_ARROW_DOWN_LARGE[8]		= { 0x0, 0x4, 0x4, 0x4, 0x4, 0x15, 0xe, 0x4 };
-PROGMEM const char LCD_CHAR_ARROW_LEFT_LARGE[8]		= { 0x0, 0x0, 0x4, 0xc, 0x1f, 0xc, 0x4, 0x0 };
-PROGMEM const char LCD_CHAR_ARROW_RIGHT_LARGE[8]	= { 0x0, 0x0, 0x4, 0x6, 0x1f, 0x6, 0x4, 0x0 };
+PROGMEM const char LCD_CHAR_CHECKMARK[8]			= { 0x0, 0x0, 0x1, 0x3, 0x16, 0x1c, 0x8,0x0 };
+PROGMEM const char LCD_CHAR_BOX_EMPTY[8]			= { 0x0, 0x1f, 0x11, 0x11, 0x11, 0x11, 0x11, 0x1f };
+PROGMEM const char LCD_CHAR_BOX_CHECKMARK[8]		= { 0x0, 0x1f, 0x11, 0x13, 0x1f, 0x15, 0x11, 0x1f };
+PROGMEM const char LCD_CHAR_WARNING[8]				= { 0x0, 0xe, 0x1b, 0x1b, 0x1f, 0x1b, 0xe, 0x0 };
+PROGMEM const char LCD_CHAR_NOT_ALLOWED[8]			= { 0xe, 0x1f, 0x19, 0x1d, 0x17, 0x13, 0x1f, 0xe };
+PROGMEM const char LCD_CHAR_LIGHTNING[8]			= { 0x3, 0x6, 0xc, 0xf, 0x3, 0x6, 0xc, 0x8 };
+PROGMEM const char LCD_CHAR_NOTES[8]				= { 0x3, 0x7, 0xd, 0x9, 0x9, 0xb, 0x1b, 0x18 };
+PROGMEM const char LCD_CHAR_CLOCK_A[8]				= { 0x7, 0xc, 0xa, 0x9, 0x8, 0x8, 0x7, 0x0 };
+PROGMEM const char LCD_CHAR_CLOCK_B[8]				= { 0x1c, 0x2, 0x2, 0x1a, 0x2, 0x2, 0x1c, 0x0 };
+PROGMEM const char LCD_CHAR_HOURGLASS_1[8]			= { 0x1f, 0x1f, 0xe, 0x4, 0xa, 0x11, 0x11, 0x1f };
+PROGMEM const char LCD_CHAR_HOURGLASS_2[8]			= { 0x1f, 0x11, 0xe, 0x4, 0xa, 0x11, 0x1f, 0x1f };
+PROGMEM const char LCD_CHAR_HOURGLASS_3[8]			= { 0x1f, 0x11, 0xa, 0x4, 0xa, 0x1f, 0x1f, 0x1f };
+PROGMEM const char LCD_CHAR_HOURGLASS_4[8]			= { 0x1f, 0x11, 0xa, 0x4, 0xe, 0x1f, 0x1f, 0x1f };
 
 // Gem cut icons
 PROGMEM const char LCD_CHAR_CUT_BRILLIANT[8]		= { 0x0, 0xe, 0x15, 0x1b, 0x15, 0xa, 0x4, 0x0 };
@@ -140,6 +155,38 @@ PROGMEM const char LCD_CHAR_SHAPE_EMERALD[8]		= { 0xe, 0x1b, 0x11, 0x11, 0x11, 0
 PROGMEM const char LCD_CHAR_SHAPE_TRILLIANT[8]		= { 0x0, 0x4, 0xe, 0x1b, 0x11, 0x1b, 0xe, 0x0 };
 PROGMEM const char LCD_CHAR_SHAPE_TRIANGLE[8]		= { 0x0, 0x4, 0xe, 0xa, 0x1b, 0x11, 0x1f, 0x0 };
 PROGMEM const char LCD_CHAR_SHAPE_SPECIAL[8]		= { 0x0, 0x0, 0xa, 0x15, 0x11, 0xa, 0x4, 0x0 };
+
+// Small arrow icons
+PROGMEM const char LCD_CHAR_ARROW_UP_SMALL[8]		= { 0x0, 0x0, 0x4, 0xe, 0x4, 0x4, 0x0, 0x0 };
+PROGMEM const char LCD_CHAR_ARROW_DOWN_SMALL[8]		= { 0x0, 0x0, 0x4, 0x4, 0xe, 0x4, 0x0, 0x0 };
+PROGMEM const char LCD_CHAR_ARROW_LEFT_SMALL[8]		= { 0x0, 0x0, 0x0, 0x8, 0x1e, 0x8, 0x0, 0x0 };
+PROGMEM const char LCD_CHAR_ARROW_RIGHT_SMALL[8]	= { 0x0, 0x0, 0x0, 0x2, 0xf, 0x2, 0x0, 0x0 };
+
+// Medium arrow icons
+PROGMEM const char LCD_CHAR_ARROW_UP[8]				= { 0x0, 0x4, 0xe, 0x15, 0x4, 0x4, 0x4, 0x0 };
+PROGMEM const char LCD_CHAR_ARROW_DOWN[8]			= { 0x0, 0x4, 0x4, 0x4, 0x15, 0xe, 0x4, 0x0 };
+
+// Large arrow icons
+PROGMEM const char LCD_CHAR_ARROW_LEFT_LARGE[8]		= { 0x0, 0x0, 0x4, 0xc, 0x1f, 0xc, 0x4, 0x0 };
+PROGMEM const char LCD_CHAR_ARROW_RIGHT_LARGE[8]	= { 0x0, 0x0, 0x4, 0x6, 0x1f, 0x6, 0x4, 0x0 };
+
+// Scrollbar icons
+PROGMEM const char LCD_CHAR_SCROLLBAR_TOP[8]		= { 0x1f, 0x1f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+PROGMEM const char LCD_CHAR_SCROLLBAR_BOTTOM[8]		= { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x1f };
+PROGMEM const char LCD_CHAR_SCROLLBAR_1[8]			= { 0x1f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+PROGMEM const char LCD_CHAR_SCROLLBAR_2[8]			= { 0x0, 0x0, 0x1f, 0x0, 0x0, 0x0, 0x0, 0x0 };
+PROGMEM const char LCD_CHAR_SCROLLBAR_3[8]			= { 0x0, 0x0, 0x0, 0x0, 0x1f, 0x0, 0x0, 0x0 };
+PROGMEM const char LCD_CHAR_SCROLLBAR_4[8]			= { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x0 };
+
+// Bar graph icons
+const char * const &  LCD_CHAR_BARGRAPH_EMPTY		= LCD_CHAR_SCROLLBAR_3;
+PROGMEM const char LCD_CHAR_BARGRAPH_FULL[8]		= { 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f };
+PROGMEM const char LCD_CHAR_BARGRAPH_SEMI_FULL_1[8]	= { 0x15, 0xa, 0x15, 0xa, 0x15, 0xa, 0x15, 0xa };
+PROGMEM const char LCD_CHAR_BARGRAPH_SEMI_FULL_2[8]	= { 0xa, 0x15, 0xa, 0x15, 0xa, 0x15, 0xa, 0x15 };
+PROGMEM const char LCD_CHAR_BARGRAPH_1[8]			= { 0x10, 0x10, 0x10, 0x10, 0x1f, 0x10, 0x10, 0x10 };
+PROGMEM const char LCD_CHAR_BARGRAPH_2[8]			= { 0x18, 0x18, 0x18, 0x18, 0x1f, 0x18, 0x18, 0x18 };
+PROGMEM const char LCD_CHAR_BARGRAPH_3[8]			= { 0x1c, 0x1c, 0x1c, 0x1c, 0x1f, 0x1c, 0x1c, 0x1c };
+PROGMEM const char LCD_CHAR_BARGRAPH_4[8]			= { 0x1e, 0x1e, 0x1e, 0x1e, 0x1f, 0x1e, 0x1e, 0x1e };
 
 
 
@@ -198,15 +245,15 @@ byte _rgbBlue					= 0;	// Pin 11 / PB3
 
 bool _statusLED					= 0;	// Pin 13 / PB5
 
-BigCrystalTWI lcd(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
+BigCrystal_I2C lcd(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
 
 
 // VaRGB CONFIGURATION
 
 using namespace vargb;
 
-void _RGB_callback_setColor(ColorSettings *);
-void _RGB_callback_scheduleComplete(Schedule *);
+void _RGB_callback_setColor(ColorSettings * colors);
+void _RGB_callback_scheduleComplete(Schedule * schedule);
 VaRGB _vaRGB(_RGB_callback_setColor, _RGB_callback_scheduleComplete);
 
 Schedule * _rgbSchedule =  new Schedule();
@@ -227,19 +274,6 @@ Curve::Linear * _rgbCurves[] = {
 	// fade to black for 5s
 	new Curve::Linear(0, 0, 0, 5), 
 };
-
-void setColorCB(ColorSettings * colors)
-{
-	analogWrite(PIN_PWM_RGB_LED_RED, colors->red);
-	analogWrite(PIN_PWM_RGB_LED_GREEN, colors->green);
-	analogWrite(PIN_PWM_RGB_LED_BLUE, colors->blue);
-}
-
-void scheduleCompleteCB(Schedule * schedule)
-{
-  _vaRGB.resetTicks();
-  _vaRGB.setSchedule(schedule);  
-}
 
 
 
@@ -270,8 +304,10 @@ void setup()
 
 void loop()
 {
-	_vaRGB.tick();
-
+	_vaRGB.tickAndDelay();
+	lcd.clear();
+	lcd.home();
+	lcd.print(_angleReading);
 	Serial.println(_angleReading);
 
 #ifdef DEBUG_INPUTS
@@ -426,6 +462,22 @@ void initializeInterrupts()
 }
 
 
+// VaRGB CALLBACK FUNCTIONS
+
+void _RGB_callback_setColor(ColorSettings * colors)
+{
+	analogWrite(PIN_PWM_RGB_LED_RED, colors->red);
+	analogWrite(PIN_PWM_RGB_LED_GREEN, colors->green);
+	analogWrite(PIN_PWM_RGB_LED_BLUE, colors->blue);
+}
+
+void _RGB_callback_scheduleComplete(Schedule * schedule)
+{
+  _vaRGB.resetTicks();
+  _vaRGB.setSchedule(schedule);  
+}
+
+
 // DEBUG UTILITY FUNCTIONS
 
 void _DEBUG_printLCDSplash()
@@ -441,58 +493,6 @@ void _DEBUG_printLCDSplash()
 	}
 
 	lcd.clear();
-}
-
-void _DEBUG_createCustomChars()
-{
-	lcd.createChar(0, LCD_CHAR_FOX);
-	lcd.createChar(1, LCD_CHAR_GEM_SMALL);
-	lcd.createChar(2, LCD_CHAR_GEM);
-
-	lcd.createChar(3, LCD_CHAR_ANGLE);
-	lcd.createChar(4, LCD_CHAR_ANGLE_2);
-	lcd.createChar(5, LCD_CHAR_DEGREES_SMALL);
-	lcd.createChar(6, LCD_CHAR_DEGREES);
-	lcd.createChar(7, LCD_CHAR_CLOCKWISE);
-
-	_DEBUG_displayKeyCodes();
-
-
-	lcd.createChar(0, LCD_CHAR_CUT_BRILLIANT);
-	lcd.createChar(1, LCD_CHAR_CUT_STEP);
-	lcd.createChar(2, LCD_CHAR_SHAPE_ROUND);
-	lcd.createChar(3, LCD_CHAR_SHAPE_OVAL);
-	lcd.createChar(4, LCD_CHAR_SHAPE_CUSHION);
-	lcd.createChar(5, LCD_CHAR_SHAPE_EMERALD);
-	lcd.createChar(6, LCD_CHAR_SHAPE_BAGUETTE);
-	lcd.createChar(7, LCD_CHAR_SHAPE_TRILLIANT);
-
-	_DEBUG_displayKeyCodes();
-
-
-	lcd.createChar(0, LCD_CHAR_SHAPE_TRIANGLE);
-	lcd.createChar(1, LCD_CHAR_SHAPE_SPECIAL);
-
-	lcd.createChar(2, LCD_CHAR_COUNTER_CCW);
-	lcd.createChar(3, LCD_CHAR_RETURN_ARROW);
-	lcd.createChar(4, LCD_CHAR_CHECKMARK);
-	lcd.createChar(5, LCD_CHAR_CLOCK);
-	lcd.createChar(6, LCD_CHAR_NOTE);
-	lcd.createChar(7, LCD_CHAR_HEART);
-
-	_DEBUG_displayKeyCodes();
-
-
-	lcd.createChar(0, LCD_CHAR_ARROW_UP);
-	lcd.createChar(1, LCD_CHAR_ARROW_DOWN);
-	lcd.createChar(2, LCD_CHAR_ARROW_LEFT);
-	lcd.createChar(3, LCD_CHAR_ARROW_RIGHT);
-	lcd.createChar(4, LCD_CHAR_ARROW_UP_LARGE);
-	lcd.createChar(5, LCD_CHAR_ARROW_DOWN_LARGE);
-	lcd.createChar(6, LCD_CHAR_ARROW_LEFT_LARGE);
-	lcd.createChar(7, LCD_CHAR_ARROW_RIGHT_LARGE);
-
-	_DEBUG_displayKeyCodes();
 }
 
 void _DEBUG_displayKeyCodes(void)
@@ -640,7 +640,7 @@ void _DEBUG_printInputValues()
 	Serial.print(itoa(_ledButton4, valStr, 2));
 	Serial.print(" ");
 	Serial.print(itoa(_ledButton5, valStr, 2));
-	Serial.print("\n");
+	Serial.println();
 
 	Serial.print(itoa(_modeSwitchVal, valStr, 10));
 	Serial.print(" / ");
@@ -653,6 +653,45 @@ void _DEBUG_printInputValues()
 	Serial.print(itoa(_selectButton, valStr, 2));
 	Serial.print(" ");
 	Serial.print(itoa(_shiftButton, valStr, 2));
-	Serial.print('\n');
-	Serial.print('\n');
+	Serial.println();
+
+	Serial.println();
+}
+
+void _DEBUG_createCustomChars()
+{
+	lcd.createChar(0, LCD_CHAR_FOX);
+	lcd.createChar(1, LCD_CHAR_GEM_SMALL);
+	lcd.createChar(2, LCD_CHAR_GEM);
+
+	lcd.createChar(3, LCD_CHAR_ANGLE);
+	lcd.createChar(4, LCD_CHAR_ANGLE_2);
+	lcd.createChar(5, LCD_CHAR_CHECKMARK);
+	lcd.createChar(6, LCD_CHAR_CLOCKWISE);
+	lcd.createChar(7, LCD_CHAR_NOTES);
+
+	_DEBUG_displayKeyCodes();
+
+
+	lcd.createChar(0, LCD_CHAR_SHAPE_ROUND);
+	lcd.createChar(1, LCD_CHAR_SHAPE_OVAL);
+	lcd.createChar(2, LCD_CHAR_SHAPE_CUSHION);
+	lcd.createChar(3, LCD_CHAR_SHAPE_EMERALD);
+	lcd.createChar(4, LCD_CHAR_SHAPE_BAGUETTE);
+	lcd.createChar(5, LCD_CHAR_SHAPE_TRILLIANT);
+	lcd.createChar(6, LCD_CHAR_SHAPE_TRIANGLE);
+	lcd.createChar(7, LCD_CHAR_SHAPE_SPECIAL);
+
+	_DEBUG_displayKeyCodes();
+
+
+	lcd.createChar(0, LCD_CHAR_CUT_BRILLIANT);
+	lcd.createChar(1, LCD_CHAR_CUT_STEP);
+
+	lcd.createChar(2, LCD_CHAR_ARROW_UP);
+	lcd.createChar(3, LCD_CHAR_ARROW_DOWN);
+	lcd.createChar(4, LCD_CHAR_ARROW_LEFT_LARGE);
+	lcd.createChar(5, LCD_CHAR_ARROW_RIGHT_LARGE);
+
+	_DEBUG_displayKeyCodes();
 }
