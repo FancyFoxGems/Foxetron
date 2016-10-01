@@ -28,13 +28,27 @@
 *.out
 *.app
 
-Foxetron.tws
-.gcc-flags.json
+/.gitignore
+/.gcc-flags.json
+/encoder_glcd.ino
+/encoder_book.ino
+
+/Foxetron.tws
+/Foxetron.vcxproj.user
+/Foxetron.sln
+/Foxetron.sln.DPack
+/Foxetron.atsuo
+/Foxetron_AngleEncoder/Foxetron_AngleEncoder.vcxproj.user
 
 *.gitignore
 *.gitattributes
+*.suo
+*.vmps.xml
 
 Release/
 
-*.suo
-*.vmps.xml
+/.vs/config/applicationhost.config
+/Foxetron_AngleEncoder/__vm/.Foxetron_AngleEncoder.vsarduino.h
+/Foxetron_AngleEncoder/Foxetron_AngleEncoder.vcxproj
+/Foxetron_AngleEncoder/Foxetron_AngleEncoder.vcxproj.filters
+/Foxetron.vcxproj.filters
