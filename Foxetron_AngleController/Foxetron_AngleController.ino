@@ -68,7 +68,7 @@
 //#define PIN_ANGLE_ENCODER_U	5	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
 #define PIN_LED_BUTTON_1		4	// Pin 4 / PD4 (PCINT20
-#define PIN_LED_BUTTON_2		5	// Pin 5 / PD5 (PCINT21) 
+#define PIN_LED_BUTTON_2		5	// Pin 5 / PD5 (PCINT21)
 #define PIN_LED_BUTTON_3		6	// Pin 6 / PD6 (PCINT22)
 #define PIN_LED_BUTTON_4		7	// Pin 7 / PD7 (PCINT23)
 #define PIN_LED_BUTTON_5		8	// Pin 8 / PB0 (PCINT0)
@@ -202,10 +202,10 @@ PROGMEM const char LCD_CHAR_BARGRAPH_4[8]			= { 0x1e, 0x1e, 0x1e, 0x1e, 0x1f, 0x
 
 // INPUTS
 
-volatile bool _angleEncoderA	= 0;	// Pin 2 / PD2 (INT0)
-volatile bool _angleEncoderB	= 0;	// Pin 3 / PD3 (INT1)
-//volatile bool _angleEncoderZ	= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
-//volatile bool _angleEncoderU	= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
+volatile bool _AngleControllerA	= 0;	// Pin 2 / PD2 (INT0)
+volatile bool _AngleControllerB	= 0;	// Pin 3 / PD3 (INT1)
+//volatile bool _AngleControllerZ	= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
+//volatile bool _AngleControllerU	= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
 volatile bool _angleUp			= 0;
 volatile uint32_t _angleReading	= 0;
@@ -262,17 +262,17 @@ Curve::Flasher * _rgbCurveFlasher = new Curve::Flasher(VaRGB_COLOR_MAXVALUE, VaR
 
 Curve::Sine * _rgbCurveSine = new Curve::Sine(500, VaRGB_COLOR_MAXVALUE, 500, 6, 2);
 
-Curve::Linear * _rgbCurves[] = { 
+Curve::Linear * _rgbCurves[] = {
 	// start black
-	new Curve::Linear(0, 0, 0, 0), 
+	new Curve::Linear(0, 0, 0, 0),
 	// go to ~1/2 red, over one 5 seconds
-	new Curve::Linear(500, 0, 0, 5), 
+	new Curve::Linear(500, 0, 0, 5),
 	// go to red+blue, over 2s
-	new Curve::Linear(1000, 0, 1000, 2), 
+	new Curve::Linear(1000, 0, 1000, 2),
 	// back down to ~1/2 red over 2s
-	new Curve::Linear(500, 0, 0, 2), 
+	new Curve::Linear(500, 0, 0, 2),
 	// fade to black for 5s
-	new Curve::Linear(0, 0, 0, 5), 
+	new Curve::Linear(0, 0, 0, 5),
 };
 
 
@@ -298,7 +298,7 @@ void setup()
 
 	for (uint8_t i = 0; i < 5; i++)
 		_rgbSchedule->addTransition(_rgbCurves[i]);
-  
+
 	_vaRGB.setSchedule(_rgbSchedule);
 }
 
@@ -328,13 +328,13 @@ void loop()
 // INT0/INT1: ANGLE ENCODER
 
 #define _ISR_ANGLE_ENCODER_READ_CHANNEL(channel, other_channel, increment_comparison)					\
-	_angleEncoder ## channel = !_angleEncoder ## channel;												\
-	_angleUp = (_angleEncoder ## channel increment_comparison _angleEncoder ## other_channel);			\
-	_ISR_angleEncoder_updateAngleReading();
+	_AngleController ## channel = !_AngleController ## channel;												\
+	_angleUp = (_AngleController ## channel increment_comparison _AngleController ## other_channel);			\
+	_ISR_AngleController_updateAngleReading();
 
-static inline void _ISR_angleEncoder_updateAngleReading() __attribute__((always_inline));
+static inline void _ISR_AngleController_updateAngleReading() __attribute__((always_inline));
 
-static inline void _ISR_angleEncoder_updateAngleReading()
+static inline void _ISR_AngleController_updateAngleReading()
 {
 	if (_angleUp)
 		++_angleReading;
@@ -474,7 +474,7 @@ void _RGB_callback_setColor(ColorSettings * colors)
 void _RGB_callback_scheduleComplete(Schedule * schedule)
 {
   _vaRGB.resetTicks();
-  _vaRGB.setSchedule(schedule);  
+  _vaRGB.setSchedule(schedule);
 }
 
 
@@ -526,8 +526,8 @@ void _DEBUG_printInputValues()
 {
 	static char valStr[5];
 
-	_angleEncoderA = digitalRead(2);
-	_angleEncoderB = digitalRead(3);
+	_AngleControllerA = digitalRead(2);
+	_AngleControllerB = digitalRead(3);
 
 	_ledButton1 = digitalRead(4);
 	if (_ledButton1)
@@ -588,10 +588,10 @@ void _DEBUG_printInputValues()
 	lcd.home();
 
 	lcd.setCursor(0, 0);
-	lcd.print(itoa(_angleEncoderA, valStr, 2));
+	lcd.print(itoa(_AngleControllerA, valStr, 2));
 
 	lcd.setCursor(2, 0);
-	lcd.print(itoa(_angleEncoderB, valStr, 2));
+	lcd.print(itoa(_AngleControllerB, valStr, 2));
 
 	lcd.setCursor(4, 0);
 	lcd.print(itoa(_ledButton1, valStr, 2));
@@ -627,9 +627,9 @@ void _DEBUG_printInputValues()
 	lcd.print(itoa(_shiftButton, valStr, 2));
 
 
-	Serial.print(itoa(_angleEncoderA, valStr, 2));
+	Serial.print(itoa(_AngleControllerA, valStr, 2));
 	Serial.print(" ");
-	Serial.print(itoa(_angleEncoderB, valStr, 2));
+	Serial.print(itoa(_AngleControllerB, valStr, 2));
 	Serial.print(" ");
 	Serial.print(itoa(_ledButton1, valStr, 2));
 	Serial.print(" ");

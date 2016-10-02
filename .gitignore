@@ -49,7 +49,7 @@ Release/
 /Foxetron.sln.DPack
 /Foxetron.atsuo
 
-/Foxetron_AngleEncoder/Foxetron_AngleEncoder.vcxproj
-/Foxetron_AngleEncoder/Foxetron_AngleEncoder.vcxproj.filters
-/Foxetron_AngleEncoder/__vm/.Foxetron_AngleEncoder.vsarduino.h
+/Foxetron_AngleController/Foxetron_AngleController.vcxproj
+/Foxetron_AngleController/Foxetron_AngleController.vcxproj.filters
+/Foxetron_AngleController/__vm/.Foxetron_AngleController.vsarduino.h
 
