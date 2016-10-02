@@ -1,0 +1,110 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foxetron_AngleController", "Foxetron_AngleController\Foxetron_AngleController.vcxproj", "{D7A063C4-4996-461E-820C-756798EB5EBC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88} = {C5F80730-F44F-4478-BDAE-6634EFC2CA88}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IttyBitty", "..\IttyBitty\IttyBitty.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{47FE4012-DE88-45D0-804B-DDB6A3DC3BE3}"
+	ProjectSection(SolutionItems) = preProject
+		..\libraries\ArduinoMenu\examples\ClickEncoder_menu\ClickEncoder_menu.ino = ..\libraries\ArduinoMenu\examples\ClickEncoder_menu\ClickEncoder_menu.ino
+		encoder_book.ino = encoder_book.ino
+		encoder_glcd.ino = encoder_glcd.ino
+		..\libraries\ArduinoMenu\examples\I2C_menu\I2C_menu.ino = ..\libraries\ArduinoMenu\examples\I2C_menu\I2C_menu.ino
+		..\libraries\phi_prompt\phi_prompt_big_show\phi_prompt_big_show.ino = ..\libraries\phi_prompt\phi_prompt_big_show\phi_prompt_big_show.ino
+		..\libraries\phi_prompt\phi_prompt_example_int\phi_prompt_example_int.ino = ..\libraries\phi_prompt\phi_prompt_example_int\phi_prompt_example_int.ino
+		..\libraries\phi_prompt\phi_prompt_example_number_phi_panel\phi_prompt_example_number_phi_panel.ino = ..\libraries\phi_prompt\phi_prompt_example_number_phi_panel\phi_prompt_example_number_phi_panel.ino
+		..\libraries\phi_prompt\phi_prompt_example_simple_fns\phi_prompt_example_simple_fns.ino = ..\libraries\phi_prompt\phi_prompt_example_simple_fns\phi_prompt_example_simple_fns.ino
+		..\libraries\phi_prompt\phi_prompt_example_string\phi_prompt_example_string.ino = ..\libraries\phi_prompt\phi_prompt_example_string\phi_prompt_example_string.ino
+		..\libraries\phi_prompt\phi_prompt_example_string_phi_panel\phi_prompt_example_string_phi_panel.ino = ..\libraries\phi_prompt\phi_prompt_example_string_phi_panel\phi_prompt_example_string_phi_panel.ino
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{3838E9C1-AD4D-47B2-94E8-04BF459E358B}"
+	ProjectSection(SolutionItems) = preProject
+		..\libraries\ArduinoMenu\src\macros.h = ..\libraries\ArduinoMenu\src\macros.h
+		..\libraries\ArduinoMenu\src\menu.cpp = ..\libraries\ArduinoMenu\src\menu.cpp
+		..\libraries\ArduinoMenu\src\menu.h = ..\libraries\ArduinoMenu\src\menu.h
+		..\libraries\MENWIZ\MENWIZ.cpp = ..\libraries\MENWIZ\MENWIZ.cpp
+		..\libraries\MENWIZ\MENWIZ.h = ..\libraries\MENWIZ\MENWIZ.h
+		..\libraries\phi_prompt\phi_prompt.cpp = ..\libraries\phi_prompt\phi_prompt.cpp
+		..\libraries\phi_prompt\phi_prompt.h = ..\libraries\phi_prompt\phi_prompt.h
+		..\libraries\Stepper\Stepper.cpp = ..\libraries\Stepper\Stepper.cpp
+		..\libraries\Stepper\Stepper.h = ..\libraries\Stepper\Stepper.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Metadata", "Metadata", "{F5FF9CAF-1028-4D93-AEB5-9DCF3507F4A3}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foxetron_AngleDriver", "Foxetron_AngleDriver\Foxetron_AngleDriver.vcxproj", "{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Arduino = Debug|Arduino
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
+		Release|Arduino = Release|Arduino
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+		Visual Micro|Arduino = Visual Micro|Arduino
+		Visual Micro|Mixed Platforms = Visual Micro|Mixed Platforms
+		Visual Micro|Win32 = Visual Micro|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Debug|Arduino.ActiveCfg = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Debug|Mixed Platforms.ActiveCfg = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Debug|Mixed Platforms.Build.0 = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Debug|Win32.ActiveCfg = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Debug|Win32.Build.0 = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Release|Arduino.ActiveCfg = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Release|Win32.ActiveCfg = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Release|Win32.Build.0 = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Visual Micro|Arduino.ActiveCfg = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Visual Micro|Arduino.Build.0 = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Visual Micro|Mixed Platforms.ActiveCfg = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Visual Micro|Mixed Platforms.Build.0 = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Visual Micro|Win32.ActiveCfg = Release|Win32
+		{D7A063C4-4996-461E-820C-756798EB5EBC}.Visual Micro|Win32.Build.0 = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|Arduino.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|Mixed Platforms.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|Mixed Platforms.Build.0 = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|Win32.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|Win32.Build.0 = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Arduino.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Win32.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Win32.Build.0 = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Visual Micro|Arduino.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Visual Micro|Mixed Platforms.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Visual Micro|Mixed Platforms.Build.0 = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Visual Micro|Win32.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Visual Micro|Win32.Build.0 = Release|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Debug|Arduino.ActiveCfg = Debug|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Debug|Win32.Build.0 = Debug|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Release|Arduino.ActiveCfg = Release|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Release|Win32.ActiveCfg = Release|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Release|Win32.Build.0 = Release|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Visual Micro|Arduino.ActiveCfg = Release|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Visual Micro|Arduino.Build.0 = Release|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Visual Micro|Mixed Platforms.ActiveCfg = Release|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Visual Micro|Mixed Platforms.Build.0 = Release|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Visual Micro|Win32.ActiveCfg = Release|Win32
+		{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}.Visual Micro|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
