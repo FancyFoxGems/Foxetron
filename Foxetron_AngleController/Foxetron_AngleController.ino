@@ -45,7 +45,7 @@
 #define LCD_SYMBOL_SCROLL_UP			0x1E
 #define LCD_SYMBOL_SCROLL_DOWN			0x1F
 
-
+// MISCELLANEOUS
 #define LCD_SYMBOL_HOUSE				0x7f
 #define LCD_SYMBOL_NOTE					0x91
 #define LCD_SYMBOL_BELL					0x98
@@ -55,6 +55,7 @@
 
 
 // LCD CONSTANTS
+
 #define LCD_I2C_ADDRESS			0x27
 #define LCD_CHAR_COLS			16
 #define LCD_CHAR_ROWS			2
@@ -202,10 +203,10 @@ PROGMEM const char LCD_CHAR_BARGRAPH_4[8]			= { 0x1e, 0x1e, 0x1e, 0x1e, 0x1f, 0x
 
 // INPUTS
 
-volatile bool _AngleControllerA	= 0;	// Pin 2 / PD2 (INT0)
-volatile bool _AngleControllerB	= 0;	// Pin 3 / PD3 (INT1)
-//volatile bool _AngleControllerZ	= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
-//volatile bool _AngleControllerU	= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
+volatile bool _AngleEncoderA	= 0;	// Pin 2 / PD2 (INT0)
+volatile bool _AngleEncoderB	= 0;	// Pin 3 / PD3 (INT1)
+//volatile bool _AngleEncoderZ	= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
+//volatile bool _AngleEncoderU	= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
 volatile bool _angleUp			= 0;
 volatile uint32_t _angleReading	= 0;
@@ -328,13 +329,13 @@ void loop()
 // INT0/INT1: ANGLE ENCODER
 
 #define _ISR_ANGLE_ENCODER_READ_CHANNEL(channel, other_channel, increment_comparison)					\
-	_AngleController ## channel = !_AngleController ## channel;												\
-	_angleUp = (_AngleController ## channel increment_comparison _AngleController ## other_channel);			\
-	_ISR_AngleController_updateAngleReading();
+	_AngleEncoder ## channel = !_AngleEncoder ## channel;												\
+	_angleUp = (_AngleEncoder ## channel increment_comparison _AngleEncoder ## other_channel);			\
+	_ISR_AngleEncoder_updateAngleReading();
 
-static inline void _ISR_AngleController_updateAngleReading() __attribute__((always_inline));
+static inline void _ISR_AngleEncoder_updateAngleReading() __attribute__((always_inline));
 
-static inline void _ISR_AngleController_updateAngleReading()
+static inline void _ISR_AngleEncoder_updateAngleReading()
 {
 	if (_angleUp)
 		++_angleReading;
@@ -526,8 +527,8 @@ void _DEBUG_printInputValues()
 {
 	static char valStr[5];
 
-	_AngleControllerA = digitalRead(2);
-	_AngleControllerB = digitalRead(3);
+	_AngleEncoderA = digitalRead(2);
+	_AngleEncoderB = digitalRead(3);
 
 	_ledButton1 = digitalRead(4);
 	if (_ledButton1)
@@ -588,10 +589,10 @@ void _DEBUG_printInputValues()
 	lcd.home();
 
 	lcd.setCursor(0, 0);
-	lcd.print(itoa(_AngleControllerA, valStr, 2));
+	lcd.print(itoa(_AngleEncoderA, valStr, 2));
 
 	lcd.setCursor(2, 0);
-	lcd.print(itoa(_AngleControllerB, valStr, 2));
+	lcd.print(itoa(_AngleEncoderB, valStr, 2));
 
 	lcd.setCursor(4, 0);
 	lcd.print(itoa(_ledButton1, valStr, 2));
@@ -627,9 +628,9 @@ void _DEBUG_printInputValues()
 	lcd.print(itoa(_shiftButton, valStr, 2));
 
 
-	Serial.print(itoa(_AngleControllerA, valStr, 2));
+	Serial.print(itoa(_AngleEncoderA, valStr, 2));
 	Serial.print(" ");
-	Serial.print(itoa(_AngleControllerB, valStr, 2));
+	Serial.print(itoa(_AngleEncoderB, valStr, 2));
 	Serial.print(" ");
 	Serial.print(itoa(_ledButton1, valStr, 2));
 	Serial.print(" ");
