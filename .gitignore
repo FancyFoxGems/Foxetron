@@ -36,10 +36,9 @@
 *.vmps.xml
 *.tws
 
-*.gitignore
-
 Release/
 
+/.gitignore
 /.gcc-flags.json
 
 /.vs/config/applicationhost.config
