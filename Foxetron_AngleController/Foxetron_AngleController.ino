@@ -20,7 +20,7 @@
 #define SERIAL_ENABLE
 #define SERIAL_BAUD_RATE		115200
 
-#if defined(DEBUG_INPUTS)
+#ifdef DEBUG_INPUTS
 	#if DEBUG_INPUTS != 1
 		#undef DEBUG_INPUTS
 	#elif !defined(SERIAL_ENABLE)
@@ -103,7 +103,7 @@
 #endif
 
 /*
-#define READ_PORT(port_letter, state_variable)			\
+#define READ_PORT(port_Letter, state_variable)			\
 	asm volatile("\t"									\
 		"push %0"	"\n\t"								\
 		"in %0, %1"	"\n"								\
@@ -122,8 +122,8 @@ PROGMEM const char LCD_CHAR_GEM[8]					= { 0x0, 0x0, 0xe, 0x1b, 0x15, 0xa, 0x4, 
 PROGMEM const char LCD_CHAR_GEM_SMALL[8]			= { 0x0, 0x0, 0x0, 0xe, 0x11, 0xa, 0x4, 0x0 };
 
 // Angle symbols
-PROGMEM const char LCD_CHAR_ANGLE[8]				= { 0x1, 0x3, 0x6, 0xc, 0x1a, 0x12, 0x1f, 0x0 };
-PROGMEM const char LCD_CHAR_ANGLE_2[8]				= { 0x0, 0x1, 0x2, 0x4, 0xa, 0x12, 0x1f, 0x0 };
+ROGMEM const char LCD_CHAR_Angle[8]				= { 0x1, 0x3, 0x6, 0xc, 0x1a, 0x12, 0x1f, 0x0 };
+PROGMEM const char LCD_CHAR_Angle_2[8]				= { 0x0, 0x1, 0x2, 0x4, 0xa, 0x12, 0x1f, 0x0 };
 PROGMEM const char LCD_CHAR_CLOCKWISE[8]			= { 0x0, 0xe, 0x1b, 0x11, 0x5, 0xf, 0x4, 0x0 };
 PROGMEM const char LCD_CHAR_COUNTER_CCW[8]			= { 0x0, 0xe, 0x1b, 0x11, 0x14, 0x1e, 0x4, 0x0 };
 
@@ -203,67 +203,67 @@ PROGMEM const char LCD_CHAR_BARGRAPH_4[8]			= { 0x1e, 0x1e, 0x1e, 0x1e, 0x1f, 0x
 
 // INPUTS
 
-volatile bool _AngleEncoderA	= 0;	// Pin 2 / PD2 (INT0)
-volatile bool _AngleEncoderB	= 0;	// Pin 3 / PD3 (INT1)
+volatile bool _AngleEncoderA	= false;	// Pin 2 / PD2 (INT0)
+volatile bool _AngleEncoderB	= false;	// Pin 3 / PD3 (INT1)
 //volatile bool _AngleEncoderZ	= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
 //volatile bool _AngleEncoderU	= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
-volatile bool _angleUp			= 0;
-volatile uint32_t _angleReading	= 0;
-word _angleDelta				= 0;
-word _angleVelocity				= 0;
+volatile bool _AngleUp			= false;
+volatile uint32_t _AngleReading	= 0;
+word _AngleDelta				= 0;
+word _AngleVelocity				= 0;
 
-volatile bool _ledButton1		= 0;	// Pin 4 / PD4 (PCINT20)
-volatile bool _ledButton2		= 0;	// Pin 5 / PD5 (PCINT21)
-volatile bool _ledButton3		= 0;	// Pin 6 / PD6 (PCINT22)
-volatile bool _ledButton4		= 0;	// Pin 7 / PD7 (PCINT23)
-volatile bool _ledButton5		= 0;	// Pin 8 / PB0 (PCINT0)
+volatile bool _LedButton1		= false;	// Pin 4 / PD4 (PCINT20)
+volatile bool _LedButton2		= false;	// Pin 5 / PD5 (PCINT21)
+volatile bool _LedButton3		= false;	// Pin 6 / PD6 (PCINT22)
+volatile bool _LedButton4		= false;	// Pin 7 / PD7 (PCINT23)
+volatile bool _LedButton5		= false;	// Pin 8 / PB0 (PCINT0)
 
 // [FREE PIN: Pin 12 / PB4 (PCINT4)]
 
 // [FREE PIN: Pin A6 / ADC6]
 
-bool _modeSwitch				= 0;	// A7 / ADC7
+bool _modeSwitch				= false;	// A7 / ADC7
 word _modeSwitchVal				= 0;
 
-volatile bool _menuEncoderA		= 0;	// Pin 14/A0 / PC0 (PCINT8)
-volatile bool _menuEncoderB		= 0;	// Pin 15/A1 / PC1 (PCINT9)
+volatile bool _MenuEncoderA		= false;	// Pin 14/A0 / PC0 (PCINT8)
+volatile bool _MenuEncoderB		= false;	// Pin 15/A1 / PC1 (PCINT9)
 
-bool _menuUp					= 0;
-uint32_t _menuReading			= 0;
-word _menuDelta					= 0;
-word _menuVelocity				= 0;
+bool _MenuUp					= false;
+uint32_t _MenuReading			= 0;
+word _MenuDelta					= 0;
+word _MenuVelocity				= 0;
 
-volatile bool _selectButton		= 0;	// Pin 16/A2 / PC2 (PCINT10)
-volatile bool _shiftButton		= 0;	// Pin 17/A3 / PC3 (PCINT11)
+volatile bool _SelectButton		= false;	// Pin 16/A2 / PC2 (PCINT10)
+volatile bool _ShiftButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
 
-byte _rgbRed					= 0;	// Pin 9 / PB1
-byte _rgbGreen					= 0;	// Pin 10 / PB2
-byte _rgbBlue					= 0;	// Pin 11 / PB3
+byte _RgbRed					= 0;		// Pin 9 / PB1
+byte _RgbGreen					= 0;		// Pin 10 / PB2
+byte _RgbBlue					= 0;		// Pin 11 / PB3
 
-bool _statusLED					= 0;	// Pin 13 / PB5
+bool _StatusLED					= LOW;		// Pin 13 / PB5
 
-BigCrystal_I2C lcd(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
+BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
 
 
 // VaRGB CONFIGURATION
 
 using namespace vargb;
 
-void _RGB_callback_setColor(ColorSettings * colors);
-void _RGB_callback_scheduleComplete(Schedule * schedule);
-VaRGB _vaRGB(_RGB_callback_setColor, _RGB_callback_scheduleComplete);
+void _RGB_callback_SetColor(ColorSettings * colors);
+void _RGB_callback_ScheduleComplete(Schedule * schedule);
+VaRGB _vaRGB(_RGB_callback_SetColor, _RGB_callback_ScheduleComplete);
 
-Schedule * _rgbSchedule =  new Schedule();
+Schedule * _RgbSchedule =  new Schedule();
 
-Curve::Flasher * _rgbCurveFlasher = new Curve::Flasher(VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, 6, 20);
+Curve::Flasher * _RgbCurveFlasher = new Curve::Flasher(VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, 6, 20);
 
-Curve::Sine * _rgbCurveSine = new Curve::Sine(500, VaRGB_COLOR_MAXVALUE, 500, 6, 2);
+Curve::Sine * _RgbCurveSine = new Curve::Sine(500, VaRGB_COLOR_MAXVALUE, 500, 6, 2);
 
-Curve::Linear * _rgbCurves[] = {
+Curve::Linear * _RgbCurves[] = {
 	// start black
 	new Curve::Linear(0, 0, 0, 0),
 	// go to ~1/2 red, over one 5 seconds
@@ -292,31 +292,31 @@ void setup()
 	initializeLCD();
 	initializeInterrupts();
 
-	lcd.printBig("Fox", 2, 0);
+	LCD.printBig("Fox", 2, 0);
 
-	_rgbSchedule->addTransition(_rgbCurveFlasher);
-	_rgbSchedule->addTransition(_rgbCurveSine);
+	_RgbSchedule->addTransition(_RgbCurveFlasher);
+	_RgbSchedule->addTransition(_RgbCurveSine);
 
 	for (uint8_t i = 0; i < 5; i++)
-		_rgbSchedule->addTransition(_rgbCurves[i]);
+		_RgbSchedule->addTransition(_RgbCurves[i]);
 
-	_vaRGB.setSchedule(_rgbSchedule);
+	_vaRGB.setSchedule(_RgbSchedule);
 }
 
 void loop()
 {
 	_vaRGB.tickAndDelay();
-	lcd.clear();
-	lcd.home();
-	lcd.print(_angleReading);
-	Serial.println(_angleReading);
+	LCD.clear();
+	LCD.home();
+	LCD.print(_AngleReading);
+	Serial.println(_AngleReading);
 
 #ifdef DEBUG_INPUTS
 
 	_DEBUG_printInputValues();
 
-	_statusLED = !_statusLED;
-	digitalWrite(13, _statusLED);
+	_StatusLED = !_StatusLED;
+	digitalWrite(13, _StatusLED);
 
 	delay(100);
 
@@ -330,17 +330,17 @@ void loop()
 
 #define _ISR_ANGLE_ENCODER_READ_CHANNEL(channel, other_channel, increment_comparison)					\
 	_AngleEncoder ## channel = !_AngleEncoder ## channel;												\
-	_angleUp = (_AngleEncoder ## channel increment_comparison _AngleEncoder ## other_channel);			\
+	_AngleUp = (_AngleEncoder ## channel increment_comparison _AngleEncoder ## other_channel);			\
 	_ISR_AngleEncoder_updateAngleReading();
 
 static inline void _ISR_AngleEncoder_updateAngleReading() __attribute__((always_inline));
 
 static inline void _ISR_AngleEncoder_updateAngleReading()
 {
-	if (_angleUp)
-		++_angleReading;
+	if (_AngleUp)
+		++_AngleReading;
 	else
-		--_angleReading;
+		--_AngleReading;
 }
 
 // CHANNEL A
@@ -361,26 +361,26 @@ ISR(INT1_vect)
 // PORT B (PCINT0:7): LED BUTTON 5
 ISR(PCINT0_vect, ISR_NOBLOCK)
 {
-	_ledButton5 = PINB && (1 >> 0);
+	_LedButton5 = PINB && (1 >> 0);
 	//_pin12var = PINB && (1 >> 4);
 }
 
 // PORT C (PCINT8:14): MENU ENCODER & BUTTONS
 ISR(PCINT1_vect, ISR_NOBLOCK)
 {
-	_menuEncoderA = PINC && (1 >> 3);
-	_menuEncoderB = PINC && (1 >> 2);
-	_selectButton = PINC && (1 >> 1);
-	_shiftButton = PINC && (1 >> 0);
+	_MenuEncoderA = PINC && (1 >> 3);
+	_MenuEncoderB = PINC && (1 >> 2);
+	_SelectButton = PINC && (1 >> 1);
+	_ShiftButton = PINC && (1 >> 0);
 }
 
 // PORT D (PCINT16:23): LED BUTTONS 1-4
 ISR(PCINT2_vect, ISR_NOBLOCK)
 {
-	_ledButton1 = PIND && (1 >> 4);
-	_ledButton2 = PIND && (1 >> 5);
-	_ledButton3 = PIND && (1 >> 6);
-	_ledButton4 = PIND && (1 >> 7);
+	_LedButton1 = PIND && (1 >> 4);
+	_LedButton2 = PIND && (1 >> 5);
+	_LedButton3 = PIND && (1 >> 6);
+	_LedButton4 = PIND && (1 >> 7);
 }// TIMER EVENTS// TIMER 2 OVERFLOWISR(TIMER2_OVF_vect, ISR_NOBLOCK){}// SERIAL EVENTS// USART RECEIVE/*ISR(USART_RX_vect, ISR_NOBLOCK){}*/
 
 // PROGRAM FUNCTIONS
@@ -434,17 +434,17 @@ void initializePins()
 
 void initializeLCD()
 {
-	lcd.init();
-	lcd.backlight();
-	lcd.home();
+	LCD.init();
+	LCD.backlight();
+	LCD.home();
 
 	// Load large font
 	uint8_t customChar[8];
 	for (uint8_t i = 0; i < 8; i++)
 	{
 		for (uint8_t j = 0; j < 8; j++)
-			customChar[j] = pgm_read_byte(BF_fontShapes + (i * 8) + j);
-		lcd.createChar(i, customChar);
+			customChar[j] = pgm_read_byte_near(BF_fontShapes + (i * 8) + j);
+		LCD.createChar(i, customChar);
 	}
 }
 
@@ -465,14 +465,14 @@ void initializeInterrupts()
 
 // VaRGB CALLBACK FUNCTIONS
 
-void _RGB_callback_setColor(ColorSettings * colors)
+void _RGB_callback_SetColor(ColorSettings * colors)
 {
 	analogWrite(PIN_PWM_RGB_LED_RED, colors->red);
 	analogWrite(PIN_PWM_RGB_LED_GREEN, colors->green);
 	analogWrite(PIN_PWM_RGB_LED_BLUE, colors->blue);
 }
 
-void _RGB_callback_scheduleComplete(Schedule * schedule)
+void _RGB_callback_ScheduleComplete(Schedule * schedule)
 {
   _vaRGB.resetTicks();
   _vaRGB.setSchedule(schedule);
@@ -483,17 +483,17 @@ void _RGB_callback_scheduleComplete(Schedule * schedule)
 
 void _DEBUG_printLCDSplash()
 {
-	lcd.print("Foxetron test...");
+	LCD.print("Foxetron test...");
 
 	delay(200);
 
 	for (byte i = 0; i < 16; i++)
 	{
-		lcd.scrollDisplayLeft();
+		LCD.scrollDisplayLeft();
 		delay(20);
 	}
 
-	lcd.clear();
+	LCD.clear();
 }
 
 void _DEBUG_displayKeyCodes(void)
@@ -502,18 +502,18 @@ void _DEBUG_displayKeyCodes(void)
 
 	while (i < 1)
 	{
-		lcd.clear();
+		LCD.clear();
 
-		lcd.print("Codes 0x");
+		LCD.print("Codes 0x");
 
-		lcd.print(i, HEX);
-		lcd.print("-0x");
-		lcd.print(i + 16, HEX);
+		LCD.print(i, HEX);
+		LCD.print("-0x");
+		LCD.print(i + 16, HEX);
 
-		lcd.setCursor(0, 1);
+		LCD.setCursor(0, 1);
 
 		for (int j = 0; j < 8; j++)
-		lcd.write(i + j);
+		LCD.write(i + j);
 
 		i+=16;
 
@@ -530,8 +530,8 @@ void _DEBUG_printInputValues()
 	_AngleEncoderA = digitalRead(2);
 	_AngleEncoderB = digitalRead(3);
 
-	_ledButton1 = digitalRead(4);
-	if (_ledButton1)
+	_LedButton1 = digitalRead(4);
+	if (_LedButton1)
 	{
 		PORTD |= (1 << 4);
 		DDRD |= (1 << 4);
@@ -539,8 +539,8 @@ void _DEBUG_printInputValues()
 		DDRD &= ~(1 << 4);
 	}
 
-	_ledButton2 = digitalRead(5);
-	if (_ledButton2)
+	_LedButton2 = digitalRead(5);
+	if (_LedButton2)
 	{
 		PORTD |= (1 << 5);
 		DDRD |= (1 << 5);
@@ -548,8 +548,8 @@ void _DEBUG_printInputValues()
 		DDRD &= ~(1 << 5);
 	}
 
-	_ledButton3 = digitalRead(6);
-	if (_ledButton3)
+	_LedButton3 = digitalRead(6);
+	if (_LedButton3)
 	{
 		PORTD |= (1 << 6);
 		DDRD |= (1 << 6);
@@ -557,8 +557,8 @@ void _DEBUG_printInputValues()
 		DDRD &= ~(1 << 6);
 	}
 
-	_ledButton4 = digitalRead(7);
-	if (_ledButton4)
+	_LedButton4 = digitalRead(7);
+	if (_LedButton4)
 	{
 		PORTD |= (1 << 7);
 		DDRD |= (1 << 7);
@@ -566,8 +566,8 @@ void _DEBUG_printInputValues()
 		DDRD &= ~(1 << 7);
 	}
 
-	_ledButton5 = digitalRead(8);
-	if (_ledButton5)
+	_LedButton5 = digitalRead(8);
+	if (_LedButton5)
 	{
 		PORTB |= (1 << 0);
 		DDRB |= (1 << 0);
@@ -577,83 +577,83 @@ void _DEBUG_printInputValues()
 
 	_modeSwitch = analogRead(7) > 500 ? true : false;
 
-	_menuEncoderA = digitalRead(14);
-	_menuEncoderB = digitalRead(15);
+	_MenuEncoderA = digitalRead(14);
+	_MenuEncoderB = digitalRead(15);
 
-	_selectButton = !digitalRead(16);
-	_shiftButton = !digitalRead(17);
-
-
-	// Rear inputs
-
-	lcd.home();
-
-	lcd.setCursor(0, 0);
-	lcd.print(itoa(_AngleEncoderA, valStr, 2));
-
-	lcd.setCursor(2, 0);
-	lcd.print(itoa(_AngleEncoderB, valStr, 2));
-
-	lcd.setCursor(4, 0);
-	lcd.print(itoa(_ledButton1, valStr, 2));
-
-	lcd.setCursor(6, 0);
-	lcd.print(itoa(_ledButton2, valStr, 2));
-
-	lcd.setCursor(8, 0);
-	lcd.print(itoa(_ledButton3, valStr, 2));
-
-	lcd.setCursor(10, 0);
-	lcd.print(itoa(_ledButton4, valStr, 2));
-
-	lcd.setCursor(12, 0);
-	lcd.print(itoa(_ledButton5, valStr, 2));
+	_SelectButton = !digitalRead(16);
+	_ShiftButton = !digitalRead(17);
 
 
-	// Front inputs
+	// REAR INPUTS
 
-	lcd.setCursor(4, 1);
-	lcd.print(itoa(_modeSwitchVal, valStr, 10));
+	LCD.home();
 
-	lcd.setCursor(8, 1);
-	lcd.print(itoa(_menuEncoderA, valStr, 2));
+	LCD.setCursor(0, 0);
+	LCD.print(itoa(_AngleEncoderA, valStr, 2));
 
-	lcd.setCursor(10, 1);
-	lcd.print(itoa(_menuEncoderB, valStr, 2));
+	LCD.setCursor(2, 0);
+	LCD.print(itoa(_AngleEncoderB, valStr, 2));
 
-	lcd.setCursor(12, 1);
-	lcd.print(itoa(_selectButton, valStr, 2));
+	LCD.setCursor(4, 0);
+	LCD.print(itoa(_LedButton1, valStr, 2));
 
-	lcd.setCursor(14, 1);
-	lcd.print(itoa(_shiftButton, valStr, 2));
+	LCD.setCursor(6, 0);
+	LCD.print(itoa(_LedButton2, valStr, 2));
+
+	LCD.setCursor(8, 0);
+	LCD.print(itoa(_LedButton3, valStr, 2));
+
+	LCD.setCursor(10, 0);
+	LCD.print(itoa(_LedButton4, valStr, 2));
+
+	LCD.setCursor(12, 0);
+	LCD.print(itoa(_LedButton5, valStr, 2));
+
+
+	// FRONT INPUTS
+
+	LCD.setCursor(4, 1);
+	LCD.print(itoa(_modeSwitchVal, valStr, 10));
+
+	LCD.setCursor(8, 1);
+	LCD.print(itoa(_MenuEncoderA, valStr, 2));
+
+	LCD.setCursor(10, 1);
+	LCD.print(itoa(_MenuEncoderB, valStr, 2));
+
+	LCD.setCursor(12, 1);
+	LCD.print(itoa(_SelectButton, valStr, 2));
+
+	LCD.setCursor(14, 1);
+	LCD.print(itoa(_ShiftButton, valStr, 2));
 
 
 	Serial.print(itoa(_AngleEncoderA, valStr, 2));
 	Serial.print(" ");
 	Serial.print(itoa(_AngleEncoderB, valStr, 2));
 	Serial.print(" ");
-	Serial.print(itoa(_ledButton1, valStr, 2));
+	Serial.print(itoa(_LedButton1, valStr, 2));
 	Serial.print(" ");
-	Serial.print(itoa(_ledButton2, valStr, 2));
+	Serial.print(itoa(_LedButton2, valStr, 2));
 	Serial.print(" ");
-	Serial.print(itoa(_ledButton3, valStr, 2));
+	Serial.print(itoa(_LedButton3, valStr, 2));
 	Serial.print(" ");
-	Serial.print(itoa(_ledButton4, valStr, 2));
+	Serial.print(itoa(_LedButton4, valStr, 2));
 	Serial.print(" ");
-	Serial.print(itoa(_ledButton5, valStr, 2));
+	Serial.print(itoa(_LedButton5, valStr, 2));
 	Serial.println();
 
 	Serial.print(itoa(_modeSwitchVal, valStr, 10));
 	Serial.print(" / ");
 	Serial.print(itoa(_modeSwitch, valStr, 2));
 	Serial.print(" ");
-	Serial.print(itoa(_menuEncoderA, valStr, 2));
+	Serial.print(itoa(_MenuEncoderA, valStr, 2));
 	Serial.print(" ");
-	Serial.print(itoa(_menuEncoderB, valStr, 2));
+	Serial.print(itoa(_MenuEncoderB, valStr, 2));
 	Serial.print(" ");
-	Serial.print(itoa(_selectButton, valStr, 2));
+	Serial.print(itoa(_SelectButton, valStr, 2));
 	Serial.print(" ");
-	Serial.print(itoa(_shiftButton, valStr, 2));
+	Serial.print(itoa(_ShiftButton, valStr, 2));
 	Serial.println();
 
 	Serial.println();
@@ -661,38 +661,38 @@ void _DEBUG_printInputValues()
 
 void _DEBUG_createCustomChars()
 {
-	lcd.createChar(0, LCD_CHAR_FOX);
-	lcd.createChar(1, LCD_CHAR_GEM_SMALL);
-	lcd.createChar(2, LCD_CHAR_GEM);
+	LCD.createChar(0, LCD_CHAR_FOX);
+	LCD.createChar(1, LCD_CHAR_GEM_SMALL);
+	LCD.createChar(2, LCD_CHAR_GEM);
 
-	lcd.createChar(3, LCD_CHAR_ANGLE);
-	lcd.createChar(4, LCD_CHAR_ANGLE_2);
-	lcd.createChar(5, LCD_CHAR_CHECKMARK);
-	lcd.createChar(6, LCD_CHAR_CLOCKWISE);
-	lcd.createChar(7, LCD_CHAR_NOTES);
-
-	_DEBUG_displayKeyCodes();
-
-
-	lcd.createChar(0, LCD_CHAR_SHAPE_ROUND);
-	lcd.createChar(1, LCD_CHAR_SHAPE_OVAL);
-	lcd.createChar(2, LCD_CHAR_SHAPE_CUSHION);
-	lcd.createChar(3, LCD_CHAR_SHAPE_EMERALD);
-	lcd.createChar(4, LCD_CHAR_SHAPE_BAGUETTE);
-	lcd.createChar(5, LCD_CHAR_SHAPE_TRILLIANT);
-	lcd.createChar(6, LCD_CHAR_SHAPE_TRIANGLE);
-	lcd.createChar(7, LCD_CHAR_SHAPE_SPECIAL);
+	LCD.createChar(3, LCD_CHAR_Angle);
+	LCD.createChar(4, LCD_CHAR_Angle_2);
+	LCD.createChar(5, LCD_CHAR_CHECKMARK);
+	LCD.createChar(6, LCD_CHAR_CLOCKWISE);
+	LCD.createChar(7, LCD_CHAR_NOTES);
 
 	_DEBUG_displayKeyCodes();
 
 
-	lcd.createChar(0, LCD_CHAR_CUT_BRILLIANT);
-	lcd.createChar(1, LCD_CHAR_CUT_STEP);
+	LCD.createChar(0, LCD_CHAR_SHAPE_ROUND);
+	LCD.createChar(1, LCD_CHAR_SHAPE_OVAL);
+	LCD.createChar(2, LCD_CHAR_SHAPE_CUSHION);
+	LCD.createChar(3, LCD_CHAR_SHAPE_EMERALD);
+	LCD.createChar(4, LCD_CHAR_SHAPE_BAGUETTE);
+	LCD.createChar(5, LCD_CHAR_SHAPE_TRILLIANT);
+	LCD.createChar(6, LCD_CHAR_SHAPE_TRIANGLE);
+	LCD.createChar(7, LCD_CHAR_SHAPE_SPECIAL);
 
-	lcd.createChar(2, LCD_CHAR_ARROW_UP);
-	lcd.createChar(3, LCD_CHAR_ARROW_DOWN);
-	lcd.createChar(4, LCD_CHAR_ARROW_LEFT_LARGE);
-	lcd.createChar(5, LCD_CHAR_ARROW_RIGHT_LARGE);
+	_DEBUG_displayKeyCodes();
+
+
+	LCD.createChar(0, LCD_CHAR_CUT_BRILLIANT);
+	LCD.createChar(1, LCD_CHAR_CUT_STEP);
+
+	LCD.createChar(2, LCD_CHAR_ARROW_UP);
+	LCD.createChar(3, LCD_CHAR_ARROW_DOWN);
+	LCD.createChar(4, LCD_CHAR_ARROW_LEFT_LARGE);
+	LCD.createChar(5, LCD_CHAR_ARROW_RIGHT_LARGE);
 
 	_DEBUG_displayKeyCodes();
 }
