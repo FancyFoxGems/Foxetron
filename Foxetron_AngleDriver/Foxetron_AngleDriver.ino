@@ -11,7 +11,7 @@
 #define SERIAL_BAUD_RATE		115200
 
 #if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
-		#undef DEBUG_INPUTS
+	#undef DEBUG_INPUTS
 #endif
 
 
@@ -79,9 +79,7 @@ volatile bool _ActionLed = HIGH;
 
 void setup()
 {
-#ifdef SERIAL_ENABLE
 	Serial.begin(SERIAL_BAUD_RATE);
-#endif
 
 	initializePins();
 	initializeInterrupts();

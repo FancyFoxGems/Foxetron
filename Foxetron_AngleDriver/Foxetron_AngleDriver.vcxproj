@@ -63,7 +63,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties arduino.upload.port="COM6" />
+      <UserProperties arduino.upload.port="COM19" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
