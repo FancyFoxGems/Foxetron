@@ -21,11 +21,11 @@
 #define SERIAL_BAUD_RATE		115200
 
 #ifdef DEBUG_INPUTS
-	#if DEBUG_INPUTS != 1
-		#undef DEBUG_INPUTS
-	#elif !defined(SERIAL_ENABLE)
-		#define SERIAL_ENABLE
-	#endif
+#if DEBUG_INPUTS != 1
+#undef DEBUG_INPUTS
+#elif !defined(SERIAL_ENABLE)
+#define SERIAL_ENABLE
+#endif
 #endif
 
 
@@ -128,10 +128,10 @@ PROGMEM const char LCD_CHAR_CLOCKWISE[8]			= { 0x0, 0xe, 0x1b, 0x11, 0x5, 0xf, 0
 PROGMEM const char LCD_CHAR_COUNTER_CCW[8]			= { 0x0, 0xe, 0x1b, 0x11, 0x14, 0x1e, 0x4, 0x0 };
 
 // Miscellaneous symbols
-PROGMEM const char LCD_CHAR_CHECKMARK[8]			= { 0x0, 0x0, 0x1, 0x3, 0x16, 0x1c, 0x8,0x0 };
+PROGMEM const char LCD_CHAR_CHECKMARK[8]			= { 0x0, 0x0, 0x1, 0x3, 0x16, 0x1c, 0x8, 0x0 };
 PROGMEM const char LCD_CHAR_BOX_EMPTY[8]			= { 0x0, 0x1f, 0x11, 0x11, 0x11, 0x11, 0x11, 0x1f };
 PROGMEM const char LCD_CHAR_BOX_CHECKMARK[8]		= { 0x0, 0x1f, 0x11, 0x13, 0x1f, 0x15, 0x11, 0x1f };
-PROGMEM const char LCD_CHAR_WARNING[8]				= { 0x0, 0xe, 0x1b, 0x1b, 0x1f, 0x1b, 0xe, 0x0 };
+PROGMEM const char LCD_CHAR_WARNING[8] 				= { 0x0, 0xe, 0x1b, 0x1b, 0x1f, 0x1b, 0xe, 0x0 };
 PROGMEM const char LCD_CHAR_NOT_ALLOWED[8]			= { 0xe, 0x1f, 0x19, 0x1d, 0x17, 0x13, 0x1f, 0xe };
 PROGMEM const char LCD_CHAR_LIGHTNING[8]			= { 0x3, 0x6, 0xc, 0xf, 0x3, 0x6, 0xc, 0x8 };
 PROGMEM const char LCD_CHAR_NOTES[8]				= { 0x3, 0x7, 0xd, 0x9, 0x9, 0xb, 0x1b, 0x18 };
@@ -180,10 +180,10 @@ PROGMEM const char LCD_CHAR_SCROLLBAR_3[8]			= { 0x0, 0x0, 0x0, 0x0, 0x1f, 0x0, 
 PROGMEM const char LCD_CHAR_SCROLLBAR_4[8]			= { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1f, 0x0 };
 
 // Bar graph icons
-const char * const &  LCD_CHAR_BARGRAPH_EMPTY		= LCD_CHAR_SCROLLBAR_3;
+const char * const &  LCD_CHAR_BARGRAPH_EMPTY = LCD_CHAR_SCROLLBAR_3;
 PROGMEM const char LCD_CHAR_BARGRAPH_FULL[8]		= { 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f };
-PROGMEM const char LCD_CHAR_BARGRAPH_SEMI_FULL_1[8]	= { 0x15, 0xa, 0x15, 0xa, 0x15, 0xa, 0x15, 0xa };
-PROGMEM const char LCD_CHAR_BARGRAPH_SEMI_FULL_2[8]	= { 0xa, 0x15, 0xa, 0x15, 0xa, 0x15, 0xa, 0x15 };
+PROGMEM const char LCD_CHAR_BARGRAPH_SEMI_FULL_1[8] = { 0x15, 0xa, 0x15, 0xa, 0x15, 0xa, 0x15, 0xa };
+PROGMEM const char LCD_CHAR_BARGRAPH_SEMI_FULL_2[8] = { 0xa, 0x15, 0xa, 0x15, 0xa, 0x15, 0xa, 0x15 };
 PROGMEM const char LCD_CHAR_BARGRAPH_1[8]			= { 0x10, 0x10, 0x10, 0x10, 0x1f, 0x10, 0x10, 0x10 };
 PROGMEM const char LCD_CHAR_BARGRAPH_2[8]			= { 0x18, 0x18, 0x18, 0x18, 0x1f, 0x18, 0x18, 0x18 };
 PROGMEM const char LCD_CHAR_BARGRAPH_3[8]			= { 0x1c, 0x1c, 0x1c, 0x1c, 0x1f, 0x1c, 0x1c, 0x1c };
@@ -205,11 +205,11 @@ PROGMEM const char LCD_CHAR_BARGRAPH_4[8]			= { 0x1e, 0x1e, 0x1e, 0x1e, 0x1f, 0x
 
 volatile bool _AngleEncoderA	= false;	// Pin 2 / PD2 (INT0)
 volatile bool _AngleEncoderB	= false;	// Pin 3 / PD3 (INT1)
-//volatile bool _AngleEncoderZ	= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
-//volatile bool _AngleEncoderU	= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
+//volatile bool _AngleEncoderZ		= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
+//volatile bool _AngleEncoderU		= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
 volatile bool _AngleUp			= false;
-volatile uint32_t _AngleReading	= 0;
+volatile uint32_t _AngleReading = 0;
 word _AngleDelta				= 0;
 word _AngleVelocity				= 0;
 
@@ -262,7 +262,7 @@ void _RGB_callback_ScheduleComplete(Schedule * schedule);
 
 VaRGB RGB(_RGB_callback_SetColor, _RGB_callback_ScheduleComplete);
 
-Schedule * _RgbSchedule =  new Schedule();
+Schedule * _RgbSchedule = new Schedule();
 
 Curve::Flasher * _RgbCurveFlasher = new Curve::Flasher(VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, 6, 20);
 
@@ -351,13 +351,13 @@ static inline void _ISR_AngleEncoder_updateAngleReading()
 // CHANNEL A
 ISR(INT0_vect)
 {
-	_ISR_ANGLE_ENCODER_READ_CHANNEL(A, B, ==);
+	_ISR_ANGLE_ENCODER_READ_CHANNEL(A, B, == );
 }
 
 // CHANNEL B
 ISR(INT1_vect)
 {
-	_ISR_ANGLE_ENCODER_READ_CHANNEL(B, A, !=);
+	_ISR_ANGLE_ENCODER_READ_CHANNEL(B, A, != );
 }
 
 
@@ -479,8 +479,8 @@ void _RGB_callback_SetColor(ColorSettings * colors)
 
 void _RGB_callback_ScheduleComplete(Schedule * schedule)
 {
-  RGB.resetTicks();
-  RGB.setSchedule(schedule);
+	RGB.resetTicks();
+	RGB.setSchedule(schedule);
 }
 
 
@@ -518,9 +518,9 @@ void _DEBUG_displayKeyCodes(void)
 		LCD.setCursor(0, 1);
 
 		for (int j = 0; j < 8; j++)
-		LCD.write(i + j);
+			LCD.write(i + j);
 
-		i+=16;
+		i += 16;
 
 		while (!Serial.available()) delay(100);
 		Serial.read();

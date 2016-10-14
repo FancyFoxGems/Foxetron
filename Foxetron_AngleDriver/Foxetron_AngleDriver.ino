@@ -68,8 +68,8 @@ volatile bool _LatchButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
 // OUTPUTS
 
 // LEDs
-volatile bool _StatusLed = LOW;
-volatile bool _ActionLed = HIGH;
+volatile bool _StatusLed		= LOW;
+volatile bool _ActionLed		= HIGH;
 
 
 
