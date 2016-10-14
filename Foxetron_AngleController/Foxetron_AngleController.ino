@@ -297,7 +297,7 @@ void setup()
 	initializeLCD();
 	initializeInterrupts();
 
-	LCD.printBig("Fox", 2, 0);
+	LCD.printBig(F("Fox"), 2, 0);
 
 	_RgbSchedule->addTransition(_RgbCurveFlasher);
 	_RgbSchedule->addTransition(_RgbCurveSine);
@@ -488,7 +488,7 @@ void _RGB_callback_ScheduleComplete(Schedule * schedule)
 
 void _DEBUG_printLCDSplash()
 {
-	LCD.print("Foxetron test...");
+	LCD.print(F("Foxetron test..."));
 
 	delay(200);
 
@@ -509,10 +509,10 @@ void _DEBUG_displayKeyCodes(void)
 	{
 		LCD.clear();
 
-		LCD.print("Codes 0x");
+		LCD.print(F("Codes 0x"));
 
 		LCD.print(i, HEX);
-		LCD.print("-0x");
+		LCD.print(F("-0x"));
 		LCD.print(i + 16, HEX);
 
 		LCD.setCursor(0, 1);
