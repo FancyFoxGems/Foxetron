@@ -122,8 +122,8 @@ PROGMEM const char LCD_CHAR_GEM[8]					= { 0x0, 0x0, 0xe, 0x1b, 0x15, 0xa, 0x4, 
 PROGMEM const char LCD_CHAR_GEM_SMALL[8]			= { 0x0, 0x0, 0x0, 0xe, 0x11, 0xa, 0x4, 0x0 };
 
 // Angle symbols
-ROGMEM const char LCD_CHAR_Angle[8]				= { 0x1, 0x3, 0x6, 0xc, 0x1a, 0x12, 0x1f, 0x0 };
-PROGMEM const char LCD_CHAR_Angle_2[8]				= { 0x0, 0x1, 0x2, 0x4, 0xa, 0x12, 0x1f, 0x0 };
+PROGMEM const char LCD_CHAR_ANGLE[8]				= { 0x1, 0x3, 0x6, 0xc, 0x1a, 0x12, 0x1f, 0x0 };
+PROGMEM const char LCD_CHAR_ANGLE_2[8]				= { 0x0, 0x1, 0x2, 0x4, 0xa, 0x12, 0x1f, 0x0 };
 PROGMEM const char LCD_CHAR_CLOCKWISE[8]			= { 0x0, 0xe, 0x1b, 0x11, 0x5, 0xf, 0x4, 0x0 };
 PROGMEM const char LCD_CHAR_COUNTER_CCW[8]			= { 0x0, 0xe, 0x1b, 0x11, 0x14, 0x1e, 0x4, 0x0 };
 
@@ -226,6 +226,7 @@ volatile bool _LedButton5		= false;	// Pin 8 / PB0 (PCINT0)
 bool _modeSwitch				= false;	// A7 / ADC7
 word _modeSwitchVal				= 0;
 
+// Menu rotary encoder
 volatile bool _MenuEncoderA		= false;	// Pin 14/A0 / PC0 (PCINT8)
 volatile bool _MenuEncoderB		= false;	// Pin 15/A1 / PC1 (PCINT9)
 
@@ -240,22 +241,26 @@ volatile bool _ShiftButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
 
 // OUTPUTS
 
+// LEDs
 byte _RgbRed					= 0;		// Pin 9 / PB1
 byte _RgbGreen					= 0;		// Pin 10 / PB2
 byte _RgbBlue					= 0;		// Pin 11 / PB3
 
 bool _StatusLED					= LOW;		// Pin 13 / PB5
 
+
+// LCD display
 BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
 
 
-// VaRGB CONFIGURATION
+// RGB LED / VaRGB CONFIGURATION
 
 using namespace vargb;
 
 void _RGB_callback_SetColor(ColorSettings * colors);
 void _RGB_callback_ScheduleComplete(Schedule * schedule);
-VaRGB _vaRGB(_RGB_callback_SetColor, _RGB_callback_ScheduleComplete);
+
+VaRGB RGB(_RGB_callback_SetColor, _RGB_callback_ScheduleComplete);
 
 Schedule * _RgbSchedule =  new Schedule();
 
@@ -300,12 +305,12 @@ void setup()
 	for (uint8_t i = 0; i < 5; i++)
 		_RgbSchedule->addTransition(_RgbCurves[i]);
 
-	_vaRGB.setSchedule(_RgbSchedule);
+	RGB.setSchedule(_RgbSchedule);
 }
 
 void loop()
 {
-	_vaRGB.tickAndDelay();
+	RGB.tickAndDelay();
 	LCD.clear();
 	LCD.home();
 	LCD.print(_AngleReading);
@@ -474,8 +479,8 @@ void _RGB_callback_SetColor(ColorSettings * colors)
 
 void _RGB_callback_ScheduleComplete(Schedule * schedule)
 {
-  _vaRGB.resetTicks();
-  _vaRGB.setSchedule(schedule);
+  RGB.resetTicks();
+  RGB.setSchedule(schedule);
 }
 
 
@@ -629,30 +634,30 @@ void _DEBUG_printInputValues()
 
 
 	Serial.print(itoa(_AngleEncoderA, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_AngleEncoderB, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_LedButton1, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_LedButton2, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_LedButton3, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_LedButton4, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_LedButton5, valStr, 2));
 	Serial.println();
 
 	Serial.print(itoa(_modeSwitchVal, valStr, 10));
-	Serial.print(" / ");
+	Serial.print(F(" / "));
 	Serial.print(itoa(_modeSwitch, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_MenuEncoderA, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_MenuEncoderB, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_SelectButton, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_ShiftButton, valStr, 2));
 	Serial.println();
 
@@ -665,8 +670,8 @@ void _DEBUG_createCustomChars()
 	LCD.createChar(1, LCD_CHAR_GEM_SMALL);
 	LCD.createChar(2, LCD_CHAR_GEM);
 
-	LCD.createChar(3, LCD_CHAR_Angle);
-	LCD.createChar(4, LCD_CHAR_Angle_2);
+	LCD.createChar(3, LCD_CHAR_ANGLE);
+	LCD.createChar(4, LCD_CHAR_ANGLE_2);
 	LCD.createChar(5, LCD_CHAR_CHECKMARK);
 	LCD.createChar(6, LCD_CHAR_CLOCKWISE);
 	LCD.createChar(7, LCD_CHAR_NOTES);

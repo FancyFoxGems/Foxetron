@@ -7,15 +7,11 @@
 // PROGRAM OPTIONS
 
 #define DEBUG_INPUTS			1
-#define SERIAL_ENABLE
+
 #define SERIAL_BAUD_RATE		115200
 
-#if defined(DEBUG_INPUTS)
-	#if DEBUG_INPUTS != 1
+#if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
 		#undef DEBUG_INPUTS
-	#elif !defined(SERIAL_ENABLE)
-		#define SERIAL_ENABLE
-	#endif
 #endif
 
 
@@ -54,7 +50,7 @@
 
 // INPUTS
 
-// Angle Encoder
+// Angle encoder
 volatile bool _AngleEncoderA	= false;	// Pin 2 / PD2 (INT0)
 volatile bool _AngleEncoderB	= false;	// Pin 3 / PD3 (INT1)
 
@@ -71,7 +67,7 @@ volatile bool _LatchButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
 
 // OUTPUTS
 
-// LED indicators
+// LEDs
 volatile bool _StatusLed = LOW;
 volatile bool _ActionLed = HIGH;
 
@@ -94,9 +90,7 @@ void setup()
 void loop()
 {
 #ifdef DEBUG_INPUTS
-
 	_DEBUG_printInputValues();
-
 #endif
 }
 
@@ -118,6 +112,11 @@ static inline void _ISR_AngleEncoder_updateAngleReading()
 		++_AngleReading;
 	else
 		--_AngleReading;
+
+#ifdef DEBUG_INPUTS
+	Serial.print(F("ANGLE: "));
+	Serial.println(_AngleReading);
+#endif
 }
 
 // CHANNEL A
@@ -203,7 +202,7 @@ void _DEBUG_printInputValues()
 	// REAR INPUTS
 
 	Serial.print(itoa(_AngleEncoderA, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_AngleEncoderB, valStr, 2));
 	Serial.println();
 
@@ -211,9 +210,9 @@ void _DEBUG_printInputValues()
 	// FRONT INPUTS
 
 	Serial.print(itoa(_LatchButton, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_OneShotButton, valStr, 2));
-	Serial.print(" ");
+	Serial.print(F(" "));
 	Serial.print(itoa(_ActionButton, valStr, 2));
 	Serial.println();
 
