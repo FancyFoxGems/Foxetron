@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{47
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{3838E9C1-AD4D-47B2-94E8-04BF459E358B}"
 	ProjectSection(SolutionItems) = preProject
+		BigCrystal_I2C.custom.cpp = BigCrystal_I2C.custom.cpp
+		BigCrystal_I2C.custom.h = BigCrystal_I2C.custom.h
 		..\libraries\ArduinoMenu\src\macros.h = ..\libraries\ArduinoMenu\src\macros.h
 		..\libraries\ArduinoMenu\src\menu.cpp = ..\libraries\ArduinoMenu\src\menu.cpp
 		..\libraries\ArduinoMenu\src\menu.h = ..\libraries\ArduinoMenu\src\menu.h

@@ -7,6 +7,7 @@
 
 // 3RD-PARTY LIBS
 #include "BigCrystal_I2C.h"
+#include "phi_prompt.h"
 #include "VaRGB.h"
 #include "VaRGBCurves.h"
 
