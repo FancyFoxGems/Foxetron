@@ -1,3 +1,8 @@
+/************************************************************************************************************************************
+* This file, redistributed with the Foxetron program suite, is part of an Arduino library released under the CC BY-SA v3.0 license. *
+* See below for details.                                                                                                            *
+*************************************************************************************************************************************/
+
 // ---------------------------------------------------------------------------
 // Created by Roberto Brunialti on 20/04/12.
 // Copyright 2012 - Under creative commons license 3.0:

@@ -1,3 +1,7 @@
+/********************************************************************************************************************
+* This file, redistributed with the Foxetron program suite, is part of an Arduino library in the Public Domain.     *
+*********************************************************************************************************************/
+
 #ifndef BigCrystal_I2C_h
 #define BigCrystal_I2C_h
 

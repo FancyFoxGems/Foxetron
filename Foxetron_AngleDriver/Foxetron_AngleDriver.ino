@@ -1,3 +1,23 @@
+/*****************************************************************************************************
+* Name:		Foxetron Angle Driver (Firmware Code; Part of the Foxetron Program Suite)
+* Created:	10/2/2016
+* Author:	Tom Biuso <tjbtech@yahoo.com>
+*
+* This file is part of the Foxetron program suite.
+* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
+*
+* The Foxetron suite is free software: you can redistribute it and/or modify it under the terms of the
+* GNU General Public License as published by the Free Software Foundation, either version
+* 3 of the License, or (at your option) any later version.
+*
+* The Foxetron suite is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+* without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+* See the included GNU General Public License text for more details.
+*****************************************************************************************************/
+
+
 /* INCLUDES */
 
 
@@ -162,7 +182,7 @@ void initializePins()
 
 
 	// FRONT PINS
- 
+
 	pinMode(PIN_OUT_STATUS_LED, OUTPUT);
 
 	pinMode(PIN_OUT_ACTION_LED, OUTPUT);

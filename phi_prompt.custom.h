@@ -1,3 +1,8 @@
+/************************************************************************************************************************************
+* This file, redistributed with the Foxetron program suite, is part of an Arduino library released under the GNU GPL v3.0 license.  *
+* See below for details.                                                                                                            *
+*************************************************************************************************************************************/
+
 /** \file
 *  \brief     This is an official release of the phi_prompt text-based user interface library for arduino 1.0.
 *  \details   This library requires 1.0 version of phi_interfaces library.
@@ -187,7 +192,7 @@ void center_text_P(PGM_P src);                      ///< This function displays 
 void scroll_bar_v(byte p, byte c, byte r, byte h);  ///< Displays a scroll bar at column/row with height and percentage.
 void long_msg_lcd(phi_prompt_struct *para);         ///< Displays a static long message stored in SRAM that could span multiple lines.
 void long_msg_lcd_P(phi_prompt_struct *para);       ///< Displays a static long message stored in PROGMEM that could span multiple lines.
-byte render_list(phi_prompt_struct *para);          ///< 
+byte render_list(phi_prompt_struct *para);          ///<
 
 int wait_on_escape(int ref_time);                   ///< Returns key pressed or NO_KEY if time expires before any key was pressed. This does the key sensing and translation.
 
@@ -195,11 +200,11 @@ int ok_dialog(char msg[]);                          ///< Displays an ok dialog
 int yn_dialog(char msg[]);                          ///< Displays a short message with yes/no options.
 int input_integer(phi_prompt_struct *para);         ///< Input integer on keypad with fixed step, upper and lower limits.
 int input_float(phi_prompt_struct *para);           ///< This function is kept in this release but will be removed in the future. Please don't use it.
-int sense_select_list(phi_prompt_struct * para);    ///< Senses the user input for phi_prompt_select_list_update_ms, modifies the shared struct accordingly and returns what the user did in the phi_prompt_select_list_update_ms.  
+int sense_select_list(phi_prompt_struct * para);    ///< Senses the user input for phi_prompt_select_list_update_ms, modifies the shared struct accordingly and returns what the user did in the phi_prompt_select_list_update_ms.
 int select_list(phi_prompt_struct *para);           ///< Displays a list/menu for the user to select. Display options for list: Option 0, display classic list, option 1, display 2X2 list, option 2, display list with index, option 3, display list with index2.
 int input_panel(phi_prompt_struct *para);           ///< Input character options for input panel: Option 0, default, option 1 include 0-9 as valid inputs.
 int input_number(phi_prompt_struct *para);          ///< Input number on keypad with decimal point and negative.
-int sense_text_area(phi_prompt_struct * para);      ///< Senses the user input for phi_prompt_text_area_ms, modifies the shared struct accordingly and returns what the user did in the phi_prompt_text_area_update_ms.  
+int sense_text_area(phi_prompt_struct * para);      ///< Senses the user input for phi_prompt_text_area_ms, modifies the shared struct accordingly and returns what the user did in the phi_prompt_text_area_update_ms.
 int text_area(phi_prompt_struct *para);             ///< Displays a text area using message stored in the SRAM.
 int text_area_P(phi_prompt_struct *para);           ///< Displays a text area using message stored in PROGMEM.
 
@@ -217,7 +222,7 @@ void simple_select_list_scroll_bar(byte b);                         ///< Enable 
 void simple_select_list_auto_scroll(byte b);                        ///< Enable or disable auto scroll long item. Use before simple_select_list.
 void restore_string_for_simple_select_list();                       ///< This undoes the modification done on the string by prepare.
 byte render_simple_select_list();                                   ///< Renders the simple select list using the prepared shared_struct by prepare_simple_select_list. It simply calls render_list
-byte sense_simple_select_list();                                    ///< Senses the user input for phi_prompt_select_list_update_ms, modifies the shared struct accordingly and returns what the user did in the phi_prompt_select_list_update_ms. 
+byte sense_simple_select_list();                                    ///< Senses the user input for phi_prompt_select_list_update_ms, modifies the shared struct accordingly and returns what the user did in the phi_prompt_select_list_update_ms.
 byte get_simple_select_list_item();                                 ///< Returns the current highlighted item from shared_struct.low.i
 byte set_simple_select_list_item(byte b);                           ///< Sets the current highlighted item for shared_struct.low.i
 byte simple_select_list(char msg[], byte b = 0, long l = -1);             ///< Displays a menu/list from a formatted string. With no b option the list item 0 is highlighted. Returns the item selected.
@@ -228,7 +233,7 @@ byte simple_input_panel(char msg[], byte lo, byte h, byte opt);      ///< Collec
 
 void prepare_simple_text_area(char msg[], byte highlighted = 0);      ///< Prepares a text area from a formatted string.
 void render_simple_text_area();                                     ///< Renders the simple text area using the prepared shared_struct by prepare_simple_text_area. It simply calls long_msg_lcd.
-byte sense_simple_text_area();                                      ///< Senses the user input for phi_prompt_text_area_ms, modifies the shared struct accordingly and returns what the user did in the phi_prompt_text_area_update_ms.  
+byte sense_simple_text_area();                                      ///< Senses the user input for phi_prompt_text_area_ms, modifies the shared struct accordingly and returns what the user did in the phi_prompt_text_area_update_ms.
 byte get_simple_text_area_location();                               ///< Returns the current text area location from shared_struct.low.i
 byte set_simple_text_area_location(byte b);                         ///< Sets the current text area location  for shared_struct.low.i
 byte simple_text_area(char msg[], byte b = 0);                                  ///< Displays a long message with scrolling. It returns buttons pressed.

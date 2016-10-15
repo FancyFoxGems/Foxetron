@@ -1,3 +1,8 @@
+/************************************************************************************************************************************
+* This file, redistributed with the Foxetron program suite, is part of an Arduino library released under the CC BY-SA v3.0 license. *
+* See below for details.                                                                                                            *
+*************************************************************************************************************************************/
+
 // ---------------------------------------------------------------------------
 // Created by Roberto Brunialti on 20/04/12.
 // Copyright 2012 - Under creative commons license 3.0:
@@ -18,7 +23,7 @@
 // The library allows the users to define callbacks able to overload internal
 // functions (i.e. navigation device management) or to be executed inside a menu.
 // It is possible to define also splash screens and a default user screen to be
-// activated after a time interval since the last interactio, 
+// activated after a time interval since the last interactio,
 //
 // @author R. Brunialti - roberto_brunialti@tiscali.it
 // ---------------------------------------------------------------------------

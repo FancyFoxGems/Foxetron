@@ -1,3 +1,8 @@
+/************************************************************************************************************************************
+* This file, redistributed with the Foxetron program suite, is part of an Arduino library released under the GNU GPL v3.0 license.  *
+* See below for details.                                                                                                            *
+*************************************************************************************************************************************/
+
 /** \file
 *  \brief     This is an official release of the phi_prompt text-based user interface library for arduino 1.0.
 *  \details   This library requires 1.0 version of phi_interfaces library.
@@ -94,7 +99,7 @@ http://liudr.wordpress.com
 #include <phi_prompt.h>
 
 const char phi_prompt_lcd_ch0[] PROGMEM ={ 4, 14, 31, 64, 31, 31, 31, 31, 0 }; ///< Custom LCD character: Up triangle with block
-const char phi_prompt_lcd_ch1[] PROGMEM ={ 4, 14, 31, 64, 64, 64, 64, 64, 0 }; ///< Custom LCD character: Up triangle 
+const char phi_prompt_lcd_ch1[] PROGMEM ={ 4, 14, 31, 64, 64, 64, 64, 64, 0 }; ///< Custom LCD character: Up triangle
 const char phi_prompt_lcd_ch2[] PROGMEM =
 { 31, 31, 31, 31, 64, 64, 64, 64, 0 }; ///< Custom LCD character: Top block
 const char phi_prompt_lcd_ch3[] PROGMEM =
@@ -107,7 +112,7 @@ const char phi_prompt_lcd_ch6[] PROGMEM =
 { B01000, B01100, B01010, B01001, B01001, B11010, B11000, B00000, 0 }; ///< Custom LCD character: Music
 const char phi_prompt_lcd_ch7[] PROGMEM =
 { B00111, B00100, B00000, B11100, B10000, B11101, B00010, B00101, 0 }; ///< Custom LCD character: Lux
-const char * const phi_prompt_lcd_ch_item[] PROGMEM ={ phi_prompt_lcd_ch0, phi_prompt_lcd_ch1, phi_prompt_lcd_ch2, phi_prompt_lcd_ch3, phi_prompt_lcd_ch4, phi_prompt_lcd_ch5, phi_prompt_lcd_ch6, phi_prompt_lcd_ch7 }; ///< Custom LCD character char array addresses. 
+const char * const phi_prompt_lcd_ch_item[] PROGMEM ={ phi_prompt_lcd_ch0, phi_prompt_lcd_ch1, phi_prompt_lcd_ch2, phi_prompt_lcd_ch3, phi_prompt_lcd_ch4, phi_prompt_lcd_ch5, phi_prompt_lcd_ch6, phi_prompt_lcd_ch7 }; ///< Custom LCD character char array addresses.
 
 const char PROGMEM yn_00[] PROGMEM = " YES >NO<";          ///< This list item is used to render Y/N dialog
 const char PROGMEM yn_01[] PROGMEM = ">YES< NO ";          ///< This list item is used to render Y/N dialog
@@ -830,7 +835,7 @@ byte render_list(phi_prompt_struct* para)
 		//Display item on LCD
 		lcd->setCursor(para->col + ((i - _first_item) / rows)*(para->width + 1), para->row + (i - _first_item) % rows);
 
-		if (para->option&phi_prompt_arrow_dot) // Determine whether to render arrow and dot. In case of yes, the buffer is shifted to the right one character.       
+		if (para->option&phi_prompt_arrow_dot) // Determine whether to render arrow and dot. In case of yes, the buffer is shifted to the right one character.
 		{
 
 			if (i <= _last_item)
@@ -1964,7 +1969,7 @@ void simple_select_list_scroll_bar(byte b)
 		if (!(simple_option&phi_prompt_scroll_bar)) //if the scroll bar was not selected
 		{
 
-			shared_struct.width--; //Decrease length of each item to accommodate the scroll bar only if the scroll bar was not selected. 
+			shared_struct.width--; //Decrease length of each item to accommodate the scroll bar only if the scroll bar was not selected.
 			simple_option |= (int)phi_prompt_scroll_bar;
 		}
 	}
