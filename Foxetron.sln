@@ -18,15 +18,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{47
 		..\libraries\phi_prompt\phi_prompt_example_simple_fns\phi_prompt_example_simple_fns.ino = ..\libraries\phi_prompt\phi_prompt_example_simple_fns\phi_prompt_example_simple_fns.ino
 		..\libraries\phi_prompt\phi_prompt_example_string\phi_prompt_example_string.ino = ..\libraries\phi_prompt\phi_prompt_example_string\phi_prompt_example_string.ino
 		..\libraries\phi_prompt\phi_prompt_example_string_phi_panel\phi_prompt_example_string_phi_panel.ino = ..\libraries\phi_prompt\phi_prompt_example_string_phi_panel\phi_prompt_example_string_phi_panel.ino
+		..\libraries\MENWIZ\examples\quick_tour\quick_tour.ino = ..\libraries\MENWIZ\examples\quick_tour\quick_tour.ino
+		..\libraries\MENWIZ\examples\Test_all_var_types_new\Test_all_var_types_new.ino = ..\libraries\MENWIZ\examples\Test_all_var_types_new\Test_all_var_types_new.ino
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{3838E9C1-AD4D-47B2-94E8-04BF459E358B}"
 	ProjectSection(SolutionItems) = preProject
+		..\libraries\ArduinoMenu\src\ArduinoMenu.cpp = ..\libraries\ArduinoMenu\src\ArduinoMenu.cpp
+		..\libraries\ArduinoMenu\src\ArduinoMenu.h = ..\libraries\ArduinoMenu\src\ArduinoMenu.h
 		BigCrystal_I2C.custom.cpp = BigCrystal_I2C.custom.cpp
 		BigCrystal_I2C.custom.h = BigCrystal_I2C.custom.h
 		..\libraries\ArduinoMenu\src\macros.h = ..\libraries\ArduinoMenu\src\macros.h
-		..\libraries\ArduinoMenu\src\menu.cpp = ..\libraries\ArduinoMenu\src\menu.cpp
-		..\libraries\ArduinoMenu\src\menu.h = ..\libraries\ArduinoMenu\src\menu.h
 		..\libraries\MENWIZ\MENWIZ.cpp = ..\libraries\MENWIZ\MENWIZ.cpp
 		..\libraries\MENWIZ\MENWIZ.h = ..\libraries\MENWIZ\MENWIZ.h
 		..\libraries\phi_prompt\phi_prompt.cpp = ..\libraries\phi_prompt\phi_prompt.cpp
@@ -41,6 +43,16 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foxetron_AngleDriver", "Foxetron_AngleDriver\Foxetron_AngleDriver.vcxproj", "{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HalfStepper", "..\HalfStepper\HalfStepper.vcxproj", "{9D2D59B4-0DC7-408A-9479-C1BC41C903F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries - Customized", "Libraries - Customized", "{B1C0123F-E0F2-46FD-924A-F30A8E730C48}"
+	ProjectSection(SolutionItems) = preProject
+		BigCrystal_I2C.custom.cpp = BigCrystal_I2C.custom.cpp
+		BigCrystal_I2C.custom.h = BigCrystal_I2C.custom.h
+		MENWIZ.custom.cpp = MENWIZ.custom.cpp
+		MENWIZ.custom.h = MENWIZ.custom.h
+		phi_prompt.custom.cpp = phi_prompt.custom.cpp
+		phi_prompt.custom.h = phi_prompt.custom.h
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
