@@ -43,7 +43,7 @@ void initializeLCD()
 
 const char * const LCD_invertChar(const char * lcdChar, byte charWidth)
 {
-	char * newLcdChar = new char[sizeof(lcdChar)];
+	char newLcdChar[sizeof(lcdChar)];
 
 	for (byte pixY = 0; pixY < sizeof(lcdChar); pixY++)
 		newLcdChar[pixY] = lcdChar[pixY] ^ (1 << charWidth - 1);

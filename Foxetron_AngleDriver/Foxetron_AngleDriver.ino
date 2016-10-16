@@ -28,6 +28,7 @@
 
 
 // PROJECT MODULES
+#include "Foxetron_messages.h"
 
 // PROJECT LIBS
 
@@ -106,6 +107,11 @@ void setup()
 
 	initializePins();
 	initializeInterrupts();
+}
+
+void serialEvent()
+{
+
 }
 
 void loop()

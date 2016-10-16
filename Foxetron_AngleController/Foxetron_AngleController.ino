@@ -29,6 +29,7 @@
 
 
 // PROJECT MODULES
+#include "Foxetron_messages.h"
 #include "Foxetron_LCD.h"
 #include "Foxetron_RGB.h"
 #include "Foxetron_EEPROM.h"
@@ -175,6 +176,11 @@ void setup()
 	initializeRGB();
 
 	LCD.printBig(F("Fox"), 2, 0);
+}
+
+void serialEvent()
+{
+
 }
 
 void loop()
