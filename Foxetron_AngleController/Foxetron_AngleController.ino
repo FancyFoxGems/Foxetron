@@ -93,6 +93,8 @@
 	: "=&r" (current) : "I" (_SFR_IO_ADDR(PINC)) );
 */
 
+#define countof(var) (SIZEOF(var) / SIZEOF(0[var]))
+
 #pragma endregion DEFINES
 
 
@@ -169,6 +171,8 @@ void setup()
 	Serial.begin(SERIAL_BAUD_RATE);
 #endif
 
+	atexit(cleanUp);
+
 	initializePins();
 	initializeLCD();
 	initializeInterrupts();
@@ -176,6 +180,11 @@ void setup()
 	initializeRGB();
 
 	LCD.printBig(F("Fox"), 2, 0);
+}
+
+void cleanUp()
+{
+	freeRGB();
 }
 
 void serialEvent()

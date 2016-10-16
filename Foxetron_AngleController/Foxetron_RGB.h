@@ -57,6 +57,7 @@ extern Curve::Linear * _RgbCurves[];
 #pragma region FUNCTION DECLARATIONS
 
 void initializeRGB();
+void freeRGB();
 
 #pragma region FUNCTION DECLARATIONS
 

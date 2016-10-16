@@ -69,4 +69,20 @@ void initializeRGB()
 	RGB.setSchedule(_RgbSchedule);
 }
 
+void freeRGB()
+{
+	delete _RgbSchedule;
+
+	delete _RgbCurveFlasher;
+	delete _RgbCurveSine;
+	
+	for (byte i = 0; i < sizeof(_RgbCurves) / sizeof(_RgbCurves[0]); i++)
+	{
+		if (_RgbCurves[i] != NULL)
+			delete _RgbCurves[i];
+	}
+
+	delete[] _RgbCurves;
+}
+
 #pragma endregion FUNCTION DEFINITIONS

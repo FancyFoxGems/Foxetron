@@ -105,8 +105,15 @@ void setup()
 {
 	Serial.begin(SERIAL_BAUD_RATE);
 
+	atexit(cleanUp);
+
 	initializePins();
 	initializeInterrupts();
+}
+
+void cleanUp()
+{
+
 }
 
 void serialEvent()
