@@ -33,9 +33,12 @@
 #include "VaRGBCurves.h"
 
 // ARDUINO LIBS
-#include <EEPROM.h>
+//#include <EEPROM.h>
 
-// AVR LIBS
+// ARDUINO CORE
+//#include <Arduino.h>
+
+// AVR LibC
 //#include <avr/pgmspace.h>
 
 
