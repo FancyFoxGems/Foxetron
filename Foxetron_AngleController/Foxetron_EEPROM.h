@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [Foxetron_EEPROM.h]: HD44780 CHARACTER CODES & CUSTOM CHARACTER DATA
+* [Foxetron_EEPROM.h]: EEPROM MODULE FOR MANAGING USER SETTINGS & FILE RECORDS
 *
 * This file is part of the Foxetron program suite
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -13,7 +13,10 @@
 #pragma region INCLUDES
 
 // ARDUINO LIBS
-#include <EEPROM.h>
+//#include <EEPROM.h>			// included by DB 3rd-party library
+
+// 3RD-PARTY LIBS
+#include "libs/DB.h"
 
 #pragma endregion INCLUDES
 

@@ -170,6 +170,9 @@
     <ClInclude Include="Foxetron_pins.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="Foxetron_LCD_chars.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="Foxetron_LCD.h">
       <Filter>src</Filter>
     </ClInclude>

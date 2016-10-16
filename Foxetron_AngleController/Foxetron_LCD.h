@@ -1,13 +1,13 @@
 /***********************************************************************************************
-* [Foxetron_LCD_chars.h]: HD44780 CHARACTER CODES & CUSTOM CHARACTER DATA
+* [Foxetron_LCD.h]: HD44780 LCD DISPLAY MODULE (W/ RGB BACKLIGHT) VIA I2C; LARGE FONT SUPPORT
 *
 * This file is part of the Foxetron program suite
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef _FOXETRON_LCD_CHARS_H
-#define _FOXETRON_LCD_CHARS_H
+#ifndef _FOXETRON_LCD_H
+#define _FOXETRON_LCD_H
 
 
 
@@ -60,87 +60,6 @@
 #define LCD_SYMBOL_RESERVED				0xae
 
 #pragma endregion DEFINES
-
-
-
-#pragma region FLASH DATA
-
-// CUSTOM LCD CHARACTERS
-
-// Miscellaneous icons
-extern PROGMEM const char LCD_CHAR_FOX[8];
-extern PROGMEM const char LCD_CHAR_GEM[8];
-extern PROGMEM const char LCD_CHAR_GEM_SMALL[8];
-
-// Angle symbols
-extern PROGMEM const char LCD_CHAR_ANGLE[8];
-extern PROGMEM const char LCD_CHAR_ANGLE_2[8];
-extern PROGMEM const char LCD_CHAR_CLOCKWISE[8];
-extern PROGMEM const char LCD_CHAR_COUNTER_CCW[8];
-
-// Miscellaneous symbols
-extern PROGMEM const char LCD_CHAR_CHECKMARK[8];
-extern PROGMEM const char LCD_CHAR_BOX_EMPTY[8];
-extern PROGMEM const char LCD_CHAR_BOX_CHECKMARK[8];
-extern PROGMEM const char LCD_CHAR_WARNING[8];
-extern PROGMEM const char LCD_CHAR_NOT_ALLOWED[8];
-extern PROGMEM const char LCD_CHAR_LIGHTNING[8];
-extern PROGMEM const char LCD_CHAR_NOTES[8];
-extern PROGMEM const char LCD_CHAR_CLOCK_A[8];
-extern PROGMEM const char LCD_CHAR_CLOCK_B[8];
-extern PROGMEM const char LCD_CHAR_HOURGLASS_1[8];
-extern PROGMEM const char LCD_CHAR_HOURGLASS_2[8];
-extern PROGMEM const char LCD_CHAR_HOURGLASS_3[8];
-extern PROGMEM const char LCD_CHAR_HOURGLASS_4[8];
-
-// Gem cut icons
-extern PROGMEM const char LCD_CHAR_CUT_BRILLIANT[8];
-extern PROGMEM const char LCD_CHAR_CUT_STEP[8];
-
-// Gem shape (outline) icons
-extern PROGMEM const char LCD_CHAR_SHAPE_ROUND[8];
-extern PROGMEM const char LCD_CHAR_SHAPE_OVAL[8];
-extern PROGMEM const char LCD_CHAR_SHAPE_CUSHION[8];
-extern PROGMEM const char LCD_CHAR_SHAPE_SQUARE[8];
-extern PROGMEM const char LCD_CHAR_SHAPE_BAGUETTE[8];
-extern PROGMEM const char LCD_CHAR_SHAPE_EMERALD[8];
-extern PROGMEM const char LCD_CHAR_SHAPE_TRILLIANT[8];
-extern PROGMEM const char LCD_CHAR_SHAPE_TRIANGLE[8];
-extern PROGMEM const char LCD_CHAR_SHAPE_SPECIAL[8];
-
-// Small arrow icons
-extern PROGMEM const char LCD_CHAR_ARROW_UP_SMALL[8];
-extern PROGMEM const char LCD_CHAR_ARROW_DOWN_SMALL[8];
-extern PROGMEM const char LCD_CHAR_ARROW_LEFT_SMALL[8];
-extern PROGMEM const char LCD_CHAR_ARROW_RIGHT_SMALL[8];
-
-// Medium arrow icons
-extern PROGMEM const char LCD_CHAR_ARROW_UP[8];
-extern PROGMEM const char LCD_CHAR_ARROW_DOWN[8];
-
-// Large arrow icons
-extern PROGMEM const char LCD_CHAR_ARROW_LEFT_LARGE[8];
-extern PROGMEM const char LCD_CHAR_ARROW_RIGHT_LARGE[8];
-
-// Scrollbar icons
-extern PROGMEM const char LCD_CHAR_SCROLLBAR_TOP[8];
-extern PROGMEM const char LCD_CHAR_SCROLLBAR_BOTTOM[8];
-extern PROGMEM const char LCD_CHAR_SCROLLBAR_1[8];
-extern PROGMEM const char LCD_CHAR_SCROLLBAR_2[8];
-extern PROGMEM const char LCD_CHAR_SCROLLBAR_3[8];
-extern PROGMEM const char LCD_CHAR_SCROLLBAR_4[8];
-
-// Bar graph icons
-extern const char * const &  LCD_CHAR_BARGRAPH_EMPTY;
-extern PROGMEM const char LCD_CHAR_BARGRAPH_FULL[8];
-extern PROGMEM const char LCD_CHAR_BARGRAPH_SEMI_FULL_1[8];
-extern PROGMEM const char LCD_CHAR_BARGRAPH_SEMI_FULL_2[8];
-extern PROGMEM const char LCD_CHAR_BARGRAPH_1[8];
-extern PROGMEM const char LCD_CHAR_BARGRAPH_2[8];
-extern PROGMEM const char LCD_CHAR_BARGRAPH_3[8];
-extern PROGMEM const char LCD_CHAR_BARGRAPH_4[8];
-
-#pragma endregion FLASH DATA
 
 
 

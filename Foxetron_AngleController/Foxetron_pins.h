@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [Foxetron_LCD_chars.h]: HD44780 CHARACTER CODES & CUSTOM CHARACTER DATA
+* [Foxetron_pins.h]: PIN DEFINITIONS FOR THE FOXETRON ANGLE CONTROLLER
 *
 * This file is part of the Foxetron program suite
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.

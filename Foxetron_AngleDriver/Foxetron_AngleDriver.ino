@@ -32,7 +32,7 @@
 // PROJECT LIBS
 
 // 3RD-PARTY LIBS
-#include "HalfStepper.h"
+#include "HalfStepper.h"					// well...1st-party in this case, really.
 
 // ARDUINO LIBS
 
@@ -50,31 +50,13 @@
 
 // PROGRAM OPTIONS
 
-#define DEBUG_INPUTS			1
+#define DEBUG_INPUTS			0
 
 #define SERIAL_BAUD_RATE		115200
 
 #if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
 	#undef DEBUG_INPUTS
 #endif
-
-
-// INPUT PINS
-
-#define PIN_ANGLE_ENCODER_A		2	// Pin 2 / PD2 (INT0)
-#define PIN_ANGLE_ENCODER_B		3	// Pin 3 / PD3 (INT1)
-
-
-#define PIN_BUTTON_ACTION		15	// Pin 15/A1 / PC1 (PCINT9)
-#define PIN_BUTTON_ONESHOT		16	// Pin 16/A2 / PC2 (PCINT10)
-#define PIN_BUTTON_LATCH		17	// Pin 17/A3 / PC3 (PCINT11)
-
-
-// OUTPUT PINS
-
-#define PIN_OUT_STATUS_LED		13	// Pin 13 / PB5
-
-#define PIN_OUT_ACTION_LED		14	// Pin 14/A0 / PC0 (PCINT8)
 
 #pragma endregion DEFINES
 
@@ -87,7 +69,7 @@
 
 
 
-#pragma region GLOBAL VARIABLES
+#pragma region PROGRAM VARIABLES
 
 // INPUTS
 
@@ -112,7 +94,7 @@ volatile bool _LatchButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
 volatile bool _StatusLed		= LOW;
 volatile bool _ActionLed		= HIGH;
 
-#pragma endregion GLOBAL VARIABLES
+#pragma endregion PROGRAM VARIABLES
 
 
 
@@ -196,29 +178,6 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
 
 
 #pragma region PROGRAM FUNCTIONS
-
-void initializePins()
-{
-	// REAR PINS
-
-	// [Pins 0 (RX) & 1 (TX): USART serial communication --[angle feedback, commands, etc.]--> AVR uC stepper motor angle controller]
-
-	// Angle encoder
-	pinMode(PIN_ANGLE_ENCODER_A, INPUT);			// Channel A
-	pinMode(PIN_ANGLE_ENCODER_B, INPUT);			// Channel B
-
-
-	// FRONT PINS
-
-	pinMode(PIN_OUT_STATUS_LED, OUTPUT);
-
-	pinMode(PIN_OUT_ACTION_LED, OUTPUT);
-
-	// Mast control inputs
-	pinMode(PIN_BUTTON_ACTION, INPUT_PULLUP);
-	pinMode(PIN_BUTTON_ONESHOT, INPUT_PULLUP);
-	pinMode(PIN_BUTTON_LATCH, INPUT_PULLUP);
-}
 
 void initializeInterrupts()
 {

@@ -90,6 +90,7 @@
     <ClInclude Include="libs\MENWIZ.custom.h" />
     <ClInclude Include="libs\phi_prompt.custom.h" />
     <ClInclude Include="Foxetron_pins.h" />
+    <ClInclude Include="Foxetron_LCD_chars.h" />
     <ClInclude Include="Foxetron_LCD.h" />
     <ClInclude Include="Foxetron_RGB.h" />
     <ClInclude Include="Foxetron_EEPROM.h" />

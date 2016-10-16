@@ -25,10 +25,11 @@
 
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
-#include "Foxetron_LCD.h"
+#include "Foxetron_LCD_chars.h"
 
 
 // PROJECT MODULES
+#include "Foxetron_LCD.h"
 #include "Foxetron_RGB.h"
 #include "Foxetron_EEPROM.h"
 
@@ -155,7 +156,7 @@ byte _RgbBlue					= 0;		// Pin 11 / PB3
 
 bool _StatusLED					= LOW;		// Pin 13 / PB5
 
-
+#pragma endregion PROGRAM VARIABLES
 
 
 
