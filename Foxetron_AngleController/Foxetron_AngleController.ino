@@ -190,10 +190,10 @@ BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 
 
 using namespace vargb;
 
-void _RGB_callback_SetColor(ColorSettings * colors);
-void _RGB_callback_ScheduleComplete(Schedule * schedule);
+void RGB_callback_SetColor(ColorSettings * colors);
+void RGB_callback_ScheduleComplete(Schedule * schedule);
 
-VaRGB RGB(_RGB_callback_SetColor, _RGB_callback_ScheduleComplete);
+VaRGB RGB(RGB_callback_SetColor, RGB_callback_ScheduleComplete);
 
 Schedule * _RgbSchedule = new Schedule();
 
@@ -251,7 +251,7 @@ void loop()
 
 #ifdef DEBUG_INPUTS
 
-	_DEBUG_printInputValues();
+	DEBUG_printInputValues();
 
 	_StatusLED = !_StatusLED;
 	digitalWrite(13, _StatusLED);
@@ -403,14 +403,14 @@ void initializeInterrupts()
 
 // VaRGB CALLBACK FUNCTIONS
 
-void _RGB_callback_SetColor(ColorSettings * colors)
+void RGB_callback_SetColor(ColorSettings * colors)
 {
 	analogWrite(PIN_PWM_RGB_LED_RED, colors->red);
 	analogWrite(PIN_PWM_RGB_LED_GREEN, colors->green);
 	analogWrite(PIN_PWM_RGB_LED_BLUE, colors->blue);
 }
 
-void _RGB_callback_ScheduleComplete(Schedule * schedule)
+void RGB_callback_ScheduleComplete(Schedule * schedule)
 {
 	RGB.resetTicks();
 	RGB.setSchedule(schedule);
@@ -419,7 +419,7 @@ void _RGB_callback_ScheduleComplete(Schedule * schedule)
 
 // DEBUG UTILITY FUNCTIONS
 
-void _DEBUG_printLCDSplash()
+void DEBUG_printLCDSplash()
 {
 	LCD.print(F("Foxetron test..."));
 
@@ -434,7 +434,7 @@ void _DEBUG_printLCDSplash()
 	LCD.clear();
 }
 
-void _DEBUG_displayKeyCodes(void)
+void DEBUG_displayKeyCodes(void)
 {
 	uint8_t i = 0;
 
@@ -461,7 +461,7 @@ void _DEBUG_displayKeyCodes(void)
 }
 
 
-void _DEBUG_printInputValues()
+void DEBUG_printInputValues()
 {
 	static char valStr[5];
 
@@ -597,7 +597,7 @@ void _DEBUG_printInputValues()
 	Serial.println();
 }
 
-void _DEBUG_createCustomChars()
+void DEBUG_createCustomChars()
 {
 	LCD.createChar(0, LCD_CHAR_FOX);
 	LCD.createChar(1, LCD_CHAR_GEM_SMALL);
@@ -609,7 +609,7 @@ void _DEBUG_createCustomChars()
 	LCD.createChar(6, LCD_CHAR_CLOCKWISE);
 	LCD.createChar(7, LCD_CHAR_NOTES);
 
-	_DEBUG_displayKeyCodes();
+	DEBUG_displayKeyCodes();
 
 
 	LCD.createChar(0, LCD_CHAR_SHAPE_ROUND);
@@ -621,7 +621,7 @@ void _DEBUG_createCustomChars()
 	LCD.createChar(6, LCD_CHAR_SHAPE_TRIANGLE);
 	LCD.createChar(7, LCD_CHAR_SHAPE_SPECIAL);
 
-	_DEBUG_displayKeyCodes();
+	DEBUG_displayKeyCodes();
 
 
 	LCD.createChar(0, LCD_CHAR_CUT_BRILLIANT);
@@ -632,5 +632,5 @@ void _DEBUG_createCustomChars()
 	LCD.createChar(4, LCD_CHAR_ARROW_LEFT_LARGE);
 	LCD.createChar(5, LCD_CHAR_ARROW_RIGHT_LARGE);
 
-	_DEBUG_displayKeyCodes();
+	DEBUG_displayKeyCodes();
 }

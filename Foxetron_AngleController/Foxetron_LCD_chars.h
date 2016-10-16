@@ -126,4 +126,28 @@ PROGMEM const char LCD_CHAR_BARGRAPH_3[8] = { 0x1c, 0x1c, 0x1c, 0x1c, 0x1f, 0x1c
 PROGMEM const char LCD_CHAR_BARGRAPH_4[8] = { 0x1e, 0x1e, 0x1e, 0x1e, 0x1f, 0x1e, 0x1e, 0x1e };
 
 
+
+/* FUNCTIONS */
+
+const char * const LCD_invertChar(const char * lcdChar, byte charWidth = 5)
+{
+	char * newLcdChar = new char[sizeof(lcdChar)];
+
+	for (byte pixY = 0; pixY < sizeof(lcdChar); pixY++)
+		newLcdChar[pixY] = lcdChar[pixY] ^ (1 << charWidth - 1);
+
+	return const_cast<const char *>(newLcdChar);
+}
+
+const char * LCD_invertChar_P(const char * lcdChar, byte charWidth = 5)
+{
+	char lcdCharData[sizeof(lcdChar)];
+
+	for (byte i = 0; i < sizeof(lcdChar); i++)
+		lcdCharData[i] = pgm_read_byte_near(lcdChar++);
+
+	return LCD_invertChar(const_cast<const char *>(lcdCharData), charWidth);
+}
+
+
 #endif

@@ -6,7 +6,7 @@
 #define BigCrystal_I2C_h
 
 #include "BigFont.h"
-#include "LiquidCrystal_I2C.h"
+#include "LiquidCrystal_I2C.custom.h"
 
 class BigCrystal_I2C : public LiquidCrystal_I2C
 {

@@ -132,9 +132,9 @@ http://liudr.wordpress.com
 #include <Arduino.h>
 #endif
 
-#include <LiquidCrystal_I2C.h>
+#include "phi_interfaces.h"
+#include "LiquidCrystal_I2C.custom.h"
 #include <avr/pgmspace.h>
-#include <phi_interfaces.h>
 
 union buffer_pointer    /// This defines a union to store various pointer types.
 {
