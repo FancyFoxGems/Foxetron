@@ -118,7 +118,10 @@ void cleanUp()
 
 void serialEvent()
 {
+	while (Serial.available)
+	{
 
+	}
 }
 
 void loop()
