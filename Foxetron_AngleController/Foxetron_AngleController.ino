@@ -22,24 +22,28 @@
 
 // PROJECT INCLUDES
 #include "Foxetron_LCD_chars.h"
+#include "Foxetron_RGB.h"
+#include "Foxetron_EEPROM.h"
 
 // PROJECT LIBS
+//#include "libs/LiquidCrystal_I2C.custom.h"		// included by other project libs
 #include "libs/BigCrystal_I2C.custom.h"
 #include "libs/MENWIZ.custom.h"
 #include "libs/phi_prompt.custom.h"
 
 // 3RD-PARTY LIBS
-#include "VaRGB.h"
-#include "VaRGBCurves.h"
+//#include "VaRGB.h"							// included by Foxetron_RGB
+//#include "VaRGBCurves.h"						// included by Foxetron_RGB
 
 // ARDUINO LIBS
-//#include <EEPROM.h>
+//#include <EEPROM.h>							// included by Foxetron_EEPROM
+//#include <Wire.h>								// included by project/3rd-party libs
 
 // ARDUINO CORE
-//#include <Arduino.h>
+//#include <Arduino.h>							// included by project/3rd-party libs
 
 // AVR LibC
-//#include <avr/pgmspace.h>
+//#include <avr/pgmspace.h>						// included by project 3rd-party libs
 
 
 
@@ -69,8 +73,8 @@
 
 // INPUT PINS
 
-#define PIN_ANGLE_ENCODER_A		2	// Pin 2 / PD2 (INT0)
-#define PIN_ANGLE_ENCODER_B		3	// Pin 3 / PD3 (INT1)
+#define PIN_ANGLE_ENCODER_A		2	// Pin 2 / PD2 (INT0)	- [UNUSED]
+#define PIN_ANGLE_ENCODER_B		3	// Pin 3 / PD3 (INT1)	- [UNUSED]
 //#define PIN_ANGLE_ENCODER_Z	4	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
 //#define PIN_ANGLE_ENCODER_U	5	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
@@ -95,9 +99,9 @@
 
 // OUTPUT PINS
 
-#define PIN_PWM_RGB_LED_RED		9	// Pin 9 / PB1
-#define PIN_PWM_RGB_LED_GREEN	10	// Pin 10 / PB2
-#define PIN_PWM_RGB_LED_BLUE	11	// Pin 11 / PB3
+//#define PIN_PWM_RGB_LED_RED		9	// Pin 9 / PB1
+//#define PIN_PWM_RGB_LED_GREEN	10	// Pin 10 / PB2
+//#define PIN_PWM_RGB_LED_BLUE	11	// Pin 11 / PB3
 
 #define PIN_OUT_STATUS_LED		13	// Pin 13 / PB5
 
@@ -186,35 +190,6 @@ bool _StatusLED					= LOW;		// Pin 13 / PB5
 BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
 
 
-// RGB LED / VaRGB CONFIGURATION
-
-using namespace vargb;
-
-void RGB_callback_SetColor(ColorSettings * colors);
-void RGB_callback_ScheduleComplete(Schedule * schedule);
-
-VaRGB RGB(RGB_callback_SetColor, RGB_callback_ScheduleComplete);
-
-Schedule * _RgbSchedule = new Schedule();
-
-Curve::Flasher * _RgbCurveFlasher = new Curve::Flasher(VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, 6, 20);
-
-Curve::Sine * _RgbCurveSine = new Curve::Sine(500, VaRGB_COLOR_MAXVALUE, 500, 6, 2);
-
-Curve::Linear * _RgbCurves[] = {
-	// start black
-	new Curve::Linear(0, 0, 0, 0),
-	// go to ~1/2 red, over one 5 seconds
-	new Curve::Linear(500, 0, 0, 5),
-	// go to red+blue, over 2s
-	new Curve::Linear(1000, 0, 1000, 2),
-	// back down to ~1/2 red over 2s
-	new Curve::Linear(500, 0, 0, 2),
-	// fade to black for 5s
-	new Curve::Linear(0, 0, 0, 5),
-};
-
-
 
 /* PROGRAM CODE */
 
@@ -222,6 +197,7 @@ Curve::Linear * _RgbCurves[] = {
 
 void setup()
 {
+	RGB.resetTicks();
 #ifdef SERIAL_ENABLE
 	Serial.begin(SERIAL_BAUD_RATE);
 #endif
@@ -230,15 +206,9 @@ void setup()
 	initializeLCD();
 	initializeInterrupts();
 
+	initializeRGB();
+
 	LCD.printBig(F("Fox"), 2, 0);
-
-	_RgbSchedule->addTransition(_RgbCurveFlasher);
-	_RgbSchedule->addTransition(_RgbCurveSine);
-
-	for (uint8_t i = 0; i < 5; i++)
-		_RgbSchedule->addTransition(_RgbCurves[i]);
-
-	RGB.setSchedule(_RgbSchedule);
 }
 
 void loop()
@@ -398,22 +368,6 @@ void initializeInterrupts()
 	PCMSK0 = 0b00010001;
 	PCMSK1 = 0b00001111;
 	PCMSK2 = 0b11110000;
-}
-
-
-// VaRGB CALLBACK FUNCTIONS
-
-void RGB_callback_SetColor(ColorSettings * colors)
-{
-	analogWrite(PIN_PWM_RGB_LED_RED, colors->red);
-	analogWrite(PIN_PWM_RGB_LED_GREEN, colors->green);
-	analogWrite(PIN_PWM_RGB_LED_BLUE, colors->blue);
-}
-
-void RGB_callback_ScheduleComplete(Schedule * schedule)
-{
-	RGB.resetTicks();
-	RGB.setSchedule(schedule);
 }
 
 
@@ -597,7 +551,7 @@ void DEBUG_printInputValues()
 	Serial.println();
 }
 
-void DEBUG_createCustomChars()
+void DEBUG_displayCustomChars()
 {
 	LCD.createChar(0, LCD_CHAR_FOX);
 	LCD.createChar(1, LCD_CHAR_GEM_SMALL);

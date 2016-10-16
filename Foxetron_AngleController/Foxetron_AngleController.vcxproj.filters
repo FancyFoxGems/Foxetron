@@ -155,6 +155,9 @@
     <ClInclude Include="libs\BigFont.h">
       <Filter>Libraries</Filter>
     </ClInclude>
+    <ClInclude Include="libs\DB.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
     <ClInclude Include="libs\MENWIZ.custom.h">
       <Filter>Libraries</Filter>
     </ClInclude>
@@ -167,10 +170,10 @@
     <ClInclude Include="Foxetron_LCD_chars.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="libs\LiquidCrystal_I2C.custom.h">
-      <Filter>Libraries</Filter>
+    <ClInclude Include="Foxetron_RGB.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="libs\LiquidCrystal_I2C.custom.h">
+    <ClInclude Include="Foxetron_EEPROM.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
@@ -256,9 +259,6 @@
     <ClCompile Include="..\..\libraries\VaRGB\Curve.cpp">
       <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libraries\VaRGB\Dummy.cpp">
-      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\libraries\VaRGB\Flasher.cpp">
       <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
     </ClCompile>
@@ -269,9 +269,6 @@
       <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
     </ClCompile>
     <ClCompile Include="..\..\libraries\VaRGB\Sine.cpp">
-      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\VaRGB\Threshold.cpp">
       <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
     </ClCompile>
     <ClCompile Include="..\..\libraries\VaRGB\VaRGB.cpp">
@@ -286,7 +283,13 @@
     <ClCompile Include="..\..\libraries\Wire\utility\twi.c">
       <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
     </ClCompile>
+    <ClCompile Include="libs\LiquidCrystal_I2C.custom.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
     <ClCompile Include="libs\BigFont.c">
+      <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\DB.cpp">
       <Filter>Libraries</Filter>
     </ClCompile>
     <ClCompile Include="libs\BigCrystal_I2C.custom.cpp">
@@ -298,13 +301,10 @@
     <ClCompile Include="libs\phi_prompt.custom.cpp">
       <Filter>Libraries</Filter>
     </ClCompile>
-    <ClCompile Include="Foxetron_debug.cpp">
+    <ClCompile Include="Foxetron_RGB.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="libs\LiquidCrystal_I2C.custom.cpp">
-      <Filter>Libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="libs\Liquid_I2C.custom.cpp">
+    <ClCompile Include="Foxetron_EEPROM.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
