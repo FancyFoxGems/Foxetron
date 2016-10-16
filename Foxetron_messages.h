@@ -10,7 +10,168 @@
 #define _FOXETRON_MESSAGES_H
 
 
+#include <Arduino.h>
+
+
+#pragma region ENUMS
+
+enum DataType : byte
+{
+	BOOL,
+	BYTE,
+	CHAR,
+	WORD,
+	SHORT,
+	DWORD,
+	LONG,
+	FLOAT,
+	BYTES
+};
+
+enum ErrorCode : byte
+{
+	SUCCESS = 0
+};
+
+enum ControllerStatusCode : byte
+{
+	NONE
+};
+
+enum DriverStatusCode : byte
+{
+	IDLE
+};
+
+#pragma endregion ENUMS
+
+
+
 #pragma region TYPEDEFS
+
+typedef uint32_t dword;
+
+typedef union _MESSAGE
+{
+	bool BitVal;
+	byte ByteVal;
+	char CharVal;
+	word WordVal;
+	short IntVal;
+	dword DWordVal;
+	long LongVal;
+	float FloatVal;
+	byte Bytes[4];
+}
+Datum, DATUM, * PDATUM, & RDATUM;
+
+typedef const struct _Datum CDATUM, *CPDATUM, &CRDATUM;
+
+
+typedef struct _Message
+{
+	DataType DatumType;
+	Datum Data;
+}
+Message, MESSAGE, * PMESSAGE, & RMESSAGE;
+
+typedef const struct _Message CMESSAGE, *CPMESSAGE, &CRMESSAGE;
+
+
+// REQUESTS
+
+typedef struct _Request : public Message
+{
+
+}
+Request, REQUEST, * PREQUEST, & RREQUEST;
+
+typedef const struct _Request CREQUEST, * CPREQUEST, & CRREQUEST;
+
+
+typedef struct _StatusRequest : public Request
+{
+
+}
+StatusRequest, STATUSREQUEST, *PSTATUSREQUEST, &RSTATUSREQUEST;
+
+typedef const struct _StatusRequest CSTATUSREQUEST, *CPSTATUSREQUEST, &CRSTATUSREQUEST;
+
+
+typedef struct _AngleRequest : public Request
+{
+
+}
+AngleRequest, ANGLEREQUEST, * PANGLEREQUEST, & RANGLEREQUEST;
+
+typedef const struct _AngleRequest CANGLEREQUEST, * CPANGLEREQUEST, & CRANGLEREQUEST;
+
+
+typedef struct _MotorRequest : public Request
+{
+
+}
+MotorRequest, MOTORREQUEST, *PMOTORREQUEST, &RMOTORREQUEST;
+
+typedef const struct _MotorRequest CMOTORREQUEST, *CPMOTORREQUEST, &CRMOTORREQUEST;
+
+
+
+// RESPONSES
+
+typedef struct _Response : public Message
+{
+	ErrorCode Error = ErrorCode::SUCCESS;
+}
+Response, RESPONSE, *PRESPONSE, &RRESPONSE;
+
+typedef const struct _Response CRESPONSE, * CPRESPONSE, & CRRESPONSE;
+
+
+typedef struct _StatusResponse : public Response
+{
+	const char * StatusMessage;
+}
+StatusResponse, STATUSRESPONSE, *PSTATUSRESPONSE, &RSTATUSRESPONSE;
+
+typedef const struct _StatusResponse CSTATUSRESPONSE, *CPSTATUSRESPONSE, &CRSTATUSRESPONSE;
+
+
+typedef struct _ControllerStatusResponse : public StatusResponse
+{
+	ControllerStatusCode ControllerStatus = ControllerStatusCode::NONE;
+}
+ControllerStatusResponse, CONTROLLERSTATUSRESPONSE, *PCONTROLLERSTATUSRESPONSE, &RCONTROLLERSTATUSRESPONSE;
+
+typedef const struct _ControllerStatusResponse CCONTROLLERSTATUSRESPONSE, *CPCONTROLLERSTATUSRESPONSE, &CRCONTROLLERSTATUSRESPONSE;
+
+
+typedef struct _DriverStatusResponse : public StatusResponse
+{
+	DriverStatusCode DriverStatus = DriverStatusCode::IDLE;
+}
+DriverStatusResponse, DRIVERSTATUSRESPONSE, *PDRIVERSTATUSRESPONSE, &RDRIVERSTATUSRESPONSE;
+
+typedef const struct _DriverStatusResponse CDRIVERSTATUSRESPONSE, *CPDRIVERSTATUSRESPONSE, &CRDRIVERSTATUSRESPONSE;
+
+
+typedef struct _AngleResponse : public Response
+{
+
+}
+AngleResponse, ANGLERESPONSE, *PANGLERESPONSE, &RANGLERESPONSE;
+
+typedef const struct _AngleResponse CAngleResponse, *CPAngleResponse, &CRAngleResponse;
+
+
+typedef struct _MotorResponse : public Response
+{
+
+}
+MotorResponse, MOTORRESPONSE, *PMOTORRESPONSE, &RMOTORRESPONSE;
+
+typedef const struct _MotorResponse CMOTORRESPONSE, *CPMOTORRESPONSE, &CRMOTORRESPONSE;
+
 
 #pragma endregion TYPEDEFS
 
