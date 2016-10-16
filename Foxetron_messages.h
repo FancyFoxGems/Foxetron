@@ -17,6 +17,7 @@
 
 enum DataType : byte
 {
+	BYTES,
 	BOOL,
 	BYTE,
 	CHAR,
@@ -24,8 +25,7 @@ enum DataType : byte
 	SHORT,
 	DWORD,
 	LONG,
-	FLOAT,
-	BYTES
+	FLOAT
 };
 
 enum FoxetronError : byte
@@ -53,7 +53,21 @@ typedef uint32_t dword;
 
 typedef union _MESSAGE
 {
-	bool BitVal;
+	byte Bytes[4];
+
+	struct
+	{
+		bool b0 : 1;
+		bool b1 : 1;
+		bool b2 : 1;
+		bool b3 : 1;
+		bool b4 : 1;
+		bool b5 : 1;
+		bool b6 : 1;
+		bool b7 : 1;
+	} Bits;
+
+	bool BoolVal;
 	byte ByteVal;
 	char CharVal;
 	word WordVal;
@@ -61,7 +75,6 @@ typedef union _MESSAGE
 	dword DWordVal;
 	long LongVal;
 	float FloatVal;
-	byte Bytes[4];
 }
 Datum, DATUM, * PDATUM, & RDATUM;
 

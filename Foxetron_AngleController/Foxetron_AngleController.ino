@@ -189,7 +189,7 @@ void cleanUp()
 
 void serialEvent()
 {
-	while (Serial.available)
+	while (Serial.available())
 	{
 
 	}
