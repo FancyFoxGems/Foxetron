@@ -28,9 +28,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 		..\libraries\ArduinoMenu\src\ArduinoMenu.h = ..\libraries\ArduinoMenu\src\ArduinoMenu.h
 		BigCrystal_I2C.custom.cpp = BigCrystal_I2C.custom.cpp
 		BigCrystal_I2C.custom.h = BigCrystal_I2C.custom.h
+		..\libraries\ClickEncoder\ClickEncoder.cpp = ..\libraries\ClickEncoder\ClickEncoder.cpp
+		..\libraries\ClickEncoder\ClickEncoder.h = ..\libraries\ClickEncoder\ClickEncoder.h
 		..\libraries\ArduinoMenu\src\macros.h = ..\libraries\ArduinoMenu\src\macros.h
 		..\libraries\MENWIZ\MENWIZ.cpp = ..\libraries\MENWIZ\MENWIZ.cpp
 		..\libraries\MENWIZ\MENWIZ.h = ..\libraries\MENWIZ\MENWIZ.h
+		..\libraries\OneButton\OneButton.cpp = ..\libraries\OneButton\OneButton.cpp
+		..\libraries\OneButton\OneButton.h = ..\libraries\OneButton\OneButton.h
 		..\libraries\phi_prompt\phi_prompt.cpp = ..\libraries\phi_prompt\phi_prompt.cpp
 		..\libraries\phi_prompt\phi_prompt.h = ..\libraries\phi_prompt\phi_prompt.h
 	EndProjectSection
