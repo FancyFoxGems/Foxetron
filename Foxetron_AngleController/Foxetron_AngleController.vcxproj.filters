@@ -71,9 +71,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Arduino.h">
       <Filter>src\_micro-api-readonly\core</Filter>
     </ClInclude>
@@ -172,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="phi_prompt.custom.h">
       <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h">
+      <Filter>__vm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
