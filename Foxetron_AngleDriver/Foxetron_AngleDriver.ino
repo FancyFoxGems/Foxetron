@@ -18,11 +18,35 @@
 *****************************************************************************************************/
 
 
-/* INCLUDES */
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+
+
+#pragma region INCLUDES
+
+// PROJECT INCLUDES
+//#include "Foxetron_pins.h"
+
+
+// PROJECT MODULES
+
+// PROJECT LIBS
+
+// 3RD-PARTY LIBS
+#include "HalfStepper.h"
+
+// ARDUINO LIBS
+
+// ARDUINO CORE
+//#include <Arduino.h>							// included by project/3rd-party libs
+
+// AVR LibC
+//#include <avr/pgmspace.h>						// included by project 3rd-party libs
+
+#pragma endregion INCLUDES
 
 
 
-/* DEFINES */
+#pragma region DEFINES
 
 // PROGRAM OPTIONS
 
@@ -52,21 +76,18 @@
 
 #define PIN_OUT_ACTION_LED		14	// Pin 14/A0 / PC0 (PCINT8)
 
-
-
-/* FLASH DATA */
-
-
-
-/* EEPROM VARIABLES */
+#pragma endregion DEFINES
 
 
 
-/* PROGRAM CONSTANTS */
+
+#pragma region PROGRAM CONSTANTS
+
+#pragma endregion PROGRAM CONSTANTS
 
 
 
-/* GLOBAL VARIABLES */
+#pragma region GLOBAL VARIABLES
 
 // INPUTS
 
@@ -91,11 +112,11 @@ volatile bool _LatchButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
 volatile bool _StatusLed		= LOW;
 volatile bool _ActionLed		= HIGH;
 
+#pragma endregion GLOBAL VARIABLES
 
 
-/* PROGRAM CODE */
 
-// PROGRAM OUTLINE: ENTRY POINT & LOOP
+#pragma region PROGRAM OUTLINE: ENTRY POINT & LOOP
 
 void setup()
 {
@@ -112,8 +133,11 @@ void loop()
 #endif
 }
 
+#pragma endregion PROGRAM OUTLINE: ENTRY POINT & LOOP
 
-/* INTERRUPT VECTORS and SUPPORTING MACROS & INLINED FUNCTIONS */
+
+
+#pragma region INTERRUPT VECTORS and SUPPORTING MACROS & INLINED FUNCTIONS
 
 // INT0/INT1: ANGLE ENCODER
 
@@ -167,8 +191,11 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
 
 }*/
 
+#pragma endregion INTERRUPT VECTORS and SUPPORTING MACROS & INLINED FUNCTIONS
 
-// PROGRAM FUNCTIONS
+
+
+#pragma region PROGRAM FUNCTIONS
 
 void initializePins()
 {
@@ -201,9 +228,11 @@ void initializeInterrupts()
 	EICRA |= 0b00000101;
 }
 
+#pragma endregion PROGRAM FUNCTIONS
 
-// DEBUG UTILITY FUNCTIONS
 
+
+#pragma region DEBUG UTILITY FUNCTIONS
 
 void _DEBUG_printInputValues()
 {
@@ -244,3 +273,5 @@ void _DEBUG_printInputValues()
 
 	delay(500);
 }
+
+#pragma endregion DEBUG UTILITY FUNCTIONS

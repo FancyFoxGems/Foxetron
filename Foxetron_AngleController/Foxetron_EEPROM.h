@@ -10,11 +10,12 @@
 #define _FOXETRON_EEPROM_H
 
 
-
-/* INCLUDES*/
+#pragma region INCLUDES
 
 // ARDUINO LIBS
 #include <EEPROM.h>
+
+#pragma endregion INCLUDES
 
 
 

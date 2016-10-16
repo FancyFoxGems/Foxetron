@@ -5,11 +5,10 @@
 ***********************************************************************************************/
 
 
-/* INCLUDES */
 #include "Foxetron_RGB.h"
 
 
-/* GLOBAL VARIABLES*/
+#pragma region GLOBAL VARIABLES
 
 // RGB LED / VaRGB CONFIGURATION
 
@@ -35,8 +34,11 @@ Curve::Linear * _RgbCurves[] =
 	new Curve::Linear(0, 0, 0, 5),
 };
 
+#pragma endregion GLOBAL VARIABLES
 
-/* FUNCTIONS */
+
+
+#pragma region FUNCTION DEFINITIONS
 
 // VaRGB CALLBACK FUNCTIONS
 
@@ -66,3 +68,5 @@ void initializeRGB()
 
 	RGB.setSchedule(_RgbSchedule);
 }
+
+#pragma endregion FUNCTION DEFINITIONS

@@ -170,7 +170,7 @@
     <ClInclude Include="Foxetron_pins.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="Foxetron_LCD_chars.h">
+    <ClInclude Include="Foxetron_LCD.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="Foxetron_RGB.h">
@@ -303,6 +303,9 @@
     </ClCompile>
     <ClCompile Include="libs\phi_prompt.custom.cpp">
       <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="Foxetron_LCD.cpp">
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="Foxetron_RGB.cpp">
       <Filter>src</Filter>

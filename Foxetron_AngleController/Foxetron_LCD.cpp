@@ -1,54 +1,15 @@
-/***********************************************************************************************
-* [Foxetron_LCD_chars.h]: HD44780 CHARACTER CODES & CUSTOM CHARACTER DATA
-*
-* This file is part of the Foxetron program suite
-* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
-* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
+/**********************************************************************************************
+* This file is part of the Foxetron program suite.                                            *
+* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.            *
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#ifndef _FOXETRON_LCD_CHARS_H
-#define _FOXETRON_LCD_CHARS_H
+
+#include "Foxetron_LCD.h"
 
 
 
-/* INCLUDES */
-
-// PROJECT INCLUDES
-#include "Foxetron_LCD_chars.h"
-
-// AVR LIBS
-#include <avr/pgmspace.h>
-
-
-/* DEFINES */
-
-// LCD SYMBOL CHARACTERS
-
-// ARROWS
-#define LCD_SYMBOL_SCROLL_RIGHT			0x10
-#define LCD_SYMBOL_SCROLL_LEFT			0x11
-#define LCD_SYMBOL_DOUBLE_ARROW_UP		0x15
-#define LCD_SYMBOL_DOUBLE_ARROW_DOWN	0x16
-#define LCD_SYMBOL_SPLIT_CIRCLE			0x17
-#define LCD_SYMBOL_ARROW_RETURN			0x18
-#define LCD_SYMBOL_ARROW_UP				0x19
-#define LCD_SYMBOL_ARROW_DOWN			0x1A
-#define LCD_SYMBOL_ARROW_RIGHT			0x1A
-#define LCD_SYMBOL_ARROW_LEFT			0x1B
-#define LCD_SYMBOL_SCROLL_UP			0x1E
-#define LCD_SYMBOL_SCROLL_DOWN			0x1F
-
-// MISCELLANEOUS
-#define LCD_SYMBOL_HOUSE				0x7f
-#define LCD_SYMBOL_NOTE					0x91
-#define LCD_SYMBOL_BELL					0x98
-#define LCD_SYMBOL_HEART				0x9d
-#define LCD_SYMBOL_COPYRIGHT			0xa9
-#define LCD_SYMBOL_RESERVED				0xae
-
-
-
-/* FLASH DATA */
+#pragma region FLASH DATA
 
 // CUSTOM LCD CHARACTERS
 
@@ -125,11 +86,43 @@ PROGMEM const char LCD_CHAR_BARGRAPH_2[8] = { 0x18, 0x18, 0x18, 0x18, 0x1f, 0x18
 PROGMEM const char LCD_CHAR_BARGRAPH_3[8] = { 0x1c, 0x1c, 0x1c, 0x1c, 0x1f, 0x1c, 0x1c, 0x1c };
 PROGMEM const char LCD_CHAR_BARGRAPH_4[8] = { 0x1e, 0x1e, 0x1e, 0x1e, 0x1f, 0x1e, 0x1e, 0x1e };
 
+#pragma endregion FLASH DATA
 
 
-/* FUNCTIONS */
 
-const char * const LCD_invertChar(const char * lcdChar, byte charWidth = 5)
+#pragma region GLOBAL VARIABLES
+
+// LCD display
+extern BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
+
+#pragma endregion GLOBAL VARIABLES
+
+
+
+#pragma region FUNCTION DEFINITIONS
+
+// PROGRAM FUNCTIONS
+
+void initializeLCD()
+{
+	LCD.init();
+	LCD.backlight();
+	LCD.home();
+
+	// Load large font
+	uint8_t customChar[8];
+	for (uint8_t i = 0; i < 8; i++)
+	{
+		for (uint8_t j = 0; j < 8; j++)
+			customChar[j] = pgm_read_byte_near(BF_fontShapes + (i * 8) + j);
+		LCD.createChar(i, customChar);
+	}
+}
+
+
+// UTILITY FUNCTIONS
+
+const char * const LCD_invertChar(const char * lcdChar, byte charWidth)
 {
 	char * newLcdChar = new char[sizeof(lcdChar)];
 
@@ -139,7 +132,7 @@ const char * const LCD_invertChar(const char * lcdChar, byte charWidth = 5)
 	return const_cast<const char *>(newLcdChar);
 }
 
-const char * LCD_invertChar_P(const char * lcdChar, byte charWidth = 5)
+const char * LCD_invertChar_P(const char * lcdChar, byte charWidth)
 {
 	char lcdCharData[sizeof(lcdChar)];
 
@@ -149,5 +142,5 @@ const char * LCD_invertChar_P(const char * lcdChar, byte charWidth = 5)
 	return LCD_invertChar(const_cast<const char *>(lcdCharData), charWidth);
 }
 
+#pragma endregion FUNCTION DEFINITIONS
 
-#endif

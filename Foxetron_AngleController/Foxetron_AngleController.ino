@@ -18,11 +18,14 @@
 *****************************************************************************************************/
 
 
-/* INCLUDES */
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+
+
+#pragma region INCLUDES
 
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
-#include "Foxetron_LCD_chars.h"
+#include "Foxetron_LCD.h"
 
 
 // PROJECT MODULES
@@ -49,9 +52,11 @@
 // AVR LibC
 //#include <avr/pgmspace.h>						// included by project 3rd-party libs
 
+#pragma endregion INCLUDES
 
 
-/* DEFINES */
+
+#pragma region DEFINES
 
 // PROGRAM OPTIONS
 
@@ -86,23 +91,22 @@
 	: "=&r" (current) : "I" (_SFR_IO_ADDR(PINC)) );
 */
 
-
-
-/* FLASH DATA */
-
+#pragma endregion DEFINES
 
 
 
+#pragma region PROGRAM CONSTANTS
 
-/* EEPROM VARIABLES */
+// FLASH DATA
 
-
-
-/* PROGRAM CONSTANTS */
-
+#pragma endregion PROGRAM CONSTANTS
 
 
-/* GLOBAL VARIABLES */
+
+#pragma region PROGRAM VARIABLES
+
+// EEPROM VARIABLES
+
 
 // INPUTS
 
@@ -152,14 +156,10 @@ byte _RgbBlue					= 0;		// Pin 11 / PB3
 bool _StatusLED					= LOW;		// Pin 13 / PB5
 
 
-// LCD display
-BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
 
 
 
-/* PROGRAM CODE */
-
-// PROGRAM OUTLINE: ENTRY POINT & LOOP
+#pragma region PROGRAM OUTLINE: ENTRY POINT & LOOP
 
 void setup()
 {
@@ -197,8 +197,11 @@ void loop()
 #endif
 }
 
+#pragma endregion PROGRAM OUTLINE: ENTRY POINT & LOOP
 
-/* INTERRUPT VECTORS and SUPPORTING MACROS & INLINED FUNCTIONS */
+
+
+#pragma region INTERRUPT VECTORS and SUPPORTING MACROS & INLINED FUNCTIONS
 
 // INT0/INT1: ANGLE ENCODER
 
@@ -255,25 +258,11 @@ ISR(PCINT2_vect, ISR_NOBLOCK)
 	_LedButton2 = PIND && (1 >> 5);
 	_LedButton3 = PIND && (1 >> 6);
 	_LedButton4 = PIND && (1 >> 7);
-}// TIMER EVENTS// TIMER 2 OVERFLOWISR(TIMER2_OVF_vect, ISR_NOBLOCK){}// SERIAL EVENTS// USART RECEIVE/*ISR(USART_RX_vect, ISR_NOBLOCK){}*/
+}// TIMER EVENTS// TIMER 2 OVERFLOWISR(TIMER2_OVF_vect, ISR_NOBLOCK){}// SERIAL EVENTS// USART RECEIVE/*ISR(USART_RX_vect, ISR_NOBLOCK){}*/#pragma endregion INTERRUPT VECTORS and SUPPORTING MACROS & INLINED FUNCTIONS
 
-// PROGRAM FUNCTIONS
 
-void initializeLCD()
-{
-	LCD.init();
-	LCD.backlight();
-	LCD.home();
 
-	// Load large font
-	uint8_t customChar[8];
-	for (uint8_t i = 0; i < 8; i++)
-	{
-		for (uint8_t j = 0; j < 8; j++)
-			customChar[j] = pgm_read_byte_near(BF_fontShapes + (i * 8) + j);
-		LCD.createChar(i, customChar);
-	}
-}
+#pragma region PROGRAM FUNCTIONS
 
 void initializeInterrupts()
 {
@@ -289,12 +278,7 @@ void initializeInterrupts()
 	PCMSK2 = 0b11110000;
 }
 
-
-#pragma region DEBUG FUNCTIONS
-
-// DEBUG UTILITY FUNCTIONS
-
-void DEBUG_printLCDSplash()
+void printLCDSplash()
 {
 	LCD.print(F("Foxetron test..."));
 
@@ -308,6 +292,14 @@ void DEBUG_printLCDSplash()
 
 	LCD.clear();
 }
+
+#pragma endregion PROGRAM FUNCTIONS
+
+
+
+#pragma region DEBUG UTILITY FUNCTIONS
+
+// DEBUG UTILITY FUNCTIONS
 
 void DEBUG_displayKeyCodes(void)
 {
@@ -510,4 +502,4 @@ void DEBUG_displayCustomChars()
 	DEBUG_displayKeyCodes();
 }
 
-#pragma endregion
+#pragma endregion DEBUG UTILITY FUNCTIONS

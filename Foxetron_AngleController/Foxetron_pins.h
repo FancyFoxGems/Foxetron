@@ -11,13 +11,16 @@
 
 
 
-/* INCLUDES */
+#pragma region INCLUDES
 
 // PROJECT INCLUDES
 #include <Arduino.h>
 
+#pragma endregion INCLUDES
 
-/* DEFINES */
+
+
+#pragma region DEFINES
 
 // INPUT PINS
 
@@ -53,9 +56,11 @@
 
 #define PIN_OUT_STATUS_LED		13	// Pin 13 / PB5
 
+#pragma endregion DEFINES
 
 
-/* FUNCTIONS */
+
+#pragma region FUNCTIONS
 
 inline void initializePins()
 {
@@ -103,6 +108,8 @@ inline void initializePins()
 
 	// [Pins 18 & 19 - SDA: 18/A4 & SCL: 19/A5 | I2C --> PCF8574T port expander --> RGB HD44780]
 }
+
+#pragma endregion FUNCTIONS
 
 
 #endif
