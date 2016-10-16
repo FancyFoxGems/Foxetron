@@ -131,20 +131,11 @@
     <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs\pins_arduino.h">
       <Filter>src\_micro-api-readonly\variants\eightanaloginputs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libraries\BigCrystal_I2C\src\BigCrystal_I2C.h">
-      <Filter>src\_micro-api-readonly\libraries\BigCrystal_I2C\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libraries\BigCrystal_I2C\src\BigFont.h">
-      <Filter>src\_micro-api-readonly\libraries\BigCrystal_I2C\src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\libraries\EEPROM\EEPROM.h">
       <Filter>src\_micro-api-readonly\libraries\EEPROM</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libraries\LiquidCrystal_I2C\LiquidCrystal_I2C.h">
       <Filter>src\_micro-api-readonly\libraries\LiquidCrystal_I2C</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libraries\MENWIZ\MENWIZ.h">
-      <Filter>src\_micro-api-readonly\libraries\MENWIZ</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libraries\VaRGB\VaRGB.h">
       <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
@@ -158,20 +149,23 @@
     <ClInclude Include="..\..\libraries\Wire\utility\twi.h">
       <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
     </ClInclude>
-    <ClInclude Include="BigCrystal_I2C.custom.h">
+    <ClInclude Include="libs\BigCrystal_I2C.custom.h">
       <Filter>Libraries</Filter>
     </ClInclude>
-    <ClInclude Include="BigFont.h">
+    <ClInclude Include="libs\BigFont.h">
       <Filter>Libraries</Filter>
     </ClInclude>
-    <ClInclude Include="MENWIZ.custom.h">
+    <ClInclude Include="libs\MENWIZ.custom.h">
       <Filter>Libraries</Filter>
     </ClInclude>
-    <ClInclude Include="phi_prompt.custom.h">
+    <ClInclude Include="libs\phi_prompt.custom.h">
       <Filter>Libraries</Filter>
     </ClInclude>
     <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h">
       <Filter>__vm</Filter>
+    </ClInclude>
+    <ClInclude Include="Foxetron_LCD_chars.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -247,23 +241,11 @@
     <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.cpp">
       <Filter>src\_micro-api-readonly\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libraries\BigCrystal_I2C\src\BigCrystal_I2C.cpp">
-      <Filter>src\_micro-api-readonly\libraries\BigCrystal_I2C\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\BigCrystal_I2C\src\BigFont.c">
-      <Filter>src\_micro-api-readonly\libraries\BigCrystal_I2C\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\libraries\EEPROM\EEPROM.cpp">
       <Filter>src\_micro-api-readonly\libraries\EEPROM</Filter>
     </ClCompile>
     <ClCompile Include="..\..\libraries\LiquidCrystal_I2C\LiquidCrystal_I2C.cpp">
       <Filter>src\_micro-api-readonly\libraries\LiquidCrystal_I2C</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\MENWIZ\MENWIZ.cpp">
-      <Filter>src\_micro-api-readonly\libraries\MENWIZ</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\VaRGB\AndLogic.cpp">
-      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
     </ClCompile>
     <ClCompile Include="..\..\libraries\VaRGB\Constant.cpp">
       <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
@@ -280,19 +262,7 @@
     <ClCompile Include="..\..\libraries\VaRGB\Linear.cpp">
       <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libraries\VaRGB\Logic.cpp">
-      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\VaRGB\Not.cpp">
-      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\VaRGB\OrLogic.cpp">
-      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\libraries\VaRGB\Schedule.cpp">
-      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\VaRGB\Shift.cpp">
       <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
     </ClCompile>
     <ClCompile Include="..\..\libraries\VaRGB\Sine.cpp">
@@ -313,17 +283,20 @@
     <ClCompile Include="..\..\libraries\Wire\utility\twi.c">
       <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
     </ClCompile>
-    <ClCompile Include="BigFont.c">
+    <ClCompile Include="libs\BigFont.c">
       <Filter>Libraries</Filter>
     </ClCompile>
-    <ClCompile Include="BigCrystal_I2C.custom.cpp">
+    <ClCompile Include="libs\BigCrystal_I2C.custom.cpp">
       <Filter>Libraries</Filter>
     </ClCompile>
-    <ClCompile Include="MENWIZ.custom.cpp">
+    <ClCompile Include="libs\MENWIZ.custom.cpp">
       <Filter>Libraries</Filter>
     </ClCompile>
-    <ClCompile Include="phi_prompt.custom.cpp">
+    <ClCompile Include="libs\phi_prompt.custom.cpp">
       <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="Foxetron_debug.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

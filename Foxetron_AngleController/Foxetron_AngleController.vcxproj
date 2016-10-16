@@ -38,7 +38,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\RC\Sketchbook\libraries\LiquidCrystal_I2C;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\EEPROM;C:\RC\Sketchbook\libraries\phi_interfaces;C:\RC\Sketchbook\libraries\VaRGB;C:\RC\Sketchbook\libraries\EEPROM\utility;C:\RC\Sketchbook\libraries\LiquidCrystal_I2C\utility;C:\RC\Sketchbook\libraries\phi_interfaces\utility;C:\RC\Sketchbook\libraries\VaRGB\utility;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\Foxetron\Foxetron_AngleController;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\libraries\LiquidCrystal_I2C;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\EEPROM;C:\RC\Sketchbook\libraries\phi_interfaces;C:\RC\Sketchbook\libraries\VaRGB;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\iyanzvn1.cat\Micro Platforms\default\debuggers;C:\RC\Sketchbook\libraries;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\tools\avr/avr/include/;C:\Program Files (x86)\Arduino\hardware\tools\avr//avr/include/avr/;C:\Program Files (x86)\Arduino\hardware\tools\avr/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\RC\Sketchbook\libraries\LiquidCrystal_I2C;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\EEPROM;C:\RC\Sketchbook\libraries\phi_interfaces;C:\RC\Sketchbook\libraries\VaRGB;C:\RC\Sketchbook\libraries\EEPROM\utility;C:\RC\Sketchbook\libraries\VaRGB\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\Foxetron\Foxetron_AngleController;C:\Program Files (x86)\Arduino\hardware\tools\avr/avr/include/;C:\Program Files (x86)\Arduino\hardware\tools\avr//avr/include/avr/;C:\Program Files (x86)\Arduino\hardware\tools\avr/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>C:\RC\Sketchbook\Foxetron\Foxetron_AngleController\__vm\.Foxetron_AngleController.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;F_CPU=16000000L;ARDUINO=10608;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;__cplusplus=201103L;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -78,19 +78,17 @@
     <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_private.h" />
     <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.h" />
     <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs\pins_arduino.h" />
-    <ClInclude Include="..\..\libraries\BigCrystal_I2C\src\BigCrystal_I2C.h" />
-    <ClInclude Include="..\..\libraries\BigCrystal_I2C\src\BigFont.h" />
     <ClInclude Include="..\..\libraries\EEPROM\EEPROM.h" />
     <ClInclude Include="..\..\libraries\LiquidCrystal_I2C\LiquidCrystal_I2C.h" />
-    <ClInclude Include="..\..\libraries\MENWIZ\MENWIZ.h" />
     <ClInclude Include="..\..\libraries\VaRGB\VaRGB.h" />
     <ClInclude Include="..\..\libraries\VaRGB\VaRGBCurves.h" />
     <ClInclude Include="..\..\libraries\Wire\utility\twi.h" />
     <ClInclude Include="..\..\libraries\Wire\Wire.h" />
-    <ClInclude Include="BigCrystal_I2C.custom.h" />
-    <ClInclude Include="BigFont.h" />
-    <ClInclude Include="MENWIZ.custom.h" />
-    <ClInclude Include="phi_prompt.custom.h" />
+    <ClInclude Include="libs\BigCrystal_I2C.custom.h" />
+    <ClInclude Include="libs\BigFont.h" />
+    <ClInclude Include="libs\MENWIZ.custom.h" />
+    <ClInclude Include="libs\phi_prompt.custom.h" />
+    <ClInclude Include="Foxetron_LCD_chars.h" />
     <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
@@ -118,32 +116,25 @@
     <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_shift.c" />
     <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WMath.cpp" />
     <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.cpp" />
-    <ClCompile Include="..\..\libraries\BigCrystal_I2C\src\BigCrystal_I2C.cpp" />
-    <ClCompile Include="..\..\libraries\BigCrystal_I2C\src\BigFont.c" />
     <ClCompile Include="..\..\libraries\EEPROM\EEPROM.cpp" />
     <ClCompile Include="..\..\libraries\LiquidCrystal_I2C\LiquidCrystal_I2C.cpp" />
-    <ClCompile Include="..\..\libraries\MENWIZ\MENWIZ.cpp" />
-    <ClCompile Include="..\..\libraries\VaRGB\AndLogic.cpp" />
     <ClCompile Include="..\..\libraries\VaRGB\Constant.cpp" />
     <ClCompile Include="..\..\libraries\VaRGB\Curve.cpp" />
     <ClCompile Include="..\..\libraries\VaRGB\Dummy.cpp" />
     <ClCompile Include="..\..\libraries\VaRGB\Flasher.cpp" />
     <ClCompile Include="..\..\libraries\VaRGB\Linear.cpp" />
-    <ClCompile Include="..\..\libraries\VaRGB\Logic.cpp" />
-    <ClCompile Include="..\..\libraries\VaRGB\Not.cpp" />
-    <ClCompile Include="..\..\libraries\VaRGB\OrLogic.cpp" />
     <ClCompile Include="..\..\libraries\VaRGB\Schedule.cpp" />
-    <ClCompile Include="..\..\libraries\VaRGB\Shift.cpp" />
     <ClCompile Include="..\..\libraries\VaRGB\Sine.cpp" />
     <ClCompile Include="..\..\libraries\VaRGB\Threshold.cpp" />
     <ClCompile Include="..\..\libraries\VaRGB\VaRGB.cpp" />
     <ClCompile Include="..\..\libraries\VaRGB\VaRGBPlatform.cpp" />
     <ClCompile Include="..\..\libraries\Wire\utility\twi.c" />
     <ClCompile Include="..\..\libraries\Wire\Wire.cpp" />
-    <ClCompile Include="BigCrystal_I2C.custom.cpp" />
-    <ClCompile Include="BigFont.c" />
-    <ClCompile Include="MENWIZ.custom.cpp" />
-    <ClCompile Include="phi_prompt.custom.cpp" />
+    <ClCompile Include="libs\BigCrystal_I2C.custom.cpp" />
+    <ClCompile Include="libs\BigFont.c" />
+    <ClCompile Include="libs\MENWIZ.custom.cpp" />
+    <ClCompile Include="libs\phi_prompt.custom.cpp" />
+    <ClCompile Include="Foxetron_debug.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\libraries\BigCrystal_I2C\keywords.txt" />
