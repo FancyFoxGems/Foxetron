@@ -27,7 +27,7 @@
 //
 // @author R. Brunialti - roberto_brunialti@tiscali.it
 // ---------------------------------------------------------------------------
-#include "MENWIZ.h"
+#include "MENWIZ.custom.h"
 
 #define SCREATE(p, s)     p = (char *)malloc(strlen((char *)s)+1); strcpy((char *)p, (char *)s)
 #define SFORM(b, s, l)     memset(b, 32, l); memcpy(b, s, strlen(s)); b[l] = NULL; lcd->print(b)

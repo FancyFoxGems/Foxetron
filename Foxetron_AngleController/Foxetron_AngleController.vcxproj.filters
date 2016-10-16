@@ -9,13 +9,350 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;inc;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="src\_micro-api-readonly">
+      <UniqueIdentifier>{92c607cd-fe76-4cde-bfd9-a695cff3e61d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\core">
+      <UniqueIdentifier>{be1d5718-d3e7-46a4-8a60-61c3e826066a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\variants">
+      <UniqueIdentifier>{ec45e1c1-2bc5-48fd-8556-80658ce03105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\variants\eightanaloginputs">
+      <UniqueIdentifier>{427384a0-9e39-458c-a1d6-8df353ccd2ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries">
+      <UniqueIdentifier>{90bf7457-1d1e-4f3d-9200-6a00b9f14fab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\BigCrystal_I2C">
+      <UniqueIdentifier>{6c764cc8-3d3b-4ff7-8cd0-1c58f5227ba7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\BigCrystal_I2C\src">
+      <UniqueIdentifier>{6e37b87e-5a89-4368-b9bc-48093a687042}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\EEPROM">
+      <UniqueIdentifier>{918acfc7-dedc-4664-bde7-9f7739e028fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\LiquidCrystal_I2C">
+      <UniqueIdentifier>{0910ef57-cdf7-41c0-9257-901e78a34735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\MENWIZ">
+      <UniqueIdentifier>{062a6453-74e4-443d-a60d-c88cceb08f32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\VaRGB">
+      <UniqueIdentifier>{a3c06069-d607-4ba9-bed8-d0a881c3c345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\Wire">
+      <UniqueIdentifier>{818ea828-6177-4adc-90ef-b74931c35e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\Wire\utility">
+      <UniqueIdentifier>{fe857060-5396-4e66-88bf-f13dece7286f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries">
+      <UniqueIdentifier>{d1395598-fb7c-4ba2-8ec1-6293564d85b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foxetron_AngleController.ino" />
+    <None Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_pulse.S">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </None>
+    <None Include="..\..\libraries\BigCrystal_I2C\library.properties">
+      <Filter>src\_micro-api-readonly\libraries\BigCrystal_I2C</Filter>
+    </None>
+    <None Include="..\..\libraries\LiquidCrystal_I2C\library.json">
+      <Filter>src\_micro-api-readonly\libraries\LiquidCrystal_I2C</Filter>
+    </None>
+    <None Include="..\..\libraries\LiquidCrystal_I2C\library.properties">
+      <Filter>src\_micro-api-readonly\libraries\LiquidCrystal_I2C</Filter>
+    </None>
+    <None Include="..\..\libraries\Wire\library.properties">
+      <Filter>src\_micro-api-readonly\libraries\Wire</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Arduino.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\binary.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Client.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial_private.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\IPAddress.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\new.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\PluggableUSB.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Print.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Printable.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Server.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Stream.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Udp.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBAPI.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBCore.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBDesc.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WCharacter.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_private.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs\pins_arduino.h">
+      <Filter>src\_micro-api-readonly\variants\eightanaloginputs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\BigCrystal_I2C\src\BigCrystal_I2C.h">
+      <Filter>src\_micro-api-readonly\libraries\BigCrystal_I2C\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\BigCrystal_I2C\src\BigFont.h">
+      <Filter>src\_micro-api-readonly\libraries\BigCrystal_I2C\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\EEPROM\EEPROM.h">
+      <Filter>src\_micro-api-readonly\libraries\EEPROM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\LiquidCrystal_I2C\LiquidCrystal_I2C.h">
+      <Filter>src\_micro-api-readonly\libraries\LiquidCrystal_I2C</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\MENWIZ\MENWIZ.h">
+      <Filter>src\_micro-api-readonly\libraries\MENWIZ</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\VaRGB\VaRGB.h">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\VaRGB\VaRGBCurves.h">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\Wire\Wire.h">
+      <Filter>src\_micro-api-readonly\libraries\Wire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\Wire\utility\twi.h">
+      <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="BigCrystal_I2C.custom.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="BigFont.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="MENWIZ.custom.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="phi_prompt.custom.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\abi.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\CDC.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial0.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial1.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial2.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial3.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\hooks.c">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\IPAddress.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\main.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\new.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\PluggableUSB.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Print.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Stream.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Tone.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBCore.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WInterrupts.c">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring.c">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_analog.c">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_digital.c">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_pulse.c">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_shift.c">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WMath.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.cpp">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\BigCrystal_I2C\src\BigCrystal_I2C.cpp">
+      <Filter>src\_micro-api-readonly\libraries\BigCrystal_I2C\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\BigCrystal_I2C\src\BigFont.c">
+      <Filter>src\_micro-api-readonly\libraries\BigCrystal_I2C\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\EEPROM\EEPROM.cpp">
+      <Filter>src\_micro-api-readonly\libraries\EEPROM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\LiquidCrystal_I2C\LiquidCrystal_I2C.cpp">
+      <Filter>src\_micro-api-readonly\libraries\LiquidCrystal_I2C</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\MENWIZ\MENWIZ.cpp">
+      <Filter>src\_micro-api-readonly\libraries\MENWIZ</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\AndLogic.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\Constant.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\Curve.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\Dummy.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\Flasher.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\Linear.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\Logic.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\Not.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\OrLogic.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\Schedule.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\Shift.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\Sine.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\Threshold.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\VaRGB.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\VaRGB\VaRGBPlatform.cpp">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\Wire\Wire.cpp">
+      <Filter>src\_micro-api-readonly\libraries\Wire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\Wire\utility\twi.c">
+      <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="BigFont.c">
+      <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="BigCrystal_I2C.custom.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="MENWIZ.custom.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="phi_prompt.custom.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\libraries\BigCrystal_I2C\keywords.txt">
+      <Filter>src\_micro-api-readonly\libraries\BigCrystal_I2C</Filter>
+    </Text>
+    <Text Include="..\..\libraries\EEPROM\keywords.txt">
+      <Filter>src\_micro-api-readonly\libraries\EEPROM</Filter>
+    </Text>
+    <Text Include="..\..\libraries\LiquidCrystal_I2C\keywords.txt">
+      <Filter>src\_micro-api-readonly\libraries\LiquidCrystal_I2C</Filter>
+    </Text>
+    <Text Include="..\..\libraries\MENWIZ\keywords.txt">
+      <Filter>src\_micro-api-readonly\libraries\MENWIZ</Filter>
+    </Text>
+    <Text Include="..\..\libraries\MENWIZ\README.txt">
+      <Filter>src\_micro-api-readonly\libraries\MENWIZ</Filter>
+    </Text>
+    <Text Include="..\..\libraries\VaRGB\INSTALL.txt">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </Text>
+    <Text Include="..\..\libraries\VaRGB\keywords.txt">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </Text>
+    <Text Include="..\..\libraries\VaRGB\LICENSE.txt">
+      <Filter>src\_micro-api-readonly\libraries\VaRGB</Filter>
+    </Text>
+    <Text Include="..\..\libraries\Wire\keywords.txt">
+      <Filter>src\_micro-api-readonly\libraries\Wire</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -96,7 +96,7 @@ http://liudr.wordpress.com
 #include <LiquidCrystal_I2C.h>
 #include <avr/pgmspace.h>
 #include <phi_interfaces.h>
-#include <phi_prompt.h>
+#include "phi_prompt.custom.h""
 
 const char phi_prompt_lcd_ch0[] PROGMEM ={ 4, 14, 31, 64, 31, 31, 31, 31, 0 }; ///< Custom LCD character: Up triangle with block
 const char phi_prompt_lcd_ch1[] PROGMEM ={ 4, 14, 31, 64, 64, 64, 64, 64, 0 }; ///< Custom LCD character: Up triangle

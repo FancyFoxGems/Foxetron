@@ -2,7 +2,7 @@
 * This file, redistributed with the Foxetron program suite, is part of an Arduino library in the Public Domain.     *
 *********************************************************************************************************************/
 
-#include "BigCrystal_I2C.h"
+#include "BigCrystal_I2C.custom.h"
 
 BigCrystal_I2C::BigCrystal_I2C(uint8_t i2cAddr, uint8_t lcd_cols, uint8_t lcd_rows) : LiquidCrystal_I2C(i2cAddr, lcd_cols, lcd_rows)
 {

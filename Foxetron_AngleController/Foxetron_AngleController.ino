@@ -26,8 +26,10 @@
 // ARDUINO LIBS
 
 // 3RD-PARTY LIBS
-#include "BigCrystal_I2C.h"
-#include "MENWIZ.h"
+#include "BigCrystal_I2C.custom.h"
+#include "eeprom.h"
+#include "MENWIZ.custom.h"
+#include "phi_prompt.custom.h"
 #include "VaRGB.h"
 #include "VaRGBCurves.h"
 

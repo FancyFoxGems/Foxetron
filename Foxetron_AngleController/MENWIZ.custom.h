@@ -37,7 +37,7 @@
 #include <avr/pgmspace.h>
 
 #include <Wire.h>
-#include "BigCrystal_I2C.h"
+#include "BigCrystal_I2C.custom.h"
 
 #ifdef BUTTON_SUPPORT
 #include "buttons.h"
