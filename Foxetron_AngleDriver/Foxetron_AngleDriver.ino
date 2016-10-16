@@ -24,7 +24,7 @@
 #pragma region INCLUDES
 
 // PROJECT INCLUDES
-//#include "Foxetron_pins.h"
+#include "Foxetron_pins.h"
 
 
 // PROJECT MODULES
