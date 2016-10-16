@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="__vm">
@@ -166,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h">
       <Filter>__vm</Filter>
+    </ClInclude>
+    <ClInclude Include="Foxetron_pins.h">
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="Foxetron_LCD_chars.h">
       <Filter>src</Filter>
