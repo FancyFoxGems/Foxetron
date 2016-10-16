@@ -28,17 +28,17 @@ enum DataType : byte
 	BYTES
 };
 
-enum ErrorCode : byte
+enum FoxetronError : byte
 {
 	SUCCESS = 0
 };
 
-enum ControllerStatusCode : byte
+enum ControllerStatus : byte
 {
 	NONE
 };
 
-enum DriverStatusCode : byte
+enum DriverStatus : byte
 {
 	IDLE
 };
@@ -121,7 +121,7 @@ typedef const struct _MotorRequest CMOTORREQUEST, *CPMOTORREQUEST, &CRMOTORREQUE
 
 typedef struct _Response : public Message
 {
-	ErrorCode Error = ErrorCode::SUCCESS;
+	FoxetronError ErrorCode = FoxetronError::SUCCESS;
 }
 Response, RESPONSE, *PRESPONSE, &RRESPONSE;
 
@@ -139,7 +139,7 @@ typedef const struct _StatusResponse CSTATUSRESPONSE, *CPSTATUSRESPONSE, &CRSTAT
 
 typedef struct _ControllerStatusResponse : public StatusResponse
 {
-	ControllerStatusCode ControllerStatus = ControllerStatusCode::NONE;
+	ControllerStatus StatusCode = ControllerStatus::NONE;
 }
 ControllerStatusResponse, CONTROLLERSTATUSRESPONSE, *PCONTROLLERSTATUSRESPONSE, &RCONTROLLERSTATUSRESPONSE;
 
@@ -148,7 +148,7 @@ typedef const struct _ControllerStatusResponse CCONTROLLERSTATUSRESPONSE, *CPCON
 
 typedef struct _DriverStatusResponse : public StatusResponse
 {
-	DriverStatusCode DriverStatus = DriverStatusCode::IDLE;
+	DriverStatus StatusCode = DriverStatus::IDLE;
 }
 DriverStatusResponse, DRIVERSTATUSRESPONSE, *PDRIVERSTATUSRESPONSE, &RDRIVERSTATUSRESPONSE;
 
