@@ -1,3 +1,12 @@
 [submodule "HalfStepper"]
 	path = HalfStepper
 	url = git://github.com/FancyFoxGems/HalfStepper
+[submodule "Foxetron_AngleController\\libs\\LiquidCrystal_I2C"]
+	path = Foxetron_AngleController\\libs\\LiquidCrystal_I2C
+	url = https://github.com/marcoschwartz/LiquidCrystal_I2C
+[submodule "Foxetron_AngleController\\libs\\VaRGB"]
+	path = Foxetron_AngleController\\libs\\VaRGB
+	url = https://github.com/psychogenic/VaRGB
+[submodule "Foxetron_AngleDriver\\libs\\HalfStepper"]
+	path = Foxetron_AngleDriver\\libs\\HalfStepper
+	url = https://github.com/FancyFoxGems/HalfStepper
