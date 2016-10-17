@@ -12,11 +12,16 @@
 
 #include <Arduino.h>
 
-
-#pragma region ENUMS
-
 namespace FoxetronMessaging
 {
+
+#pragma region GLOBAL CONSTANTS
+#pragma endregion GLOBAL CONSTANTS
+	
+
+
+#pragma region ENUMS
+	
 	enum DataSize : byte
 	{
 		ONE_BYTE	= 0x10,
@@ -45,30 +50,30 @@ namespace FoxetronMessaging
 	enum MessageType : byte
 	{
 		// Primary types
-		REQUEST				= 0x0,
-		RESPONSE			= 0x80,
+		REQUEST_TYPE		= 0x0,
+		RESPONSE_TYPE		= 0x80,
 
 
 		// Categories
-		ANGLE				= 0x10,
-		MOTOR				= 0x20,
-		STATUS				= 0x40,
+		ANGLE_TYPE			= 0x10,
+		MOTOR_TYPE			= 0x20,
+		STATUS_TYPE			= 0x40,
 
 
 		// Request types
-		ANGLEREQUEST		= REQUEST | ANGLE,
-		MOTORREQUEST		= REQUEST | MOTOR,
-		STATUSREQUEST		= REQUEST | STATUS,
+		ANGLE_REQUEST		= REQUEST_TYPE | ANGLE_TYPE,
+		MOTOR_REQUEST		= REQUEST_TYPE | MOTOR_TYPE,
+		STATUS_REQUEST		= REQUEST_TYPE | STATUS_TYPE,
 
 		// Response types
-		ANGLERESPONSE		= RESPONSE | 0x1,
-		MOTORRESPONSE		= RESPONSE | 0x2,
-		STATUSRESPONSE		= RESPONSE | STATUS,
-		CONTROLLERSTATUS	= STATUSRESPONSE | 0x1,
-		DRIVERSTATUS		= STATUSRESPONSE | 0x2
+		ANGLE_RESPONSE		= RESPONSE_TYPE | 0x1,
+		MOTOR_RESPONSE		= RESPONSE_TYPE | 0x2,
+		STATUS_RESPONSE		= RESPONSE_TYPE | STATUS_TYPE,
+		CONTROLLER_STATUS	= STATUS_RESPONSE | 0x1,
+		DRIVER_STATUS		= STATUS_RESPONSE | 0x2
 	};
 
-	enum FoxetronError : byte
+	enum Error : byte
 	{
 		SUCCESS = 0
 	};
@@ -82,9 +87,6 @@ namespace FoxetronMessaging
 	{
 		IDLE
 	};
-}
-
-using namespace FoxetronMessaging;
 
 #pragma endregion ENUMS
 
@@ -92,79 +94,79 @@ using namespace FoxetronMessaging;
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-// FUNDAMENTAL TYPE ALIASES
+	// FUNDAMENTAL TYPE ALIASES
 
-typedef uint32_t dword;
-
-
-//  TEMPLATED TYPE FORWARD DECLARATIONS & ALIASES
-
-template<class T, MessageType TMsg>
-class Message;
-template<class T, MessageType TMsg>
-using MESSAGE = Message<T, TMsg>;
-template<class T, MessageType TMsg>
-using PMESSAGE = Message<T, TMsg> *;
-template<class T, MessageType TMsg>
-using RMESSAGE = Message<T, TMsg> &;
-template<class T, MessageType TMsg>
-using PPMESSAGE = Message<T, TMsg> **;
-template<class T, MessageType TMsg>
-using RRMESSAGE = Message<T, TMsg> &&;
-template<class T, MessageType TMsg>
-using CMESSAGE = const Message<T, TMsg>;
-template<class T, MessageType TMsg>
-using PCMESSAGE = const Message<T, TMsg> *;
-template<class T, MessageType TMsg>
-using RCMESSAGE = const Message<T, TMsg> &;
-template<class T, MessageType TMsg>
-using PPCMESSAGE = const Message<T, TMsg> **;
+	typedef uint32_t dword;
 
 
-// REQUESTS
+	//  TEMPLATED TYPE FORWARD DECLARATIONS & ALIASES
 
-class Request;
-typedef Request REQUEST, *PREQUEST, &RREQUEST;
-typedef const Request CREQUEST, *CPREQUEST, &CRREQUEST;
+	template<class T, MessageType TMsg>
+	class Message;
+	template<class T, MessageType TMsg>
+	using MESSAGE = Message<T, TMsg>;
+	template<class T, MessageType TMsg>
+	using PMESSAGE = Message<T, TMsg> *;
+	template<class T, MessageType TMsg>
+	using RMESSAGE = Message<T, TMsg> &;
+	template<class T, MessageType TMsg>
+	using PPMESSAGE = Message<T, TMsg> **;
+	template<class T, MessageType TMsg>
+	using RRMESSAGE = Message<T, TMsg> &&;
+	template<class T, MessageType TMsg>
+	using CMESSAGE = const Message<T, TMsg>;
+	template<class T, MessageType TMsg>
+	using PCMESSAGE = const Message<T, TMsg> *;
+	template<class T, MessageType TMsg>
+	using RCMESSAGE = const Message<T, TMsg> &;
+	template<class T, MessageType TMsg>
+	using PPCMESSAGE = const Message<T, TMsg> **;
 
-class AngleRequest;
-typedef AngleRequest ANGLEREQUEST, *PANGLEREQUEST, &RANGLEREQUEST;
-typedef const AngleRequest CANGLEREQUEST, *CPANGLEREQUEST, &CRANGLEREQUEST;
 
-class MotorRequest;
-typedef MotorRequest MOTORREQUEST, *PMOTORREQUEST, &RMOTORREQUEST;
-typedef const MotorRequest CMOTORREQUEST, *CPMOTORREQUEST, &CRMOTORREQUEST;
+	// REQUESTS
 
-class StatusRequest;
-typedef StatusRequest STATUSREQUEST, *PSTATUSREQUEST, &RSTATUSREQUEST;
-typedef const StatusRequest CSTATUSREQUEST, *CPSTATUSREQUEST, &CRSTATUSREQUEST;
+	class Request;
+	typedef Request REQUEST, *PREQUEST, &RREQUEST;
+	typedef const Request CREQUEST, *CPREQUEST, &CRREQUEST;
+
+	class AngleRequest;
+	typedef AngleRequest ANGLEREQUEST, *PANGLEREQUEST, &RANGLEREQUEST;
+	typedef const AngleRequest CANGLEREQUEST, *CPANGLEREQUEST, &CRANGLEREQUEST;
+
+	class MotorRequest;
+	typedef MotorRequest MOTORREQUEST, *PMOTORREQUEST, &RMOTORREQUEST;
+	typedef const MotorRequest CMOTORREQUEST, *CPMOTORREQUEST, &CRMOTORREQUEST;
+
+	class StatusRequest;
+	typedef StatusRequest STATUSREQUEST, *PSTATUSREQUEST, &RSTATUSREQUEST;
+	typedef const StatusRequest CSTATUSREQUEST, *CPSTATUSREQUEST, &CRSTATUSREQUEST;
 
 
-// RESPONSES
+	// RESPONSES
 
-class Response;
-typedef Response RESPONSE, *PRESPONSE, &RRESPONSE;
-typedef const Response CRESPONSE, *CPRESPONSE, &CRRESPONSE;
+	class Response;
+	typedef Response RESPONSE, *PRESPONSE, &RRESPONSE;
+	typedef const Response CRESPONSE, *CPRESPONSE, &CRRESPONSE;
 
-class AngleResponse;
-typedef AngleResponse ANGLERESPONSE, *PANGLERESPONSE, &RANGLERESPONSE;
-typedef const AngleResponse CANGLERESPONSE, *CPANGLERESPONSE, &CRANGLERESPONSE;
+	class AngleResponse;
+	typedef AngleResponse ANGLERESPONSE, *PANGLERESPONSE, &RANGLERESPONSE;
+	typedef const AngleResponse CANGLERESPONSE, *CPANGLERESPONSE, &CRANGLERESPONSE;
 
-class MotorResponse;
-typedef MotorResponse MOTORRESPONSE, *PMOTORRESPONSE, &RMOTORRESPONSE;
-typedef const MotorResponse CMOTORRESPONSE, *CPMOTORRESPONSE, &CRMOTORRESPONSE;
+	class MotorResponse;
+	typedef MotorResponse MOTORRESPONSE, *PMOTORRESPONSE, &RMOTORRESPONSE;
+	typedef const MotorResponse CMOTORRESPONSE, *CPMOTORRESPONSE, &CRMOTORRESPONSE;
 
-class StatusResponse;
-typedef StatusResponse STATUSRESPONSE, *PSTATUSRESPONSE, &RSTATUSRESPONSE;
-typedef const StatusResponse CSTATUSRESPONSE, *CPSTATUSRESPONSE, &CRSTATUSRESPONSE;
+	class StatusResponse;
+	typedef StatusResponse STATUSRESPONSE, *PSTATUSRESPONSE, &RSTATUSRESPONSE;
+	typedef const StatusResponse CSTATUSRESPONSE, *CPSTATUSRESPONSE, &CRSTATUSRESPONSE;
 
-class ControllerStatusResponse;
-typedef ControllerStatusResponse CONTROLLERSTATUSRESPONSE, *PCONTROLLERSTATUSRESPONSE, &RCONTROLLERSTATUSRESPONSE;
-typedef const ControllerStatusResponse CCONTROLLERSTATUSRESPONSE, *CPCONTROLLERSTATUSRESPONSE, &CRCONTROLLERSTATUSRESPONSE;
+	class ControllerStatusResponse;
+	typedef ControllerStatusResponse CONTROLLERSTATUSRESPONSE, *PCONTROLLERSTATUSRESPONSE, &RCONTROLLERSTATUSRESPONSE;
+	typedef const ControllerStatusResponse CCONTROLLERSTATUSRESPONSE, *CPCONTROLLERSTATUSRESPONSE, &CRCONTROLLERSTATUSRESPONSE;
 
-class DriverStatusResponse;
-typedef DriverStatusResponse DRIVERSTATUSRESPONSE, *PDRIVERSTATUSRESPONSE, &RDRIVERSTATUSRESPONSE;
-typedef const DriverStatusResponse CDRIVERSTATUSRESPONSE, *CPDRIVERSTATUSRESPONSE, &CRDRIVERSTATUSRESPONSE;
+	class DriverStatusResponse;
+	typedef DriverStatusResponse DRIVERSTATUSRESPONSE, *PDRIVERSTATUSRESPONSE, &RDRIVERSTATUSRESPONSE;
+	typedef const DriverStatusResponse CDRIVERSTATUSRESPONSE, *CPDRIVERSTATUSRESPONSE, &CRDRIVERSTATUSRESPONSE;
 
 #pragma endregion FORWARD DECLARATIONS & TYPE ALIASES
 
@@ -172,136 +174,135 @@ typedef const DriverStatusResponse CDRIVERSTATUSRESPONSE, *CPDRIVERSTATUSRESPONS
 
 #pragma region TYPE DECLARATIONS
 
-// UNIVERSAL 4-BYTE DATA TYPE UNION
-typedef union _Datum
-{
-	byte Bytes[4];
-
-	struct
+	// UNIVERSAL 4-BYTE DATA TYPE UNION
+	typedef union _Datum
 	{
-		bool b0 : 1;
-		bool b1 : 1;
-		bool b2 : 1;
-		bool b3 : 1;
-		bool b4 : 1;
-		bool b5 : 1;
-		bool b6 : 1;
-		bool b7 : 1;
-		bool b8 : 1;
-		bool b9 : 1;
-		bool bA : 1;
-		bool bB : 1;
-		bool bC : 1;
-		bool bD : 1;
-		bool bE : 1;
-		bool bF : 1;
+		byte Bytes[4];
+
+		struct
+		{
+			bool b0 : 1;
+			bool b1 : 1;
+			bool b2 : 1;
+			bool b3 : 1;
+			bool b4 : 1;
+			bool b5 : 1;
+			bool b6 : 1;
+			bool b7 : 1;
+			bool b8 : 1;
+			bool b9 : 1;
+			bool bA : 1;
+			bool bB : 1;
+			bool bC : 1;
+			bool bD : 1;
+			bool bE : 1;
+			bool bF : 1;
+		}
+		Bits;
+
+		byte ByteVal;
+		char CharVal;
+		bool BoolVal;
+
+		word WordVal;
+		short ShortVal;
+
+		dword DWordVal;
+		long LongVal;
+		float FloatVal;
 	}
-	Bits;
+	Datum, DATUM, * PDATUM, & RDATUM;
 
-	byte ByteVal;
-	char CharVal;
-	bool BoolVal;
-
-	word WordVal;
-	short ShortVal;
-
-	dword DWordVal;
-	long LongVal;
-	float FloatVal;
-}
-Datum, DATUM, * PDATUM, & RDATUM;
-
-typedef const union _Datum CDATUM, *CPDATUM, &CRDATUM;
+	typedef const union _Datum CDATUM, *CPDATUM, &CRDATUM;
 
 
-typedef struct _MessageParam
-{
-	DataType Type;
-	Datum Value;
-}
-MessageParam, MESSAGEPARAM, *PMESSAGEPARAM, &RMESSAGEPARAM;
+	typedef struct _Field
+	{
+		DataType Type;
+		Datum Value;
+	}
+	Field, FIELD, *PFIELD, &RFIELD;
 
-typedef const union _MESSAGEPARAM CMESSAGEPARAM, *CPMESSAGEPARAM, &CRMESSAGEPARAM;
-
-
-template<class T, MessageType TMsg>
-class Message
-{
-	static constexpr MessageType TYPE();
-	static constexpr word SIZE();
-
-	MessageParam Param;
-};
+	typedef const union _FIELD CFIELD, *CPFIELD, &CRFIELD;
 
 
-// REQUESTS
-
-class Request : public Message<Request, MessageType::REQUEST>
-{
-
-};
-
-
-class AngleRequest : public Message<AngleRequest, MessageType::ANGLEREQUEST>
-{
-
-};
+	template<class T, MessageType TMsg>
+	class Message
+	{
+		static constexpr MessageType TYPE();
+		static constexpr word SIZE();
+	};
 
 
-class MotorRequest : public Message<MotorRequest, MessageType::MOTORREQUEST>
-{
+	// REQUESTS
 
-};
+	class Request : public Message<Request, MessageType::REQUEST_TYPE>
+	{
+		Field Param;
+	};
 
 
-class StatusRequest : public Message<StatusRequest, MessageType::STATUSREQUEST>
-{
+	class AngleRequest : public Message<AngleRequest, MessageType::ANGLE_REQUEST>
+	{
 
-};
+	};
+
+
+	class MotorRequest : public Message<MotorRequest, MessageType::MOTOR_REQUEST>
+	{
+
+	};
+
+
+	class StatusRequest : public Message<StatusRequest, MessageType::STATUS_REQUEST>
+	{
+
+	};
 
 
 
-// RESPONSES
+	// RESPONSES
 
-class Response : public Message<Response, MessageType::RESPONSE>
-{
-	FoxetronError ErrorCode = FoxetronError::SUCCESS;
-};
-
-
-class AngleResponse : public Message<AngleResponse, MessageType::ANGLERESPONSE>
-{
-
-};
+	class Response : public Message<Response, MessageType::RESPONSE_TYPE>
+	{
+		Error ErrorCode = Error::SUCCESS;
+	};
 
 
-class MotorResponse : public Message<MotorResponse, MessageType::ANGLERESPONSE>
-{
+	class AngleResponse : public Message<AngleResponse, MessageType::ANGLE_RESPONSE>
+	{
 
-};
-
-
-class StatusResponse : public Message<StatusResponse, MessageType::STATUSRESPONSE>
-{
-	const char * StatusMessage;
-};
+	};
 
 
-class ControllerStatusResponse : public Message<ControllerStatusResponse, MessageType::CONTROLLERSTATUS>
-{
-	ControllerStatus StatusCode = ControllerStatus::NONE;
-};
+	class MotorResponse : public Message<MotorResponse, MessageType::ANGLE_RESPONSE>
+	{
+
+	};
 
 
-class DriverStatusResponse : public Message<DriverStatusResponse, MessageType::DRIVERSTATUS>
-{
-	DriverStatus StatusCode = DriverStatus::IDLE;
-};
+	class StatusResponse : public Message<StatusResponse, MessageType::STATUS_RESPONSE>
+	{
+		const char * StatusMessage;
+	};
+
+
+	class ControllerStatusResponse : public Message<ControllerStatusResponse, MessageType::CONTROLLER_STATUS>
+	{
+		ControllerStatus StatusCode = ControllerStatus::NONE;
+	};
+
+
+	class DriverStatusResponse : public Message<DriverStatusResponse, MessageType::DRIVER_STATUS>
+	{
+		DriverStatus StatusCode = DriverStatus::IDLE;
+	};
 
 #pragma endregion TYPE DECLARATIONS
 
+}
 
-
+using namespace FoxetronMessaging;
 
 
 #endif
