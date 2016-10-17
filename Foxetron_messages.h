@@ -263,7 +263,7 @@ class StatusRequest : public Message<StatusRequest, MessageType::STATUSREQUEST>
 
 // RESPONSES
 
-class Response : public Message<Response, MessageType::ANGLEREQUEST>
+class Response : public Message<Response, MessageType::RESPONSE>
 {
 	FoxetronError ErrorCode = FoxetronError::SUCCESS;
 };
@@ -281,19 +281,19 @@ class MotorResponse : public Message<MotorResponse, MessageType::ANGLERESPONSE>
 };
 
 
-class StatusResponse : public Message<StatusResponse, MessageType::CONTROLLERSTATUSRESPONSE>
+class StatusResponse : public Message<StatusResponse, MessageType::STATUSRESPONSE>
 {
 	const char * StatusMessage;
 };
 
 
-class ControllerStatusResponse : public Message<ControllerStatusResponse, MessageType::CONTROLLERSTATUSRESPONSE>
+class ControllerStatusResponse : public Message<ControllerStatusResponse, MessageType::CONTROLLERSTATUS>
 {
 	ControllerStatus StatusCode = ControllerStatus::NONE;
 };
 
 
-class DriverStatusResponse : public Message<DriverStatusResponse, MessageType::DRIVERSTATUSRESPONSE>
+class DriverStatusResponse : public Message<DriverStatusResponse, MessageType::DRIVERSTATUS>
 {
 	DriverStatus StatusCode = DriverStatus::IDLE;
 };
