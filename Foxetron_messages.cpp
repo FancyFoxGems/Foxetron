@@ -8,3 +8,20 @@
 #include "Foxetron_messages.h"
 
 
+#pragma region MESSAGE DEFINITION
+
+// STATIC MESSAGE "OVERRIDES"
+
+template<class T, MessageType TMsg>
+constexpr MessageType Message<T, TMsg>::TYPE()
+{
+	return TMsg;
+}
+
+template<class T, MessageType TMsg>
+constexpr word Message<T, TMsg>::SIZE()
+{
+	return static_cast<word>(sizeof(T));
+}
+
+#pragma endregion MESSAGE DEFINITION
