@@ -17,31 +17,55 @@
 
 namespace FoxetronMessaging
 {
+	enum DataSize : byte
+	{
+		ONE_BYTE	= 0x10,
+		TWO_BYTES	= 0x20,
+		THREE_BYTES	= 0x40,
+		FOUR_BYTES	= 0x80,
+	};
+
 	enum DataType : byte
 	{
-		BYTES,
-		BOOL,
-		BYTE,
-		CHAR,
-		WORD,
-		SHORT,
-		DWORD,
-		LONG,
-		FLOAT
+		BYTES	= 0x0,
+
+		BYTE	= ONE_BYTE | 0x1,
+		CHAR	= ONE_BYTE | 0x2,
+		BOOL	= ONE_BYTE | 0x4,
+
+		WORD	= TWO_BYTES | 0x1,
+		SHORT	= TWO_BYTES | 0x2,
+		BITS	= TWO_BYTES | 0x4,
+
+		DWORD	= FOUR_BYTES | 0x1,
+		LONG	= FOUR_BYTES | 0x2,
+		FLOAT	= FOUR_BYTES | 0x4
 	};
 
 	enum MessageType : byte
 	{
+		// Primary types
+		REQUEST				= 0x0,
+		RESPONSE			= 0x80,
+
+
+		// Categories
+		ANGLE				= 0x10,
+		MOTOR				= 0x20,
+		STATUS				= 0x40,
+
+
 		// Request types
-		ANGLEREQUEST,
-		MOTORREQUEST,
-		STATUSREQUEST,
+		ANGLEREQUEST		= REQUEST | ANGLE,
+		MOTORREQUEST		= REQUEST | MOTOR,
+		STATUSREQUEST		= REQUEST | STATUS,
 
 		// Response types
-		ANGLERESPONSE,
-		MOTORRESPONSE,
-		CONTROLLERSTATUSRESPONSE,
-		DRIVERSTATUSRESPONSE
+		ANGLERESPONSE		= RESPONSE | 0x1,
+		MOTORRESPONSE		= RESPONSE | 0x2,
+		STATUSRESPONSE		= RESPONSE | STATUS,
+		CONTROLLERSTATUS	= STATUSRESPONSE | 0x1,
+		DRIVERSTATUS		= STATUSRESPONSE | 0x2
 	};
 
 	enum FoxetronError : byte
@@ -153,7 +177,7 @@ typedef union _Datum
 {
 	byte Bytes[4];
 
-	class
+	struct
 	{
 		bool b0 : 1;
 		bool b1 : 1;
@@ -171,13 +195,16 @@ typedef union _Datum
 		bool bD : 1;
 		bool bE : 1;
 		bool bF : 1;
-	} Bits;
+	}
+	Bits;
 
-	bool BoolVal;
 	byte ByteVal;
 	char CharVal;
+	bool BoolVal;
+
 	word WordVal;
-	short IntVal;
+	short ShortVal;
+
 	dword DWordVal;
 	long LongVal;
 	float FloatVal;
@@ -209,7 +236,7 @@ class Message
 
 // REQUESTS
 
-class Request : public Message<Request, MessageType::ANGLEREQUEST>
+class Request : public Message<Request, MessageType::REQUEST>
 {
 
 };
