@@ -15,8 +15,15 @@
 namespace FoxetronMessaging
 {
 
-#pragma region GLOBAL CONSTANTS
-#pragma endregion GLOBAL CONSTANTS
+#pragma region GLOBAL CONSTANTS & VARIABLES
+
+	static const char MESSAGE_MARKER[4] = "FOX";
+
+	static const word BUFFER_SIZE = 200;
+
+	static volatile char RX[BUFFER_SIZE];
+
+#pragma endregion GLOBAL CONSTANTS & VARIABLES
 	
 
 
@@ -47,7 +54,7 @@ namespace FoxetronMessaging
 		FLOAT	= FOUR_BYTES | 0x4
 	};
 
-	enum MessageType : byte
+	enum MessageCode : byte
 	{
 		// Primary types
 		REQUEST_TYPE		= 0x0,
@@ -56,18 +63,18 @@ namespace FoxetronMessaging
 
 		// Categories
 		ANGLE_TYPE			= 0x10,
-		MOTOR_TYPE			= 0x20,
+		NEWANGLE_TYPE			= 0x20,
 		STATUS_TYPE			= 0x40,
 
 
 		// Request types
 		ANGLE_REQUEST		= REQUEST_TYPE | ANGLE_TYPE,
-		MOTOR_REQUEST		= REQUEST_TYPE | MOTOR_TYPE,
+		NEWANGLE_REQUEST		= REQUEST_TYPE | NEWANGLE_TYPE,
 		STATUS_REQUEST		= REQUEST_TYPE | STATUS_TYPE,
 
 		// Response types
 		ANGLE_RESPONSE		= RESPONSE_TYPE | 0x1,
-		MOTOR_RESPONSE		= RESPONSE_TYPE | 0x2,
+		NEWANGLE_RESPONSE		= RESPONSE_TYPE | 0x2,
 		STATUS_RESPONSE		= RESPONSE_TYPE | STATUS_TYPE,
 		CONTROLLER_STATUS	= STATUS_RESPONSE | 0x1,
 		DRIVER_STATUS		= STATUS_RESPONSE | 0x2
@@ -97,30 +104,31 @@ namespace FoxetronMessaging
 	// FUNDAMENTAL TYPE ALIASES
 
 	typedef uint32_t dword;
+	typedef void * pvoid;
 
 
 	//  TEMPLATED TYPE FORWARD DECLARATIONS & ALIASES
 
-	template<class T, MessageType TMsg>
+	template<class TMessage, MessageCode TCode>
 	class Message;
-	template<class T, MessageType TMsg>
-	using MESSAGE = Message<T, TMsg>;
-	template<class T, MessageType TMsg>
-	using PMESSAGE = Message<T, TMsg> *;
-	template<class T, MessageType TMsg>
-	using RMESSAGE = Message<T, TMsg> &;
-	template<class T, MessageType TMsg>
-	using PPMESSAGE = Message<T, TMsg> **;
-	template<class T, MessageType TMsg>
-	using RRMESSAGE = Message<T, TMsg> &&;
-	template<class T, MessageType TMsg>
-	using CMESSAGE = const Message<T, TMsg>;
-	template<class T, MessageType TMsg>
-	using PCMESSAGE = const Message<T, TMsg> *;
-	template<class T, MessageType TMsg>
-	using RCMESSAGE = const Message<T, TMsg> &;
-	template<class T, MessageType TMsg>
-	using PPCMESSAGE = const Message<T, TMsg> **;
+	template<class TMessage, MessageCode TCode>
+	using MESSAGE = Message<TMessage, TCode>;
+	template<class TMessage, MessageCode TCode>
+	using PMESSAGE = Message<TMessage, TCode> *;
+	template<class TMessage, MessageCode TCode>
+	using RMESSAGE = Message<TMessage, TCode> &;
+	template<class TMessage, MessageCode TCode>
+	using PPMESSAGE = Message<TMessage, TCode> **;
+	template<class TMessage, MessageCode TCode>
+	using RRMESSAGE = Message<TMessage, TCode> &&;
+	template<class TMessage, MessageCode TCode>
+	using CMESSAGE = const Message<TMessage, TCode>;
+	template<class TMessage, MessageCode TCode>
+	using PCMESSAGE = const Message<TMessage, TCode> *;
+	template<class TMessage, MessageCode TCode>
+	using RCMESSAGE = const Message<TMessage, TCode> &;
+	template<class TMessage, MessageCode TCode>
+	using PPCMESSAGE = const Message<TMessage, TCode> **;
 
 
 	// REQUESTS
@@ -133,9 +141,9 @@ namespace FoxetronMessaging
 	typedef AngleRequest ANGLEREQUEST, *PANGLEREQUEST, &RANGLEREQUEST;
 	typedef const AngleRequest CANGLEREQUEST, *CPANGLEREQUEST, &CRANGLEREQUEST;
 
-	class MotorRequest;
-	typedef MotorRequest MOTORREQUEST, *PMOTORREQUEST, &RMOTORREQUEST;
-	typedef const MotorRequest CMOTORREQUEST, *CPMOTORREQUEST, &CRMOTORREQUEST;
+	class NewAngleRequest;
+	typedef NewAngleRequest NEWANGLEREQUEST, *PNEWANGLEREQUEST, &RNEWANGLEREQUEST;
+	typedef const NewAngleRequest CNEWANGLEREQUEST, *CPNEWANGLEREQUEST, &CRNEWANGLEREQUEST;
 
 	class StatusRequest;
 	typedef StatusRequest STATUSREQUEST, *PSTATUSREQUEST, &RSTATUSREQUEST;
@@ -152,9 +160,9 @@ namespace FoxetronMessaging
 	typedef AngleResponse ANGLERESPONSE, *PANGLERESPONSE, &RANGLERESPONSE;
 	typedef const AngleResponse CANGLERESPONSE, *CPANGLERESPONSE, &CRANGLERESPONSE;
 
-	class MotorResponse;
-	typedef MotorResponse MOTORRESPONSE, *PMOTORRESPONSE, &RMOTORRESPONSE;
-	typedef const MotorResponse CMOTORRESPONSE, *CPMOTORRESPONSE, &CRMOTORRESPONSE;
+	class NewAngleResponse;
+	typedef NewAngleResponse NEWANGLERESPONSE, *PNEWANGLERESPONSE, &RNEWANGLERESPONSE;
+	typedef const NewAngleResponse CNEWANGLERESPONSE, *CPNEWANGLERESPONSE, &CRNEWANGLERESPONSE;
 
 	class StatusResponse;
 	typedef StatusResponse STATUSRESPONSE, *PSTATUSRESPONSE, &RSTATUSRESPONSE;
@@ -216,86 +224,151 @@ namespace FoxetronMessaging
 	typedef const union _Datum CDATUM, *CPDATUM, &CRDATUM;
 
 
-	typedef struct _Field
+	struct Field
 	{
-		DataType Type;
-		Datum Value;
-	}
-	Field, FIELD, *PFIELD, &RFIELD;
+		Field(DataType, Datum);
 
-	typedef const union _FIELD CFIELD, *CPFIELD, &CRFIELD;
+		virtual ~Field();
+
+		const Datum Value() const;
+
+		template <typename T>
+		const T Value() const;
+
+	protected:
+
+		DataType _Type;
+		Datum _Value;
+	};
+
+	typedef Field FIELD, *PFIELD, &RFIELD;
+	typedef const Field CFIELD, *CPFIELD, &CRFIELD;
 
 
-	template<class T, MessageType TMsg>
+	template<class TMessage, MessageCode TCode>
 	class Message
 	{
-		static constexpr MessageType TYPE();
+	public:
+
+		static constexpr MessageCode TYPE();
 		static constexpr word SIZE();
+
+		Message();
+		Message(RFIELD);
+		Message(PFIELD);
+
+		virtual ~Message();
+
+		virtual RFIELD operator[](size_t);
+
+		virtual size_t ParamCount() const;
+		virtual RFIELD GetParam(size_t = 0);
+
+	protected:
+
+		void RetrieveParamValue(pvoid, byte = 0);
+
+		PFIELD _Params;
 	};
 
 
 	// REQUESTS
 
-	class Request : public Message<Request, MessageType::REQUEST_TYPE>
+	class Request : public Message<Request, MessageCode::REQUEST_TYPE> { };
+
+
+	class AngleRequest : public Message<AngleRequest, MessageCode::ANGLE_REQUEST>
 	{
-		Field Param;
+	public:
+
+		AngleRequest();
+
+		virtual ~AngleRequest();
 	};
 
 
-	class AngleRequest : public Message<AngleRequest, MessageType::ANGLE_REQUEST>
+	class NewAngleRequest : public Message<NewAngleRequest, MessageCode::NEWANGLE_REQUEST>
 	{
+	public:
 
+		NewAngleRequest(const word degrees);
+
+		virtual ~NewAngleRequest();
+
+		const word Degrees() const;
 	};
 
 
-	class MotorRequest : public Message<MotorRequest, MessageType::MOTOR_REQUEST>
+	class StatusRequest : public Message<StatusRequest, MessageCode::STATUS_REQUEST>
 	{
+	public:
 
-	};
+		StatusRequest();
 
-
-	class StatusRequest : public Message<StatusRequest, MessageType::STATUS_REQUEST>
-	{
-
+		virtual ~StatusRequest();
 	};
 
 
 
 	// RESPONSES
 
-	class Response : public Message<Response, MessageType::RESPONSE_TYPE>
+	class Response : public Message<Response, MessageCode::RESPONSE_TYPE>
 	{
-		Error ErrorCode = Error::SUCCESS;
+	public:
+
+		const Error ErrorCode() const;
+
+	protected:
+
+		Error _ErrorCode = Error::SUCCESS;
 	};
 
 
-	class AngleResponse : public Message<AngleResponse, MessageType::ANGLE_RESPONSE>
+	class AngleResponse : public Message<AngleResponse, MessageCode::ANGLE_RESPONSE>
 	{
+	public:
 
+		const word Degrees() const;
 	};
 
 
-	class MotorResponse : public Message<MotorResponse, MessageType::ANGLE_RESPONSE>
-	{
+	class NewAngleResponse : public Message<NewAngleResponse, MessageCode::NEWANGLE_RESPONSE> { };
 
+	class StatusResponse : public Message<StatusResponse, MessageCode::STATUS_RESPONSE>
+	{
+	public:
+
+		StatusResponse(const char *);
+
+		const char * StatusMessage() const;
+
+	protected:
+
+		const char * _StatusMessage;
 	};
 
 
-	class StatusResponse : public Message<StatusResponse, MessageType::STATUS_RESPONSE>
+	class ControllerStatusResponse : public Message<ControllerStatusResponse, MessageCode::CONTROLLER_STATUS>
 	{
-		const char * StatusMessage;
+	public:
+
+		const ControllerStatus StatusCode() const;
+
+	protected:
+
+		ControllerStatus _StatusCode = ControllerStatus::NONE;
 	};
 
 
-	class ControllerStatusResponse : public Message<ControllerStatusResponse, MessageType::CONTROLLER_STATUS>
+	class DriverStatusResponse : public Message<DriverStatusResponse, MessageCode::DRIVER_STATUS>
 	{
-		ControllerStatus StatusCode = ControllerStatus::NONE;
-	};
+	public:
 
+		const DriverStatus StatusCode() const;
 
-	class DriverStatusResponse : public Message<DriverStatusResponse, MessageType::DRIVER_STATUS>
-	{
-		DriverStatus StatusCode = DriverStatus::IDLE;
+	protected:
+
+		DriverStatus _StatusCode = DriverStatus::IDLE;
 	};
 
 #pragma endregion TYPE DECLARATIONS

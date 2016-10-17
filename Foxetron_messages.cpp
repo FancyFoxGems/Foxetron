@@ -12,16 +12,16 @@
 
 // STATIC MESSAGE "OVERRIDES"
 
-template<class T, MessageType TMsg>
-constexpr MessageType Message<T, TMsg>::TYPE()
+template<class TMessage, MessageCode TCode>
+constexpr MessageCode Message<TMessage, TCode>::TYPE()
 {
-	return TMsg;
+	return TCode;
 }
 
-template<class T, MessageType TMsg>
-constexpr word Message<T, TMsg>::SIZE()
+template<class TMessage, MessageCode TCode>
+constexpr word Message<TMessage, TCode>::SIZE()
 {
-	return static_cast<word>(sizeof(T));
+	return static_cast<word>(sizeof(TMessage));
 }
 
 #pragma endregion MESSAGE DEFINITION
