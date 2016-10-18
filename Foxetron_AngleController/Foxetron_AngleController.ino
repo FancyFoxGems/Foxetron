@@ -54,10 +54,9 @@
 #pragma endregion INCLUDES
 
 
-
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
-#pragma GCC diagnostic ignored "-Wpointer-arith"
+IGNORE_WARNING(-Wunknown-pragmas)
+IGNORE_WARNING(-Wstrict-aliasing)
+IGNORE_WARNING(-Wpointer-arith)
 
 
 
