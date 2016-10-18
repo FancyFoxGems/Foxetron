@@ -10,13 +10,29 @@
 
 #pragma region FIELD DEFINITION
 
-// CONSTRUCTOR/DESTRUCTOR
+// CONSTRUCTORS/DESTRUCTOR
 
-Field::Field(Datum, DataType)
+Field::Field(Datum value, DataType type)
 {
 }
 
-Field::~Field()
+FoxetronMessaging::Field::Field(byte *, DataType)
+{
+}
+
+FoxetronMessaging::Field::Field(char, DataType)
+{
+}
+
+FoxetronMessaging::Field::Field(short, DataType)
+{
+}
+
+FoxetronMessaging::Field::Field(long, DataType)
+{
+}
+
+FoxetronMessaging::Field::Field(float, DataType)
 {
 }
 
@@ -30,6 +46,7 @@ const T Field::Value() const
 }
 
 #pragma endregion FIELD DEFINITION
+
 
 
 #pragma region MESSAGE DEFINITION

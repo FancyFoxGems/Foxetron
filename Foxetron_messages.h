@@ -232,11 +232,16 @@ namespace FoxetronMessaging
 	{
 		Field(Datum, DataType = DataType::BYTES);
 
-		virtual ~Field();
+		Field(byte *, DataType = DataType::BYTES);
+
+		Field(char, DataType = DataType::CHAR);
+		Field(short, DataType = DataType::SHORT);
+		Field(long, DataType = DataType::LONG);
+		Field(float, DataType = DataType::FLOAT);
 
 		template <typename T = Datum>
 		const T Value() const;
-
+		
 	protected:
 
 		Datum _Value;
