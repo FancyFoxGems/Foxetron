@@ -12,7 +12,7 @@
 
 // CONSTRUCTOR/DESTRUCTOR
 
-Field::Field(DataType, Datum)
+Field::Field(Datum, DataType)
 {
 }
 
@@ -94,7 +94,8 @@ RFIELD Message<TMessage, TCode>::GetParam(size_t i)
 {
 	if (_Params == NULL)
 	{
-		static FIELD NULL_FIELD;
+		static DATUM NULL_DATUM;
+		static FIELD NULL_FIELD(NULL_DATUM);
 		return NULL_FIELD;
 	}
 
@@ -112,7 +113,65 @@ void Message<TMessage, TCode>::RetrieveParamValue(pvoid, byte)
 #pragma endregion MESSAGE DEFINITION
 
 
+
 #pragma region REQUEST DEFINITIONS
+
+// ANGLE REQUEST
+
+NewAngleRequest::NewAngleRequest(const word degrees)
+{
+}
+
+const word NewAngleRequest::Degrees() const
+{
+	return 0;
+}
 
 #pragma endregion REQUEST DEFINITIONS
 
+
+
+#pragma region RESPONSE DEFINITIONS
+
+Response::Response(const Error)
+{
+}
+
+const Error Response::ErrorCode() const
+{
+	return Error();
+}
+
+const word AngleResponse::Degrees() const
+{
+	return 0;
+}
+
+StatusResponse::StatusResponse(const char *)
+{
+}
+
+const char * StatusResponse::StatusMessage() const
+{
+	return nullptr;
+}
+
+ControllerStatusResponse::ControllerStatusResponse(ControllerStatus, const char *)
+{
+}
+
+const ControllerStatus ControllerStatusResponse::StatusCode() const
+{
+	return ControllerStatus();
+}
+
+DriverStatusResponse::DriverStatusResponse(DriverStatus, const char *)
+{
+}
+
+const DriverStatus DriverStatusResponse::StatusCode() const
+{
+	return DriverStatus();
+}
+
+#pragma endregion RESPONSE DEFINITIONS

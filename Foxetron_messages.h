@@ -230,7 +230,7 @@ namespace FoxetronMessaging
 
 	struct Field
 	{
-		Field(DataType, Datum);
+		Field(Datum, DataType = DataType::BYTES);
 
 		virtual ~Field();
 
@@ -239,8 +239,8 @@ namespace FoxetronMessaging
 
 	protected:
 
-		DataType _Type;
 		Datum _Value;
+		DataType _Type;
 	};
 
 	typedef Field FIELD, *PFIELD, &RFIELD;
@@ -279,36 +279,20 @@ namespace FoxetronMessaging
 	class Request : public Message<Request, MessageCode::REQUEST_TYPE> { };
 
 
-	class AngleRequest : public Message<AngleRequest, MessageCode::ANGLE_REQUEST>
-	{
-	public:
-
-		AngleRequest();
-
-		virtual ~AngleRequest();
-	};
+	class AngleRequest : public Message<AngleRequest, MessageCode::ANGLE_REQUEST> { };
 
 
 	class NewAngleRequest : public Message<NewAngleRequest, MessageCode::NEWANGLE_REQUEST>
 	{
 	public:
 
-		NewAngleRequest(const word degrees);
-
-		virtual ~NewAngleRequest();
+		NewAngleRequest(const word);
 
 		const word Degrees() const;
 	};
 
 
-	class StatusRequest : public Message<StatusRequest, MessageCode::STATUS_REQUEST>
-	{
-	public:
-
-		StatusRequest();
-
-		virtual ~StatusRequest();
-	};
+	class StatusRequest : public Message<StatusRequest, MessageCode::STATUS_REQUEST> { };
 
 
 
@@ -317,6 +301,8 @@ namespace FoxetronMessaging
 	class Response : public Message<Response, MessageCode::RESPONSE_TYPE>
 	{
 	public:
+
+		Response(const Error);
 
 		const Error ErrorCode() const;
 
@@ -329,6 +315,8 @@ namespace FoxetronMessaging
 	class AngleResponse : public Message<AngleResponse, MessageCode::ANGLE_RESPONSE>
 	{
 	public:
+
+		AngleResponse(const word);
 
 		const word Degrees() const;
 	};
