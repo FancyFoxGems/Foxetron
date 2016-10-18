@@ -230,17 +230,19 @@ namespace FoxetronMessaging
 
 	struct Field
 	{
-		Field(Datum, DataType = DataType::BYTES);
+	public:
+
+		Field(const Datum &, DataType = DataType::BYTES);
 
 		Field(byte *, DataType = DataType::BYTES);
 
-		Field(char, DataType = DataType::CHAR);
-		Field(short, DataType = DataType::SHORT);
-		Field(long, DataType = DataType::LONG);
-		Field(float, DataType = DataType::FLOAT);
+		Field(const char &, DataType = DataType::CHAR);
+		Field(const short &, DataType = DataType::SHORT);
+		Field(const long &, DataType = DataType::LONG);
+		Field(const float &, DataType = DataType::FLOAT);
 
 		template <typename T = Datum>
-		const T Value() const;
+		T & Value();
 		
 	protected:
 
@@ -248,8 +250,56 @@ namespace FoxetronMessaging
 		DataType _Type;
 	};
 
+	template<>
+	char & Field::Value<char>();
+
 	typedef Field FIELD, *PFIELD, &RFIELD;
 	typedef const Field CFIELD, *CPFIELD, &CRFIELD;
+
+
+	//template <typename T = Datum>
+	//struct Field<T>
+	//{
+	//public:
+
+	//	static constexpr DataType DataType();
+
+	//	Field(const Datum &);
+
+	//	Field(const T &);
+
+	//	const T Value() const;
+
+	//	typedef T Type;
+
+	//protected:
+
+	//	Datum _Value;
+	//};
+
+	////template<>
+	////const char Field::Value<char>() const;
+
+	//template<typename T = BYTE>
+	//class Field;
+	//template<typename T = BYTE>
+	//using FIELD = Field<T>;
+	//template<typename T = BYTE>
+	//using PFIELD = Field<T> *;
+	//template<typename T = BYTE>
+	//using RFIELD = Field<T> &;
+	//template<typename T = BYTE>
+	//using PPFIELD = Field<T> **;
+	//template<typename T = BYTE>
+	//using RRFIELD = Field<T> &&;
+	//template<typename T = BYTE>
+	//using CFIELD = const Field<T>;
+	//template<typename T = BYTE>
+	//using PCFIELD = const Field<T> *;
+	//template<typename T = BYTE>
+	//using RCFIELD = const Field<T> &;
+	//template<typename T = BYTE>
+	//using PPCFIELD = const Field<T> **;
 
 
 	template<class TMessage, MessageCode TCode>

@@ -10,39 +10,49 @@
 
 #pragma region FIELD DEFINITION
 
-// CONSTRUCTORS/DESTRUCTOR
+// CONSTRUCTORS
 
-Field::Field(Datum value, DataType type)
+Field::Field(const Datum & value, DataType type) : _Value(value), _Type(type) { }
+
+Field::Field(byte * value, DataType type) : _Type(type)
 {
+	for (byte i = 0; i < sizeof(value); i++)
+		_Value.Bytes[i] = value[i];
 }
 
-FoxetronMessaging::Field::Field(byte *, DataType)
+Field::Field(const char & value, DataType type) : _Type(type)
 {
+	_Value.CharVal = value;
 }
 
-FoxetronMessaging::Field::Field(char, DataType)
+Field::Field(const short & value, DataType type) : _Type(type)
 {
+	_Value.ShortVal = value;
 }
 
-FoxetronMessaging::Field::Field(short, DataType)
+Field::Field(const long & value, DataType type) : _Type(type)
 {
+	_Value.LongVal = value;
 }
 
-FoxetronMessaging::Field::Field(long, DataType)
+Field::Field(const float & value, DataType type) : _Type(type)
 {
-}
-
-FoxetronMessaging::Field::Field(float, DataType)
-{
+	_Value.FloatVal = value;
 }
 
 
 // METHODS
 
 template<typename T>
-const T Field::Value() const
+T & Field::Value()
 {
-	return 0;
+	return _Value;
+}
+
+template<>
+char & Field::Value<char>()
+{
+	return _Value.CharVal;
 }
 
 #pragma endregion FIELD DEFINITION
