@@ -71,66 +71,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Arduino.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\binary.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Client.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial_private.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\IPAddress.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\new.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\PluggableUSB.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Print.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Printable.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Server.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Stream.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Udp.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBAPI.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBCore.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBDesc.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WCharacter.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_private.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.h">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs\pins_arduino.h">
-      <Filter>src\_micro-api-readonly\variants\eightanaloginputs</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\libraries\EEPROM\EEPROM.h">
       <Filter>src\_micro-api-readonly\libraries\EEPROM</Filter>
     </ClInclude>
@@ -167,6 +107,9 @@
     <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h">
       <Filter>__vm</Filter>
     </ClInclude>
+    <ClInclude Include="..\Foxetron_fields.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\Foxetron_messages.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -185,8 +128,23 @@
     <ClInclude Include="Foxetron_EEPROM.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Foxetron_messages.cpp">
-      <Filter>src</Filter>
+    <ClInclude Include="..\IttyBitty\avr_cpunames.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_aliases.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_bits.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_type_traits.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_util.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_info.h">
+      <Filter>Libraries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -320,6 +278,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="Foxetron_EEPROM.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Foxetron_fields.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Foxetron_messages.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

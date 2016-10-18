@@ -18,16 +18,10 @@
 *****************************************************************************************************/
 
 
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
-#pragma GCC diagnostic ignored "-Wpointer-arith"
-
-
 #pragma region INCLUDES
 
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
-
 
 // PROJECT MODULES
 #include "Foxetron_messages.h"
@@ -46,6 +40,12 @@
 //#include <avr/pgmspace.h>						// included by project 3rd-party libs
 
 #pragma endregion INCLUDES
+
+
+
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#pragma GCC diagnostic ignored "-Wpointer-arith"
 
 
 

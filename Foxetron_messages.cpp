@@ -8,63 +8,6 @@
 #include "Foxetron_messages.h"
 
 
-#pragma region FIELD DEFINITION
-
-// CONSTRUCTORS
-
-Field::Field(Datum & value, DataType type) : _Value(value), _Type(type) { }
-
-Field::Field(byte * value, DataType type) : _Type(type)
-{
-	for (byte i = 0; i < sizeof(value); i++)
-		_Value.Bytes[i] = value[i];
-}
-
-Field::Field(char & value, DataType type) : _Type(type)
-{
-	_Value.CharVal = value;
-}
-
-Field::Field(short & value, DataType type) : _Type(type)
-{
-	_Value.ShortVal = value;
-}
-
-Field::Field(long & value, DataType type) : _Type(type)
-{
-	_Value.LongVal = value;
-}
-
-Field::Field(float & value, DataType type) : _Type(type)
-{
-	_Value.FloatVal = value;
-}
-
-
-// METHODS
-
-template<typename TVal>
-const TVal Field::GetValue() const
-{
-	return reinterpret_cast<TVal>(_Value.ByteVal);
-}
-
-template<>
-const char Field::GetValue<char>() const
-{
-	return static_cast<const char>(_Value.CharVal);
-}
-
-
-template<typename TVal>
-void FoxetronMessaging::Field::SetValue(TVal &)
-{
-}
-
-#pragma endregion FIELD DEFINITION
-
-
-
 #pragma region MESSAGE DEFINITION
 
 // STATIC MESSAGE "OVERRIDES"
@@ -139,7 +82,7 @@ RFIELD Message<TMessage, TCode>::GetParam(size_t i) const
 // PROTECTED METHODS
 
 template<class TMessage, MessageCode TCode>
-void Message<TMessage, TCode>::RetrieveParamValue(pvoid, byte)
+void Message<TMessage, TCode>::RetrieveParamValue(PVOID, byte)
 {
 }
 

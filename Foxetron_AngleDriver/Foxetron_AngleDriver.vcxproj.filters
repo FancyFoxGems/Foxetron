@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="__vm">
@@ -17,14 +17,38 @@
     <ClInclude Include="__vm\.Foxetron_AngleDriver.vsarduino.h">
       <Filter>__vm</Filter>
     </ClInclude>
+    <ClInclude Include="..\Foxetron_fields.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\Foxetron_messages.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="Foxetron_pins.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Foxetron_fields.cpp">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\Foxetron_messages.cpp">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\avr_cpunames.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_aliases.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_bits.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_type_traits.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_util.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_info.h">
+      <Filter>Libraries</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
