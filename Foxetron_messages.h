@@ -172,11 +172,10 @@ namespace Foxetron
 		VIRTUAL RFIELD operator[](CSIZE);
 
 		VIRTUAL CSIZE ParamCount() CONST;
-		VIRTUAL RFIELD GetParam(CSIZE = 0) CONST;
+
+		VIRTUAL RFIELD Param(CSIZE = 0) CONST;
 
 	protected:
-
-		VOID RetrieveParamValue(PVOID, CSIZE = 0);
 
 		PFIELD _Params;
 	};

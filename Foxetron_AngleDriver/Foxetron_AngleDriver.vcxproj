@@ -69,6 +69,7 @@
     <ClInclude Include="Foxetron_pins.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\IttyBitty\IttyBitty_bits.cpp" />
     <ClCompile Include="..\Foxetron_fields.cpp" />
     <ClCompile Include="..\Foxetron_messages.cpp" />
   </ItemGroup>

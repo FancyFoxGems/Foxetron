@@ -53,7 +53,7 @@ Message<TMessage, TCode>::~Message()
 template<CLASS TMessage, MessageCode TCode>
 RFIELD Message<TMessage, TCode>::operator[](CSIZE i)
 {
-	return this->GetParam(i);
+	return this->Param(i);
 }
 
 
@@ -66,7 +66,7 @@ CSIZE Message<TMessage, TCode>::ParamCount() CONST
 }
 
 template<CLASS TMessage, MessageCode TCode>
-RFIELD Message<TMessage, TCode>::GetParam(CSIZE i) CONST
+RFIELD Message<TMessage, TCode>::Param(CSIZE i) CONST
 {
 	if (_Params == NULL)
 	{
@@ -81,10 +81,6 @@ RFIELD Message<TMessage, TCode>::GetParam(CSIZE i) CONST
 
 // PROTECTED METHODS
 
-template<CLASS TMessage, MessageCode TCode>
-VOID Message<TMessage, TCode>::RetrieveParamValue(PVOID, CSIZE)
-{
-}
 
 #pragma endregion MESSAGE DEFINITION
 
@@ -165,7 +161,7 @@ DriverStatusResponse::DriverStatusResponse(DriverStatus driverStatus, CONST PCCH
 
 CONST DriverStatus DriverStatusResponse::StatusCode() CONST
 {
-	return static_cast<CONST DriverStatus>(this->GetParam(0).GetValue<BYTE>());
+	return static_cast<CONST DriverStatus>((BYTE)(this->Param(0)));
 }
 
 #pragma endregion RESPONSE DEFINITIONS

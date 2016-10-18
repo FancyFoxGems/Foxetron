@@ -12,30 +12,30 @@
 
 // CONSTRUCTORS
 
-Field::Field(Datum & value, DataType type) : _Value(value), _Type(type) { }
+Field::Field(RDATUM value, DataType type) : _Value(value), _DataType(type) { }
 
-Field::Field(BYTE * value, DataType type) : _Type(type)
+Field::Field(PBYTE value, DataType type) : _DataType(type)
 {
 	for (BYTE i = 0; i < SIZEOF(value); i++)
 		_Value.Bytes[i] = value[i];
 }
 
-Field::Field(CHAR & value, DataType type) : _Type(type)
+Field::Field(RCHAR value, DataType type) : _DataType(type)
 {
 	_Value.CharVal = value;
 }
 
-Field::Field(short & value, DataType type) : _Type(type)
+Field::Field(RSHORT value, DataType type) : _DataType(type)
 {
 	_Value.ShortVal = value;
 }
 
-Field::Field(LONG & value, DataType type) : _Type(type)
+Field::Field(RLONG value, DataType type) : _DataType(type)
 {
 	_Value.LongVal = value;
 }
 
-Field::Field(FLOAT & value, DataType type) : _Type(type)
+Field::Field(RFLOAT value, DataType type) : _DataType(type)
 {
 	_Value.FloatVal = value;
 }
@@ -57,8 +57,9 @@ CONST CHAR Field::GetValue<CHAR>() CONST
 
 
 template<typename TVal>
-VOID Field::SetValue(TVal &)
+VOID Field::SetValue(TVal & value)
 {
+
 }
 
 #pragma endregion FIELD DEFINITION

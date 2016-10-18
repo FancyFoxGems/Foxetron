@@ -126,9 +126,9 @@ VBOOL _AngleEncoderB	= false;	// Pin 3 / PD3 (INT1)
 //VBOOL _AngleEncoderU		= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
 VBOOL _AngleUp			= false;
-VDWORD _AngleReading = 0;
-WORD _AngleDelta				= 0;
-WORD _AngleVelocity				= 0;
+VDWORD _AngleReading	= 0;
+WORD _AngleDelta		= 0;
+WORD _AngleVelocity		= 0;
 
 VBOOL _LedButton1		= false;	// Pin 4 / PD4 (PCINT20)
 VBOOL _LedButton2		= false;	// Pin 5 / PD5 (PCINT21)
@@ -140,17 +140,17 @@ VBOOL _LedButton5		= false;	// Pin 8 / PB0 (PCINT0)
 
 // [FREE PIN: Pin A6 / ADC6]
 
-BOOL _modeSwitch				= false;	// A7 / ADC7
-WORD _modeSwitchVal				= 0;
+BOOL _modeSwitch		= false;	// A7 / ADC7
+WORD _modeSwitchVal		= 0;
 
 // Menu rotary encoder
 VBOOL _MenuEncoderA		= false;	// Pin 14/A0 / PC0 (PCINT8)
 VBOOL _MenuEncoderB		= false;	// Pin 15/A1 / PC1 (PCINT9)
 
-BOOL _MenuUp					= false;
-DWORD _MenuReading			= 0;
-WORD _MenuDelta					= 0;
-WORD _MenuVelocity				= 0;
+BOOL _MenuUp			= false;
+DWORD _MenuReading		= 0;
+WORD _MenuDelta			= 0;
+WORD _MenuVelocity		= 0;
 
 VBOOL _SelectButton		= false;	// Pin 16/A2 / PC2 (PCINT10)
 VBOOL _ShiftButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
@@ -159,11 +159,11 @@ VBOOL _ShiftButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
 // OUTPUTS
 
 // LEDs
-BYTE _RgbRed					= 0;		// Pin 9 / PB1
-BYTE _RgbGreen					= 0;		// Pin 10 / PB2
-BYTE _RgbBlue					= 0;		// Pin 11 / PB3
+BYTE _RgbRed			= 0;		// Pin 9 / PB1
+BYTE _RgbGreen			= 0;		// Pin 10 / PB2
+BYTE _RgbBlue			= 0;		// Pin 11 / PB3
 
-BOOL _StatusLED					= LOW;		// Pin 13 / PB5
+BOOL _StatusLED			= LOW;		// Pin 13 / PB5
 
 #pragma endregion PROGRAM VARIABLES
 

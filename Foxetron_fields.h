@@ -11,7 +11,9 @@
 
 
 
-#include "IttyBitty_util.h"
+#include "IttyBitty_bits.h"
+
+using namespace IttyBitty;
 
 
 namespace Foxetron
@@ -53,7 +55,7 @@ namespace Foxetron
 
 	//  TEMPLATED TYPE FORWARD DECLARATIONS & ALIASES
 
-	typedef UNION _Datum Datum, DATUM, *PDATUM, &RDATUM;
+	typedef VOLATILE UNION _Datum Datum, DATUM, *PDATUM, &RDATUM;
 	typedef CONST UNION _Datum CDATUM, *CPDATUM, &CRDATUM;
 
 	template<typename T = Datum>
@@ -84,31 +86,12 @@ namespace Foxetron
 #pragma region TYPE DECLARATIONS
 
 	// Datum: UNIVERSAL 4-BYTE DATA TYPE UNION
-
-	UNION _Datum
+	
+	UNION PACKED _Datum
 	{
 		BYTE Bytes[4];
 
-		STRUCT
-		{
-			BOOL b0 : 1;
-			BOOL b1 : 1;
-			BOOL b2 : 1;
-			BOOL b3 : 1;
-			BOOL b4 : 1;
-			BOOL b5 : 1;
-			BOOL b6 : 1;
-			BOOL b7 : 1;
-			BOOL b8 : 1;
-			BOOL b9 : 1;
-			BOOL bA : 1;
-			BOOL bB : 1;
-			BOOL bC : 1;
-			BOOL bD : 1;
-			BOOL bE : 1;
-			BOOL bF : 1;
-		}
-		Bits;
+		BITPACK	Bits;
 
 		BYTE ByteVal;
 		CHAR CharVal;
@@ -120,6 +103,13 @@ namespace Foxetron
 		DWORD DWordVal;
 		LONG LongVal;
 		FLOAT FloatVal;
+
+		_Datum() { }
+
+		_Datum(RDATUM other)
+		{
+			this->DWordVal = other.DWordVal;
+		}
 	};
 
 
@@ -129,18 +119,13 @@ namespace Foxetron
 	{
 	public:
 
-		//operator BYTE()
+		VIRTUAL CSIZE Size() const = 0;
+		
+		VIRTUAL CSIZE ByteSize() const = 0;
 
-		template<typename TVal = Datum>
-		CONST TVal GetValue() CONST;
+		VIRTUAL CONST DataSize GetDataSize() const = 0;
 
-		template<typename TVal = Datum>
-		VOID SetValue(TVal &);
-
-	protected:
-
-		Datum _Value;
-		DataType _Type;
+		VIRTUAL CONST DataType GetDataType() const = 0;
 	};
 
 	typedef IField IFIELD, *PIFIELD, &RIFIELD;
@@ -162,22 +147,30 @@ namespace Foxetron
 		Field(RLONG, DataType = DataType::LONG_FIELD);
 		Field(RFLOAT, DataType = DataType::FLOAT_FIELD);
 
-		//operator BYTE()
+		operator BYTE() const;
+
+		VIRTUAL CSIZE Size() const;
+		
+		VIRTUAL CSIZE ByteSize() const;
+
+		VIRTUAL CONST DataSize GetDataSize() const;
+
+		VIRTUAL CONST DataType GetDataType() const;
 
 		template<typename TVal = Datum>
-		CONST TVal GetValue() CONST;
+		CONST TVal GetValue() const;
 
 		template<typename TVal= Datum>
 		VOID SetValue(TVal &);
 		
 	protected:
 
-		Datum _Value;
-		DataType _Type;
+		DATUM _Value;
+		DataType _DataType;
 	};
 
 	template<>
-	CONST CHAR Field::GetValue<CHAR>() CONST;
+	CONST CHAR Field::GetValue<CHAR>() const;
 
 	typedef Field FIELD, *PFIELD, &RFIELD;
 	typedef CONST Field CFIELD, *CPFIELD, &CRFIELD;
@@ -201,7 +194,18 @@ namespace Foxetron
 
 		typedef T Type;
 
-		CONST T Value() CONST
+		operator CONST T() const;
+		operator SIGNED_TYPE(CONST T)() const;
+
+		CSIZE Size() const;
+		
+		CSIZE ByteSize() const;
+
+		CONST DataSize GetDataSize() const;
+
+		CONST DataType GetDataType() const;
+
+		CONST T Value() const
 		{
 			return reinterpret_cast<T>(_Value.ByteVal);
 		}
