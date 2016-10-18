@@ -17,6 +17,11 @@
 * See the included GNU General Public License text for more details.
 *****************************************************************************************************/
 
+// GCC WARNING SUPPRESSIONS
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#pragma GCC diagnostic ignored "-Wpointer-arith"
+
 
 #pragma region INCLUDES
 
@@ -47,8 +52,7 @@ IGNORE_WARNING(-Wpointer - arith)
 // AVR LibC
 //#include <avr/pgmspace.h>						// included by project 3rd-party libs
 
-#pragma endregion INCLUDES
-
+#pragma endregion
 
 
 #pragma region DEFINES
@@ -63,15 +67,12 @@ IGNORE_WARNING(-Wpointer - arith)
 	#undef DEBUG_INPUTS
 #endif
 
-#pragma endregion DEFINES
-
-
+#pragma endregion
 
 
 #pragma region PROGRAM CONSTANTS
 
-#pragma endregion PROGRAM CONSTANTS
-
+#pragma endregion
 
 
 #pragma region PROGRAM VARIABLES
@@ -79,18 +80,18 @@ IGNORE_WARNING(-Wpointer - arith)
 // INPUTS
 
 // Angle encoder
-VBOOL _AngleEncoderA	= false;	// Pin 2 / PD2 (INT0)
-VBOOL _AngleEncoderB	= false;	// Pin 3 / PD3 (INT1)
+VBOOL _AngleEncoderA	= FALSE;	// Pin 2 / PD2 (INT0)
+VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1)
 
-VBOOL _AngleUp			= false;
+VBOOL _AngleUp			= FALSE;
 VDWORD _AngleReading	= 0;
-WORD _AngleDelta				= 0;
-WORD _AngleVelocity				= 0;
+WORD _AngleDelta		= 0;
+WORD _AngleVelocity		= 0;
 
 // Mast control inputs
-VBOOL _ActionButton		= false;	// Pin 15/A1 / PC1 (PCINT9)
-VBOOL _OneShotButton	= false;	// Pin 16/A2 / PC2 (PCINT10)
-VBOOL _LatchButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
+VBOOL _ActionButton		= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
+VBOOL _OneShotButton	= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
+VBOOL _LatchButton		= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
@@ -99,11 +100,10 @@ VBOOL _LatchButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
 VBOOL _StatusLed		= LOW;
 VBOOL _ActionLed		= HIGH;
 
-#pragma endregion PROGRAM VARIABLES
+#pragma endregion
 
 
-
-#pragma region PROGRAM OUTLINE: ENTRY POINT & LOOP
+#pragma region PROGRAM OUTLINE: ENTRY POINT, LOOP, ETC.
 
 VOID setup()
 {
@@ -135,8 +135,7 @@ VOID loop()
 #endif
 }
 
-#pragma endregion PROGRAM OUTLINE: ENTRY POINT & LOOP
-
+#pragma endregion
 
 
 #pragma region INTERRUPT VECTORS and SUPPORTING MACROS & INLINED FUNCTIONS
@@ -193,8 +192,7 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
 
 }*/
 
-#pragma endregion INTERRUPT VECTORS and SUPPORTING MACROS & INLINED FUNCTIONS
-
+#pragma endregion
 
 
 #pragma region PROGRAM FUNCTIONS
@@ -207,8 +205,7 @@ VOID initializeInterrupts()
 	EICRA |= 0b00000101;
 }
 
-#pragma endregion PROGRAM FUNCTIONS
-
+#pragma endregion
 
 
 #pragma region DEBUG UTILITY FUNCTIONS
@@ -253,4 +250,4 @@ VOID _DEBUG_printInputValues()
 	delay(500);
 }
 
-#pragma endregion DEBUG UTILITY FUNCTIONS
+#pragma endregion

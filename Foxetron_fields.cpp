@@ -8,9 +8,9 @@
 #include "Foxetron_fields.h"
 
 
-#pragma region FIELD DEFINITION
+/* Field DEFINITION */
 
-// CONSTRUCTORS
+#pragma region CONSTRUCTORS
 
 Field::Field(RDATUM value, DataType type) : _Value(value), _DataType(type) { }
 
@@ -40,8 +40,10 @@ Field::Field(RFLOAT value, DataType type) : _DataType(type)
 	_Value.FloatVal = value;
 }
 
+#pragma endregion
 
-// METHODS
+
+#pragma region METHODS
 
 template<typename TVal>
 CONST TVal Field::GetValue() CONST
@@ -62,4 +64,4 @@ VOID Field::SetValue(TVal & value)
 
 }
 
-#pragma endregion FIELD DEFINITION
+#pragma endregion

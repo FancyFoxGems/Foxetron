@@ -8,19 +8,15 @@
 #include "Foxetron_LCD.h"
 
 
-
 #pragma region GLOBAL VARIABLES
 
 // LCD display
 EXTERN BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
 
-#pragma endregion GLOBAL VARIABLES
+#pragma endregion
 
 
-
-#pragma region FUNCTION DEFINITIONS
-
-// PROGRAM FUNCTIONS
+#pragma region PROGRAM FUNCTIONS
 
 VOID initializeLCD()
 {
@@ -38,8 +34,10 @@ VOID initializeLCD()
 	}
 }
 
+#pragma endregion
 
-// UTILITY FUNCTIONS
+
+#pragma region UTILITY FUNCTIONS
 
 CONST CHAR * CONST LCD_invertChar(CONST CHAR * lcdChar, BYTE charWidth)
 {
@@ -61,5 +59,5 @@ CONST CHAR * LCD_invertChar_P(CONST CHAR * lcdChar, BYTE charWidth)
 	return LCD_invertChar(const_cast<CONST CHAR *>(lcdCharData), charWidth);
 }
 
-#pragma endregion FUNCTION DEFINITIONS
+#pragma endregion
 

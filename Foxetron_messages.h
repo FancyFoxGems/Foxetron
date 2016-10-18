@@ -15,7 +15,6 @@
 
 namespace Foxetron
 {
-
 #pragma region GLOBAL CONSTANTS & VARIABLES
 
 	STATIC CCHAR MESSAGE_MARKER[4] = "FOX";
@@ -24,9 +23,8 @@ namespace Foxetron
 
 	EXTERN VCHAR RX[BUFFER_SIZE];
 
-#pragma endregion GLOBAL CONSTANTS & VARIABLES
+#pragma endregion
 	
-
 
 #pragma region ENUMS
 
@@ -71,14 +69,13 @@ namespace Foxetron
 		IDLE
 	};
 
-#pragma endregion ENUMS
-
-
+#pragma endregion
+	
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 
-	//  TEMPLATED TYPE FORWARD DECLARATIONS & ALIASES
+	//  Message
 
 	template<CLASS TMessage, MessageCode TCode>
 	CLASS Message;
@@ -147,8 +144,7 @@ namespace Foxetron
 	typedef DriverStatusResponse DRIVERSTATUSRESPONSE, *PDRIVERSTATUSRESPONSE, &RDRIVERSTATUSRESPONSE;
 	typedef CONST DriverStatusResponse CDRIVERSTATUSRESPONSE, *CPDRIVERSTATUSRESPONSE, &CRDRIVERSTATUSRESPONSE;
 
-#pragma endregion FORWARD DECLARATIONS & TYPE ALIASES
-
+#pragma endregion
 
 
 #pragma region TYPE DECLARATIONS
@@ -178,6 +174,8 @@ namespace Foxetron
 		VIRTUAL RFIELD Param(CSIZE = 0) CONST;
 
 	protected:
+
+		BOOL _Dispose = FALSE;
 
 		PFIELD _Params;
 	};
@@ -310,8 +308,7 @@ namespace Foxetron
 		DriverStatus _StatusCode = DriverStatus::IDLE;
 	};
 
-#pragma endregion TYPE DECLARATIONS
-
+#pragma endregion
 }
 
 

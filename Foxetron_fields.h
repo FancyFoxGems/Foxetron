@@ -10,15 +10,13 @@
 #define _FOXETRON_FIELDS_H
 
 
-
 #include "IttyBitty_bits.h"
 
 using namespace IttyBitty;
 
 
 namespace Foxetron
-{
-	
+{	
 #pragma region ENUMS
 	
 	enum DataSize : BYTE
@@ -36,24 +34,20 @@ namespace Foxetron
 		BYTE_FIELD	= ONE_BYTE | 0x1,
 		CHAR_FIELD	= ONE_BYTE | 0x2,
 		BOOL_FIELD	= ONE_BYTE | 0x4,
+		BIT_FIELD	= ONE_BYTE | 0x8,
 
 		WORD_FIELD	= TWO_BYTES | 0x1,
 		SHORT_FIELD	= TWO_BYTES | 0x2,
-		BIT_FIELD	= TWO_BYTES | 0x4,
 
 		DWORD_FIELD	= FOUR_BYTES | 0x1,
 		LONG_FIELD	= FOUR_BYTES | 0x2,
 		FLOAT_FIELD	= FOUR_BYTES | 0x4
 	};
 
-#pragma endregion ENUMS
-
+#pragma endregion
 
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
-
-
-	//  TEMPLATED TYPE FORWARD DECLARATIONS & ALIASES
 
 	typedef VOLATILE UNION _Datum Datum, DATUM, *PDATUM, &RDATUM;
 	typedef CONST UNION _Datum CDATUM, *CPDATUM, &CRDATUM;
@@ -79,8 +73,7 @@ namespace Foxetron
 	template<typename T = Datum>
 	using PPCTYPEDFIELD = CONST TypedField<T> **;
 
-#pragma endregion FORWARD DECLARATIONS & TYPE ALIASES
-
+#pragma endregion
 
 
 #pragma region TYPE DECLARATIONS
@@ -215,8 +208,7 @@ namespace Foxetron
 		Datum _Value;
 	};
 
-#pragma endregion TYPE DECLARATIONS
-
+#pragma endregion
 }
 
 using namespace Foxetron;

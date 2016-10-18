@@ -34,13 +34,10 @@ Curve::Linear * _RgbCurves[] =
 	new Curve::Linear(0, 0, 0, 5),
 };
 
-#pragma endregion GLOBAL VARIABLES
+#pragma endregion
 
 
-
-#pragma region FUNCTION DEFINITIONS
-
-// VaRGB CALLBACK FUNCTIONS
+#pragma region VaRGB CALLBACK FUNCTIONS
 
 VOID RGB_callback_SetColor(ColorSettings * colors)
 {
@@ -55,8 +52,10 @@ VOID RGB_callback_ScheduleComplete(Schedule * schedule)
 	RGB.setSchedule(schedule);
 }
 
+#pragma endregion
 
-// PROGRAM FUNCTIONS
+
+#pragma region PROGRAM FUNCTIONS
 
 VOID initializeRGB()
 {
@@ -85,4 +84,4 @@ VOID freeRGB()
 	delete[] _RgbCurves;
 }
 
-#pragma endregion FUNCTION DEFINITIONS
+#pragma endregion

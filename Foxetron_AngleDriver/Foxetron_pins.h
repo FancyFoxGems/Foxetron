@@ -10,14 +10,12 @@
 #define _FOXETRON_PINS_H
 
 
-
 #pragma region INCLUDES
 
 //  ITTY BITTY
 #include "IttyBitty_util.h"
 
-#pragma endregion INCLUDES
-
+#pragma endregion
 
 
 #pragma region DEFINES
@@ -39,12 +37,10 @@
 
 #define PIN_OUT_ACTION_LED		14	// Pin 14/A0 / PC0 (PCINT8)
 
-
-#pragma endregion DEFINES
-
+#pragma endregion
 
 
-#pragma region FUNCTIONS
+#pragma region PROGRAM FUNCTIONS
 
 INLINE VOID initializePins()
 {
@@ -70,7 +66,7 @@ INLINE VOID initializePins()
 	pinMode(PIN_BUTTON_LATCH, INPUT_PULLUP);
 }
 
-#pragma endregion FUNCTIONS
+#pragma endregion
 
 
 #endif

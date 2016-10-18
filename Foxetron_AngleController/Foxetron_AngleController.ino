@@ -24,11 +24,10 @@
 #pragma GCC diagnostic ignored "-Wpointer-arith"
 
 
-
 #pragma region INCLUDES
 
 // ITTY BITTY
-#include "IttyBitty_util.h"
+#include "IttyBitty_info.h"
 
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
@@ -60,8 +59,7 @@
 // AVR LibC
 //#include <avr/pgmspace.h>						// included by project 3rd-party libs
 
-#pragma endregion INCLUDES
-
+#pragma endregion
 
 
 #pragma region DEFINES
@@ -72,12 +70,8 @@
 #define SERIAL_ENABLE
 #define SERIAL_BAUD_RATE		115200
 
-#ifdef DEBUG_INPUTS
-#if DEBUG_INPUTS != 1
-#undef DEBUG_INPUTS
-#elif !defined(SERIAL_ENABLE)
-#define SERIAL_ENABLE
-#endif
+#ifdef DEBUG_INPUTS && DEBUG_INPUTS != 1
+	#undef DEBUG_INPUTS
 #endif
 
 
@@ -101,16 +95,14 @@
 
 #define COUNT(var) (SIZEOF(var) / SIZEOF(0[var]))
 
-#pragma endregion DEFINES
-
+#pragma endregion
 
 
 #pragma region PROGRAM CONSTANTS
 
 // FLASH DATA
 
-#pragma endregion PROGRAM CONSTANTS
-
+#pragma endregion
 
 
 #pragma region PROGRAM VARIABLES
@@ -120,40 +112,40 @@
 
 // INPUTS
 
-VBOOL _AngleEncoderA	= false;	// Pin 2 / PD2 (INT0)
-VBOOL _AngleEncoderB	= false;	// Pin 3 / PD3 (INT1)
+VBOOL _AngleEncoderA	= FALSE;	// Pin 2 / PD2 (INT0)
+VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1)
 //VBOOL _AngleEncoderZ		= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
 //VBOOL _AngleEncoderU		= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
-VBOOL _AngleUp			= false;
+VBOOL _AngleUp			= FALSE;
 VDWORD _AngleReading	= 0;
 WORD _AngleDelta		= 0;
 WORD _AngleVelocity		= 0;
 
-VBOOL _LedButton1		= false;	// Pin 4 / PD4 (PCINT20)
-VBOOL _LedButton2		= false;	// Pin 5 / PD5 (PCINT21)
-VBOOL _LedButton3		= false;	// Pin 6 / PD6 (PCINT22)
-VBOOL _LedButton4		= false;	// Pin 7 / PD7 (PCINT23)
-VBOOL _LedButton5		= false;	// Pin 8 / PB0 (PCINT0)
+VBOOL _LedButton1		= FALSE;	// Pin 4 / PD4 (PCINT20)
+VBOOL _LedButton2		= FALSE;	// Pin 5 / PD5 (PCINT21)
+VBOOL _LedButton3		= FALSE;	// Pin 6 / PD6 (PCINT22)
+VBOOL _LedButton4		= FALSE;	// Pin 7 / PD7 (PCINT23)
+VBOOL _LedButton5		= FALSE;	// Pin 8 / PB0 (PCINT0)
 
 // [FREE PIN: Pin 12 / PB4 (PCINT4)]
 
 // [FREE PIN: Pin A6 / ADC6]
 
-BOOL _modeSwitch		= false;	// A7 / ADC7
+BOOL _modeSwitch		= FALSE;	// A7 / ADC7
 WORD _modeSwitchVal		= 0;
 
 // Menu rotary encoder
-VBOOL _MenuEncoderA		= false;	// Pin 14/A0 / PC0 (PCINT8)
-VBOOL _MenuEncoderB		= false;	// Pin 15/A1 / PC1 (PCINT9)
+VBOOL _MenuEncoderA		= FALSE;	// Pin 14/A0 / PC0 (PCINT8)
+VBOOL _MenuEncoderB		= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
 
-BOOL _MenuUp			= false;
+BOOL _MenuUp			= FALSE;
 DWORD _MenuReading		= 0;
 WORD _MenuDelta			= 0;
 WORD _MenuVelocity		= 0;
 
-VBOOL _SelectButton		= false;	// Pin 16/A2 / PC2 (PCINT10)
-VBOOL _ShiftButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
+VBOOL _SelectButton		= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
+VBOOL _ShiftButton		= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
@@ -165,17 +157,14 @@ BYTE _RgbBlue			= 0;		// Pin 11 / PB3
 
 BOOL _StatusLED			= LOW;		// Pin 13 / PB5
 
-#pragma endregion PROGRAM VARIABLES
+#pragma endregion
 
 
-
-#pragma region PROGRAM OUTLINE: ENTRY POINT & LOOP
+#pragma region PROGRAM OUTLINE: ENTRY POINT, LOOP, ETC.
 
 VOID setup()
 {
-#ifdef SERIAL_ENABLE
 	Serial.begin(SERIAL_BAUD_RATE);
-#endif
 
 	atexit(cleanUp);
 
@@ -222,8 +211,7 @@ VOID loop()
 #endif
 }
 
-#pragma endregion PROGRAM OUTLINE: ENTRY POINT & LOOP
-
+#pragma endregion
 
 
 #pragma region INTERRUPT VECTORS and SUPPORTING MACROS & INLINED FUNCTIONS
@@ -283,8 +271,7 @@ ISR(PCINT2_vect, ISR_NOBLOCK)
 	_LedButton2 = PIND && (1 >> 5);
 	_LedButton3 = PIND && (1 >> 6);
 	_LedButton4 = PIND && (1 >> 7);
-}// TIMER EVENTS// TIMER 2 OVERFLOWISR(TIMER2_OVF_vect, ISR_NOBLOCK){}// SERIAL EVENTS// USART RECEIVE/*ISR(USART_RX_vect, ISR_NOBLOCK){}*/#pragma endregion INTERRUPT VECTORS and SUPPORTING MACROS & INLINED FUNCTIONS
-
+}// TIMER EVENTS// TIMER 2 OVERFLOWISR(TIMER2_OVF_vect, ISR_NOBLOCK){}// SERIAL EVENTS// USART RECEIVE/*ISR(USART_RX_vect, ISR_NOBLOCK){}*/#pragma endregion
 
 
 #pragma region PROGRAM FUNCTIONS
@@ -318,8 +305,7 @@ VOID printLCDSplash()
 	LCD.clear();
 }
 
-#pragma endregion PROGRAM FUNCTIONS
-
+#pragma endregion
 
 
 #pragma region DEBUG UTILITY FUNCTIONS
@@ -405,7 +391,7 @@ VOID DEBUG_printInputValues()
 		DDRB &= ~(1 << 0);
 	}
 
-	_modeSwitch = analogRead(7) > 500 ? true : false;
+	_modeSwitch = analogRead(7) > 500 ? TRUE : FALSE;
 
 	_MenuEncoderA = digitalRead(14);
 	_MenuEncoderB = digitalRead(15);
@@ -527,4 +513,4 @@ VOID DEBUG_displayCustomChars()
 	DEBUG_displayKeyCodes();
 }
 
-#pragma endregion DEBUG UTILITY FUNCTIONS
+#pragma endregion

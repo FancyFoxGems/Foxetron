@@ -18,8 +18,7 @@
 // AVR LIBS
 #include <avr/pgmspace.h>
 
-#pragma endregion INCLUDES
-
+#pragma endregion
 
 
 #pragma region FLASH DATA
@@ -100,7 +99,7 @@ PROGMEM CCHAR LCD_CHAR_BARGRAPH_3[8]			= { 0x1c, 0x1c, 0x1c, 0x1c, 0x1f, 0x1c, 0
 PROGMEM CCHAR LCD_CHAR_BARGRAPH_4[8]			= { 0x1e, 0x1e, 0x1e, 0x1e, 0x1f, 0x1e, 0x1e, 0x1e };
 
 
-#pragma endregion FLASH DATA
+#pragma endregion
 
 
 #endif

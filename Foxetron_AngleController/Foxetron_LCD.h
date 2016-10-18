@@ -10,7 +10,6 @@
 #define _FOXETRON_LCD_H
 
 
-
 #pragma region INCLUDES
 
 // ITTY BITTY
@@ -25,8 +24,7 @@
 // AVR LibC
 //#include <avr/pgmspace.h>						// included by project 3rd-party libs
 
-#pragma endregion INCLUDES
-
+#pragma endregion
 
 
 #pragma region DEFINES
@@ -62,8 +60,7 @@
 #define LCD_SYMBOL_COPYRIGHT			0xa9
 #define LCD_SYMBOL_RESERVED				0xae
 
-#pragma endregion DEFINES
-
+#pragma endregion
 
 
 #pragma region GLOBAL VARIABLES
@@ -71,8 +68,7 @@
 // LCD display
 EXTERN BigCrystal_I2C LCD;
 
-#pragma endregion GLOBAL VARIABLES
-
+#pragma endregion
 
 
 #pragma region FUNCTION DECLARATIONS
@@ -82,6 +78,7 @@ VOID initializeLCD();
 CONST CHAR * CONST LCD_invertChar(CONST CHAR *, BYTE = 5);
 CONST CHAR * LCD_invertChar_P(CONST CHAR *, BYTE = 5);
 
-#pragma endregion FUNCTION DECLARATIONS
+#pragma endregion
+
 
 #endif

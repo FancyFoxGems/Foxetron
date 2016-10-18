@@ -20,8 +20,7 @@
 #include "VaRGB.h"
 #include "VaRGBCurves.h"
 
-#pragma endregion INCLUDES
-
+#pragma endregion
 
 
 #pragma region DEFINES
@@ -32,8 +31,7 @@
 #define PIN_PWM_RGB_LED_GREEN	10	// Pin 10 / PB2
 #define PIN_PWM_RGB_LED_BLUE	11	// Pin 11 / PB3
 
-#pragma endregion DEFINES
-
+#pragma endregion
 
 
 #pragma region GLOBAL VARIABLES
@@ -53,8 +51,7 @@ EXTERN Curve::Flasher * _RgbCurveFlasher;
 EXTERN Curve::Sine * _RgbCurveSine;
 EXTERN Curve::Linear * _RgbCurves[];
 
-#pragma endregion GLOBAL VARIABLES
-
+#pragma endregion
 
 
 #pragma region FUNCTION DECLARATIONS

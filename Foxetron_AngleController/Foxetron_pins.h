@@ -10,14 +10,12 @@
 #define _FOXETRON_PINS_H
 
 
-
 #pragma region INCLUDES
 
 //  ITTY BITTY
 #include "IttyBitty_util.h"
 
-#pragma endregion INCLUDES
-
+#pragma endregion
 
 
 #pragma region DEFINES
@@ -56,11 +54,10 @@
 
 #define PIN_OUT_STATUS_LED		13	// Pin 13 / PB5
 
-#pragma endregion DEFINES
+#pragma endregion
 
 
-
-#pragma region FUNCTIONS
+#pragma region PROGRAM FUNCTIONS
 
 INLINE VOID initializePins()
 {
@@ -109,7 +106,7 @@ INLINE VOID initializePins()
 	// [Pins 18 & 19 - SDA: 18/A4 & SCL: 19/A5 | I2C --> PCF8574T port expander --> RGB HD44780]
 }
 
-#pragma endregion FUNCTIONS
+#pragma endregion
 
 
 #endif

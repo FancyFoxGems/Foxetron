@@ -82,8 +82,7 @@ RFIELD Message<TMessage, TCode>::Param(CSIZE i) CONST
 // PROTECTED METHODS
 
 
-#pragma endregion MESSAGE DEFINITION
-
+#pragma endregion
 
 
 #pragma region REQUEST DEFINITIONS
@@ -99,8 +98,7 @@ CWORD NewAngleRequest::Degrees() CONST
 	return 0;
 }
 
-#pragma endregion REQUEST DEFINITIONS
-
+#pragma endregion
 
 
 #pragma region RESPONSE DEFINITIONS
@@ -109,6 +107,7 @@ CWORD NewAngleRequest::Degrees() CONST
 
 Response::Response(CONST Error)
 {
+
 }
 
 CONST Error Response::ErrorCode() CONST
@@ -164,4 +163,4 @@ CONST DriverStatus DriverStatusResponse::StatusCode() CONST
 	return static_cast<CONST DriverStatus>((BYTE)(StatusResponse::Param(0)));
 }
 
-#pragma endregion RESPONSE DEFINITIONS
+#pragma endregion
