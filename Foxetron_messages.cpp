@@ -12,7 +12,7 @@
 
 // CONSTRUCTORS
 
-Field::Field(const Datum & value, DataType type) : _Value(value), _Type(type) { }
+Field::Field(Datum & value, DataType type) : _Value(value), _Type(type) { }
 
 Field::Field(byte * value, DataType type) : _Type(type)
 {
@@ -20,22 +20,22 @@ Field::Field(byte * value, DataType type) : _Type(type)
 		_Value.Bytes[i] = value[i];
 }
 
-Field::Field(const char & value, DataType type) : _Type(type)
+Field::Field(char & value, DataType type) : _Type(type)
 {
 	_Value.CharVal = value;
 }
 
-Field::Field(const short & value, DataType type) : _Type(type)
+Field::Field(short & value, DataType type) : _Type(type)
 {
 	_Value.ShortVal = value;
 }
 
-Field::Field(const long & value, DataType type) : _Type(type)
+Field::Field(long & value, DataType type) : _Type(type)
 {
 	_Value.LongVal = value;
 }
 
-Field::Field(const float & value, DataType type) : _Type(type)
+Field::Field(float & value, DataType type) : _Type(type)
 {
 	_Value.FloatVal = value;
 }
@@ -43,16 +43,22 @@ Field::Field(const float & value, DataType type) : _Type(type)
 
 // METHODS
 
-template<typename T>
-T & Field::Value()
+template<typename TVal>
+const TVal Field::GetValue() const
 {
-	return _Value;
+	return reinterpret_cast<TVal>(_Value.ByteVal);
 }
 
 template<>
-char & Field::Value<char>()
+const char Field::GetValue<char>() const
 {
-	return _Value.CharVal;
+	return static_cast<const char>(_Value.CharVal);
+}
+
+
+template<typename TVal>
+void FoxetronMessaging::Field::SetValue(TVal &)
+{
 }
 
 #pragma endregion FIELD DEFINITION
@@ -104,7 +110,7 @@ Message<TMessage, TCode>::~Message()
 template<class TMessage, MessageCode TCode>
 RFIELD Message<TMessage, TCode>::operator[](size_t i)
 {
-	return GetParam(i);
+	return this->GetParam(i);
 }
 
 
@@ -117,7 +123,7 @@ size_t Message<TMessage, TCode>::ParamCount() const
 }
 
 template<class TMessage, MessageCode TCode>
-RFIELD Message<TMessage, TCode>::GetParam(size_t i)
+RFIELD Message<TMessage, TCode>::GetParam(size_t i) const
 {
 	if (_Params == NULL)
 	{
@@ -143,7 +149,7 @@ void Message<TMessage, TCode>::RetrieveParamValue(pvoid, byte)
 
 #pragma region REQUEST DEFINITIONS
 
-// ANGLE REQUEST
+// NewAngleRequest
 
 NewAngleRequest::NewAngleRequest(const word degrees)
 {
@@ -160,6 +166,8 @@ const word NewAngleRequest::Degrees() const
 
 #pragma region RESPONSE DEFINITIONS
 
+// Response
+
 Response::Response(const Error)
 {
 }
@@ -169,10 +177,20 @@ const Error Response::ErrorCode() const
 	return Error();
 }
 
+
+// AngleResponse
+
+AngleResponse::AngleResponse(const word)
+{
+}
+
 const word AngleResponse::Degrees() const
 {
 	return 0;
 }
+
+
+// StatusResponse
 
 StatusResponse::StatusResponse(const char *)
 {
@@ -183,7 +201,10 @@ const char * StatusResponse::StatusMessage() const
 	return nullptr;
 }
 
-ControllerStatusResponse::ControllerStatusResponse(ControllerStatus, const char *)
+
+// ControllerStatusResponse
+
+ControllerStatusResponse::ControllerStatusResponse(ControllerStatus controllerStatus, const char * statusMsg)
 {
 }
 
@@ -192,13 +213,16 @@ const ControllerStatus ControllerStatusResponse::StatusCode() const
 	return ControllerStatus();
 }
 
-DriverStatusResponse::DriverStatusResponse(DriverStatus, const char *)
+
+// DriverStatusResponse
+
+DriverStatusResponse::DriverStatusResponse(DriverStatus driverStatus, const char * statusMsg)
 {
 }
 
 const DriverStatus DriverStatusResponse::StatusCode() const
 {
-	return DriverStatus();
+	return static_cast<const DriverStatus>(this->GetParam(0).GetValue<byte>());
 }
 
 #pragma endregion RESPONSE DEFINITIONS

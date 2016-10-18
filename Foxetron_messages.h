@@ -113,6 +113,30 @@ namespace FoxetronMessaging
 
 	//  TEMPLATED TYPE FORWARD DECLARATIONS & ALIASES
 
+	typedef union _Datum Datum, DATUM, *PDATUM, &RDATUM;
+	typedef const union _Datum CDATUM, *CPDATUM, &CRDATUM;
+
+	template<typename T = Datum>
+	class TypedField;
+	template<typename T = Datum>
+	using TYPEDFIELD = TypedField<T>;
+	template<typename T = Datum>
+	using PTYPEDFIELD = TypedField<T> *;
+	template<typename T = Datum>
+	using RTYPEDFIELD = TypedField<T> &;
+	template<typename T = Datum>
+	using PPTYPEDFIELD = TypedField<T> **;
+	template<typename T = Datum>
+	using RRTYPEDFIELD = TypedField<T> &&;
+	template<typename T = Datum>
+	using CTYPEDFIELD = const TypedField<T>;
+	template<typename T = Datum>
+	using PCTYPEDFIELD = const TypedField<T> *;
+	template<typename T = Datum>
+	using RCTYPEDFIELD = const TypedField<T> &;
+	template<typename T = Datum>
+	using PPCTYPEDFIELD = const TypedField<T> **;
+
 	template<class TMessage, MessageCode TCode>
 	class Message;
 	template<class TMessage, MessageCode TCode>
@@ -186,8 +210,9 @@ namespace FoxetronMessaging
 
 #pragma region TYPE DECLARATIONS
 
-	// UNIVERSAL 4-BYTE DATA TYPE UNION
-	typedef union _Datum
+	// Datum: UNIVERSAL 4-BYTE DATA TYPE UNION
+
+	union _Datum
 	{
 		byte Bytes[4];
 
@@ -222,27 +247,55 @@ namespace FoxetronMessaging
 		dword DWordVal;
 		long LongVal;
 		float FloatVal;
-	}
-	Datum, DATUM, * PDATUM, & RDATUM;
-
-	typedef const union _Datum CDATUM, *CPDATUM, &CRDATUM;
+	};
 
 
-	struct Field
+	// IField INTERFACE
+
+	class IField
 	{
 	public:
 
-		Field(const Datum &, DataType = DataType::BYTES);
+		//operator byte()
+
+		template<typename TVal = Datum>
+		const TVal GetValue() const;
+
+		template<typename TVal = Datum>
+		void SetValue(TVal &);
+
+	protected:
+
+		Datum _Value;
+		DataType _Type;
+	};
+
+	typedef IField IFIELD, *PIFIELD, &RIFIELD;
+	typedef const IField CIFIELD, *CPIFIELD, &CRIFIELD;
+
+
+	// Field
+
+	class Field : public virtual IField
+	{
+	public:
+
+		Field(Datum &, DataType = DataType::BYTES);
 
 		Field(byte *, DataType = DataType::BYTES);
 
-		Field(const char &, DataType = DataType::CHAR);
-		Field(const short &, DataType = DataType::SHORT);
-		Field(const long &, DataType = DataType::LONG);
-		Field(const float &, DataType = DataType::FLOAT);
+		Field(char &, DataType = DataType::CHAR);
+		Field(short &, DataType = DataType::SHORT);
+		Field(long &, DataType = DataType::LONG);
+		Field(float &, DataType = DataType::FLOAT);
 
-		template <typename T = Datum>
-		T & Value();
+		//operator byte()
+
+		template<typename TVal = Datum>
+		const TVal GetValue() const;
+
+		template<typename TVal= Datum>
+		void SetValue(TVal &);
 		
 	protected:
 
@@ -251,56 +304,42 @@ namespace FoxetronMessaging
 	};
 
 	template<>
-	char & Field::Value<char>();
+	const char Field::GetValue<char>() const;
 
 	typedef Field FIELD, *PFIELD, &RFIELD;
 	typedef const Field CFIELD, *CPFIELD, &CRFIELD;
 
 
-	//template <typename T = Datum>
-	//struct Field<T>
-	//{
-	//public:
+	// TypedField
 
-	//	static constexpr DataType DataType();
+	template<typename T>
+	class TypedField : public virtual IField
+	{
+	public:
 
-	//	Field(const Datum &);
+		TypedField(const Datum &)
+		{
+		}
 
-	//	Field(const T &);
+		TypedField(const T &)
+		{
 
-	//	const T Value() const;
+		}
 
-	//	typedef T Type;
+		typedef T Type;
 
-	//protected:
+		const T Value() const
+		{
+			return reinterpret_cast<T>(_Value.ByteVal);
+		}
 
-	//	Datum _Value;
-	//};
+	protected:
 
-	////template<>
-	////const char Field::Value<char>() const;
+		Datum _Value;
+	};
 
-	//template<typename T = BYTE>
-	//class Field;
-	//template<typename T = BYTE>
-	//using FIELD = Field<T>;
-	//template<typename T = BYTE>
-	//using PFIELD = Field<T> *;
-	//template<typename T = BYTE>
-	//using RFIELD = Field<T> &;
-	//template<typename T = BYTE>
-	//using PPFIELD = Field<T> **;
-	//template<typename T = BYTE>
-	//using RRFIELD = Field<T> &&;
-	//template<typename T = BYTE>
-	//using CFIELD = const Field<T>;
-	//template<typename T = BYTE>
-	//using PCFIELD = const Field<T> *;
-	//template<typename T = BYTE>
-	//using RCFIELD = const Field<T> &;
-	//template<typename T = BYTE>
-	//using PPCFIELD = const Field<T> **;
 
+	// Message
 
 	template<class TMessage, MessageCode TCode>
 	class Message
@@ -319,7 +358,7 @@ namespace FoxetronMessaging
 		virtual RFIELD operator[](size_t);
 
 		virtual size_t ParamCount() const;
-		virtual RFIELD GetParam(size_t = 0);
+		virtual RFIELD GetParam(size_t = 0) const;
 
 	protected:
 
@@ -359,7 +398,7 @@ namespace FoxetronMessaging
 
 		Response(const Error);
 
-		const Error ErrorCode() const;
+		virtual const Error ErrorCode() const;
 
 	protected:
 

@@ -4,3 +4,6 @@
 [submodule "Foxetron_AngleDriver\\libs\\HalfStepper"]
 	path = Foxetron_AngleDriver\\libs\\HalfStepper
 	url = https://github.com/FancyFoxGems/HalfStepper
+[submodule "IttyBitty"]
+	path = IttyBitty
+	url = https://github.com/FancyFoxGems/IttyBitty
