@@ -12,6 +12,10 @@
 
 #include <Arduino.h>
 
+
+#define countof(var) (sizeof(var) / sizeof(0[var]))
+
+
 namespace FoxetronMessaging
 {
 
@@ -230,9 +234,7 @@ namespace FoxetronMessaging
 
 		virtual ~Field();
 
-		const Datum Value() const;
-
-		template <typename T>
+		template <typename T = Datum>
 		const T Value() const;
 
 	protected:
@@ -352,6 +354,8 @@ namespace FoxetronMessaging
 	{
 	public:
 
+		ControllerStatusResponse(ControllerStatus, const char * = NULL);
+
 		const ControllerStatus StatusCode() const;
 
 	protected:
@@ -363,6 +367,8 @@ namespace FoxetronMessaging
 	class DriverStatusResponse : public Message<DriverStatusResponse, MessageCode::DRIVER_STATUS>
 	{
 	public:
+
+		DriverStatusResponse(DriverStatus, const char * = NULL);
 
 		const DriverStatus StatusCode() const;
 
