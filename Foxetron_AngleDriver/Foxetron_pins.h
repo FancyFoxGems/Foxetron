@@ -13,8 +13,8 @@
 
 #pragma region INCLUDES
 
-// PROJECT INCLUDES
-#include <Arduino.h>
+//  ITTY BITTY
+#include "IttyBitty_util.h"
 
 #pragma endregion INCLUDES
 
@@ -46,7 +46,7 @@
 
 #pragma region FUNCTIONS
 
-inline void initializePins()
+INLINE VOID initializePins()
 {
 
 	// REAR PINS

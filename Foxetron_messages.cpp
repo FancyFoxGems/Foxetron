@@ -12,37 +12,37 @@
 
 // STATIC MESSAGE "OVERRIDES"
 
-template<class TMessage, MessageCode TCode>
-constexpr MessageCode Message<TMessage, TCode>::TYPE()
+template<CLASS TMessage, MessageCode TCode>
+CONSTEXPR MessageCode Message<TMessage, TCode>::TYPE()
 {
 	return TCode;
 }
 
-template<class TMessage, MessageCode TCode>
-constexpr word Message<TMessage, TCode>::SIZE()
+template<CLASS TMessage, MessageCode TCode>
+CONSTEXPR CWORD Message<TMessage, TCode>::SIZE()
 {
-	return static_cast<word>(sizeof(TMessage));
+	return static_cast<CWORD>(SIZEOF(TMessage));
 }
 
 
 // CONSTRUCTORS/DESTRUCTOR
 
-template<class TMessage, MessageCode TCode>
+template<CLASS TMessage, MessageCode TCode>
 Message<TMessage, TCode>::Message()
 {
 }
 
-template<class TMessage, MessageCode TCode>
+template<CLASS TMessage, MessageCode TCode>
 Message<TMessage, TCode>::Message(RFIELD)
 {
 }
 
-template<class TMessage, MessageCode TCode>
+template<CLASS TMessage, MessageCode TCode>
 Message<TMessage, TCode>::Message(PFIELD)
 {
 }
 
-template<class TMessage, MessageCode TCode>
+template<CLASS TMessage, MessageCode TCode>
 Message<TMessage, TCode>::~Message()
 {
 }
@@ -50,8 +50,8 @@ Message<TMessage, TCode>::~Message()
 
 // OPERATORS
 
-template<class TMessage, MessageCode TCode>
-RFIELD Message<TMessage, TCode>::operator[](size_t i)
+template<CLASS TMessage, MessageCode TCode>
+RFIELD Message<TMessage, TCode>::operator[](CSIZE i)
 {
 	return this->GetParam(i);
 }
@@ -59,19 +59,19 @@ RFIELD Message<TMessage, TCode>::operator[](size_t i)
 
 // PUBLIC METHODS
 
-template<class TMessage, MessageCode TCode>
-size_t Message<TMessage, TCode>::ParamCount() const
+template<CLASS TMessage, MessageCode TCode>
+CSIZE Message<TMessage, TCode>::ParamCount() CONST
 {
-	return _Params == NULL ? 0 : static_cast<size_t>(countof(_Params));
+	return _Params == NULL ? 0 : static_cast<CSIZE>(COUNT(_Params));
 }
 
-template<class TMessage, MessageCode TCode>
-RFIELD Message<TMessage, TCode>::GetParam(size_t i) const
+template<CLASS TMessage, MessageCode TCode>
+RFIELD Message<TMessage, TCode>::GetParam(CSIZE i) CONST
 {
 	if (_Params == NULL)
 	{
-		static DATUM NULL_DATUM;
-		static FIELD NULL_FIELD(NULL_DATUM);
+		STATIC DATUM NULL_DATUM;
+		STATIC FIELD NULL_FIELD(NULL_DATUM);
 		return NULL_FIELD;
 	}
 
@@ -81,8 +81,8 @@ RFIELD Message<TMessage, TCode>::GetParam(size_t i) const
 
 // PROTECTED METHODS
 
-template<class TMessage, MessageCode TCode>
-void Message<TMessage, TCode>::RetrieveParamValue(PVOID, byte)
+template<CLASS TMessage, MessageCode TCode>
+VOID Message<TMessage, TCode>::RetrieveParamValue(PVOID, CSIZE)
 {
 }
 
@@ -94,11 +94,11 @@ void Message<TMessage, TCode>::RetrieveParamValue(PVOID, byte)
 
 // NewAngleRequest
 
-NewAngleRequest::NewAngleRequest(const word degrees)
+NewAngleRequest::NewAngleRequest(CWORD degrees)
 {
 }
 
-const word NewAngleRequest::Degrees() const
+CWORD NewAngleRequest::Degrees() CONST
 {
 	return 0;
 }
@@ -111,11 +111,11 @@ const word NewAngleRequest::Degrees() const
 
 // Response
 
-Response::Response(const Error)
+Response::Response(CONST Error)
 {
 }
 
-const Error Response::ErrorCode() const
+CONST Error Response::ErrorCode() CONST
 {
 	return Error();
 }
@@ -123,11 +123,11 @@ const Error Response::ErrorCode() const
 
 // AngleResponse
 
-AngleResponse::AngleResponse(const word)
+AngleResponse::AngleResponse(CWORD)
 {
 }
 
-const word AngleResponse::Degrees() const
+CONST WORD AngleResponse::Degrees() CONST
 {
 	return 0;
 }
@@ -135,11 +135,11 @@ const word AngleResponse::Degrees() const
 
 // StatusResponse
 
-StatusResponse::StatusResponse(const char *)
+StatusResponse::StatusResponse(PCCHAR )
 {
 }
 
-const char * StatusResponse::StatusMessage() const
+PCCHAR  StatusResponse::StatusMessage() CONST
 {
 	return nullptr;
 }
@@ -147,11 +147,11 @@ const char * StatusResponse::StatusMessage() const
 
 // ControllerStatusResponse
 
-ControllerStatusResponse::ControllerStatusResponse(ControllerStatus controllerStatus, const char * statusMsg)
+ControllerStatusResponse::ControllerStatusResponse(ControllerStatus controllerStatus, PCCHAR statusMsg)
 {
 }
 
-const ControllerStatus ControllerStatusResponse::StatusCode() const
+CONST ControllerStatus ControllerStatusResponse::StatusCode() CONST
 {
 	return ControllerStatus();
 }
@@ -159,13 +159,13 @@ const ControllerStatus ControllerStatusResponse::StatusCode() const
 
 // DriverStatusResponse
 
-DriverStatusResponse::DriverStatusResponse(DriverStatus driverStatus, const char * statusMsg)
+DriverStatusResponse::DriverStatusResponse(DriverStatus driverStatus, CONST PCCHAR statusMsg)
 {
 }
 
-const DriverStatus DriverStatusResponse::StatusCode() const
+CONST DriverStatus DriverStatusResponse::StatusCode() CONST
 {
-	return static_cast<const DriverStatus>(this->GetParam(0).GetValue<byte>());
+	return static_cast<CONST DriverStatus>(this->GetParam(0).GetValue<BYTE>());
 }
 
 #pragma endregion RESPONSE DEFINITIONS

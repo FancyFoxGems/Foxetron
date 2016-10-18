@@ -12,7 +12,7 @@
 #pragma region GLOBAL VARIABLES
 
 // LCD display
-extern BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
+EXTERN BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
 
 #pragma endregion GLOBAL VARIABLES
 
@@ -22,7 +22,7 @@ extern BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin
 
 // PROGRAM FUNCTIONS
 
-void initializeLCD()
+VOID initializeLCD()
 {
 	LCD.init();
 	LCD.backlight();
@@ -41,24 +41,24 @@ void initializeLCD()
 
 // UTILITY FUNCTIONS
 
-const char * const LCD_invertChar(const char * lcdChar, byte charWidth)
+CONST CHAR * CONST LCD_invertChar(CONST CHAR * lcdChar, BYTE charWidth)
 {
-	char newLcdChar[sizeof(lcdChar)];
+	CHAR newLcdChar[SIZEOF(lcdChar)];
 
-	for (byte pixY = 0; pixY < sizeof(lcdChar); pixY++)
+	for (BYTE pixY = 0; pixY < SIZEOF(lcdChar); pixY++)
 		newLcdChar[pixY] = lcdChar[pixY] ^ (1 << charWidth - 1);
 
-	return const_cast<const char *>(newLcdChar);
+	return const_cast<CONST CHAR *>(newLcdChar);
 }
 
-const char * LCD_invertChar_P(const char * lcdChar, byte charWidth)
+CONST CHAR * LCD_invertChar_P(CONST CHAR * lcdChar, BYTE charWidth)
 {
-	char lcdCharData[sizeof(lcdChar)];
+	CHAR lcdCharData[SIZEOF(lcdChar)];
 
-	for (byte i = 0; i < sizeof(lcdChar); i++)
+	for (BYTE i = 0; i < SIZEOF(lcdChar); i++)
 		lcdCharData[i] = pgm_read_byte_near(lcdChar++);
 
-	return LCD_invertChar(const_cast<const char *>(lcdCharData), charWidth);
+	return LCD_invertChar(const_cast<CONST CHAR *>(lcdCharData), charWidth);
 }
 
 #pragma endregion FUNCTION DEFINITIONS

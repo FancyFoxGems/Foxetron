@@ -10,6 +10,7 @@
 #define _FOXETRON_FIELDS_H
 
 
+
 #include "IttyBitty_util.h"
 
 
@@ -18,7 +19,7 @@ namespace Foxetron
 	
 #pragma region ENUMS
 	
-	enum DataSize : byte
+	enum DataSize : BYTE
 	{
 		ONE_BYTE	= 0x10,
 		TWO_BYTES	= 0x20,
@@ -26,21 +27,21 @@ namespace Foxetron
 		FOUR_BYTES	= 0x80,
 	};
 
-	enum DataType : byte
+	enum DataType : BYTE
 	{
-		BYTES	= 0x0,
+		BYTES_FIELD	= 0x0,
 
-		BYTE	= ONE_BYTE | 0x1,
-		CHAR	= ONE_BYTE | 0x2,
-		BOOL	= ONE_BYTE | 0x4,
+		BYTE_FIELD	= ONE_BYTE | 0x1,
+		CHAR_FIELD	= ONE_BYTE | 0x2,
+		BOOL_FIELD	= ONE_BYTE | 0x4,
 
-		WORD	= TWO_BYTES | 0x1,
-		SHORT	= TWO_BYTES | 0x2,
-		BITS	= TWO_BYTES | 0x4,
+		WORD_FIELD	= TWO_BYTES | 0x1,
+		SHORT_FIELD	= TWO_BYTES | 0x2,
+		BIT_FIELD	= TWO_BYTES | 0x4,
 
-		DWORD	= FOUR_BYTES | 0x1,
-		LONG	= FOUR_BYTES | 0x2,
-		FLOAT	= FOUR_BYTES | 0x4
+		DWORD_FIELD	= FOUR_BYTES | 0x1,
+		LONG_FIELD	= FOUR_BYTES | 0x2,
+		FLOAT_FIELD	= FOUR_BYTES | 0x4
 	};
 
 #pragma endregion ENUMS
@@ -52,11 +53,11 @@ namespace Foxetron
 
 	//  TEMPLATED TYPE FORWARD DECLARATIONS & ALIASES
 
-	typedef union _Datum Datum, DATUM, *PDATUM, &RDATUM;
-	typedef const union _Datum CDATUM, *CPDATUM, &CRDATUM;
+	typedef UNION _Datum Datum, DATUM, *PDATUM, &RDATUM;
+	typedef CONST UNION _Datum CDATUM, *CPDATUM, &CRDATUM;
 
 	template<typename T = Datum>
-	class TypedField;
+	CLASS TypedField;
 	template<typename T = Datum>
 	using TYPEDFIELD = TypedField<T>;
 	template<typename T = Datum>
@@ -68,13 +69,13 @@ namespace Foxetron
 	template<typename T = Datum>
 	using RRTYPEDFIELD = TypedField<T> &&;
 	template<typename T = Datum>
-	using CTYPEDFIELD = const TypedField<T>;
+	using CTYPEDFIELD = CONST TypedField<T>;
 	template<typename T = Datum>
-	using PCTYPEDFIELD = const TypedField<T> *;
+	using PCTYPEDFIELD = CONST TypedField<T> *;
 	template<typename T = Datum>
-	using RCTYPEDFIELD = const TypedField<T> &;
+	using RCTYPEDFIELD = CONST TypedField<T> &;
 	template<typename T = Datum>
-	using PPCTYPEDFIELD = const TypedField<T> **;
+	using PPCTYPEDFIELD = CONST TypedField<T> **;
 
 #pragma endregion FORWARD DECLARATIONS & TYPE ALIASES
 
@@ -84,57 +85,57 @@ namespace Foxetron
 
 	// Datum: UNIVERSAL 4-BYTE DATA TYPE UNION
 
-	union _Datum
+	UNION _Datum
 	{
-		byte Bytes[4];
+		BYTE Bytes[4];
 
-		struct
+		STRUCT
 		{
-			bool b0 : 1;
-			bool b1 : 1;
-			bool b2 : 1;
-			bool b3 : 1;
-			bool b4 : 1;
-			bool b5 : 1;
-			bool b6 : 1;
-			bool b7 : 1;
-			bool b8 : 1;
-			bool b9 : 1;
-			bool bA : 1;
-			bool bB : 1;
-			bool bC : 1;
-			bool bD : 1;
-			bool bE : 1;
-			bool bF : 1;
+			BOOL b0 : 1;
+			BOOL b1 : 1;
+			BOOL b2 : 1;
+			BOOL b3 : 1;
+			BOOL b4 : 1;
+			BOOL b5 : 1;
+			BOOL b6 : 1;
+			BOOL b7 : 1;
+			BOOL b8 : 1;
+			BOOL b9 : 1;
+			BOOL bA : 1;
+			BOOL bB : 1;
+			BOOL bC : 1;
+			BOOL bD : 1;
+			BOOL bE : 1;
+			BOOL bF : 1;
 		}
 		Bits;
 
-		byte ByteVal;
-		char CharVal;
-		bool BoolVal;
+		BYTE ByteVal;
+		CHAR CharVal;
+		BOOL BoolVal;
 
-		word WordVal;
-		short ShortVal;
+		WORD WordVal;
+		SHORT ShortVal;
 
-		::DWORD DWordVal;
-		long LongVal;
-		float FloatVal;
+		DWORD DWordVal;
+		LONG LongVal;
+		FLOAT FloatVal;
 	};
 
 
 	// IField INTERFACE
 
-	class IField
+	CLASS IField
 	{
 	public:
 
-		//operator byte()
+		//operator BYTE()
 
 		template<typename TVal = Datum>
-		const TVal GetValue() const;
+		CONST TVal GetValue() CONST;
 
 		template<typename TVal = Datum>
-		void SetValue(TVal &);
+		VOID SetValue(TVal &);
 
 	protected:
 
@@ -143,31 +144,31 @@ namespace Foxetron
 	};
 
 	typedef IField IFIELD, *PIFIELD, &RIFIELD;
-	typedef const IField CIFIELD, *CPIFIELD, &CRIFIELD;
+	typedef CONST IField CIFIELD, *CPIFIELD, &CRIFIELD;
 
 
 	// Field
 
-	class Field : public virtual IField
+	CLASS Field : public VIRTUAL IField
 	{
 	public:
 
-		Field(Datum &, DataType = DataType::BYTES);
+		Field(RDATUM, DataType = DataType::BYTES_FIELD);
 
-		Field(byte *, DataType = DataType::BYTES);
+		Field(PBYTE, DataType = DataType::BYTES_FIELD);
 
-		Field(char &, DataType = DataType::CHAR);
-		Field(short &, DataType = DataType::SHORT);
-		Field(long &, DataType = DataType::LONG);
-		Field(float &, DataType = DataType::FLOAT);
+		Field(RCHAR, DataType = DataType::CHAR_FIELD);
+		Field(RSHORT, DataType = DataType::SHORT_FIELD);
+		Field(RLONG, DataType = DataType::LONG_FIELD);
+		Field(RFLOAT, DataType = DataType::FLOAT_FIELD);
 
-		//operator byte()
+		//operator BYTE()
 
 		template<typename TVal = Datum>
-		const TVal GetValue() const;
+		CONST TVal GetValue() CONST;
 
 		template<typename TVal= Datum>
-		void SetValue(TVal &);
+		VOID SetValue(TVal &);
 		
 	protected:
 
@@ -176,31 +177,31 @@ namespace Foxetron
 	};
 
 	template<>
-	const char Field::GetValue<char>() const;
+	CONST CHAR Field::GetValue<CHAR>() CONST;
 
 	typedef Field FIELD, *PFIELD, &RFIELD;
-	typedef const Field CFIELD, *CPFIELD, &CRFIELD;
+	typedef CONST Field CFIELD, *CPFIELD, &CRFIELD;
 
 
 	// TypedField
 
 	template<typename T>
-	class TypedField : public virtual IField
+	CLASS TypedField : public VIRTUAL IField
 	{
 	public:
 
-		TypedField(const Datum &)
+		TypedField(CONST Datum &)
 		{
 		}
 
-		TypedField(const T &)
+		TypedField(CONST T &)
 		{
 
 		}
 
 		typedef T Type;
 
-		const T Value() const
+		CONST T Value() CONST
 		{
 			return reinterpret_cast<T>(_Value.ByteVal);
 		}

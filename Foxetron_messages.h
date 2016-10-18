@@ -13,19 +13,16 @@
 #include "Foxetron_fields.h"
 
 
-#define countof(var) (sizeof(var) / sizeof(0[var]))
-
-
 namespace Foxetron
 {
 
 #pragma region GLOBAL CONSTANTS & VARIABLES
 
-	static const char MESSAGE_MARKER[4] = "FOX";
+	STATIC CCHAR MESSAGE_MARKER[4] = "FOX";
 
-	static const word BUFFER_SIZE = 200;
+	STATIC CWORD BUFFER_SIZE = 200;
 
-	static volatile char RX[BUFFER_SIZE];
+	EXTERN VCHAR RX[BUFFER_SIZE];
 
 #pragma endregion GLOBAL CONSTANTS & VARIABLES
 	
@@ -33,7 +30,7 @@ namespace Foxetron
 
 #pragma region ENUMS
 
-	enum MessageCode : byte
+	enum MessageCode : BYTE
 	{
 		// Primary types
 		REQUEST_TYPE		= 0x0,
@@ -42,34 +39,34 @@ namespace Foxetron
 
 		// Categories
 		ANGLE_TYPE			= 0x10,
-		NEWANGLE_TYPE			= 0x20,
+		NEWANGLE_TYPE		= 0x20,
 		STATUS_TYPE			= 0x40,
 
 
 		// Request types
 		ANGLE_REQUEST		= REQUEST_TYPE | ANGLE_TYPE,
-		NEWANGLE_REQUEST		= REQUEST_TYPE | NEWANGLE_TYPE,
+		NEWANGLE_REQUEST	= REQUEST_TYPE | NEWANGLE_TYPE,
 		STATUS_REQUEST		= REQUEST_TYPE | STATUS_TYPE,
 
 		// Response types
 		ANGLE_RESPONSE		= RESPONSE_TYPE | 0x1,
-		NEWANGLE_RESPONSE		= RESPONSE_TYPE | 0x2,
+		NEWANGLE_RESPONSE	= RESPONSE_TYPE | 0x2,
 		STATUS_RESPONSE		= RESPONSE_TYPE | STATUS_TYPE,
 		CONTROLLER_STATUS	= STATUS_RESPONSE | 0x1,
 		DRIVER_STATUS		= STATUS_RESPONSE | 0x2
 	};
 
-	enum Error : byte
+	enum Error : BYTE
 	{
 		SUCCESS = 0
 	};
 
-	enum ControllerStatus : byte
+	enum ControllerStatus : BYTE
 	{
 		NONE
 	};
 
-	enum DriverStatus : byte
+	enum DriverStatus : BYTE
 	{
 		IDLE
 	};
@@ -83,72 +80,72 @@ namespace Foxetron
 
 	//  TEMPLATED TYPE FORWARD DECLARATIONS & ALIASES
 
-	template<class TMessage, MessageCode TCode>
-	class Message;
-	template<class TMessage, MessageCode TCode>
+	template<CLASS TMessage, MessageCode TCode>
+	CLASS Message;
+	template<CLASS TMessage, MessageCode TCode>
 	using MESSAGE = Message<TMessage, TCode>;
-	template<class TMessage, MessageCode TCode>
+	template<CLASS TMessage, MessageCode TCode>
 	using PMESSAGE = Message<TMessage, TCode> *;
-	template<class TMessage, MessageCode TCode>
+	template<CLASS TMessage, MessageCode TCode>
 	using RMESSAGE = Message<TMessage, TCode> &;
-	template<class TMessage, MessageCode TCode>
+	template<CLASS TMessage, MessageCode TCode>
 	using PPMESSAGE = Message<TMessage, TCode> **;
-	template<class TMessage, MessageCode TCode>
+	template<CLASS TMessage, MessageCode TCode>
 	using RRMESSAGE = Message<TMessage, TCode> &&;
-	template<class TMessage, MessageCode TCode>
-	using CMESSAGE = const Message<TMessage, TCode>;
-	template<class TMessage, MessageCode TCode>
-	using PCMESSAGE = const Message<TMessage, TCode> *;
-	template<class TMessage, MessageCode TCode>
-	using RCMESSAGE = const Message<TMessage, TCode> &;
-	template<class TMessage, MessageCode TCode>
-	using PPCMESSAGE = const Message<TMessage, TCode> **;
+	template<CLASS TMessage, MessageCode TCode>
+	using CMESSAGE = CONST Message<TMessage, TCode>;
+	template<CLASS TMessage, MessageCode TCode>
+	using PCMESSAGE = CONST Message<TMessage, TCode> *;
+	template<CLASS TMessage, MessageCode TCode>
+	using RCMESSAGE = CONST Message<TMessage, TCode> &;
+	template<CLASS TMessage, MessageCode TCode>
+	using PPCMESSAGE = CONST Message<TMessage, TCode> **;
 
 
 	// REQUESTS
 
-	class Request;
+	CLASS Request;
 	typedef Request REQUEST, *PREQUEST, &RREQUEST;
-	typedef const Request CREQUEST, *CPREQUEST, &CRREQUEST;
+	typedef CONST Request CREQUEST, *CPREQUEST, &CRREQUEST;
 
-	class AngleRequest;
+	CLASS AngleRequest;
 	typedef AngleRequest ANGLEREQUEST, *PANGLEREQUEST, &RANGLEREQUEST;
-	typedef const AngleRequest CANGLEREQUEST, *CPANGLEREQUEST, &CRANGLEREQUEST;
+	typedef CONST AngleRequest CANGLEREQUEST, *CPANGLEREQUEST, &CRANGLEREQUEST;
 
-	class NewAngleRequest;
+	CLASS NewAngleRequest;
 	typedef NewAngleRequest NEWANGLEREQUEST, *PNEWANGLEREQUEST, &RNEWANGLEREQUEST;
-	typedef const NewAngleRequest CNEWANGLEREQUEST, *CPNEWANGLEREQUEST, &CRNEWANGLEREQUEST;
+	typedef CONST NewAngleRequest CNEWANGLEREQUEST, *CPNEWANGLEREQUEST, &CRNEWANGLEREQUEST;
 
-	class StatusRequest;
+	CLASS StatusRequest;
 	typedef StatusRequest STATUSREQUEST, *PSTATUSREQUEST, &RSTATUSREQUEST;
-	typedef const StatusRequest CSTATUSREQUEST, *CPSTATUSREQUEST, &CRSTATUSREQUEST;
+	typedef CONST StatusRequest CSTATUSREQUEST, *CPSTATUSREQUEST, &CRSTATUSREQUEST;
 
 
 	// RESPONSES
 
-	class Response;
+	CLASS Response;
 	typedef Response RESPONSE, *PRESPONSE, &RRESPONSE;
-	typedef const Response CRESPONSE, *CPRESPONSE, &CRRESPONSE;
+	typedef CONST Response CRESPONSE, *CPRESPONSE, &CRRESPONSE;
 
-	class AngleResponse;
+	CLASS AngleResponse;
 	typedef AngleResponse ANGLERESPONSE, *PANGLERESPONSE, &RANGLERESPONSE;
-	typedef const AngleResponse CANGLERESPONSE, *CPANGLERESPONSE, &CRANGLERESPONSE;
+	typedef CONST AngleResponse CANGLERESPONSE, *CPANGLERESPONSE, &CRANGLERESPONSE;
 
-	class NewAngleResponse;
+	CLASS NewAngleResponse;
 	typedef NewAngleResponse NEWANGLERESPONSE, *PNEWANGLERESPONSE, &RNEWANGLERESPONSE;
-	typedef const NewAngleResponse CNEWANGLERESPONSE, *CPNEWANGLERESPONSE, &CRNEWANGLERESPONSE;
+	typedef CONST NewAngleResponse CNEWANGLERESPONSE, *CPNEWANGLERESPONSE, &CRNEWANGLERESPONSE;
 
-	class StatusResponse;
+	CLASS StatusResponse;
 	typedef StatusResponse STATUSRESPONSE, *PSTATUSRESPONSE, &RSTATUSRESPONSE;
-	typedef const StatusResponse CSTATUSRESPONSE, *CPSTATUSRESPONSE, &CRSTATUSRESPONSE;
+	typedef CONST StatusResponse CSTATUSRESPONSE, *CPSTATUSRESPONSE, &CRSTATUSRESPONSE;
 
-	class ControllerStatusResponse;
+	CLASS ControllerStatusResponse;
 	typedef ControllerStatusResponse CONTROLLERSTATUSRESPONSE, *PCONTROLLERSTATUSRESPONSE, &RCONTROLLERSTATUSRESPONSE;
-	typedef const ControllerStatusResponse CCONTROLLERSTATUSRESPONSE, *CPCONTROLLERSTATUSRESPONSE, &CRCONTROLLERSTATUSRESPONSE;
+	typedef CONST ControllerStatusResponse CCONTROLLERSTATUSRESPONSE, *CPCONTROLLERSTATUSRESPONSE, &CRCONTROLLERSTATUSRESPONSE;
 
-	class DriverStatusResponse;
+	CLASS DriverStatusResponse;
 	typedef DriverStatusResponse DRIVERSTATUSRESPONSE, *PDRIVERSTATUSRESPONSE, &RDRIVERSTATUSRESPONSE;
-	typedef const DriverStatusResponse CDRIVERSTATUSRESPONSE, *CPDRIVERSTATUSRESPONSE, &CRDRIVERSTATUSRESPONSE;
+	typedef CONST DriverStatusResponse CDRIVERSTATUSRESPONSE, *CPDRIVERSTATUSRESPONSE, &CRDRIVERSTATUSRESPONSE;
 
 #pragma endregion FORWARD DECLARATIONS & TYPE ALIASES
 
@@ -158,13 +155,13 @@ namespace Foxetron
 
 	// Message
 
-	template<class TMessage, MessageCode TCode>
-	class Message
+	template<CLASS TMessage, MessageCode TCode>
+	CLASS Message
 	{
 	public:
 
-		static constexpr MessageCode TYPE();
-		static constexpr word SIZE();
+		STATIC CONSTEXPR MessageCode TYPE();
+		STATIC CONSTEXPR CWORD SIZE();
 
 		Message();
 		Message(RFIELD);
@@ -172,14 +169,14 @@ namespace Foxetron
 
 		VIRTUAL ~Message();
 
-		virtual RFIELD operator[](size_t);
+		VIRTUAL RFIELD operator[](CSIZE);
 
-		virtual size_t ParamCount() const;
-		virtual RFIELD GetParam(size_t = 0) const;
+		VIRTUAL CSIZE ParamCount() CONST;
+		VIRTUAL RFIELD GetParam(CSIZE = 0) CONST;
 
 	protected:
 
-		void RetrieveParamValue(PVOID, byte = 0);
+		VOID RetrieveParamValue(PVOID, CSIZE = 0);
 
 		PFIELD _Params;
 	};
@@ -187,35 +184,35 @@ namespace Foxetron
 
 	// REQUESTS
 
-	class Request : public Message<Request, MessageCode::REQUEST_TYPE> { };
+	CLASS Request : public Message<Request, MessageCode::REQUEST_TYPE> { };
 
 
-	class AngleRequest : public Message<AngleRequest, MessageCode::ANGLE_REQUEST> { };
+	CLASS AngleRequest : public Message<AngleRequest, MessageCode::ANGLE_REQUEST> { };
 
 
-	class NewAngleRequest : public Message<NewAngleRequest, MessageCode::NEWANGLE_REQUEST>
+	CLASS NewAngleRequest : public Message<NewAngleRequest, MessageCode::NEWANGLE_REQUEST>
 	{
 	public:
 
-		NewAngleRequest(const word);
+		NewAngleRequest(CWORD);
 
-		const word Degrees() const;
+		CWORD Degrees() CONST;
 	};
 
 
-	class StatusRequest : public Message<StatusRequest, MessageCode::STATUS_REQUEST> { };
+	CLASS StatusRequest : public Message<StatusRequest, MessageCode::STATUS_REQUEST> { };
 
 
 
 	// RESPONSES
 
-	class Response : public Message<Response, MessageCode::RESPONSE_TYPE>
+	CLASS Response : public Message<Response, MessageCode::RESPONSE_TYPE>
 	{
 	public:
 
-		Response(const Error);
+		Response(CONST Error);
 
-		virtual const Error ErrorCode() const;
+		VIRTUAL CONST Error ErrorCode() CONST;
 
 	protected:
 
@@ -223,39 +220,39 @@ namespace Foxetron
 	};
 
 
-	class AngleResponse : public Message<AngleResponse, MessageCode::ANGLE_RESPONSE>
+	CLASS AngleResponse : public Message<AngleResponse, MessageCode::ANGLE_RESPONSE>
 	{
 	public:
 
-		AngleResponse(const word);
+		AngleResponse(CONST WORD);
 
-		const word Degrees() const;
+		CWORD Degrees() CONST;
 	};
 
 
-	class NewAngleResponse : public Message<NewAngleResponse, MessageCode::NEWANGLE_RESPONSE> { };
+	CLASS NewAngleResponse : public Message<NewAngleResponse, MessageCode::NEWANGLE_RESPONSE> { };
 
-	class StatusResponse : public Message<StatusResponse, MessageCode::STATUS_RESPONSE>
+	CLASS StatusResponse : public Message<StatusResponse, MessageCode::STATUS_RESPONSE>
 	{
 	public:
 
-		StatusResponse(const char *);
+		StatusResponse(PCCHAR);
 
-		const char * StatusMessage() const;
+		PCCHAR StatusMessage() CONST;
 
 	protected:
 
-		const char * _StatusMessage;
+		PCCHAR _StatusMessage;
 	};
 
 
-	class ControllerStatusResponse : public Message<ControllerStatusResponse, MessageCode::CONTROLLER_STATUS>
+	CLASS ControllerStatusResponse : public Message<ControllerStatusResponse, MessageCode::CONTROLLER_STATUS>
 	{
 	public:
 
-		ControllerStatusResponse(ControllerStatus, const char * = NULL);
+		ControllerStatusResponse(ControllerStatus, PCCHAR = NULL);
 
-		const ControllerStatus StatusCode() const;
+		CONST ControllerStatus StatusCode() CONST;
 
 	protected:
 
@@ -263,13 +260,13 @@ namespace Foxetron
 	};
 
 
-	class DriverStatusResponse : public Message<DriverStatusResponse, MessageCode::DRIVER_STATUS>
+	CLASS DriverStatusResponse : public Message<DriverStatusResponse, MessageCode::DRIVER_STATUS>
 	{
 	public:
 
-		DriverStatusResponse(DriverStatus, const char * = NULL);
+		DriverStatusResponse(DriverStatus, PCCHAR = NULL);
 
-		const DriverStatus StatusCode() const;
+		CONST DriverStatus StatusCode() CONST;
 
 	protected:
 

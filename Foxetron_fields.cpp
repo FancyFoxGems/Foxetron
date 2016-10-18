@@ -14,13 +14,13 @@
 
 Field::Field(Datum & value, DataType type) : _Value(value), _Type(type) { }
 
-Field::Field(byte * value, DataType type) : _Type(type)
+Field::Field(BYTE * value, DataType type) : _Type(type)
 {
-	for (byte i = 0; i < sizeof(value); i++)
+	for (BYTE i = 0; i < SIZEOF(value); i++)
 		_Value.Bytes[i] = value[i];
 }
 
-Field::Field(char & value, DataType type) : _Type(type)
+Field::Field(CHAR & value, DataType type) : _Type(type)
 {
 	_Value.CharVal = value;
 }
@@ -30,12 +30,12 @@ Field::Field(short & value, DataType type) : _Type(type)
 	_Value.ShortVal = value;
 }
 
-Field::Field(long & value, DataType type) : _Type(type)
+Field::Field(LONG & value, DataType type) : _Type(type)
 {
 	_Value.LongVal = value;
 }
 
-Field::Field(float & value, DataType type) : _Type(type)
+Field::Field(FLOAT & value, DataType type) : _Type(type)
 {
 	_Value.FloatVal = value;
 }
@@ -44,20 +44,20 @@ Field::Field(float & value, DataType type) : _Type(type)
 // METHODS
 
 template<typename TVal>
-const TVal Field::GetValue() const
+CONST TVal Field::GetValue() CONST
 {
 	return reinterpret_cast<TVal>(_Value.ByteVal);
 }
 
 template<>
-const char Field::GetValue<char>() const
+CONST CHAR Field::GetValue<CHAR>() CONST
 {
-	return static_cast<const char>(_Value.CharVal);
+	return static_cast<CCHAR>(_Value.CharVal);
 }
 
 
 template<typename TVal>
-void Field::SetValue(TVal &)
+VOID Field::SetValue(TVal &)
 {
 }
 

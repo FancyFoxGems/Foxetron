@@ -13,6 +13,9 @@
 
 #pragma region INCLUDES
 
+// ITTY BITTY
+#include "IttyBitty_util.h"
+
 // 3RD-PARTY LIBS
 #include "VaRGB.h"
 #include "VaRGBCurves.h"
@@ -39,16 +42,16 @@
 
 using namespace vargb;
 
-void RGB_callback_SetColor(ColorSettings *);
-void RGB_callback_ScheduleComplete(Schedule *);
+VOID RGB_callback_SetColor(ColorSettings *);
+VOID RGB_callback_ScheduleComplete(Schedule *);
 
-extern VaRGB RGB;
+EXTERN VaRGB RGB;
 
-extern Schedule * _RgbSchedule;
+EXTERN Schedule * _RgbSchedule;
 
-extern Curve::Flasher * _RgbCurveFlasher;
-extern Curve::Sine * _RgbCurveSine;
-extern Curve::Linear * _RgbCurves[];
+EXTERN Curve::Flasher * _RgbCurveFlasher;
+EXTERN Curve::Sine * _RgbCurveSine;
+EXTERN Curve::Linear * _RgbCurves[];
 
 #pragma endregion GLOBAL VARIABLES
 
@@ -56,8 +59,8 @@ extern Curve::Linear * _RgbCurves[];
 
 #pragma region FUNCTION DECLARATIONS
 
-void initializeRGB();
-void freeRGB();
+VOID initializeRGB();
+VOID freeRGB();
 
 #pragma region FUNCTION DECLARATIONS
 

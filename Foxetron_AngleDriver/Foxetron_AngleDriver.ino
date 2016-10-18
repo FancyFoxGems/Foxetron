@@ -20,6 +20,14 @@
 
 #pragma region INCLUDES
 
+// ITTY BITTY
+#include "IttyBitty_util.h"
+
+// GCC WARNING SUPPRESSIONS
+IGNORE_WARNING(-Wunknown - pragmas)
+IGNORE_WARNING(-Wstrict - aliasing)
+IGNORE_WARNING(-Wpointer - arith)
+
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
 
@@ -40,11 +48,6 @@
 //#include <avr/pgmspace.h>						// included by project 3rd-party libs
 
 #pragma endregion INCLUDES
-
-
-IGNORE_WARNING(-Wunknown - pragmas)
-IGNORE_WARNING(-Wstrict - aliasing)
-IGNORE_WARNING(-Wpointer - arith)
 
 
 
@@ -76,25 +79,25 @@ IGNORE_WARNING(-Wpointer - arith)
 // INPUTS
 
 // Angle encoder
-volatile bool _AngleEncoderA	= false;	// Pin 2 / PD2 (INT0)
-volatile bool _AngleEncoderB	= false;	// Pin 3 / PD3 (INT1)
+VBOOL _AngleEncoderA	= false;	// Pin 2 / PD2 (INT0)
+VBOOL _AngleEncoderB	= false;	// Pin 3 / PD3 (INT1)
 
-volatile bool _AngleUp			= false;
-volatile uint32_t _AngleReading	= 0;
-word _AngleDelta				= 0;
-word _AngleVelocity				= 0;
+VBOOL _AngleUp			= false;
+VDWORD _AngleReading	= 0;
+WORD _AngleDelta				= 0;
+WORD _AngleVelocity				= 0;
 
 // Mast control inputs
-volatile bool _ActionButton		= false;	// Pin 15/A1 / PC1 (PCINT9)
-volatile bool _OneShotButton	= false;	// Pin 16/A2 / PC2 (PCINT10)
-volatile bool _LatchButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
+VBOOL _ActionButton		= false;	// Pin 15/A1 / PC1 (PCINT9)
+VBOOL _OneShotButton	= false;	// Pin 16/A2 / PC2 (PCINT10)
+VBOOL _LatchButton		= false;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
 
 // LEDs
-volatile bool _StatusLed		= LOW;
-volatile bool _ActionLed		= HIGH;
+VBOOL _StatusLed		= LOW;
+VBOOL _ActionLed		= HIGH;
 
 #pragma endregion PROGRAM VARIABLES
 
@@ -102,7 +105,7 @@ volatile bool _ActionLed		= HIGH;
 
 #pragma region PROGRAM OUTLINE: ENTRY POINT & LOOP
 
-void setup()
+VOID setup()
 {
 	Serial.begin(SERIAL_BAUD_RATE);
 
@@ -112,12 +115,12 @@ void setup()
 	initializeInterrupts();
 }
 
-void cleanUp()
+VOID cleanUp()
 {
 
 }
 
-void serialEvent()
+VOID serialEvent()
 {
 	while (Serial.available())
 	{
@@ -125,7 +128,7 @@ void serialEvent()
 	}
 }
 
-void loop()
+VOID loop()
 {
 #ifdef DEBUG_INPUTS
 	_DEBUG_printInputValues();
@@ -145,9 +148,9 @@ void loop()
 	_AngleUp = (_AngleEncoder ## channel increment_comparison _AngleEncoder ## other_channel);			\
 	_ISR_AngleEncoder_updateAngleReading();
 
-static inline void _ISR_AngleEncoder_updateAngleReading() __attribute__((always_inline));
+STATIC INLINE VOID _ISR_AngleEncoder_updateAngleReading() ALWAYS_INLINE;
 
-static inline void _ISR_AngleEncoder_updateAngleReading()
+STATIC INLINE VOID _ISR_AngleEncoder_updateAngleReading()
 {
 	if (_AngleUp)
 		++_AngleReading;
@@ -196,7 +199,7 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
 
 #pragma region PROGRAM FUNCTIONS
 
-void initializeInterrupts()
+VOID initializeInterrupts()
 {
 	// External interrupts: Angle encoder
 	EIMSK |= 0b00000011;
@@ -210,9 +213,9 @@ void initializeInterrupts()
 
 #pragma region DEBUG UTILITY FUNCTIONS
 
-void _DEBUG_printInputValues()
+VOID _DEBUG_printInputValues()
 {
-	static char valStr[2];
+	STATIC CHAR valStr[2];
 
 	_AngleEncoderA	= digitalRead(PIN_ANGLE_ENCODER_A);
 	_AngleEncoderB	= digitalRead(PIN_ANGLE_ENCODER_B);

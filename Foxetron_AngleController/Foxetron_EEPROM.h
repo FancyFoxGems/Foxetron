@@ -12,6 +12,9 @@
 
 #pragma region INCLUDES
 
+// ITTY BITTY
+#include "IttyBitty_util.h"
+
 // ARDUINO LIBS
 //#include <EEPROM.h>			// included by DB 3rd-party library
 

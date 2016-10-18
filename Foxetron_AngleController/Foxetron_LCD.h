@@ -13,6 +13,9 @@
 
 #pragma region INCLUDES
 
+// ITTY BITTY
+#include "IttyBitty_util.h"
+
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
 
@@ -66,7 +69,7 @@
 #pragma region GLOBAL VARIABLES
 
 // LCD display
-extern BigCrystal_I2C LCD;
+EXTERN BigCrystal_I2C LCD;
 
 #pragma endregion GLOBAL VARIABLES
 
@@ -74,10 +77,10 @@ extern BigCrystal_I2C LCD;
 
 #pragma region FUNCTION DECLARATIONS
 
-void initializeLCD();
+VOID initializeLCD();
 
-const char * const LCD_invertChar(const char *, byte = 5);
-const char * LCD_invertChar_P(const char *, byte = 5);
+CONST CHAR * CONST LCD_invertChar(CONST CHAR *, BYTE = 5);
+CONST CHAR * LCD_invertChar_P(CONST CHAR *, BYTE = 5);
 
 #pragma endregion FUNCTION DECLARATIONS
 

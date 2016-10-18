@@ -42,14 +42,14 @@ Curve::Linear * _RgbCurves[] =
 
 // VaRGB CALLBACK FUNCTIONS
 
-void RGB_callback_SetColor(ColorSettings * colors)
+VOID RGB_callback_SetColor(ColorSettings * colors)
 {
 	analogWrite(PIN_PWM_RGB_LED_RED, colors->red);
 	analogWrite(PIN_PWM_RGB_LED_GREEN, colors->green);
 	analogWrite(PIN_PWM_RGB_LED_BLUE, colors->blue);
 }
 
-void RGB_callback_ScheduleComplete(Schedule * schedule)
+VOID RGB_callback_ScheduleComplete(Schedule * schedule)
 {
 	RGB.resetTicks();
 	RGB.setSchedule(schedule);
@@ -58,7 +58,7 @@ void RGB_callback_ScheduleComplete(Schedule * schedule)
 
 // PROGRAM FUNCTIONS
 
-void initializeRGB()
+VOID initializeRGB()
 {
 	_RgbSchedule->addTransition(_RgbCurveFlasher);
 	_RgbSchedule->addTransition(_RgbCurveSine);
@@ -69,14 +69,14 @@ void initializeRGB()
 	RGB.setSchedule(_RgbSchedule);
 }
 
-void freeRGB()
+VOID freeRGB()
 {
 	delete _RgbSchedule;
 
 	delete _RgbCurveFlasher;
 	delete _RgbCurveSine;
 	
-	for (byte i = 0; i < sizeof(_RgbCurves) / sizeof(_RgbCurves[0]); i++)
+	for (BYTE i = 0; i < SIZEOF(_RgbCurves) / SIZEOF(_RgbCurves[0]); i++)
 	{
 		if (_RgbCurves[i] != NULL)
 			delete _RgbCurves[i];
