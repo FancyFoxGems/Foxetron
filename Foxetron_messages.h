@@ -161,7 +161,9 @@ namespace Foxetron
 	public:
 
 		STATIC CONSTEXPR MessageCode TYPE();
-		STATIC CONSTEXPR CWORD SIZE();
+		STATIC CONSTEXPR CSIZE SIZE();
+
+		STATIC CONSTEXPR CSIZE DATASIZE = Message::SIZE();
 
 		Message();
 		Message(RFIELD);
@@ -183,10 +185,20 @@ namespace Foxetron
 
 	// REQUESTS
 
-	CLASS Request : public Message<Request, MessageCode::REQUEST_TYPE> { };
+	CLASS Request : public Message<Request, MessageCode::REQUEST_TYPE> 
+	{
+	protected:
+
+		typedef Message<Request, MessageCode::REQUEST_TYPE> TBASE;
+	};
 
 
-	CLASS AngleRequest : public Message<AngleRequest, MessageCode::ANGLE_REQUEST> { };
+	CLASS AngleRequest : public Message<AngleRequest, MessageCode::ANGLE_REQUEST>
+	{
+	protected:
+
+		typedef Message<AngleRequest, MessageCode::ANGLE_REQUEST> TBASE;
+	};
 
 
 	CLASS NewAngleRequest : public Message<NewAngleRequest, MessageCode::NEWANGLE_REQUEST>
@@ -196,10 +208,19 @@ namespace Foxetron
 		NewAngleRequest(CWORD);
 
 		CWORD Degrees() CONST;
+		
+	protected:
+
+		typedef Message<NewAngleRequest, MessageCode::NEWANGLE_REQUEST> TBASE;
 	};
 
 
-	CLASS StatusRequest : public Message<StatusRequest, MessageCode::STATUS_REQUEST> { };
+	CLASS StatusRequest : public Message<StatusRequest, MessageCode::STATUS_REQUEST>
+	{
+	protected:
+
+		typedef Message<StatusRequest, MessageCode::STATUS_REQUEST> TBASE;
+	};
 
 
 
@@ -212,8 +233,10 @@ namespace Foxetron
 		Response(CONST Error);
 
 		VIRTUAL CONST Error ErrorCode() CONST;
-
+		
 	protected:
+
+		typedef Message<Response, MessageCode::RESPONSE_TYPE> TBASE;
 
 		Error _ErrorCode = Error::SUCCESS;
 	};
@@ -226,10 +249,19 @@ namespace Foxetron
 		AngleResponse(CONST WORD);
 
 		CWORD Degrees() CONST;
+		
+	protected:
+
+		typedef Message<AngleResponse, MessageCode::ANGLE_RESPONSE> TBASE;
 	};
 
 
-	CLASS NewAngleResponse : public Message<NewAngleResponse, MessageCode::NEWANGLE_RESPONSE> { };
+	CLASS NewAngleResponse : public Message<NewAngleResponse, MessageCode::NEWANGLE_RESPONSE>
+	{
+	protected:
+
+		typedef Message<NewAngleResponse, MessageCode::NEWANGLE_RESPONSE> TBASE;
+	};
 
 	CLASS StatusResponse : public Message<StatusResponse, MessageCode::STATUS_RESPONSE>
 	{
@@ -238,36 +270,42 @@ namespace Foxetron
 		StatusResponse(PCCHAR);
 
 		PCCHAR StatusMessage() CONST;
-
+		
 	protected:
+
+		typedef Message<StatusResponse, MessageCode::STATUS_RESPONSE> TBASE;
 
 		PCCHAR _StatusMessage;
 	};
 
 
-	CLASS ControllerStatusResponse : public Message<ControllerStatusResponse, MessageCode::CONTROLLER_STATUS>
+	CLASS ControllerStatusResponse : public Message<ControllerStatusResponse, MessageCode::CONTROLLER_STATUS>, public StatusResponse
 	{
 	public:
 
 		ControllerStatusResponse(ControllerStatus, PCCHAR = NULL);
 
 		CONST ControllerStatus StatusCode() CONST;
-
+		
 	protected:
+
+		typedef Message<ControllerStatusResponse, MessageCode::CONTROLLER_STATUS> TBASE;
 
 		ControllerStatus _StatusCode = ControllerStatus::NONE;
 	};
 
 
-	CLASS DriverStatusResponse : public Message<DriverStatusResponse, MessageCode::DRIVER_STATUS>
+	CLASS DriverStatusResponse : public Message<DriverStatusResponse, MessageCode::DRIVER_STATUS>, public StatusResponse
 	{
 	public:
 
 		DriverStatusResponse(DriverStatus, PCCHAR = NULL);
-
+		
 		CONST DriverStatus StatusCode() CONST;
 
 	protected:
+
+		typedef Message<DriverStatusResponse, MessageCode::DRIVER_STATUS> TBASE;
 
 		DriverStatus _StatusCode = DriverStatus::IDLE;
 	};

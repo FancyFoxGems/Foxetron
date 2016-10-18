@@ -19,9 +19,9 @@ CONSTEXPR MessageCode Message<TMessage, TCode>::TYPE()
 }
 
 template<CLASS TMessage, MessageCode TCode>
-CONSTEXPR CWORD Message<TMessage, TCode>::SIZE()
+CONSTEXPR CSIZE Message<TMessage, TCode>::SIZE()
 {
-	return static_cast<CWORD>(SIZEOF(TMessage));
+	return SIZEOF(TMessage);
 }
 
 
@@ -131,11 +131,11 @@ CONST WORD AngleResponse::Degrees() CONST
 
 // StatusResponse
 
-StatusResponse::StatusResponse(PCCHAR )
+StatusResponse::StatusResponse(PCCHAR statusMsg) : _StatusMessage(statusMsg)
 {
 }
 
-PCCHAR  StatusResponse::StatusMessage() CONST
+PCCHAR StatusResponse::StatusMessage() CONST
 {
 	return nullptr;
 }
@@ -143,25 +143,25 @@ PCCHAR  StatusResponse::StatusMessage() CONST
 
 // ControllerStatusResponse
 
-ControllerStatusResponse::ControllerStatusResponse(ControllerStatus controllerStatus, PCCHAR statusMsg)
+ControllerStatusResponse::ControllerStatusResponse(ControllerStatus controllerStatus, PCCHAR statusMsg) : StatusResponse(statusMsg)
 {
 }
 
 CONST ControllerStatus ControllerStatusResponse::StatusCode() CONST
 {
-	return ControllerStatus();
+	return static_cast<CONST ControllerStatus>((BYTE)(StatusResponse::Param(0)));
 }
 
 
 // DriverStatusResponse
 
-DriverStatusResponse::DriverStatusResponse(DriverStatus driverStatus, CONST PCCHAR statusMsg)
+DriverStatusResponse::DriverStatusResponse(DriverStatus driverStatus, PCCHAR statusMsg) : StatusResponse(statusMsg)
 {
 }
 
 CONST DriverStatus DriverStatusResponse::StatusCode() CONST
 {
-	return static_cast<CONST DriverStatus>((BYTE)(this->Param(0)));
+	return static_cast<CONST DriverStatus>((BYTE)(StatusResponse::Param(0)));
 }
 
 #pragma endregion RESPONSE DEFINITIONS
