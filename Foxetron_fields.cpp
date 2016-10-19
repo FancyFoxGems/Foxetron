@@ -67,6 +67,116 @@ RDATUM Datum::operator =(RRDATUM other)
 	return *this;
 }
 
+Datum::operator PCBYTE() const
+{
+	return MAKE_CONST(this->Bytes);
+}
+
+Datum::operator PBYTE()
+{
+	return this->Bytes;
+}
+
+Datum::operator PCCHAR() const
+{
+	return MAKE_CONST(this->String);
+}
+
+Datum::operator PCHAR()
+{
+	return this->String;
+}
+
+Datum::operator CBITPACK() const
+{
+	return *MAKE_CONST(this->BitsPtr);
+}
+
+Datum::operator RBITPACK()
+{
+	return *(this->BitsPtr);
+}
+
+Datum::operator CCHAR() const
+{
+	return MAKE_CONST(*(this->CharPtr));
+}
+
+Datum::operator RCHAR()
+{
+	return *(this->CharPtr);
+}
+
+Datum::operator CBYTE() const
+{
+	return MAKE_CONST(*(this->BytePtr));
+}
+
+Datum::operator RBYTE()
+{
+	return *(this->BytePtr);	
+}
+
+Datum::operator CBOOL() const
+{
+	return MAKE_CONST(*(this->BoolPtr));
+}
+
+Datum::operator RBOOL()
+{
+	return *(this->BoolPtr);
+}
+
+Datum::operator CSHORT() const
+{
+	return MAKE_CONST(*(this->ShortPtr));
+}
+
+Datum::operator RSHORT()
+{
+	return *(this->ShortPtr);
+}
+
+Datum::operator CWORD() const
+{
+	return MAKE_CONST(*(this->WordPtr));
+}
+
+Datum::operator RWORD()
+{
+	return *(this->WordPtr);
+}
+
+Datum::operator CLONG() const
+{
+	return MAKE_CONST(*(this->LongPtr));
+}
+
+Datum::operator RLONG()
+{
+	return *(this->LongPtr);
+}
+
+Datum::operator CDWORD() const
+{
+	return MAKE_CONST(*(this->DWordPtr));
+}
+
+Datum::operator RDWORD()
+{
+	return *(this->DWordPtr);
+}
+
+Datum::operator CFLOAT() const
+{
+	return MAKE_CONST(*(this->FloatPtr));
+}
+
+Datum::operator RFLOAT()
+{
+	return *(this->FloatPtr);
+}
+
 #pragma endregion
 
 

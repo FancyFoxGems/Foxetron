@@ -127,6 +127,31 @@ namespace Foxetron
 
 		RDATUM operator =(RCDATUM other);
 		RDATUM operator =(RRDATUM other);
+		
+		operator PCBYTE() const;
+		operator PBYTE();
+		operator PCCHAR() const;
+		operator PCHAR();
+
+		operator CBITPACK() const;
+		operator RBITPACK();
+
+		operator CCHAR() const;
+		operator RCHAR();
+		operator CBYTE() const;
+		operator RBYTE();
+		operator CBOOL() const;
+		operator RBOOL();
+		operator CSHORT() const;
+		operator RSHORT();
+		operator CWORD() const;
+		operator RWORD();
+		operator CLONG() const;
+		operator RLONG();
+		operator CDWORD() const;
+		operator RDWORD();
+		operator CFLOAT() const;
+		operator RFLOAT();
 	};
 
 #pragma endregion
@@ -185,6 +210,9 @@ namespace Foxetron
 		
 		operator PCBYTE() const;
 		operator PBYTE();
+		operator PCCHAR() const;
+		operator PCHAR();
+
 		operator CBITPACK() const;
 		operator RBITPACK();
 
