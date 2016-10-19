@@ -60,13 +60,13 @@ RFIELD Message<TMessage, TCode>::operator[](CSIZE i)
 // PUBLIC METHODS
 
 template<CLASS TMessage, MessageCode TCode>
-CSIZE Message<TMessage, TCode>::ParamCount() CONST
+CSIZE Message<TMessage, TCode>::ParamCount() const
 {
 	return _Params == NULL ? 0 : static_cast<CSIZE>(COUNT(_Params));
 }
 
 template<CLASS TMessage, MessageCode TCode>
-RFIELD Message<TMessage, TCode>::Param(CSIZE i) CONST
+RFIELD Message<TMessage, TCode>::Param(CSIZE i) const
 {
 	if (_Params == NULL)
 		return Field::NULL_OBJECT();
@@ -89,7 +89,7 @@ NewAngleRequest::NewAngleRequest(CWORD degrees)
 {
 }
 
-CWORD NewAngleRequest::Degrees() CONST
+CWORD NewAngleRequest::Degrees() const
 {
 	return 0;
 }
@@ -106,7 +106,7 @@ Response::Response(CONST Error)
 
 }
 
-CONST Error Response::ErrorCode() CONST
+CONST Error Response::ErrorCode() const
 {
 	return Error();
 }
@@ -118,7 +118,7 @@ AngleResponse::AngleResponse(CWORD)
 {
 }
 
-CONST WORD AngleResponse::Degrees() CONST
+CONST WORD AngleResponse::Degrees() const
 {
 	return 0;
 }
@@ -130,7 +130,7 @@ StatusResponse::StatusResponse(PCCHAR statusMsg) : _StatusMessage(statusMsg)
 {
 }
 
-PCCHAR StatusResponse::StatusMessage() CONST
+PCCHAR StatusResponse::StatusMessage() const
 {
 	return nullptr;
 }
@@ -142,7 +142,7 @@ ControllerStatusResponse::ControllerStatusResponse(ControllerStatus controllerSt
 {
 }
 
-CONST ControllerStatus ControllerStatusResponse::StatusCode() CONST
+CONST ControllerStatus ControllerStatusResponse::StatusCode() const
 {
 	return static_cast<CONST ControllerStatus>((BYTE)(StatusResponse::Param(0)));
 }
@@ -154,7 +154,7 @@ DriverStatusResponse::DriverStatusResponse(DriverStatus driverStatus, PCCHAR sta
 {
 }
 
-CONST DriverStatus DriverStatusResponse::StatusCode() CONST
+CONST DriverStatus DriverStatusResponse::StatusCode() const
 {
 	return static_cast<CONST DriverStatus>((BYTE)(StatusResponse::Param(0)));
 }

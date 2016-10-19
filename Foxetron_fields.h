@@ -19,16 +19,16 @@ namespace Foxetron
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	typedef VOLATILE UNION _Datum Datum, DATUM, * PDATUM, & RDATUM;
-	typedef CONST UNION _Datum CDATUM, * PCDATUM, & RCDATUM;
+	typedef VOLATILE UNION Datum DATUM, * PDATUM, & RDATUM;
+	typedef CONST UNION Datum CDATUM, * PCDATUM, & RCDATUM;
 
 	CLASS IField;
 	typedef IField IFIELD, *PIFIELD, &RIFIELD;
-	typedef CONST IField CIFIELD, *CPIFIELD, &CRIFIELD;
+	typedef CONST IField CIFIELD, *PCIFIELD, &RCIFIELD;
 
 	CLASS Field;
 	typedef Field FIELD, *PFIELD, &RFIELD;
-	typedef CONST Field CFIELD, *CPFIELD, &CRFIELD;
+	typedef CONST Field CFIELD, *PCFIELD, &RCFIELD;
 
 	template<typename T = Datum>
 	CLASS TypedField;
@@ -86,7 +86,7 @@ namespace Foxetron
 
 #pragma region Datum: UNIVERSAL 4-BYTE DATA TYPE UNION
 	
-	UNION PACKED _Datum
+	UNION PACKED Datum
 	{
 		BYTE Bytes[4];
 
@@ -103,12 +103,25 @@ namespace Foxetron
 		DWORD DWordVal;
 		FLOAT FloatVal;
 
-		_Datum() { }
+		Datum() { }
 
-		_Datum(RCDATUM other)
+		Datum(RCDATUM other)
 		{
 			this->LongVal = other.LongVal;
 		}
+
+		 Datum(PBYTE);
+
+		 Datum(RBITPACK);
+
+		 Datum(RCHAR);
+		 Datum(RBYTE);
+		 Datum(RBOOL);
+		 Datum(RSHORT);
+		 Datum(RWORD);
+		 Datum(RLONG);
+		 Datum(RDWORD);
+		 Datum(RFLOAT);
 
 		RDATUM operator =(RCDATUM other)
 		{
@@ -133,32 +146,43 @@ namespace Foxetron
 		VIRTUAL CONST DataSize GetDataSize() const = 0;
 
 		VIRTUAL CONST DataType GetDataType() const = 0;
+
+		VIRTUAL PCBYTE Bytes() const = 0;
 	};
 
 #pragma endregion
 
 
-#pragma region Field
+#pragma region Field DECLARATION
 
-	CLASS Field : public VIRTUAL IField
+	CLASS Field : public virtual IField
 	{
 	public:
 
 		STATIC RFIELD NULL_OBJECT();
 
+		// CONSTRUCTORS/DESTRUCTOR
+
+		Field(RCFIELD);
+
 		Field(RCDATUM, DataType = DataType::BYTES_FIELD);
 
 		EXPLICIT Field(PBYTE, DataType = DataType::BYTES_FIELD);
-		EXPLICIT Field(RCBITPACK, DataType = DataType::BIT_FIELD);
 
-		EXPLICIT Field(RCCHAR);
-		EXPLICIT Field(RCBYTE);
-		EXPLICIT Field(RCBOOL);
-		EXPLICIT Field(RCSHORT);
-		EXPLICIT Field(RCWORD);
-		EXPLICIT Field(RCLONG);
-		EXPLICIT Field(RCDWORD);
-		EXPLICIT Field(RCFLOAT);
+		EXPLICIT Field(RBITPACK, DataType = DataType::BIT_FIELD);
+
+		EXPLICIT Field(RCHAR);
+		EXPLICIT Field(RBYTE);
+		EXPLICIT Field(RBOOL);
+		EXPLICIT Field(RSHORT);
+		EXPLICIT Field(RWORD);
+		EXPLICIT Field(RLONG);
+		EXPLICIT Field(RDWORD);
+		EXPLICIT Field(RFLOAT);
+
+		VIRTUAL ~Field();
+
+		RFIELD operator =(RCFIELD other);
 		
 		operator PCBYTE() const;
 		operator PBYTE();
@@ -189,12 +213,14 @@ namespace Foxetron
 		VIRTUAL CONST DataSize GetDataSize() const;
 
 		VIRTUAL CONST DataType GetDataType() const;
+		
+		VIRTUAL PCBYTE Bytes() const;
 
 		template<typename TVal = Datum>
 		CONST TVal GetValue() const;
 
 		template<typename TVal= Datum>
-		VOID SetValue(TVal &);
+		VOID SetValue(const TVal &);
 		
 	protected:
 
@@ -211,17 +237,17 @@ namespace Foxetron
 #pragma region TypedField DEFINITION
 
 	template<typename T>
-	CLASS TypedField : public VIRTUAL IField
+	CLASS TypedField : public virtual IField
 	{
 	public:
 
 		// CONSTRUYCTORS
 
-		TypedField(CONST Datum &)
+		TypedField(RCDATUM value)
 		{
 		}
 
-		TypedField(CONST T &)
+		TypedField(CONST T & value)
 		{
 
 		}
@@ -233,7 +259,7 @@ namespace Foxetron
 		operator SIGNED_TYPE(CONST T)() const;
 
 
-		//  VIRTUAL IMPLEMENATIONS
+		//  VIRTUAL HIDING IMPLEMENATIONS
 
 		CSIZE Size() const;
 		
@@ -249,9 +275,14 @@ namespace Foxetron
 
 		// USER METHODS
 
-		CONST T Value() const
+		CONST T GetValue() const
 		{
 			return reinterpret_cast<T>(_Value.ByteVal);
+		}
+
+		VOID SetValue(CONST T & value)
+		{
+
 		}
 
 
@@ -263,7 +294,7 @@ namespace Foxetron
 
 		// INSTANCE VARIABLES
 
-		Datum _Value;
+		DATUM _Value;
 	};
 
 #pragma endregion

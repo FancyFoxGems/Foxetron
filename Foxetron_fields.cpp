@@ -12,6 +12,12 @@
 
 #pragma region CONSTRUCTORS
 
+RFIELD Field::NULL_OBJECT()
+{
+	STATIC FIELD NULL_FIELD((BYTE)0);
+	return NULL_FIELD;
+}
+
 Field::Field(RCDATUM value, DataType type) : _Value(value), _DataType(type) { }
 
 Field::Field(PBYTE value, DataType type) : _DataType(type)
@@ -20,22 +26,22 @@ Field::Field(PBYTE value, DataType type) : _DataType(type)
 		_Value.Bytes[i] = value[i];
 }
 
-Field::Field(RCCHAR value)
+Field::Field(RCHAR value)
 {
 	_Value.CharVal = value;
 }
 
-Field::Field(RCSHORT value)
+Field::Field(RSHORT value)
 {
 	_Value.ShortVal = value;
 }
 
-Field::Field(RCLONG value)
+Field::Field(RLONG value)
 {
 	_Value.LongVal = value;
 }
 
-Field::Field(RCFLOAT value)
+Field::Field(RFLOAT value)
 {
 	_Value.FloatVal = value;
 }
@@ -46,20 +52,19 @@ Field::Field(RCFLOAT value)
 #pragma region METHODS
 
 template<typename TVal>
-CONST TVal Field::GetValue() CONST
+CONST TVal Field::GetValue() const
 {
 	return reinterpret_cast<TVal>(_Value.ByteVal);
 }
 
 template<>
-CONST CHAR Field::GetValue<CHAR>() CONST
+CONST CHAR Field::GetValue<CHAR>() const
 {
 	return static_cast<CCHAR>(_Value.CharVal);
 }
 
-
 template<typename TVal>
-VOID Field::SetValue(TVal & value)
+VOID Field::SetValue(const TVal & value)
 {
 
 }
