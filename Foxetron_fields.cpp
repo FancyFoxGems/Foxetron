@@ -12,7 +12,7 @@
 
 #pragma region CONSTRUCTORS
 
-Field::Field(RDATUM value, DataType type) : _Value(value), _DataType(type) { }
+Field::Field(RCDATUM value, DataType type) : _Value(value), _DataType(type) { }
 
 Field::Field(PBYTE value, DataType type) : _DataType(type)
 {
@@ -20,22 +20,22 @@ Field::Field(PBYTE value, DataType type) : _DataType(type)
 		_Value.Bytes[i] = value[i];
 }
 
-Field::Field(RCHAR value, DataType type) : _DataType(type)
+Field::Field(RCCHAR value)
 {
 	_Value.CharVal = value;
 }
 
-Field::Field(RSHORT value, DataType type) : _DataType(type)
+Field::Field(RCSHORT value)
 {
 	_Value.ShortVal = value;
 }
 
-Field::Field(RLONG value, DataType type) : _DataType(type)
+Field::Field(RCLONG value)
 {
 	_Value.LongVal = value;
 }
 
-Field::Field(RFLOAT value, DataType type) : _DataType(type)
+Field::Field(RCFLOAT value)
 {
 	_Value.FloatVal = value;
 }

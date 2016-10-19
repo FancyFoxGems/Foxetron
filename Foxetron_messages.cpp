@@ -69,11 +69,7 @@ template<CLASS TMessage, MessageCode TCode>
 RFIELD Message<TMessage, TCode>::Param(CSIZE i) CONST
 {
 	if (_Params == NULL)
-	{
-		STATIC DATUM NULL_DATUM;
-		STATIC FIELD NULL_FIELD(NULL_DATUM);
-		return NULL_FIELD;
-	}
+		return Field::NULL_OBJECT();
 
 	return _Params[i];
 }
