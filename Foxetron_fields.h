@@ -92,6 +92,8 @@ namespace Foxetron
 	
 	UNION PACKED Datum
 	{
+		// UNION MEMBERS
+
 		PBYTE Bytes;
 		PCHAR String;	
 		PBITPACK BitFields;
@@ -108,10 +110,12 @@ namespace Foxetron
 		PFLOAT FloatPtr;
 
 
-		EXPLICIT Datum(BYTE byteSize = 1);
+		// CONSTRUCTORS
 
-		EXPLICIT Datum(RCDATUM other);
-		EXPLICIT Datum(RRDATUM other);
+		Datum();
+
+		Datum(RCDATUM other);
+		Datum(RRDATUM other);
 
 		EXPLICIT Datum(PBYTE value);
 		EXPLICIT Datum(PCHAR value);		
@@ -126,6 +130,8 @@ namespace Foxetron
 		EXPLICIT Datum(RDWORD value);
 		EXPLICIT Datum(RFLOAT value);
 
+
+		//OPERATORS
 
 		RDATUM operator =(RCDATUM other);
 		RDATUM operator =(RRDATUM other);
@@ -155,8 +161,10 @@ namespace Foxetron
 		operator RFLOAT();
 
 
-		VOID FreePtr();
-		VOID FreeData();
+		// USER METHODS
+
+		/*VOID FreePtr();
+		VOID FreeData();*/
 	};
 
 #pragma endregion
@@ -168,16 +176,15 @@ namespace Foxetron
 	{
 	public:
 
-		VIRTUAL CSIZE Size() const = 0;
-		
+		// INTERFACE METHODS
+
+		VIRTUAL CSIZE Size() const = 0;		
 		VIRTUAL CSIZE ByteSize() const = 0;
 
 		VIRTUAL CONST DataSize GetDataSize() const = 0;
-
 		VIRTUAL CONST DataType GetDataType() const = 0;
 
 		VIRTUAL PCBYTE Bytes() const = 0;
-
 		VIRTUAL PCCHAR String() const = 0;
 	};
 
@@ -192,16 +199,16 @@ namespace Foxetron
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		Field();
+		Field(DataType = DataType::BYTE_FIELD);
 
 		Field(RCFIELD);
 		Field(RRFIELD);
 
-		Field(RCDATUM, DataType type = DataType::BYTE_FIELD);
+		Field(RCDATUM, DataType = DataType::BYTE_FIELD);
 
 		EXPLICIT Field(PBYTE);
 		EXPLICIT Field(PCHAR);
-		//EXPLICIT Field(PBITPACK);
+		EXPLICIT Field(PBITPACK);
 
 		EXPLICIT Field(RCHAR);
 		EXPLICIT Field(RBYTE);
@@ -215,10 +222,15 @@ namespace Foxetron
 		VIRTUAL ~Field();
 
 
-		STATIC RFIELD NULL_OBJECT();
+		// STATIC FUNCTIONS
 
+		STATIC RFIELD NULL_OBJECT();
+		
+		
+		// OPERATORS
 
 		RFIELD operator =(RCFIELD);
+		RFIELD operator =(RRFIELD);
 		
 		operator PCBYTE() const;
 		operator PBYTE();
@@ -245,20 +257,21 @@ namespace Foxetron
 		operator RFLOAT();
 
 
-		VIRTUAL CSIZE Size() const;
-		
+		// IField IMPLEMENTATIONS
+
+		VIRTUAL CSIZE Size() const;		
 		VIRTUAL CSIZE ByteSize() const;
 
 		VIRTUAL CONST DataSize GetDataSize() const;
-
 		VIRTUAL CONST DataType GetDataType() const;
 		
-		VIRTUAL PCBYTE Bytes() const;
-		
+		VIRTUAL PCBYTE Bytes() const;		
 		VIRTUAL PCCHAR String() const;
 		
 
 	protected:
+
+		// INSTANCE VARIABLES
 
 		Datum _Value;
 		DataType _DataType;
@@ -297,7 +310,7 @@ namespace Foxetron
 		operator SIGNED_TYPE(CONST T)() const;
 
 
-		//  VIRTUAL HIDING IMPLEMENATIONS
+		//  VIRTUAL HIDING IField IMPLEMENATIONS
 
 		CSIZE Size() const;
 		
