@@ -19,19 +19,19 @@ namespace Foxetron
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	typedef UNION Datum DATUM, * PDATUM, & RDATUM, ** PPDATUM, && RRDATUM;
-	typedef CONST UNION Datum CDATUM, * PCDATUM, & RCDATUM, ** PPCDATUM;
+	typedef union Datum DATUM, * PDATUM, & RDATUM, ** PPDATUM, && RRDATUM;
+	typedef const union Datum CDATUM, * PCDATUM, & RCDATUM, ** PPCDATUM;
 
-	CLASS IField;
+	class IField;
 	typedef IField IFIELD, * PIFIELD, & RIFIELD, ** PPIFIELD, && RRIFIELD;
-	typedef CONST IField CIFIELD, *PCIFIELD, & RCIFIELD, ** PPCIFIELD;
+	typedef const IField CIFIELD, *PCIFIELD, & RCIFIELD, ** PPCIFIELD;
 
-	CLASS Field;
+	class Field;
 	typedef Field FIELD, * PFIELD, & RFIELD, ** PPFIELD, && RRFIELD;
-	typedef CONST Field CFIELD, * PCFIELD, & RCFIELD, ** PPCFIELD;
+	typedef const Field CFIELD, * PCFIELD, & RCFIELD, ** PPCFIELD;
 
 	template<typename T = Datum>
-	CLASS TypedField;
+	class TypedField;
 	template<typename T = Datum>
 	using TYPEDFIELD = TypedField<T>;
 	template<typename T = Datum>
@@ -43,13 +43,13 @@ namespace Foxetron
 	template<typename T = Datum>
 	using RRTYPEDFIELD = TypedField<T> &&;
 	template<typename T = Datum>
-	using CTYPEDFIELD = CONST TypedField<T>;
+	using CTYPEDFIELD = const TypedField<T>;
 	template<typename T = Datum>
-	using PCTYPEDFIELD = CONST TypedField<T> *;
+	using PCTYPEDFIELD = const TypedField<T> *;
 	template<typename T = Datum>
-	using RCTYPEDFIELD = CONST TypedField<T> &;
+	using RCTYPEDFIELD = const TypedField<T> &;
 	template<typename T = Datum>
-	using PPCTYPEDFIELD = CONST TypedField<T> **;
+	using PPCTYPEDFIELD = const TypedField<T> **;
 
 #pragma endregion
 
@@ -81,14 +81,17 @@ namespace Foxetron
 		FLOAT_FIELD	= FOUR_BYTES | 0x4
 	};
 
+	STATIC CONST BYTE DATA_SIZE_MASK = 0xF0;
+
 #pragma endregion
 
 
-#pragma region Datum DEFINITION: UNIVERSAL 4-BYTE DATA TYPE UNION
+#pragma region Datum DECLARATION: UNIVERSAL 4-BYTE DATA TYPE UNION
 	
 	UNION PACKED Datum
 	{
 		PBYTE Bytes;
+		PCHAR String;
 	
 		PBITPACK BitsPtr;
 		
@@ -103,50 +106,27 @@ namespace Foxetron
 		PDWORD DWordPtr;
 		PFLOAT FloatPtr;
 
-		Datum() : Bytes(0) { }
+		Datum();
 
-		Datum(RCDATUM other)
-		{
-			this->Bytes = other.Bytes;
-		}
+		Datum(RCDATUM other);
+		Datum(RRDATUM other);
 
-		Datum(RRDATUM other)
-		{
-			*this = other.Bytes;
-			//new (this) Datum(other.Bytes);
-		}
+		Datum(PBYTE value);
+		Datum(PCHAR value);
+		Datum(RBITPACK value);
+		Datum(RCHAR value);
+		Datum(RBYTE value);
+		Datum(RBOOL value);
+		Datum(RSHORT value);
+		Datum(RWORD value);
+		Datum(RLONG value);
+		Datum(RDWORD value);
+		Datum(RFLOAT value);
 
-		Datum(PBYTE value) : Bytes(value) { }
+		~Datum();
 
-		Datum(RBITPACK value) : BitsPtr(&value) { }
-
-		Datum(RCHAR value) : CharPtr(&value) { }
-
-		Datum(RBYTE value) : BytePtr(&value) { }
-
-		Datum(RBOOL value) : BoolPtr(&value) { }
-
-		Datum(RSHORT value) : ShortPtr(&value) { }
-
-		Datum(RWORD value) : WordPtr(&value) { }
-
-		Datum(RLONG value) : LongPtr(&value) { }
-		
-		Datum(RDWORD value) : DWordPtr(&value) { }
-
-		Datum(RFLOAT value) : FloatPtr(&value) { }
-
-		RDATUM operator =(RCDATUM other)
-		{
-			*this = Datum(other);
-			return *this;
-		}
-
-		RDATUM operator =(RRDATUM other)
-		{
-			*this = Datum(other);
-			return *this;
-		}
+		RDATUM operator =(RCDATUM other);
+		RDATUM operator =(RRDATUM other);
 	};
 
 #pragma endregion
@@ -186,7 +166,7 @@ namespace Foxetron
 
 		Field(RCDATUM, DataType = DataType::BYTES_FIELD);
 
-		EXPLICIT Field(PBYTE, DataType = DataType::BYTES_FIELD);
+		Field(PBYTE, DataType = DataType::BYTES_FIELD);
 
 		EXPLICIT Field(RBITPACK, DataType = DataType::BIT_FIELD);
 
@@ -243,7 +223,7 @@ namespace Foxetron
 		
 	protected:
 
-		DATUM _Value;
+		Datum _Value;
 		DataType _DataType;
 	};
 

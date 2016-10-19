@@ -12,13 +12,13 @@
 
 // STATIC MESSAGE "OVERRIDES"
 
-template<CLASS TMessage, MessageCode TCode>
+template<class TMessage, MessageCode TCode>
 CONSTEXPR MessageCode Message<TMessage, TCode>::TYPE()
 {
 	return TCode;
 }
 
-template<CLASS TMessage, MessageCode TCode>
+template<class TMessage, MessageCode TCode>
 CONSTEXPR CSIZE Message<TMessage, TCode>::SIZE()
 {
 	return SIZEOF(TMessage);
@@ -27,22 +27,22 @@ CONSTEXPR CSIZE Message<TMessage, TCode>::SIZE()
 
 // CONSTRUCTORS/DESTRUCTOR
 
-template<CLASS TMessage, MessageCode TCode>
+template<class TMessage, MessageCode TCode>
 Message<TMessage, TCode>::Message()
 {
 }
 
-template<CLASS TMessage, MessageCode TCode>
+template<class TMessage, MessageCode TCode>
 Message<TMessage, TCode>::Message(RFIELD)
 {
 }
 
-template<CLASS TMessage, MessageCode TCode>
+template<class TMessage, MessageCode TCode>
 Message<TMessage, TCode>::Message(PFIELD)
 {
 }
 
-template<CLASS TMessage, MessageCode TCode>
+template<class TMessage, MessageCode TCode>
 Message<TMessage, TCode>::~Message()
 {
 }
@@ -50,7 +50,7 @@ Message<TMessage, TCode>::~Message()
 
 // OPERATORS
 
-template<CLASS TMessage, MessageCode TCode>
+template<class TMessage, MessageCode TCode>
 RFIELD Message<TMessage, TCode>::operator[](CSIZE i)
 {
 	return this->Param(i);
@@ -59,13 +59,13 @@ RFIELD Message<TMessage, TCode>::operator[](CSIZE i)
 
 // PUBLIC METHODS
 
-template<CLASS TMessage, MessageCode TCode>
+template<class TMessage, MessageCode TCode>
 CSIZE Message<TMessage, TCode>::ParamCount() const
 {
 	return _Params == NULL ? 0 : static_cast<CSIZE>(COUNT(_Params));
 }
 
-template<CLASS TMessage, MessageCode TCode>
+template<class TMessage, MessageCode TCode>
 RFIELD Message<TMessage, TCode>::Param(CSIZE i) const
 {
 	if (_Params == NULL)

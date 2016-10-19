@@ -77,72 +77,72 @@ namespace Foxetron
 
 	//  Message
 
-	template<CLASS TMessage, MessageCode TCode>
-	CLASS Message;
-	template<CLASS TMessage, MessageCode TCode>
+	template<class TMessage, MessageCode TCode>
+	class Message;
+	template<class TMessage, MessageCode TCode>
 	using MESSAGE = Message<TMessage, TCode>;
-	template<CLASS TMessage, MessageCode TCode>
+	template<class TMessage, MessageCode TCode>
 	using PMESSAGE = Message<TMessage, TCode> *;
-	template<CLASS TMessage, MessageCode TCode>
+	template<class TMessage, MessageCode TCode>
 	using RMESSAGE = Message<TMessage, TCode> &;
-	template<CLASS TMessage, MessageCode TCode>
+	template<class TMessage, MessageCode TCode>
 	using PPMESSAGE = Message<TMessage, TCode> **;
-	template<CLASS TMessage, MessageCode TCode>
+	template<class TMessage, MessageCode TCode>
 	using RRMESSAGE = Message<TMessage, TCode> &&;
-	template<CLASS TMessage, MessageCode TCode>
-	using CMESSAGE = CONST Message<TMessage, TCode>;
-	template<CLASS TMessage, MessageCode TCode>
-	using PCMESSAGE = CONST Message<TMessage, TCode> *;
-	template<CLASS TMessage, MessageCode TCode>
-	using RCMESSAGE = CONST Message<TMessage, TCode> &;
-	template<CLASS TMessage, MessageCode TCode>
-	using PPCMESSAGE = CONST Message<TMessage, TCode> **;
+	template<class TMessage, MessageCode TCode>
+	using CMESSAGE = const Message<TMessage, TCode>;
+	template<class TMessage, MessageCode TCode>
+	using PCMESSAGE = const Message<TMessage, TCode> *;
+	template<class TMessage, MessageCode TCode>
+	using RCMESSAGE = const Message<TMessage, TCode> &;
+	template<class TMessage, MessageCode TCode>
+	using PPCMESSAGE = const Message<TMessage, TCode> **;
 
 
 	// REQUESTS
 
-	CLASS Request;
+	class Request;
 	typedef Request REQUEST, * PREQUEST, & RREQUEST;
-	typedef CONST Request CREQUEST, * PCREQUEST, & RCREQUEST;
+	typedef const Request CREQUEST, * PCREQUEST, & RCREQUEST;
 
-	CLASS AngleRequest;
+	class AngleRequest;
 	typedef AngleRequest ANGLEREQUEST, * PANGLEREQUEST, & RANGLEREQUEST;
-	typedef CONST AngleRequest CANGLEREQUEST, *CPANGLEREQUEST, & RCANGLEREQUEST;
+	typedef const AngleRequest CANGLEREQUEST, * CPANGLEREQUEST, & RCANGLEREQUEST;
 
-	CLASS NewAngleRequest;
-	typedef NewAngleRequest NEWANGLEREQUEST, *PNEWANGLEREQUEST, &RNEWANGLEREQUEST;
-	typedef CONST NewAngleRequest CNEWANGLEREQUEST, *CPNEWANGLEREQUEST, &CRNEWANGLEREQUEST;
+	class NewAngleRequest;
+	typedef NewAngleRequest NEWANGLEREQUEST, * PNEWANGLEREQUEST, & RNEWANGLEREQUEST;
+	typedef const NewAngleRequest CNEWANGLEREQUEST, * CPNEWANGLEREQUEST, & CRNEWANGLEREQUEST;
 
-	CLASS StatusRequest;
-	typedef StatusRequest STATUSREQUEST, *PSTATUSREQUEST, &RSTATUSREQUEST;
-	typedef CONST StatusRequest CSTATUSREQUEST, *CPSTATUSREQUEST, &CRSTATUSREQUEST;
+	class StatusRequest;
+	typedef StatusRequest STATUSREQUEST, * PSTATUSREQUEST, & RSTATUSREQUEST;
+	typedef const StatusRequest CSTATUSREQUEST, * CPSTATUSREQUEST, & CRSTATUSREQUEST;
 
 
 	// RESPONSES
 
-	CLASS Response;
+	class Response;
 	typedef Response RESPONSE, * PRESPONSE, & RRESPONSE;
-	typedef CONST Response CRESPONSE, * PCRESPONSE, & RCRESPONSE;
+	typedef const Response CRESPONSE, * PCRESPONSE, & RCRESPONSE;
 
-	CLASS AngleResponse;
+	class AngleResponse;
 	typedef AngleResponse ANGLERESPONSE, * PANGLERESPONSE, & RANGLERESPONSE;
-	typedef CONST AngleResponse CANGLERESPONSE, * PCANGLERESPONSE, & RCANGLERESPONSE;
+	typedef const AngleResponse CANGLERESPONSE, * PCANGLERESPONSE, & RCANGLERESPONSE;
 
-	CLASS NewAngleResponse;
+	class NewAngleResponse;
 	typedef NewAngleResponse NEWANGLERESPONSE, * PNEWANGLERESPONSE, & RNEWANGLERESPONSE;
-	typedef CONST NewAngleResponse CNEWANGLERESPONSE, * PCNEWANGLERESPONSE, & RCNEWANGLERESPONSE;
+	typedef const NewAngleResponse CNEWANGLERESPONSE, * PCNEWANGLERESPONSE, & RCNEWANGLERESPONSE;
 
-	CLASS StatusResponse;
+	class StatusResponse;
 	typedef StatusResponse STATUSRESPONSE, * PSTATUSRESPONSE, & RSTATUSRESPONSE;
-	typedef CONST StatusResponse CSTATUSRESPONSE, * PCSTATUSRESPONSE, & RCSTATUSRESPONSE;
+	typedef const StatusResponse CSTATUSRESPONSE, * PCSTATUSRESPONSE, & RCSTATUSRESPONSE;
 
-	CLASS ControllerStatusResponse;
+	class ControllerStatusResponse;
 	typedef ControllerStatusResponse CONTROLLERSTATUSRESPONSE, * PCONTROLLERSTATUSRESPONSE, & RCONTROLLERSTATUSRESPONSE;
-	typedef CONST ControllerStatusResponse CCONTROLLERSTATUSRESPONSE, * PCCONTROLLERSTATUSRESPONSE, & RCCONTROLLERSTATUSRESPONSE;
+	typedef const ControllerStatusResponse CCONTROLLERSTATUSRESPONSE, * PCCONTROLLERSTATUSRESPONSE, & RCCONTROLLERSTATUSRESPONSE;
 
-	CLASS DriverStatusResponse;
+	class DriverStatusResponse;
 	typedef DriverStatusResponse DRIVERSTATUSRESPONSE, * PDRIVERSTATUSRESPONSE, & RDRIVERSTATUSRESPONSE;
-	typedef CONST DriverStatusResponse CDRIVERSTATUSRESPONSE, * PCDRIVERSTATUSRESPONSE, & RCDRIVERSTATUSRESPONSE;
+	typedef const DriverStatusResponse CDRIVERSTATUSRESPONSE, * PCDRIVERSTATUSRESPONSE, & RCDRIVERSTATUSRESPONSE;
 
 #pragma endregion
 	
@@ -151,7 +151,7 @@ namespace Foxetron
 
 	// Message
 
-	template<CLASS TMessage, MessageCode TCode>
+	template<class TMessage, MessageCode TCode>
 	CLASS Message
 	{
 	public:

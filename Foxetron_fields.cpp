@@ -8,9 +8,72 @@
 #include "Foxetron_fields.h"
 
 
-/* Field DEFINITION */
+#pragma region Datum DEFINITION
 
-#pragma region CONSTRUCTORS
+// CONSTRUCTORS/DESTRUCTOR
+
+Datum::Datum() : Bytes(0) { }
+
+Datum::Datum(RCDATUM other)
+{
+	this->Bytes = other.Bytes;
+}
+
+Datum::Datum(RRDATUM other)
+{
+	*this = other.Bytes;
+}
+
+Datum::Datum(PBYTE value) : Bytes(value) { }
+
+Datum::Datum(PCHAR value) : String(value) { }
+
+Datum::Datum(RBITPACK value) : BitsPtr(&value) { }
+
+Datum::Datum(RCHAR value) : CharPtr(&value) { }
+
+Datum::Datum(RBYTE value) : BytePtr(&value) { }
+
+Datum::Datum(RBOOL value) : BoolPtr(&value) { }
+
+Datum::Datum(RSHORT value) : ShortPtr(&value) { }
+
+Datum::Datum(RWORD value) : WordPtr(&value) { }
+
+Datum::Datum(RLONG value) : LongPtr(&value) { }
+		
+Datum::Datum(RDWORD value) : DWordPtr(&value) { }
+
+Datum::Datum(RFLOAT value) : FloatPtr(&value) { }
+
+Datum::~Datum()
+{
+	if (this->Bytes)
+		delete this->Bytes;
+}
+
+
+// OPERATORS
+
+RDATUM Datum::operator =(RCDATUM other)
+{
+	*this = Datum(other);
+	return *this;
+}
+
+RDATUM Datum::operator =(RRDATUM other)
+{
+	*this = Datum(other);
+	return *this;
+}
+
+#pragma endregion
+
+
+
+#pragma region Field DEFINITION
+
+// CONSTRUCTORS/DESTRUCTOR
 
 RFIELD Field::NULL_OBJECT()
 {
@@ -42,10 +105,24 @@ Field::Field(RFLOAT value)
 {
 }
 
-#pragma endregion
+
+// OPERATORS
 
 
-#pragma region METHODS
+// USER METHODS
+
+CONST DataSize Field::GetDataSize() const
+{
+	return static_cast<DataSize>(MASK(_DataType, DATA_SIZE_MASK));
+}
+
+CONST DataType Field::GetDataType() const
+{
+	return _DataType;
+}
+
+
+// USER METHODS
 
 template<typename TVal>
 CONST TVal Field::GetValue() const
