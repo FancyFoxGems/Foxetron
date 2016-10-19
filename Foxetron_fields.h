@@ -135,6 +135,19 @@ namespace Foxetron
 
 		RDATUM operator =(RCDATUM other);
 		RDATUM operator =(RRDATUM other);
+
+		RDATUM operator =(PBYTE other);
+		RDATUM operator =(PCHAR other);
+		RDATUM operator =(PBITPACK other);
+
+		RDATUM operator =(RCCHAR other);
+		RDATUM operator =(RCBYTE other);
+		RDATUM operator =(RCBOOL other);
+		RDATUM operator =(RCSHORT other);
+		RDATUM operator =(RCWORD other);
+		RDATUM operator =(RCLONG other);
+		RDATUM operator =(RCDWORD other);
+		RDATUM operator =(RCFLOAT other);
 		
 		operator PCBYTE() const;
 		operator PBYTE();
@@ -143,28 +156,28 @@ namespace Foxetron
 		operator PCBITPACK() const;
 		operator PBITPACK();
 
-		operator CCHAR() const;
+		operator RCCHAR() const;
 		operator RCHAR();
-		operator CBYTE() const;
+		operator RCBYTE() const;
 		operator RBYTE();
-		operator CBOOL() const;
+		operator RCBOOL() const;
 		operator RBOOL();
-		operator CSHORT() const;
+		operator RCSHORT() const;
 		operator RSHORT();
-		operator CWORD() const;
+		operator RCWORD() const;
 		operator RWORD();
-		operator CLONG() const;
+		operator RCLONG() const;
 		operator RLONG();
-		operator CDWORD() const;
+		operator RCDWORD() const;
 		operator RDWORD();
-		operator CFLOAT() const;
+		operator RCFLOAT() const;
 		operator RFLOAT();
 
 
 		// USER METHODS
 
-		/*VOID FreePtr();
-		VOID FreeData();*/
+		VOID FreePtr();
+		VOID FreeData();
 	};
 
 #pragma endregion
@@ -231,6 +244,8 @@ namespace Foxetron
 
 		RFIELD operator =(RCFIELD);
 		RFIELD operator =(RRFIELD);
+
+		RFIELD operator =(RCDATUM);
 		
 		operator PCBYTE() const;
 		operator PBYTE();
@@ -239,21 +254,21 @@ namespace Foxetron
 		operator PCBITPACK() const;
 		operator PBITPACK();
 
-		operator CCHAR() const;
+		operator RCCHAR() const;
 		operator RCHAR();
-		operator CBYTE() const;
+		operator RCBYTE() const;
 		operator RBYTE();
-		operator CBOOL() const;
+		operator RCBOOL() const;
 		operator RBOOL();
-		operator CSHORT() const;
+		operator RCSHORT() const;
 		operator RSHORT();
-		operator CWORD() const;
+		operator RCWORD() const;
 		operator RWORD();
-		operator CLONG() const;
+		operator RCLONG() const;
 		operator RLONG();
-		operator CDWORD() const;
+		operator RCDWORD() const;
 		operator RDWORD();
-		operator CFLOAT() const;
+		operator RCFLOAT() const;
 		operator RFLOAT();
 
 

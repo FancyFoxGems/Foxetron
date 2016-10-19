@@ -12,7 +12,7 @@
 
 // CONSTRUCTORS
 
-Datum::Datum() { }
+Datum::Datum() : Bytes(0) { }
 
 //Datum::Datum(CBYTE byteSize)
 //{
@@ -66,6 +66,73 @@ RDATUM Datum::operator =(RRDATUM rValue)
 	return *this;
 }
 
+RDATUM Datum::operator =(PBYTE rValue)
+{
+	this->Bytes = rValue;
+	return *this;
+}
+
+RDATUM Datum::operator =(PCHAR rValue)
+{
+	this->String = rValue;
+	return *this;
+}
+
+RDATUM Datum::operator =(PBITPACK rValue)
+{
+	this->BitFields = rValue;
+	return *this;
+}
+
+RDATUM Datum::operator =(RCCHAR rValue)
+{
+	*this->CharPtr = rValue;
+	return *this;
+}
+
+RDATUM Datum::operator =(RCBYTE rValue)
+{
+	*this->BytePtr = rValue;
+	return *this;
+}
+
+RDATUM Datum::operator =(RCBOOL rValue)
+{
+	*this->BoolPtr = rValue;
+	return *this;
+}
+
+RDATUM Datum::operator =(RCSHORT rValue)
+{
+	*this->ShortPtr = rValue;
+	return *this;
+}
+
+RDATUM Datum::operator =(RCWORD rValue)
+{
+	*this->WordPtr = rValue;
+	return *this;
+}
+
+RDATUM Datum::operator =(RCLONG rValue)
+{
+	*this->LongPtr = rValue;
+	return *this;
+}
+
+RDATUM Datum::operator =(RCDWORD rValue)
+{
+	*this->DWordPtr = rValue;
+	return *this;
+}
+
+RDATUM Datum::operator =(RCFLOAT rValue)
+{
+	*this->FloatPtr = rValue;
+	return *this;
+}
+
+
 Datum::operator PCBYTE() const
 {
 	return MAKE_CONST(this->Bytes);
@@ -96,7 +163,7 @@ Datum::operator PBITPACK()
 	return this->BitFields;
 }
 
-Datum::operator CCHAR() const
+Datum::operator RCCHAR() const
 {
 	return MAKE_CONST(*this->CharPtr);
 }
@@ -106,7 +173,7 @@ Datum::operator RCHAR()
 	return *this->CharPtr;
 }
 
-Datum::operator CBYTE() const
+Datum::operator RCBYTE() const
 {
 	return MAKE_CONST(*this->BytePtr);
 }
@@ -116,7 +183,7 @@ Datum::operator RBYTE()
 	return *this->BytePtr;	
 }
 
-Datum::operator CBOOL() const
+Datum::operator RCBOOL() const
 {
 	return MAKE_CONST(*this->BoolPtr);
 }
@@ -126,7 +193,7 @@ Datum::operator RBOOL()
 	return *this->BoolPtr;
 }
 
-Datum::operator CSHORT() const
+Datum::operator RCSHORT() const
 {
 	return MAKE_CONST(*this->ShortPtr);
 }
@@ -136,7 +203,7 @@ Datum::operator RSHORT()
 	return *this->ShortPtr;
 }
 
-Datum::operator CWORD() const
+Datum::operator RCWORD() const
 {
 	return MAKE_CONST(*this->WordPtr);
 }
@@ -146,7 +213,7 @@ Datum::operator RWORD()
 	return *this->WordPtr;
 }
 
-Datum::operator CLONG() const
+Datum::operator RCLONG() const
 {
 	return MAKE_CONST(*this->LongPtr);
 }
@@ -156,7 +223,7 @@ Datum::operator RLONG()
 	return *this->LongPtr;
 }
 
-Datum::operator CDWORD() const
+Datum::operator RCDWORD() const
 {
 	return MAKE_CONST(*this->DWordPtr);
 }
@@ -166,7 +233,7 @@ Datum::operator RDWORD()
 	return *this->DWordPtr;
 }
 
-Datum::operator CFLOAT() const
+Datum::operator RCFLOAT() const
 {
 	return MAKE_CONST(*this->FloatPtr);
 }
@@ -179,20 +246,20 @@ Datum::operator RFLOAT()
 
 // USER METHODS
 
-//VOID Datum::FreePtr()
-//{
-//	if (this->Bytes)
-//		delete this->Bytes;
-//}
-//
-//VOID Datum::FreeData()
-//{
-//	if (this->Bytes)
-//	{
-//		delete [] this->Bytes;
-//		delete this->Bytes;
-//	}
-//}
+VOID Datum::FreePtr()
+{
+	if (this->Bytes)
+		delete this->Bytes;
+}
+
+VOID Datum::FreeData()
+{
+	if (this->Bytes)
+	{
+		delete [] this->Bytes;
+		delete this->Bytes;
+	}
+}
 
 #pragma endregion
 
@@ -206,8 +273,8 @@ Field::Field(DataType dataType) : _DataType(dataType) { }
 
 Field::Field(RCFIELD other)
 {
-	this->_Value = other._Value;
-	this->_DataType = other._DataType;
+	_Value = other._Value;
+	_DataType = other._DataType;
 }
 
 Field::Field(RRFIELD other)
@@ -254,6 +321,13 @@ RFIELD Field::operator =(RRFIELD rValue)
 	return *this;
 }
 
+RFIELD Field::operator =(RCDATUM rValue)
+{
+	_Value = rValue;
+	return *this;
+}
+
+
 Field::operator PCBYTE() const
 {
 	return _Value;
@@ -284,7 +358,7 @@ Field::operator PBITPACK()
 	return _Value;
 }
 
-Field::operator CCHAR() const
+Field::operator RCCHAR() const
 {
 	return _Value;
 }
@@ -294,7 +368,7 @@ Field::operator RCHAR()
 	return _Value;
 }
 
-Field::operator CBYTE() const
+Field::operator RCBYTE() const
 {
 	return _Value;
 }
@@ -304,7 +378,7 @@ Field::operator RBYTE()
 	return _Value;
 }
 
-Field::operator CBOOL() const
+Field::operator RCBOOL() const
 {
 	return _Value;
 }
@@ -314,7 +388,7 @@ Field::operator RBOOL()
 	return _Value;
 }
 
-Field::operator CSHORT() const
+Field::operator RCSHORT() const
 {
 	return _Value;
 }
@@ -324,7 +398,7 @@ Field::operator RSHORT()
 	return _Value;
 }
 
-Field::operator CWORD() const
+Field::operator RCWORD() const
 {
 	return _Value;
 }
@@ -334,7 +408,7 @@ Field::operator RWORD()
 	return _Value;
 }
 
-Field::operator CLONG() const
+Field::operator RCLONG() const
 {
 	return _Value;
 }
@@ -344,7 +418,7 @@ Field::operator RLONG()
 	return _Value;
 }
 
-Field::operator CDWORD() const
+Field::operator RCDWORD() const
 {
 	return _Value;
 }
@@ -354,7 +428,7 @@ Field::operator RDWORD()
 	return _Value;
 }
 
-Field::operator CFLOAT() const
+Field::operator RCFLOAT() const
 {
 	return _Value;
 }
