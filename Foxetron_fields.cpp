@@ -28,22 +28,18 @@ Field::Field(PBYTE value, DataType type) : _DataType(type)
 
 Field::Field(RCHAR value)
 {
-	_Value.CharVal = value;
 }
 
 Field::Field(RSHORT value)
 {
-	_Value.ShortVal = value;
 }
 
 Field::Field(RLONG value)
 {
-	_Value.LongVal = value;
 }
 
 Field::Field(RFLOAT value)
 {
-	_Value.FloatVal = value;
 }
 
 #pragma endregion
@@ -54,13 +50,13 @@ Field::Field(RFLOAT value)
 template<typename TVal>
 CONST TVal Field::GetValue() const
 {
-	return reinterpret_cast<TVal>(_Value.ByteVal);
+	return reinterpret_cast<TVal>(*(_Value.Bytes));
 }
 
 template<>
 CONST CHAR Field::GetValue<CHAR>() const
 {
-	return static_cast<CCHAR>(_Value.CharVal);
+	return static_cast<CCHAR>(*(_Value.CharPtr));
 }
 
 template<typename TVal>

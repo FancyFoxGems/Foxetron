@@ -19,16 +19,16 @@ namespace Foxetron
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	typedef VOLATILE UNION Datum DATUM, * PDATUM, & RDATUM;
-	typedef CONST UNION Datum CDATUM, * PCDATUM, & RCDATUM;
+	typedef UNION Datum DATUM, * PDATUM, & RDATUM, ** PPDATUM, && RRDATUM;
+	typedef CONST UNION Datum CDATUM, * PCDATUM, & RCDATUM, ** PPCDATUM;
 
 	CLASS IField;
-	typedef IField IFIELD, *PIFIELD, &RIFIELD;
-	typedef CONST IField CIFIELD, *PCIFIELD, &RCIFIELD;
+	typedef IField IFIELD, * PIFIELD, & RIFIELD, ** PPIFIELD, && RRIFIELD;
+	typedef CONST IField CIFIELD, *PCIFIELD, & RCIFIELD, ** PPCIFIELD;
 
 	CLASS Field;
-	typedef Field FIELD, *PFIELD, &RFIELD;
-	typedef CONST Field CFIELD, *PCFIELD, &RCFIELD;
+	typedef Field FIELD, * PFIELD, & RFIELD, ** PPFIELD, && RRFIELD;
+	typedef CONST Field CFIELD, * PCFIELD, & RCFIELD, ** PPCFIELD;
 
 	template<typename T = Datum>
 	CLASS TypedField;
@@ -84,48 +84,67 @@ namespace Foxetron
 #pragma endregion
 
 
-#pragma region Datum: UNIVERSAL 4-BYTE DATA TYPE UNION
+#pragma region Datum DEFINITION: UNIVERSAL 4-BYTE DATA TYPE UNION
 	
 	UNION PACKED Datum
 	{
-		BYTE Bytes[4];
+		PBYTE Bytes;
+	
+		PBITPACK BitsPtr;
+		
+		PCHAR CharPtr;
+		PBYTE BytePtr;
+		PBOOL BoolPtr;
+		
+		PSHORT ShortPtr;
+		PWORD WordPtr;
+		
+		PLONG LongPtr;
+		PDWORD DWordPtr;
+		PFLOAT FloatPtr;
 
-		BITPACK	Bits;
-		
-		CHAR CharVal;
-		BYTE ByteVal;
-		BOOL BoolVal;
-		
-		SHORT ShortVal;
-		WORD WordVal;
-		
-		LONG LongVal;
-		DWORD DWordVal;
-		FLOAT FloatVal;
-
-		Datum() { }
+		Datum() : Bytes(0) { }
 
 		Datum(RCDATUM other)
 		{
-			this->LongVal = other.LongVal;
+			this->Bytes = other.Bytes;
 		}
 
-		 Datum(PBYTE);
+		Datum(RRDATUM other)
+		{
+			*this = other.Bytes;
+			//new (this) Datum(other.Bytes);
+		}
 
-		 Datum(RBITPACK);
+		Datum(PBYTE value) : Bytes(value) { }
 
-		 Datum(RCHAR);
-		 Datum(RBYTE);
-		 Datum(RBOOL);
-		 Datum(RSHORT);
-		 Datum(RWORD);
-		 Datum(RLONG);
-		 Datum(RDWORD);
-		 Datum(RFLOAT);
+		Datum(RBITPACK value) : BitsPtr(&value) { }
+
+		Datum(RCHAR value) : CharPtr(&value) { }
+
+		Datum(RBYTE value) : BytePtr(&value) { }
+
+		Datum(RBOOL value) : BoolPtr(&value) { }
+
+		Datum(RSHORT value) : ShortPtr(&value) { }
+
+		Datum(RWORD value) : WordPtr(&value) { }
+
+		Datum(RLONG value) : LongPtr(&value) { }
+		
+		Datum(RDWORD value) : DWordPtr(&value) { }
+
+		Datum(RFLOAT value) : FloatPtr(&value) { }
 
 		RDATUM operator =(RCDATUM other)
 		{
-			this->LongVal = other.LongVal;
+			*this = Datum(other);
+			return *this;
+		}
+
+		RDATUM operator =(RRDATUM other)
+		{
+			*this = Datum(other);
 			return *this;
 		}
 	};
@@ -277,7 +296,7 @@ namespace Foxetron
 
 		CONST T GetValue() const
 		{
-			return reinterpret_cast<T>(_Value.ByteVal);
+			return reinterpret_cast<T>(*_Value.Bytes);
 		}
 
 		VOID SetValue(CONST T & value)
