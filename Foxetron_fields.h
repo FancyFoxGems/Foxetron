@@ -58,6 +58,7 @@ namespace Foxetron
 	
 	enum DataSize : BYTE
 	{
+		WHO_KNOWS	= 0x0,
 		ONE_BYTE	= 0x10,
 		TWO_BYTES	= 0x20,
 		THREE_BYTES	= 0x40,
@@ -66,19 +67,20 @@ namespace Foxetron
 
 	enum DataType : BYTE
 	{
-		BYTES_FIELD	= 0x0,
+		BYTES_FIELD		= WHO_KNOWS | 0x0,
+		STRING_FIELD	= WHO_KNOWS | 0x1,
+		BIT_FIELD		= WHO_KNOWS | 0x2,
 
-		BYTE_FIELD	= ONE_BYTE | 0x1,
-		CHAR_FIELD	= ONE_BYTE | 0x2,
-		BOOL_FIELD	= ONE_BYTE | 0x4,
-		BIT_FIELD	= ONE_BYTE | 0x8,
+		BYTE_FIELD		= ONE_BYTE | 0x1,
+		CHAR_FIELD		= ONE_BYTE | 0x2,
+		BOOL_FIELD		= ONE_BYTE | 0x4,
 
-		WORD_FIELD	= TWO_BYTES | 0x1,
-		SHORT_FIELD	= TWO_BYTES | 0x2,
+		WORD_FIELD		= TWO_BYTES | 0x1,
+		SHORT_FIELD		= TWO_BYTES | 0x2,
 
-		DWORD_FIELD	= FOUR_BYTES | 0x1,
-		LONG_FIELD	= FOUR_BYTES | 0x2,
-		FLOAT_FIELD	= FOUR_BYTES | 0x4
+		DWORD_FIELD		= FOUR_BYTES | 0x1,
+		LONG_FIELD		= FOUR_BYTES | 0x2,
+		FLOAT_FIELD		= FOUR_BYTES | 0x4
 	};
 
 	STATIC CONST BYTE DATA_SIZE_MASK = 0xF0;
@@ -91,9 +93,8 @@ namespace Foxetron
 	UNION PACKED Datum
 	{
 		PBYTE Bytes;
-		PCHAR String;
-	
-		PBITPACK BitsPtr;
+		PCHAR String;	
+		PBITPACK BitFields;
 		
 		PCHAR CharPtr;
 		PBYTE BytePtr;
@@ -106,24 +107,25 @@ namespace Foxetron
 		PDWORD DWordPtr;
 		PFLOAT FloatPtr;
 
-		Datum();
 
-		Datum(RCDATUM other);
-		Datum(RRDATUM other);
+		EXPLICIT Datum(BYTE byteSize = 1);
 
-		Datum(PBYTE value);
-		Datum(PCHAR value);
-		Datum(RBITPACK value);
-		Datum(RCHAR value);
-		Datum(RBYTE value);
-		Datum(RBOOL value);
-		Datum(RSHORT value);
-		Datum(RWORD value);
-		Datum(RLONG value);
-		Datum(RDWORD value);
-		Datum(RFLOAT value);
+		EXPLICIT Datum(RCDATUM other);
+		EXPLICIT Datum(RRDATUM other);
 
-		~Datum();
+		EXPLICIT Datum(PBYTE value);
+		EXPLICIT Datum(PCHAR value);		
+		EXPLICIT Datum(PBITPACK value);
+
+		EXPLICIT Datum(RCHAR value);
+		EXPLICIT Datum(RBYTE value);
+		EXPLICIT Datum(RBOOL value);
+		EXPLICIT Datum(RSHORT value);
+		EXPLICIT Datum(RWORD value);
+		EXPLICIT Datum(RLONG value);
+		EXPLICIT Datum(RDWORD value);
+		EXPLICIT Datum(RFLOAT value);
+
 
 		RDATUM operator =(RCDATUM other);
 		RDATUM operator =(RRDATUM other);
@@ -132,9 +134,8 @@ namespace Foxetron
 		operator PBYTE();
 		operator PCCHAR() const;
 		operator PCHAR();
-
-		operator CBITPACK() const;
-		operator RBITPACK();
+		operator PCBITPACK() const;
+		operator PBITPACK();
 
 		operator CCHAR() const;
 		operator RCHAR();
@@ -152,6 +153,10 @@ namespace Foxetron
 		operator RDWORD();
 		operator CFLOAT() const;
 		operator RFLOAT();
+
+
+		VOID FreePtr();
+		VOID FreeData();
 	};
 
 #pragma endregion
@@ -172,6 +177,8 @@ namespace Foxetron
 		VIRTUAL CONST DataType GetDataType() const = 0;
 
 		VIRTUAL PCBYTE Bytes() const = 0;
+
+		VIRTUAL PCCHAR String() const = 0;
 	};
 
 #pragma endregion
@@ -183,17 +190,18 @@ namespace Foxetron
 	{
 	public:
 
-		STATIC RFIELD NULL_OBJECT();
-
 		// CONSTRUCTORS/DESTRUCTOR
 
+		Field();
+
 		Field(RCFIELD);
+		Field(RRFIELD);
 
-		Field(RCDATUM, DataType = DataType::BYTES_FIELD);
+		Field(RCDATUM, DataType type = DataType::BYTE_FIELD);
 
-		Field(PBYTE, DataType = DataType::BYTES_FIELD);
-
-		EXPLICIT Field(RBITPACK, DataType = DataType::BIT_FIELD);
+		EXPLICIT Field(PBYTE);
+		EXPLICIT Field(PCHAR);
+		//EXPLICIT Field(PBITPACK);
 
 		EXPLICIT Field(RCHAR);
 		EXPLICIT Field(RBYTE);
@@ -206,15 +214,18 @@ namespace Foxetron
 
 		VIRTUAL ~Field();
 
-		RFIELD operator =(RCFIELD other);
+
+		STATIC RFIELD NULL_OBJECT();
+
+
+		RFIELD operator =(RCFIELD);
 		
 		operator PCBYTE() const;
 		operator PBYTE();
 		operator PCCHAR() const;
 		operator PCHAR();
-
-		operator CBITPACK() const;
-		operator RBITPACK();
+		operator PCBITPACK() const;
+		operator PBITPACK();
 
 		operator CCHAR() const;
 		operator RCHAR();
@@ -233,6 +244,7 @@ namespace Foxetron
 		operator CFLOAT() const;
 		operator RFLOAT();
 
+
 		VIRTUAL CSIZE Size() const;
 		
 		VIRTUAL CSIZE ByteSize() const;
@@ -242,21 +254,15 @@ namespace Foxetron
 		VIRTUAL CONST DataType GetDataType() const;
 		
 		VIRTUAL PCBYTE Bytes() const;
-
-		template<typename TVal = Datum>
-		CONST TVal GetValue() const;
-
-		template<typename TVal= Datum>
-		VOID SetValue(const TVal &);
 		
+		VIRTUAL PCCHAR String() const;
+		
+
 	protected:
 
 		Datum _Value;
 		DataType _DataType;
 	};
-
-	template<>
-	CONST CHAR Field::GetValue<CHAR>() const;
 
 #pragma endregion
 
@@ -267,6 +273,11 @@ namespace Foxetron
 	CLASS TypedField : public virtual IField
 	{
 	public:
+
+		// META-MEMBERS
+
+		typedef T Type;
+
 
 		// CONSTRUYCTORS
 
@@ -312,10 +323,6 @@ namespace Foxetron
 
 		}
 
-
-		// META-MEMBERS
-
-		typedef T Type;
 
 	protected:
 

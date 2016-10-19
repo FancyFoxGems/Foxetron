@@ -12,7 +12,10 @@
 
 // CONSTRUCTORS/DESTRUCTOR
 
-Datum::Datum() : Bytes(0) { }
+Datum::Datum(BYTE byteSize)
+{
+	this->Bytes = new byte[byteSize];
+}
 
 Datum::Datum(RCDATUM other)
 {
@@ -20,15 +23,15 @@ Datum::Datum(RCDATUM other)
 }
 
 Datum::Datum(RRDATUM other)
-{
-	*this = other.Bytes;
+{	
+	new (this) Datum(other.Bytes);
 }
 
 Datum::Datum(PBYTE value) : Bytes(value) { }
 
 Datum::Datum(PCHAR value) : String(value) { }
 
-Datum::Datum(RBITPACK value) : BitsPtr(&value) { }
+Datum::Datum(PBITPACK value) : BitFields(value) { }
 
 Datum::Datum(RCHAR value) : CharPtr(&value) { }
 
@@ -46,24 +49,18 @@ Datum::Datum(RDWORD value) : DWordPtr(&value) { }
 
 Datum::Datum(RFLOAT value) : FloatPtr(&value) { }
 
-Datum::~Datum()
-{
-	if (this->Bytes)
-		delete this->Bytes;
-}
-
 
 // OPERATORS
 
-RDATUM Datum::operator =(RCDATUM other)
+RDATUM Datum::operator =(RCDATUM rValue)
 {
-	*this = Datum(other);
+	*this = Datum(rValue);
 	return *this;
 }
 
-RDATUM Datum::operator =(RRDATUM other)
+RDATUM Datum::operator =(RRDATUM rValue)
 {
-	*this = Datum(other);
+	*this = Datum(rValue);
 	return *this;
 }
 
@@ -87,94 +84,112 @@ Datum::operator PCHAR()
 	return this->String;
 }
 
-Datum::operator CBITPACK() const
+Datum::operator PCBITPACK() const
 {
-	return *MAKE_CONST(this->BitsPtr);
+	return MAKE_CONST(this->BitFields);
 }
 
-Datum::operator RBITPACK()
+Datum::operator PBITPACK()
 {
-	return *(this->BitsPtr);
+	return this->BitFields;
 }
 
 Datum::operator CCHAR() const
 {
-	return MAKE_CONST(*(this->CharPtr));
+	return MAKE_CONST(*this->CharPtr);
 }
 
 Datum::operator RCHAR()
 {
-	return *(this->CharPtr);
+	return *this->CharPtr;
 }
 
 Datum::operator CBYTE() const
 {
-	return MAKE_CONST(*(this->BytePtr));
+	return MAKE_CONST(*this->BytePtr);
 }
 
 Datum::operator RBYTE()
 {
-	return *(this->BytePtr);	
+	return *this->BytePtr;	
 }
 
 Datum::operator CBOOL() const
 {
-	return MAKE_CONST(*(this->BoolPtr));
+	return MAKE_CONST(*this->BoolPtr);
 }
 
 Datum::operator RBOOL()
 {
-	return *(this->BoolPtr);
+	return *this->BoolPtr;
 }
 
 Datum::operator CSHORT() const
 {
-	return MAKE_CONST(*(this->ShortPtr));
+	return MAKE_CONST(*this->ShortPtr);
 }
 
 Datum::operator RSHORT()
 {
-	return *(this->ShortPtr);
+	return *this->ShortPtr;
 }
 
 Datum::operator CWORD() const
 {
-	return MAKE_CONST(*(this->WordPtr));
+	return MAKE_CONST(*this->WordPtr);
 }
 
 Datum::operator RWORD()
 {
-	return *(this->WordPtr);
+	return *this->WordPtr;
 }
 
 Datum::operator CLONG() const
 {
-	return MAKE_CONST(*(this->LongPtr));
+	return MAKE_CONST(*this->LongPtr);
 }
 
 Datum::operator RLONG()
 {
-	return *(this->LongPtr);
+	return *this->LongPtr;
 }
 
 Datum::operator CDWORD() const
 {
-	return MAKE_CONST(*(this->DWordPtr));
+	return MAKE_CONST(*this->DWordPtr);
 }
 
 Datum::operator RDWORD()
 {
-	return *(this->DWordPtr);
+	return *this->DWordPtr;
 }
 
 Datum::operator CFLOAT() const
 {
-	return MAKE_CONST(*(this->FloatPtr));
+	return MAKE_CONST(*this->FloatPtr);
 }
 
 Datum::operator RFLOAT()
 {
-	return *(this->FloatPtr);
+	return *this->FloatPtr;
+}
+
+
+// USER METHODS
+
+VOID Datum::FreePtr()
+{
+	if (this->Bytes)
+		delete this->Bytes;
+}
+
+VOID Datum::FreeData()
+{
+	if (this->Bytes)
+	{
+		delete [] this->Bytes;
+		delete this->Bytes;
+	}
 }
 
 #pragma endregion
@@ -183,21 +198,20 @@ Datum::operator RFLOAT()
 
 #pragma region Field DEFINITION
 
-// CONSTRUCTORS/DESTRUCTOR
+// STATIC FUNCTIONS
 
 RFIELD Field::NULL_OBJECT()
 {
-	STATIC FIELD NULL_FIELD((BYTE)0);
+	STATIC Field NULL_FIELD((PBYTE)0);
 	return NULL_FIELD;
 }
 
+
+// CONSTRUCTORS/DESTRUCTOR
+
 Field::Field(RCDATUM value, DataType type) : _Value(value), _DataType(type) { }
 
-Field::Field(PBYTE value, DataType type) : _DataType(type)
-{
-	for (BYTE i = 0; i < SIZEOF(value); i++)
-		_Value.Bytes[i] = value[i];
-}
+Field::Field(PBYTE value) : _Value(value), _DataType(DataType::BYTES_FIELD) { }
 
 Field::Field(RCHAR value)
 {
@@ -234,22 +248,5 @@ CONST DataType Field::GetDataType() const
 
 // USER METHODS
 
-template<typename TVal>
-CONST TVal Field::GetValue() const
-{
-	return reinterpret_cast<TVal>(*(_Value.Bytes));
-}
-
-template<>
-CONST CHAR Field::GetValue<CHAR>() const
-{
-	return static_cast<CCHAR>(*(_Value.CharPtr));
-}
-
-template<typename TVal>
-VOID Field::SetValue(const TVal & value)
-{
-
-}
 
 #pragma endregion
