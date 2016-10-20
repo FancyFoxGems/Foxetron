@@ -273,6 +273,7 @@ Field::Field(DataType dataType) : _DataType(dataType) { }
 
 Field::Field(RCFIELD other)
 {
+	_Dispose = other._Dispose;
 	_Value = other._Value;
 	_DataType = other._DataType;
 }
@@ -460,10 +461,36 @@ PCCHAR Field::String() const
 
 // CONSTRUCTORS/DESTRUCTOR
 
-VarLengthField::VarLengthField(CSIZE length, DataType dataType) : Field(dataType) { }
+VarLengthField::VarLengthField(CSIZE length, DataType dataType) : Field(dataType)
+{
+	switch (dataType)
+	{
+	case DataType::BYTES_FIELD:
+		_Dispose = TRUE;
+		_Value = new BYTE[length];
+		_Length = length;
+		break;
+
+	case DataType::STRING_FIELD:
+		_Dispose = TRUE;
+		_Value = new CHAR[length];
+		_Length = length;
+		break;
+
+	case DataType::BIT_FIELD:
+		_Dispose = TRUE;
+		_Value = new BITPACK[length];
+		_Length = length;
+		break;
+
+	default:
+		break;
+	}
+}
 
 VarLengthField::VarLengthField(RCVARLENGTHFIELD other)
 {
+	_Dispose = other._Dispose;
 	_Value = other._Value;
 	_DataType = other._DataType;
 	_Length = other._Length;
@@ -482,17 +509,17 @@ VarLengthField::VarLengthField(RCDATUM value, DataType dataType) : Field(value, 
 
 VarLengthField::VarLengthField(PBYTE value) : Field(DataType::BYTES_FIELD)
 {
-
+	_Length = SIZEOF(*(PBYTE)_Value);
 }
 
 VarLengthField::VarLengthField(PCHAR value) : Field(DataType::STRING_FIELD)
 {
-
+	_Length = SIZEOF(*(PBYTE)_Value);
 }
 
 VarLengthField::VarLengthField(PBITPACK value) : Field(DataType::BIT_FIELD)
 {
-
+	_Length = SIZEOF(*(PBYTE)_Value);
 }
 
 VarLengthField::~VarLengthField()
@@ -501,6 +528,8 @@ VarLengthField::~VarLengthField()
 	{
 		if (_Length > 0)
 			_Value.FreeData();
+		else
+			_Value.FreePtr();
 	}
 }
 
