@@ -423,14 +423,14 @@ Field::operator RFLOAT()
 
 // IField IMPLEMENTATIONS
 
-CSIZE Field::Size() const
-{
-	return sizeof(Field);
-}
-
 CSIZE Field::FieldSize() const
 {
-	return sizeof(DataType) + this->GetDataSize();
+	return sizeof(DataType) + this->ByteSize();
+}
+
+CSIZE Field::ByteSize() const
+{
+	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
 }
 
 CONST DataSize Field::GetDataSize() const
@@ -582,17 +582,12 @@ VarLengthField::operator PBITPACK()
 
 // Field OVERRIDES
 
-CSIZE VarLengthField::Size() const
-{
-	return sizeof(VarLengthField);
-}
-
-CSIZE VarLengthField::FieldSize() const
+CSIZE VarLengthField::ByteSize() const
 {
 	if (_Length > 0)
 		return _Length;
 
-	return this->GetDataSize();
+	return Field::FieldSize();
 }
 
 #pragma endregion

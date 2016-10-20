@@ -195,8 +195,8 @@ namespace Foxetron
 
 		// INTERFACE METHODS
 
-		VIRTUAL CSIZE Size() const = 0;		
 		VIRTUAL CSIZE FieldSize() const = 0;
+		VIRTUAL CSIZE ByteSize() const = 0;
 
 		VIRTUAL CONST DataSize GetDataSize() const = 0;
 		VIRTUAL CONST DataType GetDataType() const = 0;
@@ -267,8 +267,8 @@ namespace Foxetron
 
 		// IField IMPLEMENTATIONS
 
-		VIRTUAL CSIZE Size() const;
 		VIRTUAL CSIZE FieldSize() const;
+		VIRTUAL CSIZE ByteSize() const;
 
 		VIRTUAL CONST DataSize GetDataSize() const;
 		VIRTUAL CONST DataType GetDataType() const;
@@ -327,8 +327,7 @@ namespace Foxetron
 
 		// Field OVERRIDES
 
-		VIRTUAL CSIZE Size() const;
-		VIRTUAL CSIZE FieldSize() const;
+		VIRTUAL CSIZE ByteSize() const;
 		
 
 	protected:
@@ -342,7 +341,8 @@ namespace Foxetron
 
 
 #pragma region TypedField DEFINITION
-
+	
+	// TODO: Finish...
 	template<typename T>
 	CLASS TypedField : public virtual IField
 	{
@@ -375,7 +375,7 @@ namespace Foxetron
 
 		CSIZE Size() const;
 		
-		CSIZE ByteSize() const;
+		CSIZE FieldSize() const;
 
 
 		// ACCESSORS/MUTATORS
