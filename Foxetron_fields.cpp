@@ -283,12 +283,6 @@ Field::Field(RRFIELD other)
 }
 
 Field::Field(RCDATUM value, DataType dataType) : _Value(value), _DataType(dataType) { }
-//
-//Field::Field(PBYTE value) : _Value(value), _DataType(DataType::BYTES_FIELD) { }
-//
-//Field::Field(PCHAR value) : _Value(value), _DataType(DataType::STRING_FIELD) { }
-//
-//Field::Field(PBITPACK value) : _Value(value), _DataType(DataType::BIT_FIELD) { }
 
 Field::Field(RCHAR value) : _Value(value), _DataType(DataType::CHAR_FIELD) { }
 
@@ -305,6 +299,12 @@ Field::Field(RLONG value) : _Value(value), _DataType(DataType::LONG_FIELD) { }
 Field::Field(RDWORD value) : _Value(value), _DataType(DataType::DWORD_FIELD) { }
 
 Field::Field(RFLOAT value) : _Value(value), _DataType(DataType::FLOAT_FIELD) { }
+
+Field::~Field()
+{
+	if (_Dispose)
+		_Value.FreePtr();
+}
 
 
 // OPERATORS
@@ -337,35 +337,7 @@ RFIELD Field::NULL_OBJECT()
 }
 
 
-Field::operator PCBYTE() const
-{
-	return _Value;
-}
-
-Field::operator PBYTE()
-{
-	return _Value;
-}
-
-Field::operator PCCHAR() const
-{
-	return _Value;
-}
-
-Field::operator PCHAR()
-{
-	return _Value;
-}
-
-Field::operator PCBITPACK() const
-{
-	return _Value;
-}
-
-Field::operator PBITPACK()
-{
-	return _Value;
-}
+// OPERATORS
 
 Field::operator RCCHAR() const
 {
@@ -478,6 +450,120 @@ PCBYTE Field::Bytes() const
 PCCHAR Field::String() const
 {
 	return _Value.String;
+}
+
+#pragma endregion
+
+
+
+#pragma region VarLengthField DEFINITION
+
+// CONSTRUCTORS/DESTRUCTOR
+
+VarLengthField::VarLengthField(CSIZE length, DataType dataType) : Field(dataType) { }
+
+VarLengthField::VarLengthField(RCVARLENGTHFIELD other)
+{
+	_Value = other._Value;
+	_DataType = other._DataType;
+	_Length = other._Length;
+}
+
+VarLengthField::VarLengthField(RRVARLENGTHFIELD other)
+{	
+	new (this) VarLengthField(other._Value, other._DataType);
+}
+
+VarLengthField::VarLengthField(RCDATUM value, DataType dataType) : Field(value, dataType)
+{
+	if (dataType == DataType::BYTES_FIELD || dataType == DataType::STRING_FIELD || dataType == DataType::BIT_FIELD)
+		_Length = SIZEOF(*(PBYTE)_Value);
+}
+
+VarLengthField::VarLengthField(PBYTE value) : Field(DataType::BYTES_FIELD)
+{
+
+}
+
+VarLengthField::VarLengthField(PCHAR value) : Field(DataType::STRING_FIELD)
+{
+
+}
+
+VarLengthField::VarLengthField(PBITPACK value) : Field(DataType::BIT_FIELD)
+{
+
+}
+
+VarLengthField::~VarLengthField()
+{
+	if (_Dispose)
+	{
+		if (_Length > 0)
+			_Value.FreeData();
+	}
+}
+
+
+// OPERATORS
+
+RVARLENGTHFIELD VarLengthField::operator =(RCVARLENGTHFIELD rValue)
+{
+	*this = VarLengthField(rValue);
+	return *this;
+}
+
+RVARLENGTHFIELD VarLengthField::operator =(RRVARLENGTHFIELD rValue)
+{
+	*this = VarLengthField(rValue);
+	return *this;
+}
+
+
+VarLengthField::operator PCBYTE() const
+{
+	return _Value;
+}
+
+VarLengthField::operator PBYTE()
+{
+	return _Value;
+}
+
+VarLengthField::operator PCCHAR() const
+{
+	return _Value;
+}
+
+VarLengthField::operator PCHAR()
+{
+	return _Value;
+}
+
+VarLengthField::operator PCBITPACK() const
+{
+	return _Value;
+}
+
+VarLengthField::operator PBITPACK()
+{
+	return _Value;
+}
+
+
+// Field OVERRIDES
+
+CSIZE VarLengthField::Size() const
+{
+	return sizeof(VarLengthField);
+}
+
+CSIZE VarLengthField::FieldSize() const
+{
+	if (_Length > 0)
+		return _Length;
+
+	return this->GetDataSize();
 }
 
 #pragma endregion

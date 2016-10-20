@@ -232,6 +232,8 @@ namespace Foxetron
 		EXPLICIT Field(RDWORD);
 		EXPLICIT Field(RFLOAT);
 
+		VIRTUAL ~Field();
+
 
 		// STATIC FUNCTIONS
 
@@ -244,13 +246,6 @@ namespace Foxetron
 		VIRTUAL RFIELD operator =(RRFIELD);
 
 		VIRTUAL RFIELD operator =(RCDATUM);
-		
-		operator PCBYTE() const;
-		operator PBYTE();
-		operator PCCHAR() const;
-		operator PCHAR();
-		operator PCBITPACK() const;
-		operator PBITPACK();
 
 		operator RCCHAR() const;
 		operator RCHAR();
@@ -285,6 +280,8 @@ namespace Foxetron
 	protected:
 
 		// INSTANCE VARIABLES
+		
+		BOOL _Dispose = FALSE;
 
 		Datum _Value;
 		DataType _DataType;
@@ -295,18 +292,18 @@ namespace Foxetron
 
 #pragma region VarLengthField DECLARATION
 
-	CLASS VarLengthField : public virtual Field
+	CLASS VarLengthField : public Field
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		VarLengthField(DataType = DataType::BYTE_FIELD);
+		VarLengthField(CSIZE = 0, DataType = DataType::BYTES_FIELD);
 
-		VarLengthField(RCFIELD);
-		VarLengthField(RRFIELD);
+		VarLengthField(RCVARLENGTHFIELD);
+		VarLengthField(RRVARLENGTHFIELD);
 
-		VarLengthField(RCDATUM, DataType = DataType::BYTE_FIELD);
+		VarLengthField(RCDATUM, DataType = DataType::BYTES_FIELD);
 
 		EXPLICIT VarLengthField(PBYTE);
 		EXPLICIT VarLengthField(PCHAR);
@@ -317,29 +314,28 @@ namespace Foxetron
 		
 		// OPERATORS
 
-		VIRTUAL RFIELD operator =(RCFIELD);
-		VIRTUAL RFIELD operator =(RRFIELD);
+		VIRTUAL RVARLENGTHFIELD operator =(RCVARLENGTHFIELD);
+		VIRTUAL RVARLENGTHFIELD operator =(RRVARLENGTHFIELD);
+		
+		operator PCBYTE() const;
+		operator PBYTE();
+		operator PCCHAR() const;
+		operator PCHAR();
+		operator PCBITPACK() const;
+		operator PBITPACK();
 
-		VIRTUAL RFIELD operator =(RCDATUM);
 
-
-		// IField OVERRIDES
+		// Field OVERRIDES
 
 		VIRTUAL CSIZE Size() const;
 		VIRTUAL CSIZE FieldSize() const;
-
-		VIRTUAL CONST DataSize GetDataSize() const;
-		VIRTUAL CONST DataType GetDataType() const;
-		
-		VIRTUAL PCBYTE Bytes() const;
-		VIRTUAL PCCHAR String() const;
 		
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-		SIZE _DataSize;
+		SIZE _Length = 0;
 	};
 
 #pragma endregion
