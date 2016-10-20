@@ -489,6 +489,7 @@ VarLengthField::VarLengthField(CSIZE length, DataType dataType) : Field(dataType
 VarLengthField::VarLengthField(RCVARLENGTHFIELD other)
 {
 	_Dispose = other._Dispose;
+
 	_Value = other._Value;
 	_DataType = other._DataType;
 	_Length = other._Length;

@@ -426,13 +426,13 @@ namespace Foxetron
 
 		VIRTUAL RTYPEDFIELD<T> operator =(RCVARLENGTHFIELD rValue)
 		{
-			*this = Field(rValue);
+			*this = TypedField<T>(rValue);
 			return *this;
 		}
 
 		VIRTUAL RTYPEDFIELD<T> operator =(RRVARLENGTHFIELD rValue)
 		{
-			*this = Field(rValue);
+			*this = TypedField<T>(rValue);
 			return *this;
 		}
 
@@ -631,7 +631,6 @@ namespace Foxetron
 #pragma endregion
 
 	
-	/*
 #pragma region VarLengthTypedField DEFINITION
 
 	template<typename T>
@@ -641,12 +640,16 @@ namespace Foxetron
 
 		// CONSTRUYCTORS/DESTRUCTOR
 
-		TypedField() : _Dispose(TRUE)
+		VarLengthTypedField(CSIZE length = 0)
 		{
-			_DataType = TypedField<T>::FindDataType();
+			_Dispose = TRUE;
+
+			_Value = new T[length];
+			_DataType = VarLengthTypedField<T>::FindDataType();
+			_Length = length;
 		}
 
-		TypedField(RCTYPEDFIELD<T> other)
+		VarLengthTypedField(RCVARLENGTHTYPEDFIELD<T> other)
 		{
 			_Dispose = other._Dispose;
 
@@ -654,123 +657,71 @@ namespace Foxetron
 			_DataType = other._DataType;
 		}
 
-		TypedField(RRTYPEDFIELD<T> other)
+		VarLengthTypedField(RRVARLENGTHTYPEDFIELD<T> other)
 		{
-			new (this) TypedField<T>(other._Value);
+			new (this) VarLengthTypedField<T>(other._Value);
 		}
 
-		TypedField(RCDATUM value) : _Value(value)
+		VarLengthTypedField(RCDATUM value)
 		{
-			_DataType = TypedField<T>::FindDataType();
+			_Value = value;
+			_DataType = VarLengthTypedField<T>::FindDataType();
+			_Length = SIZEOF(*(PBYTE)_Value);
 		}
 
-		EXPLICIT TypedField(T & value)
+		EXPLICIT VarLengthTypedField(T & value)
 		{
-			new (this) TypedField<T>(value);
+			new (this) VarLengthTypedField<T>(value);
 		}
 
-		EXPLICIT TypedField(SIGNED_TYPE(T &) value)
-		{
-			new (this) TypedField<T>(value);
-		}
-
-		VIRTUAL ~TypedField()
+		VIRTUAL ~VarLengthTypedField()
 		{
 			if (_Dispose)
-				_Value.FreePtr();
-		}
-
-
-		// STATIC FUNCTIONS
-
-		STATIC RTYPEDFIELD<T> NULL_OBJECT()
-		{
-			STATIC TypedField<T> NULL_TYPEDFIELD;
-			return NULL_TYPEDFIELD;
+			{
+				if (_Length > 0)
+					_Value.FreeData();
+				else
+					_Value.FreePtr();
+			}
 		}
 		
 		
 		// OPERATORS
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RCVARLENGTHFIELD rValue)
-		{
-			*this = Field(rValue);
-			return *this;
-		}
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RRVARLENGTHFIELD rValue)
+		VIRTUAL operator CONST T() const
 		{
-			*this = Field(rValue);
-			return *this;
-		}
-
-		VIRTUAL RTYPEDFIELD<T> operator =(RCDATUM rValue)
-		{
-			_Value = rValue;
-			return *this;
-		}
-
-
-		VIRTUAL operator UNSIGNED_TYPE(CONST T&)() const
-		{
-			return (UNSIGNED_TYPE(CONST T&))_Value;
+			return (CONST T)_Value;
 		}
 
 		VIRTUAL operator UNSIGNED_TYPE(T&)()
 		{
-			return (UNSIGNED_TYPE(T&))_Value;
-		}
-
-		VIRTUAL operator SIGNED_TYPE(CONST T&)() const
-		{
-			return (SIGNED_TYPE(CONST T&))_Value;
-		}
-
-		VIRTUAL operator SIGNED_TYPE(T&)()
-		{
-			return (SIGNED_TYPE(T&))_Value;
+			return (T)_Value;
 		}
 
 
 		//  IField IMPLEMENTATIONS
-
-		VIRTUAL CONST DataSize GetDataSize() const
-		{
-			return static_cast<DataSize>(MASK(_DataType, DATA_SIZE_MASK));
-		}
-
-		VIRTUAL CONST DataType GetDataType() const
-		{
-			return _DataType;
-		}
 				
 		VIRTUAL CSIZE FieldSize() const
 		{
-			return SIZEOF(DataType) + this->ByteSize();
+			return sizeof(_Length) + TypedField<T>::FieldSize();
 		}
 
 		VIRTUAL CSIZE ByteSize() const
 		{
-			return sizeof(T);
+			if (_Length > 0)
+				return _Length;
+
+			return TypedField<T>::FieldSize();
 		}
-		
-		VIRTUAL PCBYTE Bytes() const
-		{
-			return _Value.Bytes;
-		}
-
-		VIRTUAL PCCHAR String() const
-		{
-			return _Value.String;
-		}
-
-
-		// META-MEMBERS
-
-		typedef T FieldType;
 
 
 	protected:
+
+		using TypedField<T>::_Dispose;
+		using TypedField<T>::_Value;
+		using TypedField<T>::_DataType;
+
 		
 		// PROTECTED STATIC FUNCTIONS
 
@@ -779,12 +730,10 @@ namespace Foxetron
 			return DataType::BYTES_FIELD;
 		}
 
+
 		// INSTANCE VARIABLES
-		
-		BOOL _Dispose = FALSE;
-		
-		DATUM _Value;
-		DataType _DataType;
+
+		SIZE _Length = 0;
 	};
 
 #pragma endregion
@@ -832,7 +781,6 @@ namespace Foxetron
 	};
 
 #pragma endregion
-*/
 }
 
 using namespace Foxetron;
