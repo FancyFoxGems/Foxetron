@@ -448,10 +448,17 @@ RFIELD Field::NULL_OBJECT()
 }
 
 
-// OPERATORS
+// IField IMPLEMENTATIONS
 
+CSIZE Field::Size() const
+{
+	return sizeof(Field);
+}
 
-// USER METHODS
+CSIZE Field::FieldSize() const
+{
+	return sizeof(DataType) + this->GetDataSize();
+}
 
 CONST DataSize Field::GetDataSize() const
 {
@@ -462,9 +469,15 @@ CONST DataType Field::GetDataType() const
 {
 	return _DataType;
 }
+		
+PCBYTE Field::Bytes() const
+{
+	return _Value.Bytes;
+}
 
-
-// USER METHODS
-
+PCCHAR Field::String() const
+{
+	return _Value.String;
+}
 
 #pragma endregion
