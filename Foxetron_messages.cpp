@@ -10,18 +10,12 @@
 
 #pragma region Message DEFINITION
 
-// STATIC MESSAGE "OVERRIDES"
+// STATIC CONSTEXPR METHODS
 
 template<class TMessage, MessageCode TCode>
 CONSTEXPR MessageCode Message<TMessage, TCode>::TYPE()
 {
 	return TCode;
-}
-
-template<class TMessage, MessageCode TCode>
-CONSTEXPR CSIZE Message<TMessage, TCode>::SIZE()
-{
-	return SIZEOF(TMessage);
 }
 
 
@@ -45,6 +39,8 @@ Message<TMessage, TCode>::Message(PIFIELD)
 template<class TMessage, MessageCode TCode>
 Message<TMessage, TCode>::~Message()
 {
+	if (_Params != NULL)
+		delete[] _Params;
 }
 
 
@@ -57,7 +53,7 @@ RIFIELD Message<TMessage, TCode>::operator[](CSIZE i)
 }
 
 
-// PUBLIC METHODS
+// USER METHODS
 
 template<class TMessage, MessageCode TCode>
 CSIZE Message<TMessage, TCode>::ParamCount() const
@@ -73,13 +69,60 @@ RIFIELD Message<TMessage, TCode>::Param(CSIZE i) const
 
 	return _Params[i];
 }
+				
 
+// ISerializable IMPLEMENTATION
 
-// PROTECTED METHODS
+template<class TMessage, MessageCode TCode>
+CSIZE Message<TMessage, TCode>::Size() const
+{
+	SIZE size = SIZEOF(MESSAGE_MARKER) + SIZEOF(MessageCode);
 
+	for (SIZE i = 0; i < this->ParamCount(); i++)
+		size += _Params[i].Size();
+
+	return size;
+}
+		
+template<class TMessage, MessageCode TCode>
+PCBYTE Message<TMessage, TCode>::ToBytes() const
+{
+	return 0;
+}
+
+template<class TMessage, MessageCode TCode>
+PCCHAR Message<TMessage, TCode>::ToString() const
+{
+	CSIZE size = this->Size();
+	
+	if (__field_buffer == NULL || COUNT(__field_buffer) <= size)
+	{
+		if (__field_buffer)
+			delete[] __field_buffer;
+
+		__field_buffer = new CHAR[size + 1];
+	}
+
+	memcpy(__field_buffer, "", size);
+	__field_buffer[size] = '\0';
+
+	return __field_buffer;
+}
+
+template<class TMessage, MessageCode TCode>
+VOID Message<TMessage, TCode>::LoadFromBytes(PCBYTE data)
+{
+	//_DataType = static_cast<DataType>(*data++);
+}
+
+template<class TMessage, MessageCode TCode>
+VOID Message<TMessage, TCode>::LoadFromString(PCCHAR data)
+{
+	LoadFromBytes(reinterpret_cast<PCBYTE>(data));
+}
 
 #pragma endregion
-
+/*
 
 #pragma region Request DEFINITIONS
 
@@ -160,3 +203,4 @@ CONST DriverStatus DriverStatusResponse::StatusCode() const
 }
 
 #pragma endregion
+*/

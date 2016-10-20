@@ -274,19 +274,6 @@ FieldBase::~FieldBase()
 	if (_Dispose)
 		_Value.FreePtr();
 }
-
-
-// IField IMPLEMENTATION
-
-CONST DataSize FieldBase::GetDataSize() const
-{
-	return static_cast<DataSize>(MASK(_DataType, DATA_SIZE_MASK));
-}
-
-CONST DataType FieldBase::GetDataType() const
-{
-	return _DataType;
-}
 				
 
 // ISerializable IMPLEMENTATION
@@ -295,33 +282,35 @@ CSIZE FieldBase::Size() const
 {
 	return SIZEOF(DataType) + this->ByteSize();
 }
-
-CSIZE FieldBase::ByteSize() const
-{
-	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
-}
 		
 PCBYTE FieldBase::ToBytes() const
 {
-	return _Value.Bytes;
+	CSIZE size = this->Size();
+
+	if (__field_buffer)
+		delete[] __field_buffer;
+
+	__field_buffer = new BYTE[size];
+	
+	memcpy(__field_buffer, &_DataType, SIZEOF(DataType));
+	memcpy(&__field_buffer[SIZEOF(DataType)], _Value.Bytes, this->ByteSize());
+
+	return __field_buffer;
 }
 
 PCCHAR FieldBase::ToString() const
 {
 	CSIZE size = this->ByteSize();
-	
-	if (__field_buffer == NULL || COUNT(__field_buffer) <= size)
-	{
-		if (__field_buffer)
-			delete[] __field_buffer;
 
-		__field_buffer = new CHAR[size + 1];
-	}
+	if (__field_buffer)
+		delete[] __field_buffer;
 
-	memcpy(__field_buffer, _Value.String, size);
+	__field_buffer = new BYTE[size + 1];
+
+	memcpy(__field_buffer, _Value.Bytes, size);
 	__field_buffer[size] = '\0';
 
-	return __field_buffer;
+	return reinterpret_cast<PCCHAR>(__field_buffer);
 }
 
 VOID FieldBase::LoadFromBytes(PCBYTE data)
@@ -333,6 +322,24 @@ VOID FieldBase::LoadFromBytes(PCBYTE data)
 VOID FieldBase::LoadFromString(PCCHAR data)
 {
 	LoadFromBytes(reinterpret_cast<PCBYTE>(data));
+}
+
+
+// IField IMPLEMENTATION
+
+CSIZE FieldBase::ByteSize() const
+{
+	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
+}
+
+CONST DataSize FieldBase::GetDataSize() const
+{
+	return static_cast<DataSize>(MASK(_DataType, DATA_SIZE_MASK));
+}
+
+CONST DataType FieldBase::GetDataType() const
+{
+	return _DataType;
 }
 
 #pragma endregion
@@ -662,12 +669,20 @@ CSIZE VarLengthField::Size() const
 	return sizeof(_Length) + Field::Size();
 }
 
-CSIZE VarLengthField::ByteSize() const
+PCBYTE VarLengthField::ToBytes() const
 {
-	if (_Length > 0)
-		return _Length;
+	CSIZE size = this->Size();
 
-	return Field::Size();
+	if (__field_buffer)
+		delete[] __field_buffer;
+
+	__field_buffer = new BYTE[size];
+	
+	memcpy(__field_buffer, &_Length, SIZEOF(_Length));
+	memcpy(&__field_buffer[SIZEOF(_Length)], &_DataType, SIZEOF(DataType));
+	memcpy(&__field_buffer[SIZEOF(_Length) + SIZEOF(DataType)], _Value.Bytes, this->ByteSize());
+
+	return __field_buffer;
 }
 
 PCCHAR VarLengthField::ToString() const
@@ -688,6 +703,14 @@ VOID VarLengthField::LoadFromString(PCCHAR data)
 {
 	_Length = static_cast<SIZE>(*data++);
 	Field::LoadFromString(data);
+}
+
+CSIZE VarLengthField::ByteSize() const
+{
+	if (_Length > 0)
+		return _Length;
+
+	return Field::Size();
 }
 
 #pragma endregion

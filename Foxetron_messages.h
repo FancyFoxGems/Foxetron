@@ -19,9 +19,9 @@ namespace Foxetron
 
 	STATIC CCHAR MESSAGE_MARKER[4] = "FOX";
 
-	STATIC CWORD BUFFER_SIZE = 200;
+	STATIC CWORD RX_BUFFER_SIZE = 100;
 
-	EXTERN VCHAR RX[BUFFER_SIZE];
+	EXTERN VCHAR RX[RX_BUFFER_SIZE];
 
 #pragma endregion
 
@@ -150,14 +150,16 @@ namespace Foxetron
 #pragma region Message DECLARATION
 
 	template<class TMessage, MessageCode TCode>
-	CLASS Message
+	CLASS Message : public virtual ISerializable
 	{
 	public:
 
-		STATIC CONSTEXPR MessageCode TYPE();
-		STATIC CONSTEXPR CSIZE SIZE();
+		// STATIC CONSTEXPR METHODS
 
-		STATIC CONSTEXPR CSIZE DATASIZE = Message::SIZE();
+		STATIC CONSTEXPR MessageCode TYPE();
+
+
+		// CONSTRUCTORS/DESTRUCTOR
 
 		Message();
 		Message(RIFIELD);
@@ -165,13 +167,32 @@ namespace Foxetron
 
 		VIRTUAL ~Message();
 
+
+		// OPERATORS
+
 		VIRTUAL RIFIELD operator[](CSIZE);
+
+
+		// ACCESSORS
 
 		VIRTUAL CSIZE ParamCount() CONST;
 
 		VIRTUAL RIFIELD Param(CSIZE = 0) CONST;
+		
+
+		// ISerializable IMPLEMENTATION
+
+		VIRTUAL CSIZE Size() const;
+
+		VIRTUAL PCBYTE ToBytes() const;
+		VIRTUAL PCCHAR ToString() const;
+
+		VIRTUAL VOID LoadFromBytes(PCBYTE);
+		VIRTUAL VOID LoadFromString(PCCHAR);
 
 	protected:
+
+		// INSTANCE VARIABLES
 
 		BOOL _Dispose = FALSE;
 
@@ -179,7 +200,7 @@ namespace Foxetron
 	};
 
 #pragma endregion
-	
+	/*
 
 #pragma region Request DECLARATIONS
 
@@ -309,7 +330,7 @@ namespace Foxetron
 		DriverStatus _StatusCode = DriverStatus::IDLE;
 	};
 
-#pragma endregion
+#pragma endregion*/
 }
 
 

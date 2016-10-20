@@ -231,7 +231,6 @@ namespace Foxetron
 		// INTERFACE METHODS
 
 		VIRTUAL CSIZE Size() const = 0;
-		VIRTUAL CSIZE ByteSize() const = 0;
 
 		VIRTUAL PCBYTE ToBytes() const = 0;
 		VIRTUAL PCCHAR ToString() const = 0;
@@ -252,6 +251,8 @@ namespace Foxetron
 	public:
 
 		// INTERFACE METHODS
+		
+		VIRTUAL CSIZE ByteSize() const = 0;
 
 		VIRTUAL CONST DataSize GetDataSize() const = 0;
 		VIRTUAL CONST DataType GetDataType() const = 0;
@@ -262,8 +263,8 @@ namespace Foxetron
 	};
 
 
-	// ToString() BUFFER POINTER
-	STATIC PCHAR __field_buffer;
+	// FieldBase::ToString() BUFFER POINTER
+	STATIC PBYTE __field_buffer;
 
 #pragma endregion
 
@@ -277,24 +278,25 @@ namespace Foxetron
 		// /DESTRUCTOR
 
 		VIRTUAL ~FieldBase();
-
-
-		// IField IMPLEMENTATION
-
-		VIRTUAL CONST DataSize GetDataSize() const;
-		VIRTUAL CONST DataType GetDataType() const;
 		
 		
 		// ISerializable IMPLEMENTATION
 
 		VIRTUAL CSIZE Size() const;
-		VIRTUAL CSIZE ByteSize() const;
 
 		VIRTUAL PCBYTE ToBytes() const;
 		VIRTUAL PCCHAR ToString() const;
 
 		VIRTUAL VOID LoadFromBytes(PCBYTE);
 		VIRTUAL VOID LoadFromString(PCCHAR);
+
+
+		// IField IMPLEMENTATION
+		
+		VIRTUAL CSIZE ByteSize() const;
+
+		VIRTUAL CONST DataSize GetDataSize() const;
+		VIRTUAL CONST DataType GetDataType() const;
 		
 
 	protected:
@@ -406,12 +408,14 @@ namespace Foxetron
 		// Field OVERRIDES
 
 		VIRTUAL CSIZE Size() const;
-		VIRTUAL CSIZE ByteSize() const;
-
+		
+		VIRTUAL PCBYTE ToBytes() const;
 		VIRTUAL PCCHAR ToString() const;
 
 		VIRTUAL VOID LoadFromBytes(PCBYTE);
 		VIRTUAL VOID LoadFromString(PCCHAR);
+
+		VIRTUAL CSIZE ByteSize() const;
 		
 
 	protected:
@@ -470,7 +474,7 @@ namespace Foxetron
 		}
 
 
-		// STATIC FUNCTIONS
+		// STATIC METHODS
 
 		STATIC RTYPEDFIELD<T> NULL_OBJECT()
 		{
@@ -724,12 +728,20 @@ namespace Foxetron
 			return sizeof(_Length) + TypedField<T>::Size();
 		}
 
-		VIRTUAL CSIZE ByteSize() const
+		VIRTUAL PCCHAR ToBytes() const
 		{
-			if (_Length > 0)
-				return _Length;
+			CSIZE size = this->Size();
 
-			return TypedField<T>::Size();
+			if (__field_buffer)
+				delete[] __field_buffer;
+
+			__field_buffer = new BYTE[size];
+	
+			memcpy(__field_buffer, &_Length, SIZEOF(_Length));
+			memcpy(&__field_buffer[SIZEOF(_Length)], &_DataType, SIZEOF(DataType));
+			memcpy(&__field_buffer[SIZEOF(_Length) + SIZEOF(DataType)], _Value.Bytes, this->ByteSize());
+
+			return __field_buffer;
 		}
 
 		VIRTUAL PCCHAR ToString() const
@@ -750,6 +762,14 @@ namespace Foxetron
 		{
 			_Length = static_cast<SIZE>(*data++);
 			TypedField<T>::LoadFromString(data);
+		}
+
+		VIRTUAL CSIZE ByteSize() const
+		{
+			if (_Length > 0)
+				return _Length;
+
+			return TypedField<T>::Size();
 		}
 
 
