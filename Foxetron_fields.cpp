@@ -674,27 +674,20 @@ PCCHAR VarLengthField::ToString() const
 {
 	if (_DataType == DataType::STRING_FIELD)
 		return _Value.String;
-
-	CSIZE size = this->ByteSize();
-	
-	if (__field_buffer == NULL || COUNT(__field_buffer) <= size)
-	{
-		if (__field_buffer)
-			delete[] __field_buffer;
-
-		__field_buffer = new CHAR[size + 1];
-	}
-
-	memcpy(__field_buffer, _Value.String, size);
-	__field_buffer[size] = '\0';
-
-	return __field_buffer;
+			
+	return Field::ToString();
 }
 
 VOID VarLengthField::LoadFromBytes(PCBYTE data)
 {
 	_Length = static_cast<SIZE>(*data++);
 	Field::LoadFromBytes(data);
+}
+
+VOID VarLengthField::LoadFromString(PCCHAR data)
+{
+	_Length = static_cast<SIZE>(*data++);
+	Field::LoadFromString(data);
 }
 
 #pragma endregion

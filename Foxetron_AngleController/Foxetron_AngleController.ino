@@ -72,7 +72,7 @@
 #define SERIAL_ENABLE
 #define SERIAL_BAUD_RATE		115200
 
-#ifdef DEBUG_INPUTS && DEBUG_INPUTS != 1
+#if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
 	#undef DEBUG_INPUTS
 #endif
 

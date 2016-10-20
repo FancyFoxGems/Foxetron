@@ -195,6 +195,8 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
 
 VOID initializeInterrupts()
 {
+	VarLengthField a;
+	TypedField<SHORT> b;
 	// External interrupts: Angle encoder
 	EIMSK |= 0b00000011;
 	EICRA &= 0b11110101;

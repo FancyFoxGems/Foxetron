@@ -30,9 +30,17 @@ namespace Foxetron
 	typedef IField IFIELD, * PIFIELD, & RIFIELD, ** PPIFIELD, && RRIFIELD;
 	typedef const IField CIFIELD, *PCIFIELD, & RCIFIELD, ** PPCIFIELD;
 
+	class FieldBase;
+	typedef FieldBase FIELDBASE, * PFIELDBASE, & RFIELDBASE, ** PPFIELDBASE, && RRFIELDBASE;
+	typedef const FieldBase CFIELDBASE, * PCFIELDBASE, & RCFIELDBASE, ** PPCFIELDBASE;
+
 	class Field;
 	typedef Field FIELD, * PFIELD, & RFIELD, ** PPFIELD, && RRFIELD;
 	typedef const Field CFIELD, * PCFIELD, & RCFIELD, ** PPCFIELD;
+
+	class VarLengthFieldBase;
+	typedef VarLengthFieldBase VARLENGTHFIELDBASE, * PVARLENGTHFIELDBASE, & RVARLENGTHFIELDBASE, ** PPVARLENGTHFIELDBASE, && RRVARLENGTHFIELDBASE;
+	typedef const VarLengthFieldBase CVARLENGTHFIELDBASE, * PCVARLENGTHFIELDBASE, & RCVARLENGTHFIELDBASE, ** PPCVARLENGTHFIELDBASE;
 
 	class VarLengthField;
 	typedef VarLengthField VARLENGTHFIELD, * PVARLENGTHFIELD, & RVARLENGTHFIELD, ** PPVARLENGTHFIELD, && RRVARLENGTHFIELD;
@@ -230,6 +238,10 @@ namespace Foxetron
 
 		VIRTUAL VOID LoadFromBytes(PCBYTE) = 0;
 		VIRTUAL VOID LoadFromString(PCCHAR) = 0;
+
+	protected:
+
+		ISerializable() { }
 	};
 
 
@@ -243,6 +255,10 @@ namespace Foxetron
 
 		VIRTUAL CONST DataSize GetDataSize() const = 0;
 		VIRTUAL CONST DataType GetDataType() const = 0;
+
+	protected:
+
+		IField() { }
 	};
 
 
@@ -721,26 +737,19 @@ namespace Foxetron
 			if (_DataType == DataType::STRING_FIELD)
 				return _Value.String;
 			
-			CSIZE size = this->ByteSize();
-	
-			if (__field_buffer == NULL || COUNT(__field_buffer) <= size)
-			{
-				if (__field_buffer)
-					delete[] __field_buffer;
-
-				__field_buffer = new CHAR[size + 1];
-			}
-
-			memcpy(__field_buffer, _Value.String, size);
-			__field_buffer[size] = '\0';
-
-			return __field_buffer;
+			return Field::ToString();
 		}
 		
 		VIRTUAL VOID LoadFromBytes(PCBYTE data)
 		{
 			_Length = static_cast<SIZE>(*data++);
 			TypedField<T>::LoadFromBytes(data);
+		}
+		
+		VIRTUAL VOID LoadFromString(PCCHAR data)
+		{
+			_Length = static_cast<SIZE>(*data++);
+			TypedField<T>::LoadFromString(data);
 		}
 
 
