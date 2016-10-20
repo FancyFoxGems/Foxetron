@@ -252,9 +252,51 @@ namespace Foxetron
 #pragma endregion
 
 
+#pragma region FieldBase DECLARATION
+
+	CLASS FieldBase : public virtual IField
+	{
+	public:
+
+		// /DESTRUCTOR
+
+		VIRTUAL ~FieldBase();
+
+
+		// IField IMPLEMENTATION
+
+		VIRTUAL CONST DataSize GetDataSize() const;
+		VIRTUAL CONST DataType GetDataType() const;
+		
+		
+		// ISerializable IMPLEMENTATION
+
+		VIRTUAL CSIZE Size() const;
+		VIRTUAL CSIZE ByteSize() const;
+
+		VIRTUAL PCBYTE ToBytes() const;
+		VIRTUAL PCCHAR ToString() const;
+
+		VIRTUAL VOID LoadFromBytes(PCBYTE);
+		VIRTUAL VOID LoadFromString(PCCHAR);
+		
+
+	protected:
+
+		// INSTANCE VARIABLES
+		
+		BOOL _Dispose = FALSE;
+
+		Datum _Value;
+		DataType _DataType;
+	};
+
+#pragma endregion
+
+
 #pragma region Field DECLARATION
 
-	CLASS Field : public virtual IField
+	CLASS Field : public FieldBase
 	{
 	public:
 
@@ -275,8 +317,6 @@ namespace Foxetron
 		EXPLICIT Field(RLONG);
 		EXPLICIT Field(RDWORD);
 		EXPLICIT Field(RFLOAT);
-
-		VIRTUAL ~Field();
 
 
 		// STATIC FUNCTIONS
@@ -307,34 +347,6 @@ namespace Foxetron
 		operator RDWORD();
 		operator RCFLOAT() const;
 		operator RFLOAT();
-
-
-		// IField IMPLEMENTATION
-
-		VIRTUAL CONST DataSize GetDataSize() const;
-		VIRTUAL CONST DataType GetDataType() const;
-		
-		
-		// ISerializable IMPLEMENTATION
-
-		VIRTUAL CSIZE Size() const;
-		VIRTUAL CSIZE ByteSize() const;
-
-		VIRTUAL PCBYTE ToBytes() const;
-		VIRTUAL PCCHAR ToString() const;
-
-		VIRTUAL VOID LoadFromBytes(PCBYTE);
-		VIRTUAL VOID LoadFromString(PCCHAR);
-		
-
-	protected:
-
-		// INSTANCE VARIABLES
-		
-		BOOL _Dispose = FALSE;
-
-		Datum _Value;
-		DataType _DataType;
 	};
 
 #pragma endregion
@@ -399,14 +411,16 @@ namespace Foxetron
 #pragma region TypedField DEFINITION
 	
 	template<typename T>
-	CLASS TypedField : public virtual IField
+	CLASS TypedField : public FieldBase
 	{
 	public:
 
 		// CONSTRUYCTORS/DESTRUCTOR
 
-		TypedField() : _Dispose(TRUE)
+		TypedField()
 		{
+			_Dispose = TRUE;
+
 			_DataType = TypedField<T>::FindDataType();
 		}
 
@@ -423,8 +437,9 @@ namespace Foxetron
 			new (this) TypedField<T>(other._Value);
 		}
 
-		TypedField(RCDATUM value) : _Value(value)
+		TypedField(RCDATUM value)
 		{
+			_Value = value;
 			_DataType = TypedField<T>::FindDataType();
 		}
 
@@ -436,12 +451,6 @@ namespace Foxetron
 		EXPLICIT TypedField(SIGNED_TYPE(T &) value)
 		{
 			new (this) TypedField<T>(value);
-		}
-
-		VIRTUAL ~TypedField()
-		{
-			if (_Dispose)
-				_Value.FreePtr();
 		}
 
 
@@ -496,66 +505,6 @@ namespace Foxetron
 		}
 
 
-		//  IField IMPLEMENTATION
-
-		VIRTUAL CONST DataSize GetDataSize() const
-		{
-			return static_cast<DataSize>(MASK(_DataType, DATA_SIZE_MASK));
-		}
-
-		VIRTUAL CONST DataType GetDataType() const
-		{
-			return _DataType;
-		}
-				
-
-		// ISerializable IMPLEMENTATION
-
-		VIRTUAL CSIZE Size() const
-		{
-			return SIZEOF(DataType) + this->ByteSize();
-		}
-
-		VIRTUAL CSIZE ByteSize() const
-		{
-			return sizeof(T);
-		}
-		
-		VIRTUAL PCBYTE ToBytes() const
-		{
-			return _Value.Bytes;
-		}
-
-		VIRTUAL PCCHAR ToString() const
-		{
-			CSIZE size = this->ByteSize();
-	
-			if (__field_buffer == NULL || COUNT(__field_buffer) <= size)
-			{
-				if (__field_buffer)
-					delete[] __field_buffer;
-
-				__field_buffer = new CHAR[size + 1];
-			}
-
-			memcpy(__field_buffer, _Value.String, size);
-			__field_buffer[size] = '\0';
-
-			return __field_buffer;
-		}
-		
-		VIRTUAL VOID LoadFromBytes(PCBYTE data)
-		{
-			_DataType = static_cast<DataType>(*data++);
-			_Value = data;
-		}
-
-		VIRTUAL VOID LoadFromString(PCCHAR data)
-		{
-			LoadFromBytes(reinterpret_cast<PCBYTE>(data));
-		}
-
-
 		// META-MEMBERS
 
 		typedef T FieldType;
@@ -569,13 +518,6 @@ namespace Foxetron
 		{
 			return DataType::BYTE_FIELD;
 		}
-
-		// INSTANCE VARIABLES
-		
-		BOOL _Dispose = FALSE;
-		
-		DATUM _Value;
-		DataType _DataType;
 	};
 
 #pragma endregion
