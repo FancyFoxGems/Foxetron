@@ -22,6 +22,10 @@ namespace Foxetron
 	typedef union Datum DATUM, * PDATUM, & RDATUM, ** PPDATUM, && RRDATUM;
 	typedef const union Datum CDATUM, * PCDATUM, & RCDATUM, ** PPCDATUM;
 
+	class ISerializable;
+	typedef ISerializable ISERIALIZABLE, * PISERIALIZABLE, & RISERIALIZABLE, ** PPISERIALIZABLE, && RRISERIALIZABLE;
+	typedef const ISerializable CISERIALIZABLE, *PCISERIALIZABLE, & RCISERIALIZABLE, ** PPCISERIALIZABLE;
+
 	class IField;
 	typedef IField IFIELD, * PIFIELD, & RIFIELD, ** PPIFIELD, && RRIFIELD;
 	typedef const IField CIFIELD, *PCIFIELD, & RCIFIELD, ** PPCIFIELD;
@@ -210,9 +214,28 @@ namespace Foxetron
 
 #pragma region INTERFACES
 
+	// ISerializable DECLARATION
+
+	CLASS ISerializable
+	{
+	public:
+
+		// INTERFACE METHODS
+
+		VIRTUAL CSIZE Size() const = 0;
+		VIRTUAL CSIZE ByteSize() const = 0;
+
+		VIRTUAL PCBYTE ToBytes() const = 0;
+		VIRTUAL PCCHAR ToString() const = 0;
+
+		//VIRTUAL VOID LoadFromBytes(PCBYTE) = 0;
+		//VIRTUAL VOID LoadFromString(PCCHAR) = 0;
+	};
+
+
 	// IField DECLARATION
 
-	CLASS IField
+	CLASS IField : public ISerializable
 	{
 	public:
 
@@ -220,13 +243,11 @@ namespace Foxetron
 
 		VIRTUAL CONST DataSize GetDataSize() const = 0;
 		VIRTUAL CONST DataType GetDataType() const = 0;
-
-		VIRTUAL CSIZE FieldSize() const = 0;
-		VIRTUAL CSIZE ByteSize() const = 0;
-
-		VIRTUAL PCBYTE Bytes() const = 0;
-		VIRTUAL PCCHAR String() const = 0;
 	};
+
+
+	// ToString() BUFFER POINTER
+	STATIC PCHAR __field_buffer;
 
 #pragma endregion
 
@@ -288,16 +309,16 @@ namespace Foxetron
 		operator RFLOAT();
 
 
-		// IField IMPLEMENTATIONS
+		// IField IMPLEMENTATION
 
 		VIRTUAL CONST DataSize GetDataSize() const;
 		VIRTUAL CONST DataType GetDataType() const;
 
-		VIRTUAL CSIZE FieldSize() const;
+		VIRTUAL CSIZE Size() const;
 		VIRTUAL CSIZE ByteSize() const;
 		
-		VIRTUAL PCBYTE Bytes() const;
-		VIRTUAL PCCHAR String() const;
+		VIRTUAL PCBYTE ToBytes() const;
+		VIRTUAL PCCHAR ToString() const;
 		
 
 	protected:
@@ -350,8 +371,10 @@ namespace Foxetron
 
 		// Field OVERRIDES
 
-		VIRTUAL CSIZE FieldSize() const;
+		VIRTUAL CSIZE Size() const;
 		VIRTUAL CSIZE ByteSize() const;
+
+		VIRTUAL PCCHAR ToString() const;
 		
 
 	protected:
@@ -464,7 +487,7 @@ namespace Foxetron
 		}
 
 
-		//  IField IMPLEMENTATIONS
+		//  IField IMPLEMENTATION
 
 		VIRTUAL CONST DataSize GetDataSize() const
 		{
@@ -476,7 +499,7 @@ namespace Foxetron
 			return _DataType;
 		}
 				
-		VIRTUAL CSIZE FieldSize() const
+		VIRTUAL CSIZE Size() const
 		{
 			return SIZEOF(DataType) + this->ByteSize();
 		}
@@ -486,14 +509,27 @@ namespace Foxetron
 			return sizeof(T);
 		}
 		
-		VIRTUAL PCBYTE Bytes() const
+		VIRTUAL PCBYTE ToBytes() const
 		{
 			return _Value.Bytes;
 		}
 
-		VIRTUAL PCCHAR String() const
+		VIRTUAL PCCHAR ToString() const
 		{
-			return _Value.String;
+			CSIZE size = this->ByteSize();
+	
+			if (__field_buffer == NULL || COUNT(__field_buffer) <= size)
+			{
+				if (__field_buffer)
+					delete[] __field_buffer;
+
+				__field_buffer = new CHAR[size + 1];
+			}
+
+			memcpy(__field_buffer, _Value.String, size);
+			__field_buffer[size] = '\0';
+
+			return __field_buffer;
 		}
 
 
@@ -700,11 +736,11 @@ namespace Foxetron
 		}
 
 
-		//  IField IMPLEMENTATIONS
+		//  IField OVERRIDES
 				
-		VIRTUAL CSIZE FieldSize() const
+		VIRTUAL CSIZE Size() const
 		{
-			return sizeof(_Length) + TypedField<T>::FieldSize();
+			return sizeof(_Length) + TypedField<T>::Size();
 		}
 
 		VIRTUAL CSIZE ByteSize() const
@@ -712,7 +748,28 @@ namespace Foxetron
 			if (_Length > 0)
 				return _Length;
 
-			return TypedField<T>::FieldSize();
+			return TypedField<T>::Size();
+		}
+
+		VIRTUAL PCCHAR ToString() const
+		{
+			if (_DataType == DataType::STRING_FIELD)
+				return _Value.String;
+			
+			CSIZE size = this->ByteSize();
+	
+			if (__field_buffer == NULL || COUNT(__field_buffer) <= size)
+			{
+				if (__field_buffer)
+					delete[] __field_buffer;
+
+				__field_buffer = new CHAR[size + 1];
+			}
+
+			memcpy(__field_buffer, _Value.String, size);
+			__field_buffer[size] = '\0';
+
+			return __field_buffer;
 		}
 
 

@@ -29,11 +29,6 @@
 // ITTY BITTY
 #include "IttyBitty_util.h"
 
-// GCC WARNING SUPPRESSIONS
-IGNORE_WARNING(-Wunknown - pragmas)
-IGNORE_WARNING(-Wstrict - aliasing)
-IGNORE_WARNING(-Wpointer - arith)
-
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
 

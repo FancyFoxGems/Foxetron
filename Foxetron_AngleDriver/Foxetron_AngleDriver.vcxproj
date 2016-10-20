@@ -81,7 +81,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties vm.upload.useprogrammer="0" arduino.build.auto_discover_includes="1" VM_ReCompileCoreOnProjectMacroChange="" arduino.upload.port="COM19" />
+      <UserProperties vm.upload.useprogrammer="0" arduino.build.auto_discover_includes="1" VM_ReCompileCoreOnProjectMacroChange="" arduino.upload.port="COM19" VM_ADDITIONAL_COMPILER_FLAGS="-Wno-unknown-pragmas" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

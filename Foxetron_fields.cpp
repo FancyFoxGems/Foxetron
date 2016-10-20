@@ -269,7 +269,7 @@ VOID Datum::FreeData()
 
 // CONSTRUCTORS
 
-Field::Field(DataType dataType) : _DataType(dataType), _Dispose(TRUE) { }
+Field::Field(DataType dataType) : _Dispose(TRUE), _DataType(dataType) { }
 
 Field::Field(RCFIELD other)
 {
@@ -420,7 +420,7 @@ Field::operator RFLOAT()
 }
 
 
-// IField IMPLEMENTATIONS
+// IField IMPLEMENTATION
 
 CONST DataSize Field::GetDataSize() const
 {
@@ -432,7 +432,7 @@ CONST DataType Field::GetDataType() const
 	return _DataType;
 }
 
-CSIZE Field::FieldSize() const
+CSIZE Field::Size() const
 {
 	return SIZEOF(DataType) + this->ByteSize();
 }
@@ -442,14 +442,27 @@ CSIZE Field::ByteSize() const
 	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
 }
 		
-PCBYTE Field::Bytes() const
+PCBYTE Field::ToBytes() const
 {
 	return _Value.Bytes;
 }
 
-PCCHAR Field::String() const
+PCCHAR Field::ToString() const
 {
-	return _Value.String;
+	CSIZE size = this->ByteSize();
+	
+	if (__field_buffer == NULL || COUNT(__field_buffer) <= size)
+	{
+		if (__field_buffer)
+			delete[] __field_buffer;
+
+		__field_buffer = new CHAR[size + 1];
+	}
+
+	memcpy(__field_buffer, _Value.String, size);
+	__field_buffer[size] = '\0';
+
+	return __field_buffer;
 }
 
 #pragma endregion
@@ -581,9 +594,9 @@ VarLengthField::operator PBITPACK()
 
 // Field OVERRIDES
 
-CSIZE VarLengthField::FieldSize() const
+CSIZE VarLengthField::Size() const
 {
-	return sizeof(_Length) + Field::FieldSize();
+	return sizeof(_Length) + Field::Size();
 }
 
 CSIZE VarLengthField::ByteSize() const
@@ -591,7 +604,28 @@ CSIZE VarLengthField::ByteSize() const
 	if (_Length > 0)
 		return _Length;
 
-	return Field::FieldSize();
+	return Field::Size();
+}
+
+PCCHAR VarLengthField::ToString() const
+{
+	if (_DataType == DataType::STRING_FIELD)
+		return _Value.String;
+
+	CSIZE size = this->ByteSize();
+	
+	if (__field_buffer == NULL || COUNT(__field_buffer) <= size)
+	{
+		if (__field_buffer)
+			delete[] __field_buffer;
+
+		__field_buffer = new CHAR[size + 1];
+	}
+
+	memcpy(__field_buffer, _Value.String, size);
+	__field_buffer[size] = '\0';
+
+	return __field_buffer;
 }
 
 #pragma endregion

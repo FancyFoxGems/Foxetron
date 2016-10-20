@@ -11,7 +11,7 @@
 #pragma region GLOBAL VARIABLES
 
 // LCD display
-EXTERN BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
+BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
 
 #pragma endregion
 
@@ -41,7 +41,7 @@ VOID initializeLCD()
 
 CONST CHAR * CONST LCD_invertChar(CONST CHAR * lcdChar, BYTE charWidth)
 {
-	CHAR newLcdChar[SIZEOF(lcdChar)];
+	PCHAR newLcdChar = new CHAR[SIZEOF(lcdChar)];
 
 	for (BYTE pixY = 0; pixY < SIZEOF(lcdChar); pixY++)
 		newLcdChar[pixY] = lcdChar[pixY] ^ (1 << charWidth - 1);
@@ -51,7 +51,7 @@ CONST CHAR * CONST LCD_invertChar(CONST CHAR * lcdChar, BYTE charWidth)
 
 CONST CHAR * LCD_invertChar_P(CONST CHAR * lcdChar, BYTE charWidth)
 {
-	CHAR lcdCharData[SIZEOF(lcdChar)];
+	PCHAR lcdCharData = new CHAR[SIZEOF(lcdChar)];
 
 	for (BYTE i = 0; i < SIZEOF(lcdChar); i++)
 		lcdCharData[i] = pgm_read_byte_near(lcdChar++);
