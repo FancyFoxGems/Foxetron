@@ -431,6 +431,9 @@ CONST DataType Field::GetDataType() const
 {
 	return _DataType;
 }
+				
+
+// ISerializable IMPLEMENTATION
 
 CSIZE Field::Size() const
 {
@@ -463,6 +466,17 @@ PCCHAR Field::ToString() const
 	__field_buffer[size] = '\0';
 
 	return __field_buffer;
+}
+
+VOID Field::LoadFromBytes(PCBYTE data)
+{
+	_DataType = static_cast<DataType>(*data++);
+	_Value = data;
+}
+
+VOID Field::LoadFromString(PCCHAR data)
+{
+	LoadFromBytes(reinterpret_cast<PCBYTE>(data));
 }
 
 #pragma endregion
@@ -626,6 +640,12 @@ PCCHAR VarLengthField::ToString() const
 	__field_buffer[size] = '\0';
 
 	return __field_buffer;
+}
+
+VOID VarLengthField::LoadFromBytes(PCBYTE data)
+{
+	_Length = static_cast<SIZE>(*data++);
+	Field::LoadFromBytes(data);
 }
 
 #pragma endregion

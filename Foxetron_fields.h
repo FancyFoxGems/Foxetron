@@ -228,8 +228,8 @@ namespace Foxetron
 		VIRTUAL PCBYTE ToBytes() const = 0;
 		VIRTUAL PCCHAR ToString() const = 0;
 
-		//VIRTUAL VOID LoadFromBytes(PCBYTE) = 0;
-		//VIRTUAL VOID LoadFromString(PCCHAR) = 0;
+		VIRTUAL VOID LoadFromBytes(PCBYTE) = 0;
+		VIRTUAL VOID LoadFromString(PCCHAR) = 0;
 	};
 
 
@@ -313,12 +313,18 @@ namespace Foxetron
 
 		VIRTUAL CONST DataSize GetDataSize() const;
 		VIRTUAL CONST DataType GetDataType() const;
+		
+		
+		// ISerializable IMPLEMENTATION
 
 		VIRTUAL CSIZE Size() const;
 		VIRTUAL CSIZE ByteSize() const;
-		
+
 		VIRTUAL PCBYTE ToBytes() const;
 		VIRTUAL PCCHAR ToString() const;
+
+		VIRTUAL VOID LoadFromBytes(PCBYTE);
+		VIRTUAL VOID LoadFromString(PCCHAR);
 		
 
 	protected:
@@ -375,6 +381,9 @@ namespace Foxetron
 		VIRTUAL CSIZE ByteSize() const;
 
 		VIRTUAL PCCHAR ToString() const;
+
+		VIRTUAL VOID LoadFromBytes(PCBYTE);
+		VIRTUAL VOID LoadFromString(PCCHAR);
 		
 
 	protected:
@@ -499,6 +508,9 @@ namespace Foxetron
 			return _DataType;
 		}
 				
+
+		// ISerializable IMPLEMENTATION
+
 		VIRTUAL CSIZE Size() const
 		{
 			return SIZEOF(DataType) + this->ByteSize();
@@ -530,6 +542,17 @@ namespace Foxetron
 			__field_buffer[size] = '\0';
 
 			return __field_buffer;
+		}
+		
+		VIRTUAL VOID LoadFromBytes(PCBYTE data)
+		{
+			_DataType = static_cast<DataType>(*data++);
+			_Value = data;
+		}
+
+		VIRTUAL VOID LoadFromString(PCCHAR data)
+		{
+			LoadFromBytes(reinterpret_cast<PCBYTE>(data));
 		}
 
 
@@ -770,6 +793,12 @@ namespace Foxetron
 			__field_buffer[size] = '\0';
 
 			return __field_buffer;
+		}
+		
+		VIRTUAL VOID LoadFromBytes(PCBYTE data)
+		{
+			_Length = static_cast<SIZE>(*data++);
+			TypedField<T>::LoadFromBytes(data);
 		}
 
 
