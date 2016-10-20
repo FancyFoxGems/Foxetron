@@ -269,11 +269,12 @@ VOID Datum::FreeData()
 
 // CONSTRUCTORS
 
-Field::Field(DataType dataType) : _DataType(dataType) { }
+Field::Field(DataType dataType) : _DataType(dataType), _Dispose(TRUE) { }
 
 Field::Field(RCFIELD other)
 {
 	_Dispose = other._Dispose;
+
 	_Value = other._Value;
 	_DataType = other._DataType;
 }
@@ -308,6 +309,15 @@ Field::~Field()
 }
 
 
+// STATIC FUNCTIONS
+
+RFIELD Field::NULL_OBJECT()
+{
+	STATIC Field NULL_FIELD;
+	return NULL_FIELD;
+}
+
+
 // OPERATORS
 
 RFIELD Field::operator =(RCFIELD rValue)
@@ -328,17 +338,6 @@ RFIELD Field::operator =(RCDATUM rValue)
 	return *this;
 }
 
-
-// STATIC FUNCTIONS
-
-RFIELD Field::NULL_OBJECT()
-{
-	STATIC Field NULL_FIELD;
-	return NULL_FIELD;
-}
-
-
-// OPERATORS
 
 Field::operator RCCHAR() const
 {
@@ -423,16 +422,6 @@ Field::operator RFLOAT()
 
 // IField IMPLEMENTATIONS
 
-CSIZE Field::FieldSize() const
-{
-	return sizeof(DataType) + this->ByteSize();
-}
-
-CSIZE Field::ByteSize() const
-{
-	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
-}
-
 CONST DataSize Field::GetDataSize() const
 {
 	return static_cast<DataSize>(MASK(_DataType, DATA_SIZE_MASK));
@@ -441,6 +430,16 @@ CONST DataSize Field::GetDataSize() const
 CONST DataType Field::GetDataType() const
 {
 	return _DataType;
+}
+
+CSIZE Field::FieldSize() const
+{
+	return SIZEOF(DataType) + this->ByteSize();
+}
+
+CSIZE Field::ByteSize() const
+{
+	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
 }
 		
 PCBYTE Field::Bytes() const
@@ -454,7 +453,6 @@ PCCHAR Field::String() const
 }
 
 #pragma endregion
-
 
 
 #pragma region VarLengthField DEFINITION
@@ -581,6 +579,11 @@ VarLengthField::operator PBITPACK()
 
 
 // Field OVERRIDES
+
+CSIZE VarLengthField::FieldSize() const
+{
+	return sizeof(_Length) + Field::FieldSize();
+}
 
 CSIZE VarLengthField::ByteSize() const
 {

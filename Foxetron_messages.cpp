@@ -8,7 +8,7 @@
 #include "Foxetron_messages.h"
 
 
-#pragma region MESSAGE DEFINITION
+#pragma region Message DEFINITION
 
 // STATIC MESSAGE "OVERRIDES"
 
@@ -33,12 +33,12 @@ Message<TMessage, TCode>::Message()
 }
 
 template<class TMessage, MessageCode TCode>
-Message<TMessage, TCode>::Message(RFIELD)
+Message<TMessage, TCode>::Message(RIFIELD)
 {
 }
 
 template<class TMessage, MessageCode TCode>
-Message<TMessage, TCode>::Message(PFIELD)
+Message<TMessage, TCode>::Message(PIFIELD)
 {
 }
 
@@ -51,7 +51,7 @@ Message<TMessage, TCode>::~Message()
 // OPERATORS
 
 template<class TMessage, MessageCode TCode>
-RFIELD Message<TMessage, TCode>::operator[](CSIZE i)
+RIFIELD Message<TMessage, TCode>::operator[](CSIZE i)
 {
 	return this->Param(i);
 }
@@ -66,7 +66,7 @@ CSIZE Message<TMessage, TCode>::ParamCount() const
 }
 
 template<class TMessage, MessageCode TCode>
-RFIELD Message<TMessage, TCode>::Param(CSIZE i) const
+RIFIELD Message<TMessage, TCode>::Param(CSIZE i) const
 {
 	if (_Params == NULL)
 		return Field::NULL_OBJECT();
@@ -81,7 +81,7 @@ RFIELD Message<TMessage, TCode>::Param(CSIZE i) const
 #pragma endregion
 
 
-#pragma region REQUEST DEFINITIONS
+#pragma region Request DEFINITIONS
 
 // NewAngleRequest
 
@@ -97,7 +97,7 @@ CWORD NewAngleRequest::Degrees() const
 #pragma endregion
 
 
-#pragma region RESPONSE DEFINITIONS
+#pragma region Response DEFINITIONS
 
 // Response
 
@@ -144,7 +144,7 @@ ControllerStatusResponse::ControllerStatusResponse(ControllerStatus controllerSt
 
 CONST ControllerStatus ControllerStatusResponse::StatusCode() const
 {
-	return static_cast<CONST ControllerStatus>((BYTE)(StatusResponse::Param(0)));
+	return static_cast<CONST ControllerStatus>((BYTE)*reinterpret_cast<PFIELD>(&StatusResponse::Param(0)));
 }
 
 
@@ -156,7 +156,7 @@ DriverStatusResponse::DriverStatusResponse(DriverStatus driverStatus, PCCHAR sta
 
 CONST DriverStatus DriverStatusResponse::StatusCode() const
 {
-	return static_cast<CONST DriverStatus>((BYTE)(StatusResponse::Param(0)));
+	return static_cast<CONST DriverStatus>((BYTE)*reinterpret_cast<PFIELD>(&StatusResponse::Param(0)));
 }
 
 #pragma endregion

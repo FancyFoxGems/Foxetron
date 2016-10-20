@@ -34,26 +34,47 @@ namespace Foxetron
 	typedef VarLengthField VARLENGTHFIELD, * PVARLENGTHFIELD, & RVARLENGTHFIELD, ** PPVARLENGTHFIELD, && RRVARLENGTHFIELD;
 	typedef const VarLengthField CVARLENGTHFIELD, * PCVARLENGTHFIELD, & RCVARLENGTHFIELD, ** PPCVARLENGTHFIELD;
 
-	template<typename T = Datum>
+	template<typename T = BYTE>
 	class TypedField;
-	template<typename T = Datum>
+	template<typename T = BYTE>
 	using TYPEDFIELD = TypedField<T>;
-	template<typename T = Datum>
+	template<typename T = BYTE>
 	using PTYPEDFIELD = TypedField<T> *;
-	template<typename T = Datum>
+	template<typename T = BYTE>
 	using RTYPEDFIELD = TypedField<T> &;
-	template<typename T = Datum>
+	template<typename T = BYTE>
 	using PPTYPEDFIELD = TypedField<T> **;
-	template<typename T = Datum>
+	template<typename T = BYTE>
 	using RRTYPEDFIELD = TypedField<T> &&;
-	template<typename T = Datum>
+	template<typename T = BYTE>
 	using CTYPEDFIELD = const TypedField<T>;
-	template<typename T = Datum>
+	template<typename T = BYTE>
 	using PCTYPEDFIELD = const TypedField<T> *;
-	template<typename T = Datum>
+	template<typename T = BYTE>
 	using RCTYPEDFIELD = const TypedField<T> &;
-	template<typename T = Datum>
+	template<typename T = BYTE>
 	using PPCTYPEDFIELD = const TypedField<T> **;
+
+	template<typename T = PBYTE>
+	class VarLengthTypedField;
+	template<typename T = PBYTE>
+	using VARLENGTHTYPEDFIELD = VarLengthTypedField<T>;
+	template<typename T = PBYTE>
+	using PVARLENGTHTYPEDFIELD = VarLengthTypedField<T> *;
+	template<typename T = PBYTE>
+	using RVARLENGTHTYPEDFIELD = VarLengthTypedField<T> &;
+	template<typename T = PBYTE>
+	using PPVARLENGTHTYPEDFIELD = VarLengthTypedField<T> **;
+	template<typename T = PBYTE>
+	using RRVARLENGTHTYPEDFIELD = VarLengthTypedField<T> &&;
+	template<typename T = PBYTE>
+	using CVARLENGTHTYPEDFIELD = const VarLengthTypedField<T>;
+	template<typename T = PBYTE>
+	using PCVARLENGTHTYPEDFIELD = const VarLengthTypedField<T> *;
+	template<typename T = PBYTE>
+	using RCVARLENGTHTYPEDFIELD = const VarLengthTypedField<T> &;
+	template<typename T = PBYTE>
+	using PPCVARLENGTHTYPEDFIELD = const VarLengthTypedField<T> **;
 
 #pragma endregion
 
@@ -187,7 +208,9 @@ namespace Foxetron
 #pragma endregion
 
 
-#pragma region IField INTERFACE
+#pragma region INTERFACES
+
+	// IField DECLARATION
 
 	CLASS IField
 	{
@@ -195,11 +218,11 @@ namespace Foxetron
 
 		// INTERFACE METHODS
 
-		VIRTUAL CSIZE FieldSize() const = 0;
-		VIRTUAL CSIZE ByteSize() const = 0;
-
 		VIRTUAL CONST DataSize GetDataSize() const = 0;
 		VIRTUAL CONST DataType GetDataType() const = 0;
+
+		VIRTUAL CSIZE FieldSize() const = 0;
+		VIRTUAL CSIZE ByteSize() const = 0;
 
 		VIRTUAL PCBYTE Bytes() const = 0;
 		VIRTUAL PCCHAR String() const = 0;
@@ -267,11 +290,11 @@ namespace Foxetron
 
 		// IField IMPLEMENTATIONS
 
-		VIRTUAL CSIZE FieldSize() const;
-		VIRTUAL CSIZE ByteSize() const;
-
 		VIRTUAL CONST DataSize GetDataSize() const;
 		VIRTUAL CONST DataType GetDataType() const;
+
+		VIRTUAL CSIZE FieldSize() const;
+		VIRTUAL CSIZE ByteSize() const;
 		
 		VIRTUAL PCBYTE Bytes() const;
 		VIRTUAL PCCHAR String() const;
@@ -327,6 +350,7 @@ namespace Foxetron
 
 		// Field OVERRIDES
 
+		VIRTUAL CSIZE FieldSize() const;
 		VIRTUAL CSIZE ByteSize() const;
 		
 
@@ -342,70 +366,473 @@ namespace Foxetron
 
 #pragma region TypedField DEFINITION
 	
-	// TODO: Finish...
 	template<typename T>
 	CLASS TypedField : public virtual IField
 	{
 	public:
 
-		// META-MEMBERS
+		// CONSTRUYCTORS/DESTRUCTOR
 
-		typedef T Type;
-
-
-		// CONSTRUYCTORS
-
-		TypedField(RCDATUM value)
+		TypedField() : _Dispose(TRUE)
 		{
+			_DataType = TypedField<T>::FindDataType();
 		}
 
-		TypedField(CONST T & value)
+		TypedField(RCTYPEDFIELD<T> other)
 		{
+			_Dispose = other._Dispose;
 
+			_Value = other._Value;
+			_DataType = other._DataType;
+		}
+
+		TypedField(RRTYPEDFIELD<T> other)
+		{
+			new (this) TypedField<T>(other._Value);
+		}
+
+		TypedField(RCDATUM value) : _Value(value)
+		{
+			_DataType = TypedField<T>::FindDataType();
+		}
+
+		EXPLICIT TypedField(T & value)
+		{
+			new (this) TypedField<T>(value);
+		}
+
+		EXPLICIT TypedField(SIGNED_TYPE(T &) value)
+		{
+			new (this) TypedField<T>(value);
+		}
+
+		VIRTUAL ~TypedField()
+		{
+			if (_Dispose)
+				_Value.FreePtr();
+		}
+
+
+		// STATIC FUNCTIONS
+
+		STATIC RTYPEDFIELD<T> NULL_OBJECT()
+		{
+			STATIC TypedField<T> NULL_TYPEDFIELD;
+			return NULL_TYPEDFIELD;
 		}
 		
-
+		
 		// OPERATORS
 
-		operator CONST T() const;
-		operator SIGNED_TYPE(CONST T)() const;
+		VIRTUAL RTYPEDFIELD<T> operator =(RCVARLENGTHFIELD rValue)
+		{
+			*this = Field(rValue);
+			return *this;
+		}
+
+		VIRTUAL RTYPEDFIELD<T> operator =(RRVARLENGTHFIELD rValue)
+		{
+			*this = Field(rValue);
+			return *this;
+		}
+
+		VIRTUAL RTYPEDFIELD<T> operator =(RCDATUM rValue)
+		{
+			_Value = rValue;
+			return *this;
+		}
 
 
-		//  VIRTUAL HIDING IField IMPLEMENATIONS
+		VIRTUAL operator UNSIGNED_TYPE(CONST T&)() const
+		{
+			return (UNSIGNED_TYPE(CONST T&))_Value;
+		}
 
-		CSIZE Size() const;
+		VIRTUAL operator UNSIGNED_TYPE(T&)()
+		{
+			return (UNSIGNED_TYPE(T&))_Value;
+		}
+
+		VIRTUAL operator SIGNED_TYPE(CONST T&)() const
+		{
+			return (SIGNED_TYPE(CONST T&))_Value;
+		}
+
+		VIRTUAL operator SIGNED_TYPE(T&)()
+		{
+			return (SIGNED_TYPE(T&))_Value;
+		}
+
+
+		//  IField IMPLEMENTATIONS
+
+		VIRTUAL CONST DataSize GetDataSize() const
+		{
+			return static_cast<DataSize>(MASK(_DataType, DATA_SIZE_MASK));
+		}
+
+		VIRTUAL CONST DataType GetDataType() const
+		{
+			return _DataType;
+		}
+				
+		VIRTUAL CSIZE FieldSize() const
+		{
+			return SIZEOF(DataType) + this->ByteSize();
+		}
+
+		VIRTUAL CSIZE ByteSize() const
+		{
+			return sizeof(T);
+		}
 		
-		CSIZE FieldSize() const;
-
-
-		// ACCESSORS/MUTATORS
-
-		CONST DataSize GetDataSize() const;
-
-		CONST DataType GetDataType() const;
-
-
-		// USER METHODS
-
-		CONST T GetValue() const
+		VIRTUAL PCBYTE Bytes() const
 		{
-			return reinterpret_cast<T>(*_Value.Bytes);
+			return _Value.Bytes;
 		}
 
-		VOID SetValue(CONST T & value)
+		VIRTUAL PCCHAR String() const
 		{
-
+			return _Value.String;
 		}
+
+
+		// META-MEMBERS
+
+		typedef T FieldType;
 
 
 	protected:
+		
+		// PROTECTED STATIC FUNCTIONS
+
+		STATIC CONSTEXPR const DataType FindDataType()
+		{
+			return DataType::BYTE_FIELD;
+		}
 
 		// INSTANCE VARIABLES
-
+		
+		BOOL _Dispose = FALSE;
+		
 		DATUM _Value;
+		DataType _DataType;
 	};
 
 #pragma endregion
+
+
+#pragma region TypedField PARTIAL SPECIALIZATIONS
+
+	template<>
+	class TypedField<CHAR>
+	{
+	protected:
+		
+			// PROTECTED STATIC FUNCTIONS
+
+			STATIC CONSTEXPR const DataType FindDataType()
+			{
+				return DataType::CHAR_FIELD;
+			}
+	};
+
+	template<>
+	class TypedField<BYTE>
+	{
+	protected:
+		
+			// PROTECTED STATIC FUNCTIONS
+
+			STATIC CONSTEXPR const DataType FindDataType()
+			{
+				return DataType::BYTE_FIELD;
+			}
+	};
+
+	template<>
+	class TypedField<BOOL>
+	{
+	protected:
+		
+			// PROTECTED STATIC FUNCTIONS
+
+			STATIC CONSTEXPR const DataType FindDataType()
+			{
+				return DataType::BOOL_FIELD;
+			}
+	};
+
+	template<>
+	class TypedField<SHORT>
+	{
+	protected:
+		
+			// PROTECTED STATIC FUNCTIONS
+
+			STATIC CONSTEXPR const DataType FindDataType()
+			{
+				return DataType::SHORT_FIELD;
+			}
+	};
+
+	template<>
+	class TypedField<WORD>
+	{
+	protected:
+		
+			// PROTECTED STATIC FUNCTIONS
+
+			STATIC CONSTEXPR const DataType FindDataType()
+			{
+				return DataType::WORD_FIELD;
+			}
+	};
+
+	template<>
+	class TypedField<LONG>
+	{
+	protected:
+		
+			// PROTECTED STATIC FUNCTIONS
+
+			STATIC CONSTEXPR const DataType FindDataType()
+			{
+				return DataType::LONG_FIELD;
+			}
+	};
+
+	template<>
+	class TypedField<DWORD>
+	{
+	protected:
+		
+			// PROTECTED STATIC FUNCTIONS
+
+			STATIC CONSTEXPR const DataType FindDataType()
+			{
+				return DataType::DWORD_FIELD;
+			}
+	};
+
+	template<>
+	class TypedField<FLOAT>
+	{
+	protected:
+		
+			// PROTECTED STATIC FUNCTIONS
+
+			STATIC CONSTEXPR const DataType FindDataType()
+			{
+				return DataType::FLOAT_FIELD;
+			}
+	};
+
+#pragma endregion
+
+	
+	/*
+#pragma region VarLengthTypedField DEFINITION
+
+	template<typename T>
+	CLASS VarLengthTypedField : public TypedField<T>
+	{
+	public:
+
+		// CONSTRUYCTORS/DESTRUCTOR
+
+		TypedField() : _Dispose(TRUE)
+		{
+			_DataType = TypedField<T>::FindDataType();
+		}
+
+		TypedField(RCTYPEDFIELD<T> other)
+		{
+			_Dispose = other._Dispose;
+
+			_Value = other._Value;
+			_DataType = other._DataType;
+		}
+
+		TypedField(RRTYPEDFIELD<T> other)
+		{
+			new (this) TypedField<T>(other._Value);
+		}
+
+		TypedField(RCDATUM value) : _Value(value)
+		{
+			_DataType = TypedField<T>::FindDataType();
+		}
+
+		EXPLICIT TypedField(T & value)
+		{
+			new (this) TypedField<T>(value);
+		}
+
+		EXPLICIT TypedField(SIGNED_TYPE(T &) value)
+		{
+			new (this) TypedField<T>(value);
+		}
+
+		VIRTUAL ~TypedField()
+		{
+			if (_Dispose)
+				_Value.FreePtr();
+		}
+
+
+		// STATIC FUNCTIONS
+
+		STATIC RTYPEDFIELD<T> NULL_OBJECT()
+		{
+			STATIC TypedField<T> NULL_TYPEDFIELD;
+			return NULL_TYPEDFIELD;
+		}
+		
+		
+		// OPERATORS
+
+		VIRTUAL RTYPEDFIELD<T> operator =(RCVARLENGTHFIELD rValue)
+		{
+			*this = Field(rValue);
+			return *this;
+		}
+
+		VIRTUAL RTYPEDFIELD<T> operator =(RRVARLENGTHFIELD rValue)
+		{
+			*this = Field(rValue);
+			return *this;
+		}
+
+		VIRTUAL RTYPEDFIELD<T> operator =(RCDATUM rValue)
+		{
+			_Value = rValue;
+			return *this;
+		}
+
+
+		VIRTUAL operator UNSIGNED_TYPE(CONST T&)() const
+		{
+			return (UNSIGNED_TYPE(CONST T&))_Value;
+		}
+
+		VIRTUAL operator UNSIGNED_TYPE(T&)()
+		{
+			return (UNSIGNED_TYPE(T&))_Value;
+		}
+
+		VIRTUAL operator SIGNED_TYPE(CONST T&)() const
+		{
+			return (SIGNED_TYPE(CONST T&))_Value;
+		}
+
+		VIRTUAL operator SIGNED_TYPE(T&)()
+		{
+			return (SIGNED_TYPE(T&))_Value;
+		}
+
+
+		//  IField IMPLEMENTATIONS
+
+		VIRTUAL CONST DataSize GetDataSize() const
+		{
+			return static_cast<DataSize>(MASK(_DataType, DATA_SIZE_MASK));
+		}
+
+		VIRTUAL CONST DataType GetDataType() const
+		{
+			return _DataType;
+		}
+				
+		VIRTUAL CSIZE FieldSize() const
+		{
+			return SIZEOF(DataType) + this->ByteSize();
+		}
+
+		VIRTUAL CSIZE ByteSize() const
+		{
+			return sizeof(T);
+		}
+		
+		VIRTUAL PCBYTE Bytes() const
+		{
+			return _Value.Bytes;
+		}
+
+		VIRTUAL PCCHAR String() const
+		{
+			return _Value.String;
+		}
+
+
+		// META-MEMBERS
+
+		typedef T FieldType;
+
+
+	protected:
+		
+		// PROTECTED STATIC FUNCTIONS
+
+		STATIC CONSTEXPR const DataType FindDataType()
+		{
+			return DataType::BYTES_FIELD;
+		}
+
+		// INSTANCE VARIABLES
+		
+		BOOL _Dispose = FALSE;
+		
+		DATUM _Value;
+		DataType _DataType;
+	};
+
+#pragma endregion
+
+
+#pragma region VarLengthTypedField PARTIAL SPECIALIZATIONS
+
+	template<>
+	class VarLengthTypedField<PBYTE>
+	{
+	protected:
+		
+			// PROTECTED STATIC FUNCTIONS
+
+			STATIC CONSTEXPR const DataType FindDataType()
+			{
+				return DataType::BYTES_FIELD;
+			}
+	};
+
+	template<>
+	class VarLengthTypedField<PCHAR>
+	{
+	protected:
+		
+			// PROTECTED STATIC FUNCTIONS
+
+			STATIC CONSTEXPR const DataType FindDataType()
+			{
+				return DataType::STRING_FIELD;
+			}
+	};
+
+	template<>
+	class VarLengthTypedField<BOOL>
+	{
+	protected:
+		
+			// PROTECTED STATIC FUNCTIONS
+
+			STATIC CONSTEXPR const DataType FindDataType()
+			{
+				return DataType::BIT_FIELD;
+			}
+	};
+
+#pragma endregion
+*/
 }
 
 using namespace Foxetron;

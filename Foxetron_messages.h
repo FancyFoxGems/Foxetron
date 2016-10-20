@@ -147,9 +147,7 @@ namespace Foxetron
 #pragma endregion
 	
 
-#pragma region TYPE DECLARATIONS
-
-	// Message
+#pragma region Message DECLARATION
 
 	template<class TMessage, MessageCode TCode>
 	CLASS Message
@@ -162,26 +160,28 @@ namespace Foxetron
 		STATIC CONSTEXPR CSIZE DATASIZE = Message::SIZE();
 
 		Message();
-		Message(RFIELD);
-		Message(PFIELD);
+		Message(RIFIELD);
+		Message(PIFIELD);
 
 		VIRTUAL ~Message();
 
-		VIRTUAL RFIELD operator[](CSIZE);
+		VIRTUAL RIFIELD operator[](CSIZE);
 
 		VIRTUAL CSIZE ParamCount() CONST;
 
-		VIRTUAL RFIELD Param(CSIZE = 0) CONST;
+		VIRTUAL RIFIELD Param(CSIZE = 0) CONST;
 
 	protected:
 
 		BOOL _Dispose = FALSE;
 
-		PFIELD _Params;
+		PIFIELD _Params;
 	};
 
+#pragma endregion
+	
 
-	// REQUESTS
+#pragma region Request DECLARATIONS
 
 	CLASS Request : public Message<Request, MessageCode::REQUEST_TYPE> 
 	{
@@ -220,9 +220,10 @@ namespace Foxetron
 		typedef Message<StatusRequest, MessageCode::STATUS_REQUEST> TBASE;
 	};
 
+#pragma endregion
+	
 
-
-	// RESPONSES
+#pragma region Response DECLARATIONS
 
 	CLASS Response : public Message<Response, MessageCode::RESPONSE_TYPE>
 	{
