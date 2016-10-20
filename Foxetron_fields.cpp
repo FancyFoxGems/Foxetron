@@ -283,12 +283,12 @@ Field::Field(RRFIELD other)
 }
 
 Field::Field(RCDATUM value, DataType dataType) : _Value(value), _DataType(dataType) { }
-
-Field::Field(PBYTE value) : _Value(value), _DataType(DataType::BYTES_FIELD) { }
-
-Field::Field(PCHAR value) : _Value(value), _DataType(DataType::STRING_FIELD) { }
-
-Field::Field(PBITPACK value) : _Value(value), _DataType(DataType::BIT_FIELD) { }
+//
+//Field::Field(PBYTE value) : _Value(value), _DataType(DataType::BYTES_FIELD) { }
+//
+//Field::Field(PCHAR value) : _Value(value), _DataType(DataType::STRING_FIELD) { }
+//
+//Field::Field(PBITPACK value) : _Value(value), _DataType(DataType::BIT_FIELD) { }
 
 Field::Field(RCHAR value) : _Value(value), _DataType(DataType::CHAR_FIELD) { }
 
@@ -325,6 +325,15 @@ RFIELD Field::operator =(RCDATUM rValue)
 {
 	_Value = rValue;
 	return *this;
+}
+
+
+// STATIC FUNCTIONS
+
+RFIELD Field::NULL_OBJECT()
+{
+	STATIC Field NULL_FIELD;
+	return NULL_FIELD;
 }
 
 
@@ -436,15 +445,6 @@ Field::operator RCFLOAT() const
 Field::operator RFLOAT()
 {
 	return _Value;
-}
-
-
-// STATIC FUNCTIONS
-
-RFIELD Field::NULL_OBJECT()
-{
-	STATIC Field NULL_FIELD((PBYTE)0);
-	return NULL_FIELD;
 }
 
 

@@ -30,6 +30,10 @@ namespace Foxetron
 	typedef Field FIELD, * PFIELD, & RFIELD, ** PPFIELD, && RRFIELD;
 	typedef const Field CFIELD, * PCFIELD, & RCFIELD, ** PPCFIELD;
 
+	class VarLengthField;
+	typedef VarLengthField VARLENGTHFIELD, * PVARLENGTHFIELD, & RVARLENGTHFIELD, ** PPVARLENGTHFIELD, && RRVARLENGTHFIELD;
+	typedef const VarLengthField CVARLENGTHFIELD, * PCVARLENGTHFIELD, & RCVARLENGTHFIELD, ** PPCVARLENGTHFIELD;
+
 	template<typename T = Datum>
 	class TypedField;
 	template<typename T = Datum>
@@ -219,10 +223,6 @@ namespace Foxetron
 
 		Field(RCDATUM, DataType = DataType::BYTE_FIELD);
 
-		EXPLICIT Field(PBYTE);
-		EXPLICIT Field(PCHAR);
-		EXPLICIT Field(PBITPACK);
-
 		EXPLICIT Field(RCHAR);
 		EXPLICIT Field(RBYTE);
 		EXPLICIT Field(RBOOL);
@@ -232,8 +232,6 @@ namespace Foxetron
 		EXPLICIT Field(RDWORD);
 		EXPLICIT Field(RFLOAT);
 
-		VIRTUAL ~Field();
-
 
 		// STATIC FUNCTIONS
 
@@ -242,10 +240,10 @@ namespace Foxetron
 		
 		// OPERATORS
 
-		RFIELD operator =(RCFIELD);
-		RFIELD operator =(RRFIELD);
+		VIRTUAL RFIELD operator =(RCFIELD);
+		VIRTUAL RFIELD operator =(RRFIELD);
 
-		RFIELD operator =(RCDATUM);
+		VIRTUAL RFIELD operator =(RCDATUM);
 		
 		operator PCBYTE() const;
 		operator PBYTE();
@@ -290,6 +288,58 @@ namespace Foxetron
 
 		Datum _Value;
 		DataType _DataType;
+	};
+
+#pragma endregion
+
+
+#pragma region VarLengthField DECLARATION
+
+	CLASS VarLengthField : public virtual Field
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		VarLengthField(DataType = DataType::BYTE_FIELD);
+
+		VarLengthField(RCFIELD);
+		VarLengthField(RRFIELD);
+
+		VarLengthField(RCDATUM, DataType = DataType::BYTE_FIELD);
+
+		EXPLICIT VarLengthField(PBYTE);
+		EXPLICIT VarLengthField(PCHAR);
+		EXPLICIT VarLengthField(PBITPACK);
+
+		VIRTUAL ~VarLengthField();
+		
+		
+		// OPERATORS
+
+		VIRTUAL RFIELD operator =(RCFIELD);
+		VIRTUAL RFIELD operator =(RRFIELD);
+
+		VIRTUAL RFIELD operator =(RCDATUM);
+
+
+		// IField OVERRIDES
+
+		VIRTUAL CSIZE Size() const;
+		VIRTUAL CSIZE FieldSize() const;
+
+		VIRTUAL CONST DataSize GetDataSize() const;
+		VIRTUAL CONST DataType GetDataType() const;
+		
+		VIRTUAL PCBYTE Bytes() const;
+		VIRTUAL PCCHAR String() const;
+		
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		SIZE _DataSize;
 	};
 
 #pragma endregion
