@@ -390,9 +390,9 @@ namespace Foxetron
 
 		VarLengthField(RCDATUM, DataType = DataType::BYTES_FIELD);
 
-		EXPLICIT VarLengthField(PBYTE);
+		EXPLICIT VarLengthField(PBYTE, CSIZE = 0);
 		EXPLICIT VarLengthField(PCHAR);
-		EXPLICIT VarLengthField(PBITPACK);
+		EXPLICIT VarLengthField(PBITPACK, CSIZE = 0);
 
 		VIRTUAL ~VarLengthField();
 		
@@ -689,11 +689,15 @@ namespace Foxetron
 			new (this) VarLengthTypedField<T>(other._Value);
 		}
 
-		VarLengthTypedField(RCDATUM value)
+		VarLengthTypedField(RCDATUM value, CSIZE length = 0)
 		{
 			_Value = value;
 			_DataType = VarLengthTypedField<T>::FindDataType();
-			_Length = SIZEOF(*(PBYTE)_Value);
+
+			if (_DataType == DataType::STRING_FIELD)
+				_Length = strlen((PCCHAR)_Value);
+			else
+				_Length = length;
 		}
 
 		EXPLICIT VarLengthTypedField(T & value)

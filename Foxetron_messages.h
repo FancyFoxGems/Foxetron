@@ -236,11 +236,7 @@ namespace Foxetron
 	{
 	public:
 
-		NewAngleRequest(CWORD degrees) : Message()
-		{
-			WORD degreesVal = degrees;
-			_Params[1] = Field(degreesVal);
-		}
+		NewAngleRequest(RWORD);
 
 		CWORD Degrees() const;
 		
@@ -266,7 +262,7 @@ namespace Foxetron
 	{
 	public:
 
-		Response(CONST Error);
+		Response(Error &);
 
 		VIRTUAL CONST Error ErrorCode() const;
 		
@@ -282,7 +278,7 @@ namespace Foxetron
 	{
 	public:
 
-		AngleResponse(CONST WORD);
+		AngleResponse(RWORD);
 
 		CWORD Degrees() const;
 		
@@ -310,8 +306,6 @@ namespace Foxetron
 	protected:
 
 		typedef Message<StatusResponse, MessageCode::STATUS_RESPONSE> TBASE;
-
-		PCCHAR _StatusMessage;
 	};
 
 
@@ -319,15 +313,13 @@ namespace Foxetron
 	{
 	public:
 
-		ControllerStatusResponse(ControllerStatus, PCCHAR = NULL);
+		ControllerStatusResponse(ControllerStatus &, PCCHAR = NULL);
 
 		CONST ControllerStatus StatusCode() const;
 		
 	protected:
 
 		typedef Message<ControllerStatusResponse, MessageCode::CONTROLLER_STATUS> TBASE;
-
-		ControllerStatus _StatusCode = ControllerStatus::NONE;
 	};
 
 
@@ -335,15 +327,13 @@ namespace Foxetron
 	{
 	public:
 
-		DriverStatusResponse(DriverStatus, PCCHAR = NULL);
+		DriverStatusResponse(DriverStatus &, PCCHAR = NULL);
 		
 		CONST DriverStatus StatusCode() const;
 
 	protected:
 
 		typedef Message<DriverStatusResponse, MessageCode::DRIVER_STATUS> TBASE;
-
-		DriverStatus _StatusCode = DriverStatus::IDLE;
 	};
 
 #pragma endregion

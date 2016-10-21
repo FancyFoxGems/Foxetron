@@ -603,20 +603,14 @@ VarLengthField::VarLengthField(RCDATUM value, DataType dataType) : Field(value, 
 		_Length = SIZEOF(*(PBYTE)_Value);
 }
 
-VarLengthField::VarLengthField(PBYTE value) : Field(DataType::BYTES_FIELD)
-{
-	_Length = SIZEOF(*(PBYTE)_Value);
-}
+VarLengthField::VarLengthField(PBYTE value, CSIZE length) : Field(DataType::BYTES_FIELD), _Length(length) { }
 
 VarLengthField::VarLengthField(PCHAR value) : Field(DataType::STRING_FIELD)
 {
-	_Length = SIZEOF(*(PBYTE)_Value);
+	_Length = strlen(MAKE_CONST(value));
 }
 
-VarLengthField::VarLengthField(PBITPACK value) : Field(DataType::BIT_FIELD)
-{
-	_Length = SIZEOF(*(PBYTE)_Value);
-}
+VarLengthField::VarLengthField(PBITPACK value, CSIZE length) : Field(DataType::BIT_FIELD), _Length(length) { }
 
 VarLengthField::~VarLengthField()
 {

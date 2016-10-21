@@ -236,14 +236,15 @@ CSIZE Message<TMessage, MsgCode, ParamCnt>::ParamsStringSize() const
 }
 
 #pragma endregion
-/*
+
 
 #pragma region Request DEFINITIONS
 
 // NewAngleRequest
 
-NewAngleRequest::NewAngleRequest(CWORD degrees)
+NewAngleRequest::NewAngleRequest(RWORD degrees) : Message()
 {
+	_Params[1] = Field(degrees);
 }
 
 CWORD NewAngleRequest::Degrees() const
@@ -258,9 +259,9 @@ CWORD NewAngleRequest::Degrees() const
 
 // Response
 
-Response::Response(CONST Error)
+Response::Response(Error & error) : Message()
 {
-
+	_Params[1] = Field((RBYTE)error);
 }
 
 CONST Error Response::ErrorCode() const
@@ -271,8 +272,9 @@ CONST Error Response::ErrorCode() const
 
 // AngleResponse
 
-AngleResponse::AngleResponse(CWORD)
+AngleResponse::AngleResponse(RWORD degrees) : Message()
 {
+	_Params[1] = Field(degrees);
 }
 
 CONST WORD AngleResponse::Degrees() const
@@ -283,8 +285,9 @@ CONST WORD AngleResponse::Degrees() const
 
 // StatusResponse
 
-StatusResponse::StatusResponse(PCCHAR statusMsg) : _StatusMessage(statusMsg)
+StatusResponse::StatusResponse(PCCHAR statusMsg) : Message()
 {
+	_Params[1] = VarLengthField(UNCONST(statusMsg));
 }
 
 PCCHAR StatusResponse::StatusMessage() const
@@ -295,26 +298,25 @@ PCCHAR StatusResponse::StatusMessage() const
 
 // ControllerStatusResponse
 
-ControllerStatusResponse::ControllerStatusResponse(ControllerStatus controllerStatus, PCCHAR statusMsg) : StatusResponse(statusMsg)
+ControllerStatusResponse::ControllerStatusResponse(ControllerStatus & controllerStatus, PCCHAR statusMsg) : StatusResponse(statusMsg)
 {
 }
 
 CONST ControllerStatus ControllerStatusResponse::StatusCode() const
 {
-	return static_cast<CONST ControllerStatus>((BYTE)*reinterpret_cast<PIFIELD>(&StatusResponse::Param(0)));
+	return (ControllerStatus)0;//static_cast<CONST ControllerStatus>((BYTE)*reinterpret_cast<PFIELD>(&StatusResponse::Param(0)));
 }
 
 
 // DriverStatusResponse
 
-DriverStatusResponse::DriverStatusResponse(DriverStatus driverStatus, PCCHAR statusMsg) : StatusResponse(statusMsg)
+DriverStatusResponse::DriverStatusResponse(DriverStatus & driverStatus, PCCHAR statusMsg) : StatusResponse(statusMsg)
 {
 }
 
 CONST DriverStatus DriverStatusResponse::StatusCode() const
 {
-	return static_cast<CONST DriverStatus>((BYTE)*reinterpret_cast<PIFIELD>(&StatusResponse::Param(0)));
+	return (DriverStatus)0;//static_cast<CONST DriverStatus>((BYTE)*reinterpret_cast<PCFIELD>(&StatusResponse::Param(0)));
 }
 
 #pragma endregion
-*/
