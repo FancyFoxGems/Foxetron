@@ -242,9 +242,9 @@ CSIZE Message<TMessage, MsgCode, ParamCnt>::ParamsStringSize() const
 
 // NewAngleRequest
 
-NewAngleRequest::NewAngleRequest(RWORD degrees) : Message()
+NewAngleRequest::NewAngleRequest(CWORD degrees) : Request()
 {
-	_Params[1] = Field(degrees);
+	_Params[0] = Field(UNCONST(degrees));
 }
 
 CWORD NewAngleRequest::Degrees() const
@@ -259,9 +259,9 @@ CWORD NewAngleRequest::Degrees() const
 
 // Response
 
-Response::Response(Error & error) : Message()
+Response::Response(CONST Error error) : Message()
 {
-	_Params[1] = Field((RBYTE)error);
+	_Params[0] = Field((RBYTE)UNCONST(error));
 }
 
 CONST Error Response::ErrorCode() const
@@ -272,9 +272,9 @@ CONST Error Response::ErrorCode() const
 
 // AngleResponse
 
-AngleResponse::AngleResponse(RWORD degrees) : Message()
+AngleResponse::AngleResponse(CONST Error error, CWORD degrees) : Response(error)
 {
-	_Params[1] = Field(degrees);
+	_Params[1] = Field(UNCONST(degrees));
 }
 
 CONST WORD AngleResponse::Degrees() const
@@ -285,7 +285,7 @@ CONST WORD AngleResponse::Degrees() const
 
 // StatusResponse
 
-StatusResponse::StatusResponse(PCCHAR statusMsg) : Message()
+StatusResponse::StatusResponse(CONST Error error, PCCHAR statusMsg) : Response(error)
 {
 	_Params[1] = VarLengthField(UNCONST(statusMsg));
 }
@@ -298,8 +298,9 @@ PCCHAR StatusResponse::StatusMessage() const
 
 // ControllerStatusResponse
 
-ControllerStatusResponse::ControllerStatusResponse(ControllerStatus & controllerStatus, PCCHAR statusMsg) : StatusResponse(statusMsg)
+ControllerStatusResponse::ControllerStatusResponse(CONST Error error, CONST ControllerStatus controllerStatus, PCCHAR statusMsg) : StatusResponse(error, statusMsg)
 {
+	_Params[2] = Field((RBYTE)UNCONST(controllerStatus));
 }
 
 CONST ControllerStatus ControllerStatusResponse::StatusCode() const
@@ -310,8 +311,9 @@ CONST ControllerStatus ControllerStatusResponse::StatusCode() const
 
 // DriverStatusResponse
 
-DriverStatusResponse::DriverStatusResponse(DriverStatus & driverStatus, PCCHAR statusMsg) : StatusResponse(statusMsg)
+DriverStatusResponse::DriverStatusResponse(CONST Error error, CONST DriverStatus driverStatus, PCCHAR statusMsg) : StatusResponse(error, statusMsg)
 {
+	_Params[2] = Field((RBYTE)UNCONST(driverStatus));
 }
 
 CONST DriverStatus DriverStatusResponse::StatusCode() const
