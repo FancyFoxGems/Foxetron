@@ -37,13 +37,13 @@ CONSTEXPR CSIZE Message<TMessage, MsgCode, ParamCnt>::PARAM_COUNT()
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
 Message<TMessage, MsgCode, ParamCnt>::Message() : _Dispose(TRUE)
 {
-	_Params = new FIELD[ParamCnt];
+	_Params = new Field[ParamCnt];
 }
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
 Message<TMessage, MsgCode, ParamCnt>::Message(RIFIELD param) : _Dispose(TRUE)
 {
-	_Params = new FIELD[ParamCnt];
+	_Params = new Field[ParamCnt];
 	_Params[0] = param;
 }
 
@@ -63,7 +63,7 @@ Message<TMessage, MsgCode, ParamCnt>::~Message()
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
 RCIFIELD Message<TMessage, MsgCode, ParamCnt>::operator[](CSIZE i) const
 {
-	return this->Param(i);
+	return _Params[i];
 }
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
@@ -121,16 +121,16 @@ PCBYTE Message<TMessage, MsgCode, ParamCnt>::ToBytes() const
 	memcpy(bufferPtr, &paramsSize, SIZEOF(CSIZE));
 	bufferPtr += SIZEOF(CSIZE);
 
-	RCIFIELD param = Field::NULL_OBJECT();
-	CSIZE paramSize = 0;
+	PIFIELD param;
+	SIZE paramSize = 0;
 	
 
 	for (SIZE i = 0; i < this->PARAM_COUNT(); i++)
 	{
-		param = _Params[i];
-		paramSize = param.Size();
+		param = &_Params[i];
+		paramSize = param->Size();
 
-		memcpy(bufferPtr, param.ToBytes(), paramSize);
+		memcpy(bufferPtr, param->ToBytes(), paramSize);
 		bufferPtr += paramSize;
 	}
 
@@ -158,19 +158,19 @@ PCCHAR Message<TMessage, MsgCode, ParamCnt>::ToString() const
 	CSIZE paramsSize = this->ParamsStringSize();
 	memcpy(bufferPtr, &paramsSize, SIZEOF(CSIZE));
 	bufferPtr += SIZEOF(CSIZE);
-
-	RCIFIELD param = Field::NULL_OBJECT();
-	CSIZE paramSize = 0;
+	
+	PIFIELD param;
+	SIZE paramSize = 0;
 	
 
 	for (SIZE i = 0; i < this->PARAM_COUNT(); i++)
 	{
-		param = _Params[i];
-		paramSize = param.ByteWidth();
-		if (_Params[i].GetDataType() == DataType::STRING_FIELD)
+		param = &_Params[i];
+		paramSize = param->ByteWidth();
+		if (param->GetDataType() == DataType::STRING_FIELD)
 			paramSize -= 1;
 
-		memcpy(bufferPtr, param.ToString(), paramSize);
+		memcpy(bufferPtr, param->ToString(), paramSize);
 		bufferPtr += paramSize;
 	}
 
@@ -301,7 +301,7 @@ ControllerStatusResponse::ControllerStatusResponse(ControllerStatus controllerSt
 
 CONST ControllerStatus ControllerStatusResponse::StatusCode() const
 {
-	return static_cast<CONST ControllerStatus>((BYTE)*reinterpret_cast<PFIELD>(&StatusResponse::Param(0)));
+	return static_cast<CONST ControllerStatus>((BYTE)*reinterpret_cast<PIFIELD>(&StatusResponse::Param(0)));
 }
 
 
@@ -313,7 +313,7 @@ DriverStatusResponse::DriverStatusResponse(DriverStatus driverStatus, PCCHAR sta
 
 CONST DriverStatus DriverStatusResponse::StatusCode() const
 {
-	return static_cast<CONST DriverStatus>((BYTE)*reinterpret_cast<PFIELD>(&StatusResponse::Param(0)));
+	return static_cast<CONST DriverStatus>((BYTE)*reinterpret_cast<PIFIELD>(&StatusResponse::Param(0)));
 }
 
 #pragma endregion
