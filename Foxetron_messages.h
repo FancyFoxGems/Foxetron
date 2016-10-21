@@ -10,22 +10,18 @@
 #define _FOXETRON_MESSAGES_H
 
 
-#include "Foxetron_fields.h"
+#include "IttyBitty_messages.h"
+
+using namespace IttyBitty;
 
 
 namespace Foxetron
 {
 #pragma region GLOBAL CONSTANTS & VARIABLES
 
-	STATIC CONST CSIZE MESSAGE_MARKER_SIZE = 4;
-	STATIC CCHAR MESSAGE_MARKER[MESSAGE_MARKER_SIZE] = "FOX";
-
-	STATIC CWORD RX_BUFFER_SIZE = 128;
+	EXTERN CWORD RX_BUFFER_SIZE = 128;
 
 	EXTERN VCHAR RX[RX_BUFFER_SIZE];
-		
-	// Message::ToBytes() / ToString() BUFFER POINTER
-	EXTERN PBYTE __message_buffer;
 
 #pragma endregion
 
@@ -78,31 +74,6 @@ namespace Foxetron
 	
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-
-	//  Message
-
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-	class Message;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-	using MESSAGE = Message<TMessage, MsgCode, ParamCnt>;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-	using PMESSAGE = Message<TMessage, MsgCode, ParamCnt> *;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-	using RMESSAGE = Message<TMessage, MsgCode, ParamCnt> &;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-	using PPMESSAGE = Message<TMessage, MsgCode, ParamCnt> **;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-	using RRMESSAGE = Message<TMessage, MsgCode, ParamCnt> &&;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-	using CMESSAGE = const Message<TMessage, MsgCode, ParamCnt>;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-	using PCMESSAGE = const Message<TMessage, MsgCode, ParamCnt> *;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-	using RCMESSAGE = const Message<TMessage, MsgCode, ParamCnt> &;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-	using PPCMESSAGE = const Message<TMessage, MsgCode, ParamCnt> **;
-
-
 	// REQUESTS
 
 	class Request;
@@ -147,69 +118,6 @@ namespace Foxetron
 	class DriverStatusResponse;
 	typedef DriverStatusResponse DRIVERSTATUSRESPONSE, * PDRIVERSTATUSRESPONSE, & RDRIVERSTATUSRESPONSE;
 	typedef const DriverStatusResponse CDRIVERSTATUSRESPONSE, * PCDRIVERSTATUSRESPONSE, & RCDRIVERSTATUSRESPONSE;
-
-#pragma endregion
-	
-
-#pragma region Message DECLARATION
-
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt = 0>
-	CLASS Message : public ISerializable
-	{
-	public:
-
-		// STATIC CONSTEXPR METHODS
-
-		STATIC CONSTEXPR MessageCode MESSAGE_CODE();
-		STATIC CONSTEXPR CSIZE PARAM_COUNT();
-
-
-		// CONSTRUCTORS/DESTRUCTOR
-
-		Message();
-		Message(RIFIELD);
-		Message(PIFIELD);
-
-		VIRTUAL ~Message();
-
-
-		// OPERATORS
-
-		VIRTUAL RCIFIELD operator[](CSIZE) const;
-		VIRTUAL RIFIELD operator[](CSIZE);
-
-
-		// USER METHODS
-
-		VIRTUAL RIFIELD Param(CSIZE = 0);
-		
-
-		// ISerializable IMPLEMENTATION
-
-		VIRTUAL CSIZE Size() const;
-		VIRTUAL CSIZE ByteWidth() const;
-
-		VIRTUAL PCBYTE ToBytes() const;
-		VIRTUAL PCCHAR ToString() const;
-
-		VIRTUAL VOID LoadFromBytes(PCBYTE);
-		VIRTUAL VOID LoadFromString(PCCHAR);
-
-		VIRTUAL SIZE printTo(Print&) const;
-
-	protected:
-
-		// INSTANCE VARIABLES
-
-		BOOL _Dispose = FALSE;
-
-		PIFIELD _Params;
-		
-		// HELPER METHODS
-
-		VIRTUAL CSIZE ParamsSize() const;
-		VIRTUAL CSIZE ParamsStringSize() const;
-	};
 
 #pragma endregion
 

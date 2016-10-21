@@ -107,9 +107,6 @@
     <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h">
       <Filter>__vm</Filter>
     </ClInclude>
-    <ClInclude Include="..\Foxetron_fields.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\Foxetron_messages.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -137,13 +134,19 @@
     <ClInclude Include="..\IttyBitty\IttyBitty_bits.h">
       <Filter>Libraries</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_fields.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_info.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_messages.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty\IttyBitty_type_traits.h">
       <Filter>Libraries</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty\IttyBitty_util.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty\IttyBitty_info.h">
       <Filter>Libraries</Filter>
     </ClInclude>
   </ItemGroup>
@@ -274,6 +277,12 @@
     <ClCompile Include="..\IttyBitty\IttyBitty_bits.cpp">
       <Filter>Libraries</Filter>
     </ClCompile>
+    <ClCompile Include="..\IttyBitty\IttyBitty_fields.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty\IttyBitty_messages.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
     <ClCompile Include="Foxetron_LCD.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -281,9 +290,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="Foxetron_EEPROM.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Foxetron_fields.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Foxetron_messages.cpp">
