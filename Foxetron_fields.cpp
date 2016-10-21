@@ -267,6 +267,11 @@ VOID Datum::FreeData()
 
 #pragma region FieldBase DEFINITION
 
+// GLOBAL VARIABLES
+
+PBYTE Foxetron::__field_buffer;
+
+
 // DESTRUCTOR
 
 FieldBase::~FieldBase()

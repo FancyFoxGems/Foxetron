@@ -262,14 +262,14 @@ namespace Foxetron
 		IField() { }
 	};
 
-
-	// FieldBase::ToString() BUFFER POINTER
-	STATIC PBYTE __field_buffer;
-
 #pragma endregion
 
 
 #pragma region FieldBase DECLARATION
+		
+	// FieldBase::ToBytes() / ToString() BUFFER POINTER
+	EXTERN PBYTE __field_buffer;
+
 
 	CLASS FieldBase : public virtual IField
 	{
@@ -778,6 +778,7 @@ namespace Foxetron
 		using TypedField<T>::_Dispose;
 		using TypedField<T>::_Value;
 		using TypedField<T>::_DataType;
+		using TypedField<T>::__field_buffer;
 
 		
 		// PROTECTED STATIC FUNCTIONS

@@ -10,34 +10,47 @@
 
 #pragma region Message DEFINITION
 
+// GLOBAL VARIABLES
+
+VCHAR Foxetron::RX[RX_BUFFER_SIZE];
+
+PBYTE Foxetron::__message_buffer;
+
+
 // STATIC CONSTEXPR METHODS
 
-template<class TMessage, MessageCode TCode>
-CONSTEXPR MessageCode Message<TMessage, TCode>::TYPE()
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+CONSTEXPR MessageCode Message<TMessage, MsgCode, ParamCnt>::TYPE()
 {
-	return TCode;
+	return MsgCode;
+}
+
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+CONSTEXPR CSIZE Message<TMessage, MsgCode, ParamCnt>::PARAM_COUNT()
+{
+	return ParamCnt;
 }
 
 
 // CONSTRUCTORS/DESTRUCTOR
 
-template<class TMessage, MessageCode TCode>
-Message<TMessage, TCode>::Message()
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+Message<TMessage, MsgCode, ParamCnt>::Message()
 {
 }
 
-template<class TMessage, MessageCode TCode>
-Message<TMessage, TCode>::Message(RIFIELD)
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+Message<TMessage, MsgCode, ParamCnt>::Message(RIFIELD)
 {
 }
 
-template<class TMessage, MessageCode TCode>
-Message<TMessage, TCode>::Message(PIFIELD)
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+Message<TMessage, MsgCode, ParamCnt>::Message(PIFIELD)
 {
 }
 
-template<class TMessage, MessageCode TCode>
-Message<TMessage, TCode>::~Message()
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+Message<TMessage, MsgCode, ParamCnt>::~Message()
 {
 	if (_Params != NULL)
 		delete[] _Params;
@@ -46,8 +59,8 @@ Message<TMessage, TCode>::~Message()
 
 // OPERATORS
 
-template<class TMessage, MessageCode TCode>
-RIFIELD Message<TMessage, TCode>::operator[](CSIZE i)
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+RIFIELD Message<TMessage, MsgCode, ParamCnt>::operator[](CSIZE i)
 {
 	return this->Param(i);
 }
@@ -55,14 +68,8 @@ RIFIELD Message<TMessage, TCode>::operator[](CSIZE i)
 
 // USER METHODS
 
-template<class TMessage, MessageCode TCode>
-CSIZE Message<TMessage, TCode>::ParamCount() const
-{
-	return _Params == NULL ? 0 : static_cast<CSIZE>(COUNT(_Params));
-}
-
-template<class TMessage, MessageCode TCode>
-RIFIELD Message<TMessage, TCode>::Param(CSIZE i) const
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+RIFIELD Message<TMessage, MsgCode, ParamCnt>::Param(CSIZE i) const
 {
 	if (_Params == NULL)
 		return Field::NULL_OBJECT();
@@ -73,25 +80,25 @@ RIFIELD Message<TMessage, TCode>::Param(CSIZE i) const
 
 // ISerializable IMPLEMENTATION
 
-template<class TMessage, MessageCode TCode>
-CSIZE Message<TMessage, TCode>::Size() const
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+CSIZE Message<TMessage, MsgCode, ParamCnt>::Size() const
 {
 	SIZE size = SIZEOF(MESSAGE_MARKER) + SIZEOF(MessageCode);
 
-	for (SIZE i = 0; i < this->ParamCount(); i++)
+	for (SIZE i = 0; i < this->PARAM_COUNT(); i++)
 		size += _Params[i].Size();
 
 	return size;
 }
 		
-template<class TMessage, MessageCode TCode>
-PCBYTE Message<TMessage, TCode>::ToBytes() const
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+PCBYTE Message<TMessage, MsgCode, ParamCnt>::ToBytes() const
 {
 	return 0;
 }
 
-template<class TMessage, MessageCode TCode>
-PCCHAR Message<TMessage, TCode>::ToString() const
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+PCCHAR Message<TMessage, MsgCode, ParamCnt>::ToString() const
 {
 	CSIZE size = this->Size();
 	
@@ -109,14 +116,14 @@ PCCHAR Message<TMessage, TCode>::ToString() const
 	return __field_buffer;
 }
 
-template<class TMessage, MessageCode TCode>
-VOID Message<TMessage, TCode>::LoadFromBytes(PCBYTE data)
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+VOID Message<TMessage, MsgCode, ParamCnt>::LoadFromBytes(PCBYTE data)
 {
 	//_DataType = static_cast<DataType>(*data++);
 }
 
-template<class TMessage, MessageCode TCode>
-VOID Message<TMessage, TCode>::LoadFromString(PCCHAR data)
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+VOID Message<TMessage, MsgCode, ParamCnt>::LoadFromString(PCCHAR data)
 {
 	LoadFromBytes(reinterpret_cast<PCBYTE>(data));
 }

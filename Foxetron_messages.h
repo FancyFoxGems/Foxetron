@@ -22,6 +22,9 @@ namespace Foxetron
 	STATIC CWORD RX_BUFFER_SIZE = 100;
 
 	EXTERN VCHAR RX[RX_BUFFER_SIZE];
+		
+	// Message::ToBytes() / ToString() BUFFER POINTER
+	EXTERN PBYTE __message_buffer;
 
 #pragma endregion
 
@@ -77,26 +80,26 @@ namespace Foxetron
 
 	//  Message
 
-	template<class TMessage, MessageCode TCode>
+	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
 	class Message;
-	template<class TMessage, MessageCode TCode>
-	using MESSAGE = Message<TMessage, TCode>;
-	template<class TMessage, MessageCode TCode>
-	using PMESSAGE = Message<TMessage, TCode> *;
-	template<class TMessage, MessageCode TCode>
-	using RMESSAGE = Message<TMessage, TCode> &;
-	template<class TMessage, MessageCode TCode>
-	using PPMESSAGE = Message<TMessage, TCode> **;
-	template<class TMessage, MessageCode TCode>
-	using RRMESSAGE = Message<TMessage, TCode> &&;
-	template<class TMessage, MessageCode TCode>
-	using CMESSAGE = const Message<TMessage, TCode>;
-	template<class TMessage, MessageCode TCode>
-	using PCMESSAGE = const Message<TMessage, TCode> *;
-	template<class TMessage, MessageCode TCode>
-	using RCMESSAGE = const Message<TMessage, TCode> &;
-	template<class TMessage, MessageCode TCode>
-	using PPCMESSAGE = const Message<TMessage, TCode> **;
+	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	using MESSAGE = Message<TMessage, MsgCode, ParamCnt>;
+	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	using PMESSAGE = Message<TMessage, MsgCode, ParamCnt> *;
+	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	using RMESSAGE = Message<TMessage, MsgCode, ParamCnt> &;
+	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	using PPMESSAGE = Message<TMessage, MsgCode, ParamCnt> **;
+	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	using RRMESSAGE = Message<TMessage, MsgCode, ParamCnt> &&;
+	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	using CMESSAGE = const Message<TMessage, MsgCode, ParamCnt>;
+	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	using PCMESSAGE = const Message<TMessage, MsgCode, ParamCnt> *;
+	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	using RCMESSAGE = const Message<TMessage, MsgCode, ParamCnt> &;
+	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	using PPCMESSAGE = const Message<TMessage, MsgCode, ParamCnt> **;
 
 
 	// REQUESTS
@@ -149,7 +152,7 @@ namespace Foxetron
 
 #pragma region Message DECLARATION
 
-	template<class TMessage, MessageCode TCode>
+	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
 	CLASS Message : public virtual ISerializable
 	{
 	public:
@@ -157,6 +160,8 @@ namespace Foxetron
 		// STATIC CONSTEXPR METHODS
 
 		STATIC CONSTEXPR MessageCode TYPE();
+
+		STATIC CONSTEXPR CSIZE PARAM_COUNT();
 
 
 		// CONSTRUCTORS/DESTRUCTOR
@@ -174,8 +179,6 @@ namespace Foxetron
 
 
 		// ACCESSORS
-
-		VIRTUAL CSIZE ParamCount() CONST;
 
 		VIRTUAL RIFIELD Param(CSIZE = 0) CONST;
 		
@@ -197,6 +200,9 @@ namespace Foxetron
 		BOOL _Dispose = FALSE;
 
 		PIFIELD _Params;
+		
+		// ToBytes() / ToString() BUFFER POINTER
+		STATIC PBYTE __BUFFER;
 	};
 
 #pragma endregion
