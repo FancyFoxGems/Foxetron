@@ -124,7 +124,7 @@ namespace Foxetron
 
 #pragma region Request DECLARATIONS
 
-	CLASS Request : public Message<Request, (CBYTE)MessageCode::REQUEST_TYPE> 
+	CLASS Request : public Message<Request, MessageCode::REQUEST_TYPE> 
 	{
 	protected:
 		
@@ -134,7 +134,7 @@ namespace Foxetron
 	};
 
 
-	CLASS AngleRequest : public Message<AngleRequest, (CBYTE)MessageCode::ANGLE_REQUEST>, public Request
+	CLASS AngleRequest : public Message<AngleRequest, MessageCode::ANGLE_REQUEST>, public Request
 	{
 	protected:
 		
@@ -144,7 +144,7 @@ namespace Foxetron
 	};
 
 
-	CLASS NewAngleRequest : public Message<NewAngleRequest, 1, 1>, public Request
+	CLASS NewAngleRequest : public Message<NewAngleRequest, MessageCode::NEWANGLE_REQUEST, 1>, public Request
 	{
 	public:
 

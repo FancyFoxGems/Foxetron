@@ -28,7 +28,7 @@ NewAngleRequest::NewAngleRequest(CWORD degrees) : Request()
 
 CWORD NewAngleRequest::Degrees() const
 {
-	return 0;
+	return (CWORD)*reinterpret_cast<PFIELD>(&_Params[0]);
 }
 
 #pragma endregion
@@ -45,7 +45,7 @@ Response::Response(CONST Error error) : Message()
 
 CONST Error Response::ErrorCode() const
 {
-	return Error();
+	return static_cast<CONST Error>((BYTE)*reinterpret_cast<PFIELD>(&_Params[0]));
 }
 
 
@@ -56,9 +56,9 @@ AngleResponse::AngleResponse(CONST Error error, CWORD degrees) : Response(error)
 	_Params[1] = Field(UNCONST(degrees));
 }
 
-CONST WORD AngleResponse::Degrees() const
+CWORD AngleResponse::Degrees() const
 {
-	return 0;
+	return (CWORD)*reinterpret_cast<PFIELD>(&_Params[1]);
 }
 
 
@@ -71,7 +71,7 @@ StatusResponse::StatusResponse(CONST Error error, PCCHAR statusMsg) : Response(e
 
 PCCHAR StatusResponse::StatusMessage() const
 {
-	return nullptr;
+	return (PCCHAR)*reinterpret_cast<PVARLENGTHFIELD>(&_Params[1]);
 }
 
 
@@ -84,7 +84,7 @@ ControllerStatusResponse::ControllerStatusResponse(CONST Error error, CONST Cont
 
 CONST ControllerStatus ControllerStatusResponse::StatusCode() const
 {
-	return (ControllerStatus)0;//static_cast<CONST ControllerStatus>((BYTE)*reinterpret_cast<PFIELD>(&StatusResponse::Param(0)));
+	return static_cast<CONST ControllerStatus>((BYTE)*reinterpret_cast<PFIELD>(&_Params[2]));
 }
 
 
@@ -97,7 +97,7 @@ DriverStatusResponse::DriverStatusResponse(CONST Error error, CONST DriverStatus
 
 CONST DriverStatus DriverStatusResponse::StatusCode() const
 {
-	return (DriverStatus)0;//static_cast<CONST DriverStatus>((BYTE)*reinterpret_cast<PCFIELD>(&StatusResponse::Param(0)));
+	return static_cast<CONST DriverStatus>((BYTE)*reinterpret_cast<PCFIELD>(&_Params[2]));
 }
 
 #pragma endregion
