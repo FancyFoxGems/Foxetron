@@ -10,6 +10,8 @@
 #define _FOXETRON_FIELDS_H
 
 
+#include "Printable.h"
+
 #include "IttyBitty_bits.h"
 
 using namespace IttyBitty;
@@ -231,7 +233,7 @@ namespace Foxetron
 
 	// ISerializable DECLARATION
 
-	CLASS ISerializable
+	CLASS ISerializable : public Printable
 	{
 	public:
 
@@ -292,6 +294,8 @@ namespace Foxetron
 
 		VIRTUAL VOID LoadFromBytes(PCBYTE);
 		VIRTUAL VOID LoadFromString(PCCHAR);
+		
+		VIRTUAL SIZE printTo(Print&) const;
 
 
 		// IField IMPLEMENTATION
@@ -416,6 +420,8 @@ namespace Foxetron
 
 		VIRTUAL VOID LoadFromBytes(PCBYTE);
 		VIRTUAL VOID LoadFromString(PCCHAR);
+
+		VIRTUAL SIZE printTo(Print&) const;
 		
 
 	protected:
@@ -770,6 +776,15 @@ namespace Foxetron
 		{
 			_Length = static_cast<SIZE>(*data++);
 			TypedField<T>::LoadFromString(data);
+		}
+
+		VIRTUAL SIZE printTo(Print& printer) const
+		{
+			SIZE printed = printer.print(_Length);
+			printed += printer.print(_DataType);
+			printed += printer.print(reinterpret_cast<PCCHAR>(_Value.Bytes));
+	
+			return printed;
 		}
 
 

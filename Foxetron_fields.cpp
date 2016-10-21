@@ -316,8 +316,9 @@ PCCHAR FieldBase::ToString() const
 		delete[] __field_buffer;
 
 	__field_buffer = new BYTE[size + 1];
-
-	memcpy(__field_buffer, _Value.Bytes, size);
+	
+	memcpy(__field_buffer, &_DataType, SIZEOF(DataType));
+	memcpy(&__field_buffer[SIZEOF(DataType)], _Value.Bytes, size);
 	__field_buffer[size] = '\0';
 
 	return reinterpret_cast<PCCHAR>(__field_buffer);
@@ -332,6 +333,14 @@ VOID FieldBase::LoadFromBytes(PCBYTE data)
 VOID FieldBase::LoadFromString(PCCHAR data)
 {
 	LoadFromBytes(reinterpret_cast<PCBYTE>(data));
+}
+
+SIZE FieldBase::printTo(Print& printer) const
+{
+	SIZE printed = printer.print(_DataType);
+	printed += printer.print(reinterpret_cast<PCCHAR>(_Value.Bytes));
+	
+	return printed;
 }
 
 
@@ -716,6 +725,15 @@ VOID VarLengthField::LoadFromString(PCCHAR data)
 {
 	_Length = static_cast<SIZE>(*data++);
 	Field::LoadFromString(data);
+}
+
+SIZE VarLengthField::printTo(Print& printer) const
+{
+	SIZE printed = printer.print(_Length);
+	printed += printer.print(_DataType);
+	printed += printer.print(reinterpret_cast<PCCHAR>(_Value.Bytes));
+	
+	return printed;
 }
 
 #pragma endregion

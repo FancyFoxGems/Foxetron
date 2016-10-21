@@ -192,6 +192,20 @@ VOID Message<TMessage, MsgCode, ParamCnt>::LoadFromString(PCCHAR data)
 }
 
 
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+SIZE Message<TMessage, MsgCode, ParamCnt>::printTo(Print& printer) const
+{
+	SIZE printed = printer.print(MESSAGE_MARKER);
+	printed += printer.print(MsgCode);
+	printed += printer.print(this->ParamsStringSize());
+	
+	for (SIZE i = 0; i < this->PARAM_COUNT(); i++)
+		printed += _Params[i].printTo(printer);
+
+	return printed;
+}
+
+
 // HELPER METHODS
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>

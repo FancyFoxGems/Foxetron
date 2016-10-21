@@ -195,6 +195,8 @@ namespace Foxetron
 		VIRTUAL VOID LoadFromBytes(PCBYTE);
 		VIRTUAL VOID LoadFromString(PCCHAR);
 
+		VIRTUAL SIZE printTo(Print&) const;
+
 	protected:
 
 		// INSTANCE VARIABLES
