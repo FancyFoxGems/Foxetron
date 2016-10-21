@@ -7,10 +7,10 @@
 
 #include "Foxetron_messages.h"
 
+using namespace Foxetron;
+
 
 #pragma region GLOBAL VARIABLES
-
-//IttyBitty::MESSAGE_MARKER = "FOX";
 
 VCHAR Foxetron::RX[RX_BUFFER_SIZE];
 

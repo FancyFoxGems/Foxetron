@@ -19,7 +19,7 @@ namespace Foxetron
 {
 #pragma region GLOBAL CONSTANTS & VARIABLES
 
-	EXTERN CWORD RX_BUFFER_SIZE = 128;
+	CBYTE RX_BUFFER_SIZE = 128;
 
 	EXTERN VCHAR RX[RX_BUFFER_SIZE];
 
@@ -124,7 +124,7 @@ namespace Foxetron
 
 #pragma region Request DECLARATIONS
 
-	CLASS Request : public Message<Request, MessageCode::REQUEST_TYPE> 
+	CLASS Request : public Message<Request, (CBYTE)MessageCode::REQUEST_TYPE> 
 	{
 	protected:
 		
@@ -134,7 +134,7 @@ namespace Foxetron
 	};
 
 
-	CLASS AngleRequest : public Message<AngleRequest, MessageCode::ANGLE_REQUEST>, public Request
+	CLASS AngleRequest : public Message<AngleRequest, (CBYTE)MessageCode::ANGLE_REQUEST>, public Request
 	{
 	protected:
 		
@@ -144,13 +144,13 @@ namespace Foxetron
 	};
 
 
-	CLASS NewAngleRequest : public Message<NewAngleRequest, MessageCode::NEWANGLE_REQUEST, 1>, public Request
+	CLASS NewAngleRequest : public Message<NewAngleRequest, 1, 1>, public Request
 	{
 	public:
 
 		NewAngleRequest(CWORD);
 
-		CWORD Degrees() const;
+		VIRTUAL CWORD Degrees() const;
 		
 	protected:
 		
@@ -198,7 +198,7 @@ namespace Foxetron
 
 		AngleResponse(CONST Error, CWORD);
 
-		CWORD Degrees() const;
+		VIRTUAL CWORD Degrees() const;
 		
 	protected:
 		
@@ -223,7 +223,7 @@ namespace Foxetron
 
 		StatusResponse(CONST Error, PCCHAR);
 
-		PCCHAR StatusMessage() const;
+		VIRTUAL PCCHAR StatusMessage() const;
 		
 	protected:
 		
@@ -239,7 +239,7 @@ namespace Foxetron
 
 		ControllerStatusResponse(CONST Error, CONST ControllerStatus, PCCHAR = NULL);
 
-		CONST ControllerStatus StatusCode() const;
+		VIRTUAL CONST ControllerStatus StatusCode() const;
 		
 	protected:
 		
@@ -255,7 +255,7 @@ namespace Foxetron
 
 		DriverStatusResponse(CONST Error, CONST DriverStatus, PCCHAR = NULL);
 		
-		CONST DriverStatus StatusCode() const;
+		VIRTUAL CONST DriverStatus StatusCode() const;
 
 	protected:
 		
