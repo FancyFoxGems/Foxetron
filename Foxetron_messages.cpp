@@ -10,7 +10,7 @@
 
 #pragma region GLOBAL VARIABLES
 
-IttyBitty::MESSAGE_MARKER = "FOX";
+//IttyBitty::MESSAGE_MARKER = "FOX";
 
 VCHAR Foxetron::RX[RX_BUFFER_SIZE];
 

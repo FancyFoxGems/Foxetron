@@ -135,13 +135,13 @@
       <Filter>Libraries</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty\IttyBitty_fields.h">
-      <Filter>src</Filter>
+      <Filter>Libraries</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty\IttyBitty_info.h">
-      <Filter>src</Filter>
+      <Filter>Libraries</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty\IttyBitty_messages.h">
-      <Filter>src</Filter>
+      <Filter>Libraries</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty\IttyBitty_type_traits.h">
       <Filter>Libraries</Filter>
