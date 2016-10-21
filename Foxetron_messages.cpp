@@ -20,7 +20,7 @@ PBYTE Foxetron::__message_buffer;
 // STATIC CONSTEXPR METHODS
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-CONSTEXPR MessageCode Message<TMessage, MsgCode, ParamCnt>::TYPE()
+CONSTEXPR MessageCode Message<TMessage, MsgCode, ParamCnt>::MESSAGE_CODE()
 {
 	return MsgCode;
 }
@@ -35,19 +35,20 @@ CONSTEXPR CSIZE Message<TMessage, MsgCode, ParamCnt>::PARAM_COUNT()
 // CONSTRUCTORS/DESTRUCTOR
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-Message<TMessage, MsgCode, ParamCnt>::Message()
+Message<TMessage, MsgCode, ParamCnt>::Message() : _Dispose(TRUE)
 {
+	_Params = new FIELD[ParamCnt];
 }
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-Message<TMessage, MsgCode, ParamCnt>::Message(RIFIELD)
+Message<TMessage, MsgCode, ParamCnt>::Message(RIFIELD param) : _Dispose(TRUE)
 {
+	_Params = new FIELD[ParamCnt];
+	_Params[0] = param;
 }
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-Message<TMessage, MsgCode, ParamCnt>::Message(PIFIELD)
-{
-}
+Message<TMessage, MsgCode, ParamCnt>::Message(PIFIELD params) : _Params(params) { }
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
 Message<TMessage, MsgCode, ParamCnt>::~Message()
@@ -60,6 +61,12 @@ Message<TMessage, MsgCode, ParamCnt>::~Message()
 // OPERATORS
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+RCIFIELD Message<TMessage, MsgCode, ParamCnt>::operator[](CSIZE i) const
+{
+	return this->Param(i);
+}
+
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
 RIFIELD Message<TMessage, MsgCode, ParamCnt>::operator[](CSIZE i)
 {
 	return this->Param(i);
@@ -69,7 +76,7 @@ RIFIELD Message<TMessage, MsgCode, ParamCnt>::operator[](CSIZE i)
 // USER METHODS
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-RIFIELD Message<TMessage, MsgCode, ParamCnt>::Param(CSIZE i) const
+RIFIELD Message<TMessage, MsgCode, ParamCnt>::Param(CSIZE i)
 {
 	if (_Params == NULL)
 		return Field::NULL_OBJECT();
@@ -83,37 +90,93 @@ RIFIELD Message<TMessage, MsgCode, ParamCnt>::Param(CSIZE i) const
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
 CSIZE Message<TMessage, MsgCode, ParamCnt>::Size() const
 {
-	SIZE size = SIZEOF(MESSAGE_MARKER) + SIZEOF(MessageCode);
+	return MESSAGE_MARKER_SIZE + SIZEOF(MessageCode) + SIZEOF(CSIZE) + this->ParamsSize();
+}
 
-	for (SIZE i = 0; i < this->PARAM_COUNT(); i++)
-		size += _Params[i].Size();
-
-	return size;
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+CSIZE Message<TMessage, MsgCode, ParamCnt>::ByteWidth() const
+{
+	return MESSAGE_MARKER_SIZE + SIZEOF(MessageCode) + SIZEOF(CSIZE) + this->ParamsStringSize();
 }
 		
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
 PCBYTE Message<TMessage, MsgCode, ParamCnt>::ToBytes() const
 {
-	return 0;
+	CSIZE size = this->Size();
+
+	if (__message_buffer)
+		delete[] __message_buffer;
+
+	__message_buffer = new BYTE[size];
+
+	PBYTE bufferPtr = __message_buffer;
+		
+	memcpy(bufferPtr, &MESSAGE_MARKER, MESSAGE_MARKER_SIZE);
+	bufferPtr += MESSAGE_MARKER_SIZE;
+
+	MessageCode msgCode = MsgCode;
+	memcpy(bufferPtr++, &msgCode, SIZEOF(MessageCode));
+	
+	CSIZE paramsSize = this->ParamsSize();
+	memcpy(bufferPtr, &paramsSize, SIZEOF(CSIZE));
+	bufferPtr += SIZEOF(CSIZE);
+
+	RCIFIELD param = Field::NULL_OBJECT();
+	CSIZE paramSize = 0;
+	
+
+	for (SIZE i = 0; i < this->PARAM_COUNT(); i++)
+	{
+		param = _Params[i];
+		paramSize = param.Size();
+
+		memcpy(bufferPtr, param.ToBytes(), paramSize);
+		bufferPtr += paramSize;
+	}
+
+	return __message_buffer;
 }
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
 PCCHAR Message<TMessage, MsgCode, ParamCnt>::ToString() const
 {
-	CSIZE size = this->Size();
-	
-	if (__field_buffer == NULL || COUNT(__field_buffer) <= size)
-	{
-		if (__field_buffer)
-			delete[] __field_buffer;
+	CSIZE size = this->ByteWidth();
 
-		__field_buffer = new CHAR[size + 1];
+	if (__message_buffer)
+		delete[] __message_buffer;
+
+	__message_buffer = new BYTE[size];
+
+	PBYTE bufferPtr = __message_buffer;
+		
+	memcpy(bufferPtr, &MESSAGE_MARKER, MESSAGE_MARKER_SIZE - 1);
+	bufferPtr += MESSAGE_MARKER_SIZE - 1;
+
+	MessageCode msgCode = MsgCode;
+	memcpy(bufferPtr++, &msgCode, SIZEOF(MessageCode));
+	
+	CSIZE paramsSize = this->ParamsStringSize();
+	memcpy(bufferPtr, &paramsSize, SIZEOF(CSIZE));
+	bufferPtr += SIZEOF(CSIZE);
+
+	RCIFIELD param = Field::NULL_OBJECT();
+	CSIZE paramSize = 0;
+	
+
+	for (SIZE i = 0; i < this->PARAM_COUNT(); i++)
+	{
+		param = _Params[i];
+		paramSize = param.ByteWidth();
+		if (_Params[i].GetDataType() == DataType::STRING_FIELD)
+			paramSize -= 1;
+
+		memcpy(bufferPtr, param.ToString(), paramSize);
+		bufferPtr += paramSize;
 	}
 
-	memcpy(__field_buffer, "", size);
-	__field_buffer[size] = '\0';
+	__message_buffer[size] = '\0';
 
-	return __field_buffer;
+	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
 
 template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
@@ -126,6 +189,36 @@ template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
 VOID Message<TMessage, MsgCode, ParamCnt>::LoadFromString(PCCHAR data)
 {
 	LoadFromBytes(reinterpret_cast<PCBYTE>(data));
+}
+
+
+// HELPER METHODS
+
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+CSIZE Message<TMessage, MsgCode, ParamCnt>::ParamsSize() const
+{
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < this->PARAM_COUNT(); i++)
+		size += _Params[i].Size();
+
+	return size;
+}
+
+template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+CSIZE Message<TMessage, MsgCode, ParamCnt>::ParamsStringSize() const
+{
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < this->PARAM_COUNT(); i++)
+	{
+		size += _Params[i].ByteWidth();
+
+		if (_Params[i].GetDataType() == DataType::STRING_FIELD)
+			--size;
+	}
+
+	return size;
 }
 
 #pragma endregion

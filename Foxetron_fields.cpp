@@ -285,7 +285,12 @@ FieldBase::~FieldBase()
 
 CSIZE FieldBase::Size() const
 {
-	return SIZEOF(DataType) + this->ByteSize();
+	return SIZEOF(DataType) + this->ByteWidth();
+}
+
+CSIZE FieldBase::ByteWidth() const
+{
+	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
 }
 		
 PCBYTE FieldBase::ToBytes() const
@@ -298,14 +303,14 @@ PCBYTE FieldBase::ToBytes() const
 	__field_buffer = new BYTE[size];
 	
 	memcpy(__field_buffer, &_DataType, SIZEOF(DataType));
-	memcpy(&__field_buffer[SIZEOF(DataType)], _Value.Bytes, this->ByteSize());
+	memcpy(&__field_buffer[SIZEOF(DataType)], _Value.Bytes, this->ByteWidth());
 
 	return __field_buffer;
 }
 
 PCCHAR FieldBase::ToString() const
 {
-	CSIZE size = this->ByteSize();
+	CSIZE size = this->ByteWidth();
 
 	if (__field_buffer)
 		delete[] __field_buffer;
@@ -331,11 +336,6 @@ VOID FieldBase::LoadFromString(PCCHAR data)
 
 
 // IField IMPLEMENTATION
-
-CSIZE FieldBase::ByteSize() const
-{
-	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
-}
 
 CONST DataSize FieldBase::GetDataSize() const
 {
@@ -669,6 +669,14 @@ VarLengthField::operator PBITPACK()
 
 // Field OVERRIDES
 
+CSIZE VarLengthField::ByteWidth() const
+{
+	if (_Length > 0)
+		return _Length;
+
+	return Field::Size();
+}
+
 CSIZE VarLengthField::Size() const
 {
 	return sizeof(_Length) + Field::Size();
@@ -685,7 +693,7 @@ PCBYTE VarLengthField::ToBytes() const
 	
 	memcpy(__field_buffer, &_Length, SIZEOF(_Length));
 	memcpy(&__field_buffer[SIZEOF(_Length)], &_DataType, SIZEOF(DataType));
-	memcpy(&__field_buffer[SIZEOF(_Length) + SIZEOF(DataType)], _Value.Bytes, this->ByteSize());
+	memcpy(&__field_buffer[SIZEOF(_Length) + SIZEOF(DataType)], _Value.Bytes, this->ByteWidth());
 
 	return __field_buffer;
 }
@@ -708,14 +716,6 @@ VOID VarLengthField::LoadFromString(PCCHAR data)
 {
 	_Length = static_cast<SIZE>(*data++);
 	Field::LoadFromString(data);
-}
-
-CSIZE VarLengthField::ByteSize() const
-{
-	if (_Length > 0)
-		return _Length;
-
-	return Field::Size();
 }
 
 #pragma endregion

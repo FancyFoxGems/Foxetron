@@ -17,7 +17,8 @@ namespace Foxetron
 {
 #pragma region GLOBAL CONSTANTS & VARIABLES
 
-	STATIC CCHAR MESSAGE_MARKER[4] = "FOX";
+	STATIC CONST CSIZE MESSAGE_MARKER_SIZE = 4;
+	STATIC CCHAR MESSAGE_MARKER[MESSAGE_MARKER_SIZE] = "FOX";
 
 	STATIC CWORD RX_BUFFER_SIZE = 100;
 
@@ -159,8 +160,7 @@ namespace Foxetron
 
 		// STATIC CONSTEXPR METHODS
 
-		STATIC CONSTEXPR MessageCode TYPE();
-
+		STATIC CONSTEXPR MessageCode MESSAGE_CODE();
 		STATIC CONSTEXPR CSIZE PARAM_COUNT();
 
 
@@ -175,17 +175,19 @@ namespace Foxetron
 
 		// OPERATORS
 
+		VIRTUAL RCIFIELD operator[](CSIZE) const;
 		VIRTUAL RIFIELD operator[](CSIZE);
 
 
-		// ACCESSORS
+		// USER METHODS
 
-		VIRTUAL RIFIELD Param(CSIZE = 0) CONST;
+		VIRTUAL RIFIELD Param(CSIZE = 0);
 		
 
 		// ISerializable IMPLEMENTATION
 
 		VIRTUAL CSIZE Size() const;
+		VIRTUAL CSIZE ByteWidth() const;
 
 		VIRTUAL PCBYTE ToBytes() const;
 		VIRTUAL PCCHAR ToString() const;
@@ -201,8 +203,10 @@ namespace Foxetron
 
 		PIFIELD _Params;
 		
-		// ToBytes() / ToString() BUFFER POINTER
-		STATIC PBYTE __BUFFER;
+		// HELPER METHODS
+
+		VIRTUAL CSIZE ParamsSize() const;
+		VIRTUAL CSIZE ParamsStringSize() const;
 	};
 
 #pragma endregion
