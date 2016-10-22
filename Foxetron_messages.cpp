@@ -14,7 +14,7 @@ using namespace Foxetron;
 
 // NewAngleRequest
 
-NewAngleRequest::NewAngleRequest(CWORD degrees) : Request()
+NewAngleRequest::NewAngleRequest(CWORD degrees) : TBASE()
 {
 	_Params[0] = Field(UNCONST(degrees));
 }
@@ -31,7 +31,7 @@ CWORD NewAngleRequest::Degrees() const
 
 // Response
 
-Response::Response(CONST Error error) : Message()
+Response::Response(CONST Error error) : TBASE()
 {
 	_Params[0] = Field((RBYTE)UNCONST(error));
 }
@@ -44,8 +44,9 @@ CONST Error Response::ErrorCode() const
 
 // AngleResponse
 
-AngleResponse::AngleResponse(CONST Error error, CWORD degrees) : Response(error)
+AngleResponse::AngleResponse(CONST Error error, CWORD degrees) : TBASE()
 {
+	_Params[0] = Field((RBYTE)UNCONST(error));
 	_Params[1] = Field(UNCONST(degrees));
 }
 
@@ -57,8 +58,9 @@ CWORD AngleResponse::Degrees() const
 
 // StatusResponse
 
-StatusResponse::StatusResponse(CONST Error error, PCCHAR statusMsg) : Response(error)
+StatusResponse::StatusResponse(CONST Error error, PCCHAR statusMsg) : TBASE()
 {
+	_Params[0] = Field((RBYTE)UNCONST(error));
 	_Params[1] = VarLengthField(UNCONST(statusMsg));
 }
 
@@ -70,8 +72,10 @@ PCCHAR StatusResponse::StatusMessage() const
 
 // ControllerStatusResponse
 
-ControllerStatusResponse::ControllerStatusResponse(CONST Error error, CONST ControllerStatus controllerStatus, PCCHAR statusMsg) : StatusResponse(error, statusMsg)
+ControllerStatusResponse::ControllerStatusResponse(CONST Error error, CONST ControllerStatus controllerStatus, PCCHAR statusMsg) : TBASE()
 {
+	_Params[0] = Field((RBYTE)UNCONST(error));
+	_Params[1] = VarLengthField(UNCONST(statusMsg));
 	_Params[2] = Field((RBYTE)UNCONST(controllerStatus));
 }
 
@@ -83,8 +87,10 @@ CONST ControllerStatus ControllerStatusResponse::StatusCode() const
 
 // DriverStatusResponse
 
-DriverStatusResponse::DriverStatusResponse(CONST Error error, CONST DriverStatus driverStatus, PCCHAR statusMsg) : StatusResponse(error, statusMsg)
+DriverStatusResponse::DriverStatusResponse(CONST Error error, CONST DriverStatus driverStatus, PCCHAR statusMsg) : TBASE()
 {
+	_Params[0] = Field((RBYTE)UNCONST(error));
+	_Params[1] = VarLengthField(UNCONST(statusMsg));
 	_Params[2] = Field((RBYTE)UNCONST(driverStatus));
 }
 

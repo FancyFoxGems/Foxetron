@@ -86,6 +86,14 @@ namespace Foxetron
 
 	// RESPONSES
 
+	class IResponse;
+	typedef IResponse IRESPONSE, * PIRESPONSE, & RIRESPONSE;
+	typedef const IResponse CIRESPONSE, * PCIRESPONSE, & RCIRESPONSE;
+
+	class IStatusResponse;
+	typedef IStatusResponse ISTATUSRESPONSE, * PISTATUSRESPONSE, & RISTATUSRESPONSE;
+	typedef const IStatusResponse CISTATUSRESPONSE, * PCISTATUSRESPONSE, & RCISTATUSRESPONSE;
+
 	class Response;
 	typedef Response RESPONSE, * PRESPONSE, & RRESPONSE;
 	typedef const Response CRESPONSE, * PCRESPONSE, & RCRESPONSE;
@@ -115,49 +123,59 @@ namespace Foxetron
 
 #pragma region Request DECLARATIONS
 
-	CLASS Request : public Message<MessageCode::REQUEST_TYPE> 
-	{
-	protected:
-		
-		using Message<MessageCode::REQUEST_TYPE> ::_Params;
-
-		typedef Message<MessageCode::REQUEST_TYPE> TBASE;
-	};
-
-
-	CLASS AngleRequest : public Message<MessageCode::ANGLE_REQUEST>, public Request
-	{
-	protected:
-		
-		using Request::_Params;
-
-		typedef Message<MessageCode::ANGLE_REQUEST> TBASE;
-	};
-
-
-	CLASS NewAngleRequest : public Message<MessageCode::NEWANGLE_REQUEST, 1>, public Request
+	CLASS Request : public GenericMessage<MessageCode::REQUEST_TYPE> 
 	{
 	public:
+
+		typedef GenericMessage<MessageCode::REQUEST_TYPE> TBASE;
+
+
+	protected:
+		
+		using GenericMessage<MessageCode::REQUEST_TYPE> ::_Params;
+	};
+
+
+	CLASS AngleRequest : public GenericMessage<MessageCode::ANGLE_REQUEST>
+	{
+	public:
+
+		typedef GenericMessage<MessageCode::ANGLE_REQUEST> TBASE;
+
+
+	protected:
+		
+		using TBASE::_Params;
+	};
+
+
+	CLASS NewAngleRequest : public GenericMessage<MessageCode::NEWANGLE_REQUEST, 1>
+	{
+	public:
+
+		typedef GenericMessage<MessageCode::NEWANGLE_REQUEST, 1> TBASE;
 
 		NewAngleRequest(CWORD);
 
 		VIRTUAL CWORD Degrees() const;
+
 		
 	protected:
 		
-		using Request::_Params;
-
-		typedef Message<MessageCode::NEWANGLE_REQUEST, 1> TBASE;
+		using TBASE::_Params;
 	};
 
 
-	CLASS StatusRequest : public Message<MessageCode::STATUS_REQUEST>, public Request
+	CLASS StatusRequest : public GenericMessage<MessageCode::STATUS_REQUEST>
 	{
+	public:
+
+		typedef GenericMessage<MessageCode::STATUS_REQUEST> TBASE;
+
+
 	protected:
 		
-		using Request::_Params;
-
-		typedef Message<MessageCode::STATUS_REQUEST> TBASE;
+		using TBASE::_Params;
 	};
 
 #pragma endregion
@@ -165,94 +183,126 @@ namespace Foxetron
 
 #pragma region Response DECLARATIONS
 
-	CLASS Response : public Message<MessageCode::RESPONSE_TYPE, 1>
+	INTERFACE IResponse
 	{
 	public:
+
+		VIRTUAL CONST Error ErrorCode() const = 0;
+
+
+	protected:
+
+		IResponse() { }
+	};
+	
+
+	INTERFACE IStatusResponse : public virtual IResponse
+	{
+	public:
+
+		VIRTUAL PCCHAR StatusMessage() const;
+
+
+	protected:
+
+		IStatusResponse() { }
+	};
+
+
+	CLASS Response : public GenericMessage<MessageCode::RESPONSE_TYPE, 1>, public virtual IResponse
+	{
+	public:
+
+		typedef GenericMessage<MessageCode::RESPONSE_TYPE, 1> TBASE;
 
 		Response(CONST Error);
 
 		VIRTUAL CONST Error ErrorCode() const;
 		
+
 	protected:
-
-		using Message<MessageCode::RESPONSE_TYPE, 1>::_Params;
-
-		typedef Message<MessageCode::RESPONSE_TYPE, 1> TBASE;
-
-		Error _ErrorCode = Error::SUCCESS;
+		
+		using TBASE::_Params;
 	};
 
 
-	CLASS AngleResponse : public Message<MessageCode::ANGLE_RESPONSE, 2>, public Response
+	CLASS AngleResponse : public GenericMessage<MessageCode::ANGLE_RESPONSE, 2>, public virtual IResponse
 	{
 	public:
+
+		typedef GenericMessage<MessageCode::ANGLE_RESPONSE, 2> TBASE;
 
 		AngleResponse(CONST Error, CWORD);
 
 		VIRTUAL CWORD Degrees() const;
 		
+
 	protected:
 		
-		using Response::_Params;
-
-		typedef Message<MessageCode::ANGLE_RESPONSE, 2> TBASE;
+		using TBASE::_Params;
 	};
 
 
-	CLASS NewAngleResponse : public Message<MessageCode::NEWANGLE_RESPONSE, 1>, public Response
-	{
-	protected:
-		
-		using Response::_Params;
-
-		typedef Message<MessageCode::NEWANGLE_RESPONSE, 1> TBASE;
-	};
-
-	CLASS StatusResponse : public Message<MessageCode::STATUS_RESPONSE, 2>, public Response
+	CLASS NewAngleResponse : public GenericMessage<MessageCode::NEWANGLE_RESPONSE, 1>, public virtual IResponse
 	{
 	public:
+
+		typedef GenericMessage<MessageCode::NEWANGLE_RESPONSE, 1> TBASE;
+
+
+	protected:
+		
+		using TBASE::_Params;
+	};
+
+	CLASS StatusResponse : public GenericMessage<MessageCode::STATUS_RESPONSE, 2>, public virtual IStatusResponse
+	{
+	public:
+
+		typedef GenericMessage<MessageCode::STATUS_RESPONSE, 2> TBASE;
 
 		StatusResponse(CONST Error, PCCHAR);
 
 		VIRTUAL PCCHAR StatusMessage() const;
+
 		
 	protected:
 		
-		using Response::_Params;
-
-		typedef Message<MessageCode::STATUS_RESPONSE, 2> TBASE;
+		using TBASE::_Params;
 	};
 
-
-	CLASS ControllerStatusResponse : public Message<MessageCode::CONTROLLER_STATUS, 3>, public StatusResponse
+	
+	CLASS ControllerStatusResponse : public GenericMessage<MessageCode::CONTROLLER_STATUS, 3>, public virtual IStatusResponse
 	{
 	public:
+
+		typedef GenericMessage<MessageCode::CONTROLLER_STATUS, 3> TBASE;
 
 		ControllerStatusResponse(CONST Error, CONST ControllerStatus, PCCHAR = NULL);
 
 		VIRTUAL CONST ControllerStatus StatusCode() const;
+
 		
 	protected:
 		
-		using StatusResponse::_Params;
-
-		typedef Message<MessageCode::CONTROLLER_STATUS, 3> TBASE;
+		using TBASE::_Params;
 	};
 
 
-	CLASS DriverStatusResponse : public Message<MessageCode::DRIVER_STATUS, 3>, public StatusResponse
+	CLASS DriverStatusResponse : public GenericMessage<MessageCode::DRIVER_STATUS, 3>, public virtual IStatusResponse
 	{
 	public:
+
+		typedef GenericMessage<MessageCode::DRIVER_STATUS, 3> TBASE;
 
 		DriverStatusResponse(CONST Error, CONST DriverStatus, PCCHAR = NULL);
 		
 		VIRTUAL CONST DriverStatus StatusCode() const;
 
+
 	protected:
 		
-		using StatusResponse::_Params;
-
-		typedef Message<MessageCode::DRIVER_STATUS, 3> TBASE;
+		using TBASE::_Params;
 	};
 
 #pragma endregion
