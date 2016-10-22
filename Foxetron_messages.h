@@ -17,15 +17,6 @@ using namespace IttyBitty;
 
 namespace Foxetron
 {
-#pragma region GLOBAL CONSTANTS & VARIABLES
-
-	CBYTE RX_BUFFER_SIZE = 128;
-
-	EXTERN VCHAR RX[RX_BUFFER_SIZE];
-
-#pragma endregion
-
-
 #pragma region ENUMS
 
 	enum MessageCode : BYTE
@@ -124,27 +115,27 @@ namespace Foxetron
 
 #pragma region Request DECLARATIONS
 
-	CLASS Request : public Message<Request, MessageCode::REQUEST_TYPE> 
+	CLASS Request : public Message<MessageCode::REQUEST_TYPE> 
 	{
 	protected:
 		
-		using Message<Request, MessageCode::REQUEST_TYPE> ::_Params;
+		using Message<MessageCode::REQUEST_TYPE> ::_Params;
 
-		typedef Message<Request, MessageCode::REQUEST_TYPE> TBASE;
+		typedef Message<MessageCode::REQUEST_TYPE> TBASE;
 	};
 
 
-	CLASS AngleRequest : public Message<AngleRequest, MessageCode::ANGLE_REQUEST>, public Request
+	CLASS AngleRequest : public Message<MessageCode::ANGLE_REQUEST>, public Request
 	{
 	protected:
 		
 		using Request::_Params;
 
-		typedef Message<AngleRequest, MessageCode::ANGLE_REQUEST> TBASE;
+		typedef Message<MessageCode::ANGLE_REQUEST> TBASE;
 	};
 
 
-	CLASS NewAngleRequest : public Message<NewAngleRequest, MessageCode::NEWANGLE_REQUEST, 1>, public Request
+	CLASS NewAngleRequest : public Message<MessageCode::NEWANGLE_REQUEST, 1>, public Request
 	{
 	public:
 
@@ -156,17 +147,17 @@ namespace Foxetron
 		
 		using Request::_Params;
 
-		typedef Message<NewAngleRequest, MessageCode::NEWANGLE_REQUEST, 1> TBASE;
+		typedef Message<MessageCode::NEWANGLE_REQUEST, 1> TBASE;
 	};
 
 
-	CLASS StatusRequest : public Message<StatusRequest, MessageCode::STATUS_REQUEST>, public Request
+	CLASS StatusRequest : public Message<MessageCode::STATUS_REQUEST>, public Request
 	{
 	protected:
 		
 		using Request::_Params;
 
-		typedef Message<StatusRequest, MessageCode::STATUS_REQUEST> TBASE;
+		typedef Message<MessageCode::STATUS_REQUEST> TBASE;
 	};
 
 #pragma endregion
@@ -174,7 +165,7 @@ namespace Foxetron
 
 #pragma region Response DECLARATIONS
 
-	CLASS Response : public Message<Response, MessageCode::RESPONSE_TYPE, 1>
+	CLASS Response : public Message<MessageCode::RESPONSE_TYPE, 1>
 	{
 	public:
 
@@ -184,15 +175,15 @@ namespace Foxetron
 		
 	protected:
 
-		using Message<Response, MessageCode::RESPONSE_TYPE, 1>::_Params;
+		using Message<MessageCode::RESPONSE_TYPE, 1>::_Params;
 
-		typedef Message<Response, MessageCode::RESPONSE_TYPE, 1> TBASE;
+		typedef Message<MessageCode::RESPONSE_TYPE, 1> TBASE;
 
 		Error _ErrorCode = Error::SUCCESS;
 	};
 
 
-	CLASS AngleResponse : public Message<AngleResponse, MessageCode::ANGLE_RESPONSE, 2>, public Response
+	CLASS AngleResponse : public Message<MessageCode::ANGLE_RESPONSE, 2>, public Response
 	{
 	public:
 
@@ -204,20 +195,20 @@ namespace Foxetron
 		
 		using Response::_Params;
 
-		typedef Message<AngleResponse, MessageCode::ANGLE_RESPONSE, 2> TBASE;
+		typedef Message<MessageCode::ANGLE_RESPONSE, 2> TBASE;
 	};
 
 
-	CLASS NewAngleResponse : public Message<NewAngleResponse, MessageCode::NEWANGLE_RESPONSE, 1>, public Response
+	CLASS NewAngleResponse : public Message<MessageCode::NEWANGLE_RESPONSE, 1>, public Response
 	{
 	protected:
 		
 		using Response::_Params;
 
-		typedef Message<NewAngleResponse, MessageCode::NEWANGLE_RESPONSE, 1> TBASE;
+		typedef Message<MessageCode::NEWANGLE_RESPONSE, 1> TBASE;
 	};
 
-	CLASS StatusResponse : public Message<StatusResponse, MessageCode::STATUS_RESPONSE, 2>, public Response
+	CLASS StatusResponse : public Message<MessageCode::STATUS_RESPONSE, 2>, public Response
 	{
 	public:
 
@@ -229,11 +220,11 @@ namespace Foxetron
 		
 		using Response::_Params;
 
-		typedef Message<StatusResponse, MessageCode::STATUS_RESPONSE, 2> TBASE;
+		typedef Message<MessageCode::STATUS_RESPONSE, 2> TBASE;
 	};
 
 
-	CLASS ControllerStatusResponse : public Message<ControllerStatusResponse, MessageCode::CONTROLLER_STATUS, 3>, public StatusResponse
+	CLASS ControllerStatusResponse : public Message<MessageCode::CONTROLLER_STATUS, 3>, public StatusResponse
 	{
 	public:
 
@@ -245,11 +236,11 @@ namespace Foxetron
 		
 		using StatusResponse::_Params;
 
-		typedef Message<ControllerStatusResponse, MessageCode::CONTROLLER_STATUS, 3> TBASE;
+		typedef Message<MessageCode::CONTROLLER_STATUS, 3> TBASE;
 	};
 
 
-	CLASS DriverStatusResponse : public Message<DriverStatusResponse, MessageCode::DRIVER_STATUS, 3>, public StatusResponse
+	CLASS DriverStatusResponse : public Message<MessageCode::DRIVER_STATUS, 3>, public StatusResponse
 	{
 	public:
 
@@ -261,7 +252,7 @@ namespace Foxetron
 		
 		using StatusResponse::_Params;
 
-		typedef Message<DriverStatusResponse, MessageCode::DRIVER_STATUS, 3> TBASE;
+		typedef Message<MessageCode::DRIVER_STATUS, 3> TBASE;
 	};
 
 #pragma endregion

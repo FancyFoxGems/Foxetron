@@ -10,13 +10,6 @@
 using namespace Foxetron;
 
 
-#pragma region GLOBAL VARIABLES
-
-VCHAR Foxetron::RX[RX_BUFFER_SIZE];
-
-#pragma endregion
-
-
 #pragma region Request DEFINITIONS
 
 // NewAngleRequest
