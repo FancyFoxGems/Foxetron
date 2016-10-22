@@ -42,6 +42,8 @@
 #include "Foxetron_RGB.h"
 #include "Foxetron_EEPROM.h"
 
+using namespace Foxetron;
+
 // PROJECT LIBS
 //#include "libs/LiquidCrystal_I2C.custom.h"		// included by other project libs
 #include "libs/BigCrystal_I2C.custom.h"
@@ -135,8 +137,8 @@ VBOOL _LedButton5		= FALSE;	// Pin 8 / PB0 (PCINT0)
 
 // [FREE PIN: Pin A6 / ADC6]
 
-BOOL _modeSwitch		= FALSE;	// A7 / ADC7
-WORD _modeSwitchVal		= 0;
+BOOL _ModeSwitch		= FALSE;	// A7 / ADC7
+WORD _ModeSwitchVal		= 0;
 
 // Menu rotary encoder
 VBOOL _MenuEncoderA		= FALSE;	// Pin 14/A0 / PC0 (PCINT8)
@@ -154,11 +156,25 @@ VBOOL _ShiftButton		= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 // OUTPUTS
 
 // LEDs
-BYTE _RgbRed			= 0;		// Pin 9 / PB1
-BYTE _RgbGreen			= 0;		// Pin 10 / PB2
-BYTE _RgbBlue			= 0;		// Pin 11 / PB3
+VBYTE _RgbRed			= 0;		// Pin 9 / PB1
+VBYTE _RgbGreen			= 0;		// Pin 10 / PB2
+VBYTE _RgbBlue			= 0;		// Pin 11 / PB3
 
-BOOL _StatusLED			= LOW;		// Pin 13 / PB5
+VBOOL _StatusLED		= LOW;		// Pin 13 / PB5
+
+
+// STATE
+
+WORD _Degrees				= 0;
+WORD _DegreesNew			= 0;
+
+Error _ControllerError		= Error::SUCCESS;
+PCCHAR _ControllerStatusMsg	= NULL;
+ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
+
+Error _DriverError			= Error::SUCCESS;
+PCCHAR _DriverStatusMsg		= NULL;
+DriverStatus _DriverStatus	= DriverStatus::IDLE;
 
 #pragma endregion
 
@@ -187,7 +203,7 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	WaitForEvent(Serial, HandleEvent);
+	WaitForEvent(Serial, HandleMessage);
 }
 
 VOID loop()
@@ -305,9 +321,36 @@ VOID printLCDSplash()
 	LCD.clear();
 }
 
-VOID HandleEvent(PIMESSAGE message)
+VOID HandleMessage(PIMESSAGE message)
 {
+	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 
+	switch (msgCode)
+	{
+	case MessageCode::STATUS_REQUEST:
+
+		reinterpret_cast<PSTATUSREQUEST>(message)->Handle();
+		break;
+
+	case MessageCode::ANGLE_RESPONSE:
+
+		reinterpret_cast<PANGLERESPONSE>(message)->Handle(&_DriverError, &_Degrees);
+		break;
+
+	case MessageCode::NEWANGLE_RESPONSE:
+
+		reinterpret_cast<PANGLERESPONSE>(message)->Handle(&_DriverError);
+		break;
+
+	case MessageCode::DRIVER_STATUS:
+
+		reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(&_DriverError, &_DriverStatusMsg, &_DriverStatus);
+		break;
+
+	default:
+
+		break;
+	}
 }
 
 #pragma endregion
@@ -396,7 +439,7 @@ VOID DEBUG_printInputValues()
 		DDRB &= ~(1 << 0);
 	}
 
-	_modeSwitch = analogRead(7) > 500 ? TRUE : FALSE;
+	_ModeSwitch = analogRead(7) > 500 ? TRUE : FALSE;
 
 	_MenuEncoderA = digitalRead(14);
 	_MenuEncoderB = digitalRead(15);
@@ -434,7 +477,7 @@ VOID DEBUG_printInputValues()
 	// FRONT INPUTS
 
 	LCD.setCursor(4, 1);
-	LCD.print(itoa(_modeSwitchVal, valStr, 10));
+	LCD.print(itoa(_ModeSwitchVal, valStr, 10));
 
 	LCD.setCursor(8, 1);
 	LCD.print(itoa(_MenuEncoderA, valStr, 2));
@@ -464,9 +507,9 @@ VOID DEBUG_printInputValues()
 	Serial.print(itoa(_LedButton5, valStr, 2));
 	Serial.println();
 
-	Serial.print(itoa(_modeSwitchVal, valStr, 10));
+	Serial.print(itoa(_ModeSwitchVal, valStr, 10));
 	Serial.print(F(" / "));
-	Serial.print(itoa(_modeSwitch, valStr, 2));
+	Serial.print(itoa(_ModeSwitch, valStr, 2));
 	Serial.print(F(" "));
 	Serial.print(itoa(_MenuEncoderA, valStr, 2));
 	Serial.print(F(" "));

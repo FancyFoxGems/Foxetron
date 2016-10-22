@@ -37,6 +37,8 @@
 // PROJECT MODULES
 #include "Foxetron_messages.h"
 
+using namespace Foxetron;
+
 // PROJECT LIBS
 
 // 3RD-PARTY LIBS
@@ -98,6 +100,20 @@ VBOOL _LatchButton		= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 VBOOL _StatusLed		= LOW;
 VBOOL _ActionLed		= HIGH;
 
+
+// STATE
+
+WORD _Degrees				= 0;
+WORD _DegreesNew			= 0;
+
+Error _DriverError			= Error::SUCCESS;
+PCCHAR _DriverStatusMsg		= NULL;
+DriverStatus _DriverStatus	= DriverStatus::IDLE;
+
+Error _ControllerError		= Error::SUCCESS;
+PCCHAR _ControllerStatusMsg	= NULL;
+ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
+
 #pragma endregion
 
 
@@ -120,7 +136,7 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	WaitForEvent(Serial, HandleEvent);
+	WaitForEvent(Serial, HandleMessage);
 }
 
 VOID loop()
@@ -202,9 +218,36 @@ VOID initializeInterrupts()
 	EICRA |= 0b00000101;
 }
 
-VOID HandleEvent(PIMESSAGE message)
+VOID HandleMessage(PIMESSAGE message)
 {
+	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 
+	switch (msgCode)
+	{
+	case MessageCode::ANGLE_REQUEST:
+
+		reinterpret_cast<PANGLEREQUEST>(message)->Handle();
+		break;
+
+	case MessageCode::NEWANGLE_REQUEST:
+
+		reinterpret_cast<PANGLEREQUEST>(message)->Handle(&_DegreesNew);
+		break;
+
+	case MessageCode::STATUS_REQUEST:
+
+		reinterpret_cast<PSTATUSREQUEST>(message)->Handle();
+		break;
+
+	case MessageCode::CONTROLLER_STATUS:
+
+		reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(&_ControllerError, &_ControllerStatusMsg, &_ControllerStatus);
+		break;
+
+	default:
+
+		break;
+	}
 }
 
 #pragma endregion

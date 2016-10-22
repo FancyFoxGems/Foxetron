@@ -12,6 +12,26 @@ using namespace Foxetron;
 
 #pragma region Request DEFINITIONS
 
+// Request
+
+VOID Request::Handle(...)
+{
+	va_list args;
+	va_start(args, 0);
+	va_end(args);
+}
+
+
+// AngleRequest
+
+VOID AngleRequest::Handle(...)
+{
+	va_list args;
+	va_start(args, 0);
+	va_end(args);
+}
+
+
 // NewAngleRequest
 
 NewAngleRequest::NewAngleRequest(CWORD degrees) : TBASE()
@@ -23,6 +43,24 @@ CWORD NewAngleRequest::Degrees() const
 {
 	return (CWORD)*reinterpret_cast<PFIELD>(_Params[0]);
 }
+
+VOID NewAngleRequest::Handle(...)
+{
+	va_list args;
+	va_start(args, 0);
+	va_end(args);
+}
+
+
+// StatusRequest
+
+VOID StatusRequest::Handle(...)
+{
+	va_list args;
+	va_start(args, 0);
+	va_end(args);
+}
+
 
 #pragma endregion
 
@@ -41,6 +79,13 @@ CONST Error Response::ErrorCode() const
 	return static_cast<CONST Error>((BYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
 }
 
+VOID Response::Handle(...)
+{
+	va_list args;
+	va_start(args, 0);
+	va_end(args);
+}
+
 
 // AngleResponse
 
@@ -55,6 +100,23 @@ CWORD AngleResponse::Degrees() const
 	return (CWORD)*reinterpret_cast<PCFIELD>(_Params[1]);
 }
 
+VOID AngleResponse::Handle(...)
+{
+	va_list args;
+	va_start(args, 0);
+	va_end(args);
+}
+
+
+// NewAngleResponse
+
+VOID NewAngleResponse::Handle(...)
+{
+	va_list args;
+	va_start(args, 0);
+	va_end(args);
+}
+
 
 // StatusResponse
 
@@ -67,6 +129,13 @@ StatusResponse::StatusResponse(CONST Error error, PCCHAR statusMsg) : TBASE()
 PCCHAR StatusResponse::StatusMessage() const
 {
 	return (PCCHAR)*reinterpret_cast<PCVARLENGTHFIELD>(_Params[1]);
+}
+
+VOID StatusResponse::Handle(...)
+{
+	va_list args;
+	va_start(args, 0);
+	va_end(args);
 }
 
 
@@ -84,6 +153,13 @@ CONST ControllerStatus ControllerStatusResponse::StatusCode() const
 	return static_cast<CONST ControllerStatus>((BYTE)*reinterpret_cast<PCFIELD>(_Params[2]));
 }
 
+VOID ControllerStatusResponse::Handle(...)
+{
+	va_list args;
+	va_start(args, 0);
+	va_end(args);
+}
+
 
 // DriverStatusResponse
 
@@ -97,6 +173,13 @@ DriverStatusResponse::DriverStatusResponse(CONST Error error, CONST DriverStatus
 CONST DriverStatus DriverStatusResponse::StatusCode() const
 {
 	return static_cast<CONST DriverStatus>((BYTE)*reinterpret_cast<PCFIELD>(_Params[2]));
+}
+
+VOID DriverStatusResponse::Handle(...)
+{
+	va_list args;
+	va_start(args, 0);
+	va_end(args);
 }
 
 #pragma endregion

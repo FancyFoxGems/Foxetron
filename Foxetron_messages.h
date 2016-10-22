@@ -129,6 +129,8 @@ namespace Foxetron
 
 		typedef GenericMessage<MessageCode::REQUEST_TYPE> TBASE;
 
+		VIRTUAL VOID Handle(...);
+
 
 	protected:
 		
@@ -141,6 +143,8 @@ namespace Foxetron
 	public:
 
 		typedef GenericMessage<MessageCode::ANGLE_REQUEST> TBASE;
+
+		VIRTUAL VOID Handle(...);
 
 
 	protected:
@@ -159,6 +163,8 @@ namespace Foxetron
 
 		VIRTUAL CWORD Degrees() const;
 
+		VIRTUAL VOID Handle(...);
+
 		
 	protected:
 		
@@ -171,6 +177,8 @@ namespace Foxetron
 	public:
 
 		typedef GenericMessage<MessageCode::STATUS_REQUEST> TBASE;
+
+		VIRTUAL VOID Handle(...);
 
 
 	protected:
@@ -218,6 +226,8 @@ namespace Foxetron
 		Response(CONST Error);
 
 		VIRTUAL CONST Error ErrorCode() const;
+
+		VIRTUAL VOID Handle(...);
 		
 
 	protected:
@@ -235,7 +245,8 @@ namespace Foxetron
 		AngleResponse(CONST Error, CWORD);
 
 		VIRTUAL CWORD Degrees() const;
-		
+
+		VIRTUAL VOID Handle(...);
 
 	protected:
 		
@@ -248,6 +259,8 @@ namespace Foxetron
 	public:
 
 		typedef GenericMessage<MessageCode::NEWANGLE_RESPONSE, 1> TBASE;
+
+		VIRTUAL VOID Handle(...);
 
 
 	protected:
@@ -264,6 +277,8 @@ namespace Foxetron
 		StatusResponse(CONST Error, PCCHAR);
 
 		VIRTUAL PCCHAR StatusMessage() const;
+
+		VIRTUAL VOID Handle(...);
 
 		
 	protected:
@@ -282,6 +297,8 @@ namespace Foxetron
 
 		VIRTUAL CONST ControllerStatus StatusCode() const;
 
+		VIRTUAL VOID Handle(...);
+
 		
 	protected:
 		
@@ -298,6 +315,8 @@ namespace Foxetron
 		DriverStatusResponse(CONST Error, CONST DriverStatus, PCCHAR = NULL);
 		
 		VIRTUAL CONST DriverStatus StatusCode() const;
+
+		VIRTUAL VOID Handle(...);
 
 
 	protected:
