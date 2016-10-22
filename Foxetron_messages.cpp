@@ -38,7 +38,7 @@ Response::Response(CONST Error error) : TBASE()
 
 CONST Error Response::ErrorCode() const
 {
-	return static_cast<CONST Error>((BYTE)*reinterpret_cast<PFIELD>(_Params[0]));
+	return static_cast<CONST Error>((BYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
 }
 
 
@@ -52,7 +52,7 @@ AngleResponse::AngleResponse(CONST Error error, CWORD degrees) : TBASE()
 
 CWORD AngleResponse::Degrees() const
 {
-	return (CWORD)*reinterpret_cast<PFIELD>(_Params[1]);
+	return (CWORD)*reinterpret_cast<PCFIELD>(_Params[1]);
 }
 
 
@@ -66,7 +66,7 @@ StatusResponse::StatusResponse(CONST Error error, PCCHAR statusMsg) : TBASE()
 
 PCCHAR StatusResponse::StatusMessage() const
 {
-	return (PCCHAR)*reinterpret_cast<PVARLENGTHFIELD>(_Params[1]);
+	return (PCCHAR)*reinterpret_cast<PCVARLENGTHFIELD>(_Params[1]);
 }
 
 
@@ -81,7 +81,7 @@ ControllerStatusResponse::ControllerStatusResponse(CONST Error error, CONST Cont
 
 CONST ControllerStatus ControllerStatusResponse::StatusCode() const
 {
-	return static_cast<CONST ControllerStatus>((BYTE)*reinterpret_cast<PFIELD>(_Params[2]));
+	return static_cast<CONST ControllerStatus>((BYTE)*reinterpret_cast<PCFIELD>(_Params[2]));
 }
 
 

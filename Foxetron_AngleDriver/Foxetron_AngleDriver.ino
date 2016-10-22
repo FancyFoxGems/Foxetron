@@ -120,10 +120,12 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	while (Serial.available())
-	{
+	PIMESSAGE message = NULL;
 
-	}
+	if (!ReadMessage(Serial, message))
+		return;
+
+
 }
 
 VOID loop()
