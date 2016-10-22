@@ -187,10 +187,7 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	while (Serial.available())
-	{
-
-	}
+	WaitForEvent(Serial, HandleEvent);
 }
 
 VOID loop()
@@ -306,6 +303,11 @@ VOID printLCDSplash()
 	}
 
 	LCD.clear();
+}
+
+VOID HandleEvent(PIMESSAGE message)
+{
+
 }
 
 #pragma endregion

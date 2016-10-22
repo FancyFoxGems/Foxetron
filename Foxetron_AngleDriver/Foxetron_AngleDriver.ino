@@ -120,12 +120,7 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	PIMESSAGE message = NULL;
-
-	if (!ReadMessage(Serial, message))
-		return;
-
-
+	WaitForEvent(Serial, HandleEvent);
 }
 
 VOID loop()
@@ -205,6 +200,11 @@ VOID initializeInterrupts()
 	EIMSK |= 0b00000011;
 	EICRA &= 0b11110101;
 	EICRA |= 0b00000101;
+}
+
+VOID HandleEvent(PIMESSAGE message)
+{
+
 }
 
 #pragma endregion
