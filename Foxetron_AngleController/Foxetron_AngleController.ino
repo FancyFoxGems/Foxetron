@@ -203,7 +203,7 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	WaitForEvent(Serial, HandleMessage);
+	WaitForMessage(Serial, HandleMessage);
 }
 
 VOID loop()
