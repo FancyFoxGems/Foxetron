@@ -223,7 +223,7 @@ namespace Foxetron
 
 		typedef GenericMessage<MessageCode::RESPONSE_TYPE, 1> TBASE;
 
-		Response(CONST Error);
+		Response(Error &);
 
 		VIRTUAL CONST Error ErrorCode() const;
 
@@ -236,7 +236,7 @@ namespace Foxetron
 	};
 
 
-	CLASS AngleResponse : public GenericMessage<MessageCode::ANGLE_RESPONSE, 2>, public virtual IResponse
+	CLASS AngleResponse : public GenericMessage<MessageCode::ANGLE_RESPONSE, 2>//, public virtual IResponse
 	{
 	public:
 
@@ -254,7 +254,7 @@ namespace Foxetron
 	};
 
 
-	CLASS NewAngleResponse : public GenericMessage<MessageCode::NEWANGLE_RESPONSE, 1>, public virtual IResponse
+	CLASS NewAngleResponse : public GenericMessage<MessageCode::NEWANGLE_RESPONSE, 1>//, public virtual IResponse
 	{
 	public:
 
@@ -287,7 +287,7 @@ namespace Foxetron
 	};
 
 	
-	CLASS ControllerStatusResponse : public GenericMessage<MessageCode::CONTROLLER_STATUS, 3>, public virtual IStatusResponse
+	CLASS ControllerStatusResponse : public GenericMessage<MessageCode::CONTROLLER_STATUS, 3>//, public virtual IStatusResponse
 	{
 	public:
 
@@ -306,7 +306,7 @@ namespace Foxetron
 	};
 
 
-	CLASS DriverStatusResponse : public GenericMessage<MessageCode::DRIVER_STATUS, 3>, public virtual IStatusResponse
+	CLASS DriverStatusResponse : public GenericMessage<MessageCode::DRIVER_STATUS, 3>//, public virtual IStatusResponse
 	{
 	public:
 

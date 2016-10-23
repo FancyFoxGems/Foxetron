@@ -69,14 +69,14 @@ VOID StatusRequest::Handle(...)
 
 // Response
 
-Response::Response(CONST Error error) : TBASE()
+Response::Response(Error & error) : TBASE()
 {
-	_Params[0] = new Field((RBYTE)UNCONST(error));
+	_Params[0] = new Field((RBYTE)error);
 }
 
 CONST Error Response::ErrorCode() const
 {
-	return static_cast<CONST Error>((BYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
+	return static_cast<CONST Error>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
 }
 
 VOID Response::Handle(...)

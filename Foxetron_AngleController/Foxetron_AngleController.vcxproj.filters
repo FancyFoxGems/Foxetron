@@ -149,6 +149,9 @@
     <ClInclude Include="..\IttyBitty\IttyBitty_util.h">
       <Filter>Libraries</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_values.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\abi.cpp">
@@ -281,6 +284,9 @@
       <Filter>Libraries</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty\IttyBitty_messages.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty\IttyBitty_values.cpp">
       <Filter>Libraries</Filter>
     </ClCompile>
     <ClCompile Include="Foxetron_LCD.cpp">

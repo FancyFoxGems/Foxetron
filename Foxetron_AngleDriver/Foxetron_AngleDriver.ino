@@ -123,6 +123,8 @@ VOID setup()
 {
 	Serial.begin(SERIAL_BAUD_RATE);
 
+	_DriverError = Error::SUCCESS;
+
 	atexit(cleanUp);
 
 	initializePins();
@@ -141,15 +143,18 @@ VOID serialEvent()
 
 VOID loop()
 {
-	
-	PIMESSAGE msg = new Request();
+	Error * err = new Error();
+	*err = Error::SUCCESS;
+	PIMESSAGE msg = new Response(*err);
+	//PIMESSAGE msg = new Response(_DriverError);
 
-	msg->printTo(Serial);
 	Serial.println();
+	msg->printTo(Serial);
 
 	delete msg;
 
 	delay(2000);
+
 #ifdef DEBUG_INPUTS
 	_DEBUG_printInputValues();
 #endif
