@@ -41,7 +41,7 @@
       <AdditionalIncludeDirectories>C:\RC\Sketchbook\libraries\HalfStepper;C:\RC\Sketchbook\libraries\Stepper;C:\RC\Sketchbook\libraries\HalfStepper\utility;C:\RC\Sketchbook\libraries\Stepper\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\Foxetron\Foxetron_AngleDriver;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\libraries\HalfStepper;C:\RC\Sketchbook\libraries\Stepper;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\iyanzvn1.cat\Micro Platforms\default\debuggers;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\tools\avr/avr/include/;C:\Program Files (x86)\Arduino\hardware\tools\avr//avr/include/avr/;C:\Program Files (x86)\Arduino\hardware\tools\avr/lib\gcc\avr\4.8.1\include;C:\RC\Sketchbook\Foxetron;C:\RC\Sketchbook\Foxetron\IttyBitty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>C:\RC\Sketchbook\Foxetron\Foxetron_AngleDriver\__vm\.Foxetron_AngleDriver.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;F_CPU=16000000L;ARDUINO=10608;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;__cplusplus=201103L;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;DEBUG;F_CPU=16000000L;ARDUINO=10608;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;__cplusplus=201103L;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -83,7 +83,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties vm.upload.useprogrammer="0" arduino.build.auto_discover_includes="1" VM_ReCompileCoreOnProjectMacroChange="" arduino.upload.port="COM19" VM_ADDITIONAL_COMPILER_FLAGS="-Wno-unknown-pragmas" />
+      <UserProperties vm.upload.useprogrammer="0" arduino.build.auto_discover_includes="1" VM_ReCompileCoreOnProjectMacroChange="" arduino.upload.port="COM19" VM_ADDITIONAL_PREPROC="DEBUG" VM_ADDITIONAL_COMPILER_FLAGS="-Wno-unknown-pragmas" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

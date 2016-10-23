@@ -141,6 +141,15 @@ VOID serialEvent()
 
 VOID loop()
 {
+	
+	PIMESSAGE msg = new Request();
+
+	msg->printTo(Serial);
+	Serial.println();
+
+	delete msg;
+
+	delay(2000);
 #ifdef DEBUG_INPUTS
 	_DEBUG_printInputValues();
 #endif

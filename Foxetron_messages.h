@@ -123,7 +123,7 @@ namespace Foxetron
 
 #pragma region Request DECLARATIONS
 
-	CLASS Request : public GenericMessage<MessageCode::REQUEST_TYPE> 
+	CLASS Request : public GenericMessage<MessageCode::REQUEST_TYPE>
 	{
 	public:
 
@@ -134,7 +134,7 @@ namespace Foxetron
 
 	protected:
 		
-		using GenericMessage<MessageCode::REQUEST_TYPE> ::_Params;
+		using TBASE::_Params;
 	};
 
 
