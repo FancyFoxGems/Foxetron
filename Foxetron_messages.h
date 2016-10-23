@@ -60,6 +60,18 @@ namespace Foxetron
 		IDLE
 	};
 
+	typedef enum MessageCode * PMESSAGECODE, & RMESSAGECODE;
+	typedef const enum MessageCode * PCMESSAGECODE, & RCMESSAGECODE;
+
+	typedef enum Error * PERROR, & RERROR;
+	typedef const enum Error * PCERROR, & RCERROR;
+
+	typedef enum ControllerStatus * PCONTROLLERSTATUS, & RCONTROLLERSTATUS;
+	typedef const enum ControllerStatus * PCCONTROLLERSTATUS, & RCCONTROLLERSTATUS;
+
+	typedef enum DriverStatus * PDRIVERSTATUS, & RDRIVERSTATUS;
+	typedef const enum DriverStatus * PCDRIVERSTATUS, & RCDRIVERSTATUS;
+
 #pragma endregion
 
 	
@@ -159,9 +171,9 @@ namespace Foxetron
 
 		typedef GenericMessage<MessageCode::NEWANGLE_REQUEST, 1> TBASE;
 
-		NewAngleRequest(CWORD);
+		NewAngleRequest(RCWORD);
 
-		VIRTUAL CWORD Degrees() const;
+		VIRTUAL RCWORD Degrees() const;
 
 		VIRTUAL VOID Handle(...);
 
@@ -195,7 +207,7 @@ namespace Foxetron
 	{
 	public:
 
-		VIRTUAL CONST Error ErrorCode() const = 0;
+		VIRTUAL RCERROR ErrorCode() const = 0;
 
 
 	protected:
@@ -223,9 +235,9 @@ namespace Foxetron
 
 		typedef GenericMessage<MessageCode::RESPONSE_TYPE, 1> TBASE;
 
-		Response(Error &);
+		Response(RCERROR);
 
-		VIRTUAL CONST Error ErrorCode() const;
+		VIRTUAL RCERROR ErrorCode() const;
 
 		VIRTUAL VOID Handle(...);
 		
@@ -236,15 +248,17 @@ namespace Foxetron
 	};
 
 
-	CLASS AngleResponse : public GenericMessage<MessageCode::ANGLE_RESPONSE, 2>//, public virtual IResponse
+	CLASS AngleResponse : public GenericMessage<MessageCode::ANGLE_RESPONSE, 2>, public virtual IResponse
 	{
 	public:
 
 		typedef GenericMessage<MessageCode::ANGLE_RESPONSE, 2> TBASE;
 
-		AngleResponse(CONST Error, CWORD);
+		AngleResponse(RCERROR, RCWORD);
 
-		VIRTUAL CWORD Degrees() const;
+		VIRTUAL RCERROR ErrorCode() const;
+
+		VIRTUAL RCWORD Degrees() const;
 
 		VIRTUAL VOID Handle(...);
 
@@ -254,11 +268,15 @@ namespace Foxetron
 	};
 
 
-	CLASS NewAngleResponse : public GenericMessage<MessageCode::NEWANGLE_RESPONSE, 1>//, public virtual IResponse
+	CLASS NewAngleResponse : public GenericMessage<MessageCode::NEWANGLE_RESPONSE, 1>, public virtual IResponse
 	{
 	public:
 
 		typedef GenericMessage<MessageCode::NEWANGLE_RESPONSE, 1> TBASE;
+
+		NewAngleResponse(RCERROR);
+
+		VIRTUAL RCERROR ErrorCode() const;
 
 		VIRTUAL VOID Handle(...);
 
@@ -274,7 +292,9 @@ namespace Foxetron
 
 		typedef GenericMessage<MessageCode::STATUS_RESPONSE, 2> TBASE;
 
-		StatusResponse(CONST Error, PCCHAR);
+		StatusResponse(RCERROR, PCCHAR);
+
+		VIRTUAL RCERROR ErrorCode() const;
 
 		VIRTUAL PCCHAR StatusMessage() const;
 
@@ -287,15 +307,19 @@ namespace Foxetron
 	};
 
 	
-	CLASS ControllerStatusResponse : public GenericMessage<MessageCode::CONTROLLER_STATUS, 3>//, public virtual IStatusResponse
+	CLASS ControllerStatusResponse : public GenericMessage<MessageCode::CONTROLLER_STATUS, 3>, public virtual IStatusResponse
 	{
 	public:
 
 		typedef GenericMessage<MessageCode::CONTROLLER_STATUS, 3> TBASE;
 
-		ControllerStatusResponse(CONST Error, CONST ControllerStatus, PCCHAR = NULL);
+		ControllerStatusResponse(RCERROR, RCCONTROLLERSTATUS, PCCHAR = NULL);
 
-		VIRTUAL CONST ControllerStatus StatusCode() const;
+		VIRTUAL RCERROR ErrorCode() const;
+
+		VIRTUAL PCCHAR StatusMessage() const;
+
+		VIRTUAL RCCONTROLLERSTATUS StatusCode() const;
 
 		VIRTUAL VOID Handle(...);
 
@@ -306,15 +330,19 @@ namespace Foxetron
 	};
 
 
-	CLASS DriverStatusResponse : public GenericMessage<MessageCode::DRIVER_STATUS, 3>//, public virtual IStatusResponse
+	CLASS DriverStatusResponse : public GenericMessage<MessageCode::DRIVER_STATUS, 3>, public virtual IStatusResponse
 	{
 	public:
 
 		typedef GenericMessage<MessageCode::DRIVER_STATUS, 3> TBASE;
 
-		DriverStatusResponse(CONST Error, CONST DriverStatus, PCCHAR = NULL);
+		DriverStatusResponse(RCERROR, RCDRIVERSTATUS, PCCHAR = NULL);
+
+		VIRTUAL RCERROR ErrorCode() const;
+
+		VIRTUAL PCCHAR StatusMessage() const;
 		
-		VIRTUAL CONST DriverStatus StatusCode() const;
+		VIRTUAL RCDRIVERSTATUS StatusCode() const;
 
 		VIRTUAL VOID Handle(...);
 

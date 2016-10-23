@@ -106,8 +106,7 @@ VBOOL _ActionLed		= HIGH;
 WORD _Degrees				= 0;
 WORD _DegreesNew			= 0;
 
-Error _DriverError			= Error::SUCCESS;
-PCCHAR _DriverStatusMsg		= NULL;
+Error * _ERROR				= NULL;
 DriverStatus _DriverStatus	= DriverStatus::IDLE;
 
 Error _ControllerError		= Error::SUCCESS;
@@ -122,8 +121,6 @@ ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 VOID setup()
 {
 	Serial.begin(SERIAL_BAUD_RATE);
-
-	_DriverError = Error::SUCCESS;
 
 	atexit(cleanUp);
 
@@ -142,18 +139,14 @@ VOID serialEvent()
 }
 
 VOID loop()
-{
-	Error * err = new Error();
-	*err = Error::SUCCESS;
-	PIMESSAGE msg = new Response(*err);
-	//PIMESSAGE msg = new Response(_DriverError);
-
+{	
+	if (_ERROR == NULL)
+		_ERROR = new Error();
+	
 	Serial.println();
-	msg->printTo(Serial);
+	Serial.print(NewAngleRequest(300));
 
-	delete msg;
-
-	delay(2000);
+	delay(1000);
 
 #ifdef DEBUG_INPUTS
 	_DEBUG_printInputValues();

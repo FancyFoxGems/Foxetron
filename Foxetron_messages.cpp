@@ -34,14 +34,14 @@ VOID AngleRequest::Handle(...)
 
 // NewAngleRequest
 
-NewAngleRequest::NewAngleRequest(CWORD degrees) : TBASE()
+NewAngleRequest::NewAngleRequest(RCWORD degrees) : TBASE()
 {
-	_Params[0] = new Field(UNCONST(degrees));
+	_Params[0] = new Field(degrees);
 }
 
-CWORD NewAngleRequest::Degrees() const
+RCWORD NewAngleRequest::Degrees() const
 {
-	return (CWORD)*reinterpret_cast<PFIELD>(_Params[0]);
+	return (RCWORD)*reinterpret_cast<PFIELD>(_Params[0]);
 }
 
 VOID NewAngleRequest::Handle(...)
@@ -69,14 +69,14 @@ VOID StatusRequest::Handle(...)
 
 // Response
 
-Response::Response(Error & error) : TBASE()
+Response::Response(RCERROR error) : TBASE()
 {
-	_Params[0] = new Field((RBYTE)error);
+	_Params[0] = new Field((BYTE)error);
 }
 
-CONST Error Response::ErrorCode() const
+RCERROR Response::ErrorCode() const
 {
-	return static_cast<CONST Error>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
+	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
 }
 
 VOID Response::Handle(...)
@@ -89,15 +89,20 @@ VOID Response::Handle(...)
 
 // AngleResponse
 
-AngleResponse::AngleResponse(CONST Error error, CWORD degrees) : TBASE()
+AngleResponse::AngleResponse(RCERROR error, RCWORD degrees) : TBASE()
 {
-	_Params[0] = new Field((RBYTE)UNCONST(error));
-	_Params[1] = new Field(UNCONST(degrees));
+	_Params[0] = new Field((BYTE)error);
+	_Params[1] = new Field(degrees);
 }
 
-CWORD AngleResponse::Degrees() const
+RCERROR AngleResponse::ErrorCode() const
 {
-	return (CWORD)*reinterpret_cast<PCFIELD>(_Params[1]);
+	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
+}
+
+RCWORD AngleResponse::Degrees() const
+{
+	return (RCWORD)*reinterpret_cast<PCFIELD>(_Params[1]);
 }
 
 VOID AngleResponse::Handle(...)
@@ -110,6 +115,11 @@ VOID AngleResponse::Handle(...)
 
 // NewAngleResponse
 
+RCERROR NewAngleResponse::ErrorCode() const
+{
+	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
+}
+
 VOID NewAngleResponse::Handle(...)
 {
 	va_list args;
@@ -120,10 +130,15 @@ VOID NewAngleResponse::Handle(...)
 
 // StatusResponse
 
-StatusResponse::StatusResponse(CONST Error error, PCCHAR statusMsg) : TBASE()
+StatusResponse::StatusResponse(RCERROR error, PCCHAR statusMsg) : TBASE()
 {
-	_Params[0] = new Field((RBYTE)UNCONST(error));
-	_Params[1] = new VarLengthField(UNCONST(statusMsg));
+	_Params[0] = new Field((BYTE)error);
+	_Params[1] = new VarLengthField(statusMsg);
+}
+
+RCERROR StatusResponse::ErrorCode() const
+{
+	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
 }
 
 PCCHAR StatusResponse::StatusMessage() const
@@ -141,16 +156,26 @@ VOID StatusResponse::Handle(...)
 
 // ControllerStatusResponse
 
-ControllerStatusResponse::ControllerStatusResponse(CONST Error error, CONST ControllerStatus controllerStatus, PCCHAR statusMsg) : TBASE()
+ControllerStatusResponse::ControllerStatusResponse(RCERROR error, RCCONTROLLERSTATUS controllerStatus, PCCHAR statusMsg) : TBASE()
 {
-	_Params[0] = new Field((RBYTE)UNCONST(error));
-	_Params[1] = new VarLengthField(UNCONST(statusMsg));
-	_Params[2] = new Field((RBYTE)UNCONST(controllerStatus));
+	_Params[0] = new Field((BYTE)error);
+	_Params[1] = new VarLengthField(statusMsg);
+	_Params[2] = new Field((BYTE)controllerStatus);
 }
 
-CONST ControllerStatus ControllerStatusResponse::StatusCode() const
+RCERROR ControllerStatusResponse::ErrorCode() const
 {
-	return static_cast<CONST ControllerStatus>((BYTE)*reinterpret_cast<PCFIELD>(_Params[2]));
+	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
+}
+
+PCCHAR ControllerStatusResponse::StatusMessage() const
+{
+	return (PCCHAR)*reinterpret_cast<PCVARLENGTHFIELD>(_Params[1]);
+}
+
+RCCONTROLLERSTATUS ControllerStatusResponse::StatusCode() const
+{
+	return reinterpret_cast<RCCONTROLLERSTATUS>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[2]));
 }
 
 VOID ControllerStatusResponse::Handle(...)
@@ -163,16 +188,26 @@ VOID ControllerStatusResponse::Handle(...)
 
 // DriverStatusResponse
 
-DriverStatusResponse::DriverStatusResponse(CONST Error error, CONST DriverStatus driverStatus, PCCHAR statusMsg) : TBASE()
+DriverStatusResponse::DriverStatusResponse(RCERROR error, RCDRIVERSTATUS driverStatus, PCCHAR statusMsg) : TBASE()
 {
-	_Params[0] = new Field((RBYTE)UNCONST(error));
-	_Params[1] = new VarLengthField(UNCONST(statusMsg));
-	_Params[2] = new Field((RBYTE)UNCONST(driverStatus));
+	_Params[0] = new Field((BYTE)error);
+	_Params[1] = new VarLengthField(statusMsg);
+	_Params[2] = new Field((BYTE)driverStatus);
 }
 
-CONST DriverStatus DriverStatusResponse::StatusCode() const
+RCERROR DriverStatusResponse::ErrorCode() const
 {
-	return static_cast<CONST DriverStatus>((BYTE)*reinterpret_cast<PCFIELD>(_Params[2]));
+	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
+}
+
+PCCHAR DriverStatusResponse::StatusMessage() const
+{
+	return (PCCHAR)*reinterpret_cast<PCVARLENGTHFIELD>(_Params[1]);
+}
+
+RCDRIVERSTATUS DriverStatusResponse::StatusCode() const
+{
+	return reinterpret_cast<RCDRIVERSTATUS>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[2]));
 }
 
 VOID DriverStatusResponse::Handle(...)
