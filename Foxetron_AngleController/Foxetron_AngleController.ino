@@ -203,7 +203,7 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	WaitForMessage(Serial, HandleMessage);
+	WaitForMessage(Serial, OnMessage);
 }
 
 VOID loop()
@@ -321,7 +321,7 @@ VOID printLCDSplash()
 	LCD.clear();
 }
 
-VOID HandleMessage(PIMESSAGE message)
+VOID OnMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 

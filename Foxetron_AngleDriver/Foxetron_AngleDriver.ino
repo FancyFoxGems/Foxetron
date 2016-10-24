@@ -122,6 +122,13 @@ VOID setup()
 {
 	Serial.begin(SERIAL_BAUD_RATE);
 
+#ifdef _DEBUG
+	//Serial.println();
+	//Serial.println("READY!");
+	//Serial.println();
+#endif
+
+
 	atexit(cleanUp);
 
 	initializePins();
@@ -135,18 +142,18 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	WaitForMessage(Serial, HandleMessage);
+	WaitForMessage(Serial, OnMessage);
 }
 
 VOID loop()
 {	
-	if (_ERROR == NULL)
-		_ERROR = new Error();
-	
-	Serial.println();
-	Serial.print(NewAngleRequest(300));
+	//if (_ERROR == NULL)
+	//	_ERROR = new E*/rror();
 
-	delay(1000);
+	//Serial.println();
+	//Serial.print(NewAngleRequest(300));	
+
+	//delay(1000);
 
 #ifdef DEBUG_INPUTS
 	_DEBUG_printInputValues();
@@ -225,7 +232,7 @@ VOID initializeInterrupts()
 	EICRA |= 0b00000101;
 }
 
-VOID HandleMessage(PIMESSAGE message)
+VOID OnMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 
@@ -237,8 +244,10 @@ VOID HandleMessage(PIMESSAGE message)
 		break;
 
 	case MessageCode::NEWANGLE_REQUEST:
-
-		reinterpret_cast<PANGLEREQUEST>(message)->Handle(&_DegreesNew);
+		
+	Serial.println("HANDLE NEWANGLE");
+	Serial.flush();
+		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle();//&_DegreesNew);
 		break;
 
 	case MessageCode::STATUS_REQUEST:

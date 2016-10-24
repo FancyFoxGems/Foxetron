@@ -14,27 +14,21 @@ using namespace Foxetron;
 
 // Request
 
-VOID Request::Handle(...)
-{
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
-}
+Request::Request(MessageCode msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount) { }
+
+VOID Request::Handle(...) { }
 
 
 // AngleRequest
 
-VOID AngleRequest::Handle(...)
-{
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
-}
+AngleRequest::AngleRequest() : Request(MessageCode::ANGLE_REQUEST, 0) { }
+
+VOID AngleRequest::Handle(...) { }
 
 
 // NewAngleRequest
 
-NewAngleRequest::NewAngleRequest(RCWORD degrees) : TBASE()
+NewAngleRequest::NewAngleRequest(RCWORD degrees) : Request(MessageCode::NEWANGLE_REQUEST, 1)
 {
 	_Params[0] = new Field(degrees);
 }
@@ -46,20 +40,17 @@ RCWORD NewAngleRequest::Degrees() const
 
 VOID NewAngleRequest::Handle(...)
 {
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
+
+	Serial.println("NEWANGLE");
+	Serial.flush();
 }
 
 
 // StatusRequest
 
-VOID StatusRequest::Handle(...)
-{
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
-}
+StatusRequest::StatusRequest() : Request(MessageCode::STATUS_REQUEST, 0) { }
+
+VOID StatusRequest::Handle(...) { }
 
 
 #pragma endregion
@@ -69,37 +60,23 @@ VOID StatusRequest::Handle(...)
 
 // Response
 
-Response::Response(RCERROR error) : TBASE()
-{
-	_Params[0] = new Field((BYTE)error);
-}
+
+Response::Response(RCERROR error, MessageCode msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount) { }
 
 RCERROR Response::ErrorCode() const
 {
 	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
 }
 
-VOID Response::Handle(...)
-{
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
-}
+VOID Response::Handle(...) { }
 
 
 // AngleResponse
 
-AngleResponse::AngleResponse(RCERROR error, RCWORD degrees) : TBASE()
+AngleResponse::AngleResponse(RCERROR error, RCWORD degrees) : Response(error, MessageCode::ANGLE_RESPONSE, 2)
 {
-	_Params[0] = new Field((BYTE)error);
 	_Params[1] = new Field(degrees);
 }
-
-RCERROR AngleResponse::ErrorCode() const
-{
-	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
-}
-
 RCWORD AngleResponse::Degrees() const
 {
 	return (RCWORD)*reinterpret_cast<PCFIELD>(_Params[1]);
@@ -115,30 +92,23 @@ VOID AngleResponse::Handle(...)
 
 // NewAngleResponse
 
-RCERROR NewAngleResponse::ErrorCode() const
-{
-	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
-}
+NewAngleResponse::NewAngleResponse(RCERROR error) : Response(error, MessageCode::NEWANGLE_RESPONSE) { }
 
 VOID NewAngleResponse::Handle(...)
 {
 	va_list args;
 	va_start(args, 0);
 	va_end(args);
+
+	this->ErrorCode();
 }
 
 
 // StatusResponse
 
-StatusResponse::StatusResponse(RCERROR error, PCCHAR statusMsg) : TBASE()
+StatusResponse::StatusResponse(RCERROR error, PCCHAR statusMsg, MessageCode msgCode, CBYTE paramCount) : Response(error, msgCode, paramCount)
 {
-	_Params[0] = new Field((BYTE)error);
 	_Params[1] = new VarLengthField(statusMsg);
-}
-
-RCERROR StatusResponse::ErrorCode() const
-{
-	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
 }
 
 PCCHAR StatusResponse::StatusMessage() const
@@ -156,21 +126,10 @@ VOID StatusResponse::Handle(...)
 
 // ControllerStatusResponse
 
-ControllerStatusResponse::ControllerStatusResponse(RCERROR error, RCCONTROLLERSTATUS controllerStatus, PCCHAR statusMsg) : TBASE()
+ControllerStatusResponse::ControllerStatusResponse(RCERROR error, RCCONTROLLERSTATUS controllerStatus, PCCHAR statusMsg) 
+	: StatusResponse(error, statusMsg, MessageCode::CONTROLLER_STATUS, 3)
 {
-	_Params[0] = new Field((BYTE)error);
-	_Params[1] = new VarLengthField(statusMsg);
 	_Params[2] = new Field((BYTE)controllerStatus);
-}
-
-RCERROR ControllerStatusResponse::ErrorCode() const
-{
-	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
-}
-
-PCCHAR ControllerStatusResponse::StatusMessage() const
-{
-	return (PCCHAR)*reinterpret_cast<PCVARLENGTHFIELD>(_Params[1]);
 }
 
 RCCONTROLLERSTATUS ControllerStatusResponse::StatusCode() const
@@ -188,21 +147,10 @@ VOID ControllerStatusResponse::Handle(...)
 
 // DriverStatusResponse
 
-DriverStatusResponse::DriverStatusResponse(RCERROR error, RCDRIVERSTATUS driverStatus, PCCHAR statusMsg) : TBASE()
+DriverStatusResponse::DriverStatusResponse(RCERROR error, RCDRIVERSTATUS driverStatus, PCCHAR statusMsg) 
+	: StatusResponse(error, statusMsg, MessageCode::DRIVER_STATUS, 3)
 {
-	_Params[0] = new Field((BYTE)error);
-	_Params[1] = new VarLengthField(statusMsg);
 	_Params[2] = new Field((BYTE)driverStatus);
-}
-
-RCERROR DriverStatusResponse::ErrorCode() const
-{
-	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
-}
-
-PCCHAR DriverStatusResponse::StatusMessage() const
-{
-	return (PCCHAR)*reinterpret_cast<PCVARLENGTHFIELD>(_Params[1]);
 }
 
 RCDRIVERSTATUS DriverStatusResponse::StatusCode() const

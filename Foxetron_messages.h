@@ -135,67 +135,45 @@ namespace Foxetron
 
 #pragma region Request DECLARATIONS
 
-	CLASS Request : public GenericMessage<MessageCode::REQUEST_TYPE>
+	CLASS Request : public Message
 	{
 	public:
 
-		typedef GenericMessage<MessageCode::REQUEST_TYPE> TBASE;
+		Request(MessageCode = MessageCode::REQUEST_TYPE, CBYTE = 0);
 
 		VIRTUAL VOID Handle(...);
-
-
-	protected:
-		
-		using TBASE::_Params;
 	};
 
 
-	CLASS AngleRequest : public GenericMessage<MessageCode::ANGLE_REQUEST>
+	CLASS AngleRequest : public Request
 	{
 	public:
 
-		typedef GenericMessage<MessageCode::ANGLE_REQUEST> TBASE;
+		AngleRequest();
 
 		VIRTUAL VOID Handle(...);
-
-
-	protected:
-		
-		using TBASE::_Params;
 	};
 
 
-	CLASS NewAngleRequest : public GenericMessage<MessageCode::NEWANGLE_REQUEST, 1>
+	CLASS NewAngleRequest : public Request
 	{
 	public:
-
-		typedef GenericMessage<MessageCode::NEWANGLE_REQUEST, 1> TBASE;
 
 		NewAngleRequest(RCWORD);
 
 		VIRTUAL RCWORD Degrees() const;
 
-		VIRTUAL VOID Handle(...);
-
-		
-	protected:
-		
-		using TBASE::_Params;
+		VOID Handle(...);
 	};
 
 
-	CLASS StatusRequest : public GenericMessage<MessageCode::STATUS_REQUEST>
+	CLASS StatusRequest : public Request
 	{
 	public:
 
-		typedef GenericMessage<MessageCode::STATUS_REQUEST> TBASE;
+		StatusRequest();
 
 		VIRTUAL VOID Handle(...);
-
-
-	protected:
-		
-		using TBASE::_Params;
 	};
 
 #pragma endregion
@@ -203,7 +181,7 @@ namespace Foxetron
 
 #pragma region Response DECLARATIONS
 
-	INTERFACE IResponse
+	INTERFACE IResponse : public virtual IMessage
 	{
 	public:
 
@@ -229,127 +207,72 @@ namespace Foxetron
 	};
 
 
-	CLASS Response : public GenericMessage<MessageCode::RESPONSE_TYPE, 1>, public virtual IResponse
+	CLASS Response : public Message, public virtual IResponse
 	{
 	public:
 
-		typedef GenericMessage<MessageCode::RESPONSE_TYPE, 1> TBASE;
-
-		Response(RCERROR);
+		Response(RCERROR, MessageCode = MessageCode::RESPONSE_TYPE, CBYTE = 1);
 
 		VIRTUAL RCERROR ErrorCode() const;
 
 		VIRTUAL VOID Handle(...);
-		
-
-	protected:
-		
-		using TBASE::_Params;
 	};
 
 
-	CLASS AngleResponse : public GenericMessage<MessageCode::ANGLE_RESPONSE, 2>, public virtual IResponse
+	CLASS AngleResponse : public Response
 	{
 	public:
-
-		typedef GenericMessage<MessageCode::ANGLE_RESPONSE, 2> TBASE;
-
+		
 		AngleResponse(RCERROR, RCWORD);
-
-		VIRTUAL RCERROR ErrorCode() const;
 
 		VIRTUAL RCWORD Degrees() const;
 
 		VIRTUAL VOID Handle(...);
-
-	protected:
-		
-		using TBASE::_Params;
 	};
 
 
-	CLASS NewAngleResponse : public GenericMessage<MessageCode::NEWANGLE_RESPONSE, 1>, public virtual IResponse
+	CLASS NewAngleResponse : public Response
 	{
 	public:
-
-		typedef GenericMessage<MessageCode::NEWANGLE_RESPONSE, 1> TBASE;
 
 		NewAngleResponse(RCERROR);
 
-		VIRTUAL RCERROR ErrorCode() const;
-
 		VIRTUAL VOID Handle(...);
-
-
-	protected:
-		
-		using TBASE::_Params;
 	};
 
-	CLASS StatusResponse : public GenericMessage<MessageCode::STATUS_RESPONSE, 2>, public virtual IStatusResponse
+	CLASS StatusResponse : public Response
 	{
 	public:
 
-		typedef GenericMessage<MessageCode::STATUS_RESPONSE, 2> TBASE;
-
-		StatusResponse(RCERROR, PCCHAR);
-
-		VIRTUAL RCERROR ErrorCode() const;
+		StatusResponse(RCERROR, PCCHAR, MessageCode = MessageCode::RESPONSE_TYPE, CBYTE = 2);
 
 		VIRTUAL PCCHAR StatusMessage() const;
 
 		VIRTUAL VOID Handle(...);
-
-		
-	protected:
-		
-		using TBASE::_Params;
 	};
 
 	
-	CLASS ControllerStatusResponse : public GenericMessage<MessageCode::CONTROLLER_STATUS, 3>, public virtual IStatusResponse
+	CLASS ControllerStatusResponse : public StatusResponse
 	{
 	public:
 
-		typedef GenericMessage<MessageCode::CONTROLLER_STATUS, 3> TBASE;
-
 		ControllerStatusResponse(RCERROR, RCCONTROLLERSTATUS, PCCHAR = NULL);
-
-		VIRTUAL RCERROR ErrorCode() const;
-
-		VIRTUAL PCCHAR StatusMessage() const;
 
 		VIRTUAL RCCONTROLLERSTATUS StatusCode() const;
 
 		VIRTUAL VOID Handle(...);
-
-		
-	protected:
-		
-		using TBASE::_Params;
 	};
 
 
-	CLASS DriverStatusResponse : public GenericMessage<MessageCode::DRIVER_STATUS, 3>, public virtual IStatusResponse
+	CLASS DriverStatusResponse : public StatusResponse
 	{
 	public:
 
-		typedef GenericMessage<MessageCode::DRIVER_STATUS, 3> TBASE;
-
 		DriverStatusResponse(RCERROR, RCDRIVERSTATUS, PCCHAR = NULL);
-
-		VIRTUAL RCERROR ErrorCode() const;
-
-		VIRTUAL PCCHAR StatusMessage() const;
 		
 		VIRTUAL RCDRIVERSTATUS StatusCode() const;
 
 		VIRTUAL VOID Handle(...);
-
-
-	protected:
-		
-		using TBASE::_Params;
 	};
 
 #pragma endregion
