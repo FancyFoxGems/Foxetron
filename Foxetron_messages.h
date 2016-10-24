@@ -163,7 +163,7 @@ namespace Foxetron
 
 		VIRTUAL RCWORD Degrees() const;
 
-		VOID Handle(...);
+		VIRTUAL VOID Handle(...);
 	};
 
 

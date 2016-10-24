@@ -235,7 +235,7 @@ VOID initializeInterrupts()
 VOID OnMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
-
+	CWORD degrees = reinterpret_cast<PNEWANGLEREQUEST>(message)->Degrees();
 	switch (msgCode)
 	{
 	case MessageCode::ANGLE_REQUEST:
@@ -247,6 +247,9 @@ VOID OnMessage(PIMESSAGE message)
 		
 	Serial.println("HANDLE NEWANGLE");
 	Serial.flush();
+	Serial.println(degrees);
+	Serial.flush();
+	return;
 		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle();//&_DegreesNew);
 		break;
 

@@ -35,12 +35,15 @@ NewAngleRequest::NewAngleRequest(RCWORD degrees) : Request(MessageCode::NEWANGLE
 
 RCWORD NewAngleRequest::Degrees() const
 {
-	return (RCWORD)*reinterpret_cast<PFIELD>(_Params[0]);
+	Serial.println("DEGREES");
+	Serial.flush();
+	/*Serial.println((_Params[0])->ByteWidth());
+	Serial.flush();*/
+	return (RCWORD)*reinterpret_cast<PCFIELD>(_Params[0]);
 }
 
 VOID NewAngleRequest::Handle(...)
 {
-
 	Serial.println("NEWANGLE");
 	Serial.flush();
 }
@@ -84,9 +87,6 @@ RCWORD AngleResponse::Degrees() const
 
 VOID AngleResponse::Handle(...)
 {
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
 }
 
 
@@ -96,11 +96,6 @@ NewAngleResponse::NewAngleResponse(RCERROR error) : Response(error, MessageCode:
 
 VOID NewAngleResponse::Handle(...)
 {
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
-
-	this->ErrorCode();
 }
 
 
@@ -118,9 +113,6 @@ PCCHAR StatusResponse::StatusMessage() const
 
 VOID StatusResponse::Handle(...)
 {
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
 }
 
 
@@ -139,9 +131,6 @@ RCCONTROLLERSTATUS ControllerStatusResponse::StatusCode() const
 
 VOID ControllerStatusResponse::Handle(...)
 {
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
 }
 
 
@@ -160,9 +149,6 @@ RCDRIVERSTATUS DriverStatusResponse::StatusCode() const
 
 VOID DriverStatusResponse::Handle(...)
 {
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
 }
 
 #pragma endregion
