@@ -29,7 +29,7 @@
 #pragma region INCLUDES
 
 // ITTY BITTY
-#include "IttyBitty_util.h"
+#include "IttyBitty_info.h"
 
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
@@ -106,12 +106,12 @@ VBOOL _ActionLed		= HIGH;
 WORD _Degrees				= 0;
 WORD _DegreesNew			= 0;
 
-Error * _ERROR				= NULL;
-DriverStatus _DriverStatus	= DriverStatus::IDLE;
-
-Error _ControllerError		= Error::SUCCESS;
-PCCHAR _ControllerStatusMsg	= NULL;
-ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
+//Error * _ERROR				= NULL;
+//DriverStatus _DriverStatus	= DriverStatus::IDLE;
+//
+//Error _ControllerError		= Error::SUCCESS;
+//PCCHAR _ControllerStatusMsg	= NULL;
+//ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 
 #pragma endregion
 
@@ -145,15 +145,29 @@ VOID serialEvent()
 	WaitForMessage(Serial, OnMessage);
 }
 
+int freeRam ()
+{
+  extern int __heap_start, *__brkval; 
+  int v; 
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+}
+
+	NewAngleRequest a(300);
 VOID loop()
-{	
-	//if (_ERROR == NULL)
-	//	_ERROR = new E*/rror();
+{
+	Serial.println(freeRam());
+	Serial.flush();
+	a.printTo(Serial);
+	Serial.flush();
+	Serial.println(freeRam());
+	Serial.flush();
 
-	//Serial.println();
-	//Serial.print(NewAngleRequest(300));	
-
-	//delay(1000);
+	//PCCHAR m = a.ToString();
+	//Serial.println(m);
+	//Serial.flush();
+	//delete[] m;
+	
+	//delay(2000);
 
 #ifdef DEBUG_INPUTS
 	_DEBUG_printInputValues();
@@ -234,8 +248,17 @@ VOID initializeInterrupts()
 
 VOID OnMessage(PIMESSAGE message)
 {
+	Serial.println(F("HA"));
+	Serial.flush();
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
-	CWORD degrees = reinterpret_cast<PNEWANGLEREQUEST>(message)->Degrees();
+	Serial.println(message->GetMessageCode());
+	Serial.flush();
+	return;
+	/*WORD degrees = reinterpret_cast<PNEWANGLEREQUEST>(message)->Degrees();
+	Serial.println(degrees);
+	Serial.flush();
+	return;*/
+
 	switch (msgCode)
 	{
 	case MessageCode::ANGLE_REQUEST:
@@ -244,12 +267,6 @@ VOID OnMessage(PIMESSAGE message)
 		break;
 
 	case MessageCode::NEWANGLE_REQUEST:
-		
-	Serial.println("HANDLE NEWANGLE");
-	Serial.flush();
-	Serial.println(degrees);
-	Serial.flush();
-	return;
 		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle();//&_DegreesNew);
 		break;
 
@@ -260,7 +277,7 @@ VOID OnMessage(PIMESSAGE message)
 
 	case MessageCode::CONTROLLER_STATUS:
 
-		reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(&_ControllerError, &_ControllerStatusMsg, &_ControllerStatus);
+		//reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(&_ControllerError, &_ControllerStatusMsg, &_ControllerStatus);
 		break;
 
 	default:

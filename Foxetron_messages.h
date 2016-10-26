@@ -139,7 +139,7 @@ namespace Foxetron
 	{
 	public:
 
-		Request(MessageCode = MessageCode::REQUEST_TYPE, CBYTE = 0);
+		Request(MessageCode = MessageCode::REQUEST_TYPE, CBYTE paramCount = 0);
 
 		VIRTUAL VOID Handle(...);
 	};
@@ -155,7 +155,7 @@ namespace Foxetron
 	};
 
 
-	CLASS NewAngleRequest : public Request
+	CLASS NewAngleRequest : public Message
 	{
 	public:
 

@@ -28,23 +28,19 @@ VOID AngleRequest::Handle(...) { }
 
 // NewAngleRequest
 
-NewAngleRequest::NewAngleRequest(RCWORD degrees) : Request(MessageCode::NEWANGLE_REQUEST, 1)
+NewAngleRequest::NewAngleRequest(RCWORD degrees) : Message(MessageCode::NEWANGLE_REQUEST, 1)
 {
 	_Params[0] = new Field(degrees);
 }
 
 RCWORD NewAngleRequest::Degrees() const
 {
-	Serial.println("DEGREES");
-	Serial.flush();
-	/*Serial.println((_Params[0])->ByteWidth());
-	Serial.flush();*/
 	return (RCWORD)*reinterpret_cast<PCFIELD>(_Params[0]);
 }
 
 VOID NewAngleRequest::Handle(...)
 {
-	Serial.println("NEWANGLE");
+	Serial.println(F("N"));
 	Serial.flush();
 }
 
