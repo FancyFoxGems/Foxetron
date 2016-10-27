@@ -128,7 +128,6 @@ VOID setup()
 	//Serial.println();
 #endif
 
-
 	atexit(cleanUp);
 
 	initializePins();
@@ -152,22 +151,38 @@ int freeRam ()
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
 }
 
-	NewAngleRequest a(300);
+
+PNEWANGLEREQUEST a = new NewAngleRequest(300);;
+bool b = false;
+//NewAngleRequest a(301);
 VOID loop()
 {
-	Serial.println(freeRam());
+	//if (b) return;
+	b = true;
+
+	//if (a == NULL) a = new NewAngleRequest(300);
+	//NewAngleRequest a(300);
+
+	a->printTo(Serial);
+	Serial.println();
 	Serial.flush();
-	a.printTo(Serial);
+
+	/*PCCHAR m = a->ToString();
+	Serial.println(m);
 	Serial.flush();
+	m = NULL;*/
+
+	/*Serial.println(a->ToString());
+	Serial.flush();*/
+	
+	Serial.println();
+	Serial.print("LP:");
 	Serial.println(freeRam());
 	Serial.flush();
 
-	//PCCHAR m = a.ToString();
-	//Serial.println(m);
-	//Serial.flush();
-	//delete[] m;
+	//delete a;
 	
-	//delay(2000);
+	delay(2000);
 
 #ifdef DEBUG_INPUTS
 	_DEBUG_printInputValues();

@@ -14,7 +14,7 @@ using namespace Foxetron;
 
 // Request
 
-Request::Request(MessageCode msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount) { }
+Request::Request(MessageCode messageCode, CBYTE paramCount) : Message((CBYTE)messageCode, paramCount) { }
 
 VOID Request::Handle(...) { }
 
@@ -28,7 +28,7 @@ VOID AngleRequest::Handle(...) { }
 
 // NewAngleRequest
 
-NewAngleRequest::NewAngleRequest(RCWORD degrees) : Message(MessageCode::NEWANGLE_REQUEST, 1)
+NewAngleRequest::NewAngleRequest(RCWORD degrees) : Request(MessageCode::NEWANGLE_REQUEST, 1)
 {
 	_Params[0] = new Field(degrees);
 }

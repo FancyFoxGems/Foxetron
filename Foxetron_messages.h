@@ -155,7 +155,7 @@ namespace Foxetron
 	};
 
 
-	CLASS NewAngleRequest : public Message
+	CLASS NewAngleRequest : public Request
 	{
 	public:
 
@@ -181,7 +181,7 @@ namespace Foxetron
 
 #pragma region Response DECLARATIONS
 
-	INTERFACE IResponse : public virtual IMessage
+	INTERFACE IResponse : public IMessage
 	{
 	public:
 
@@ -194,7 +194,7 @@ namespace Foxetron
 	};
 	
 
-	INTERFACE IStatusResponse : public virtual IResponse
+	INTERFACE IStatusResponse : public IResponse
 	{
 	public:
 
@@ -207,7 +207,7 @@ namespace Foxetron
 	};
 
 
-	CLASS Response : public Message, public virtual IResponse
+	CLASS Response : public Message, public IResponse
 	{
 	public:
 
