@@ -29,6 +29,7 @@
 #pragma region INCLUDES
 
 // ITTY BITTY
+#include "IttyBitty_print.h"
 #include "IttyBitty_info.h"
 
 // PROJECT INCLUDES
@@ -60,6 +61,7 @@ using namespace Foxetron;
 // PROGRAM OPTIONS
 
 #define DEBUG_INPUTS			0
+#define DEBUG_INPUT_DELAY_MS	500
 
 #define SERIAL_BAUD_RATE		115200
 
@@ -108,10 +110,10 @@ WORD _DegreesNew			= 0;
 
 //Error * _ERROR				= NULL;
 //DriverStatus _DriverStatus	= DriverStatus::IDLE;
-//
-//Error _ControllerError		= Error::SUCCESS;
-//PCCHAR _ControllerStatusMsg	= NULL;
-//ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
+
+Error _ControllerError		= Error::SUCCESS;
+PCCHAR _ControllerStatusMsg	= NULL;
+ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 
 #pragma endregion
 
@@ -123,9 +125,7 @@ VOID setup()
 	Serial.begin(SERIAL_BAUD_RATE);
 
 #ifdef _DEBUG
-	//Serial.println();
-	//Serial.println("READY!");
-	//Serial.println();
+	PrintLineAndFlush("\nREADY!");
 #endif
 
 	atexit(cleanUp);
@@ -165,16 +165,17 @@ VOID loop()
 	//Serial.println(a->ToString());
 
 	//Serial.flush();
-	delay(500);
+	//delay(500);
 
 	//delete a;
 	//a = NULL;
 	
-	Serial.println();
-	Serial.print("RAM: ");
+#ifdef _DEBUG	
+	Serial.print("\nRAM: ");
 	Serial.println(freeRam());
-	Serial.flush();
-	
+	FlushAndDelay();
+#endif
+
 	delay(3000);
 
 #ifdef DEBUG_INPUTS
@@ -205,7 +206,7 @@ STATIC INLINE VOID _ISR_AngleEncoder_updateAngleReading()
 
 #ifdef DEBUG_INPUTS
 	Serial.print(F("ANGLE: "));
-	Serial.println(_AngleReading);
+	PrintLineAndFlush(_AngleReading);
 #endif
 }
 
@@ -256,16 +257,11 @@ VOID initializeInterrupts()
 
 VOID OnMessage(PIMESSAGE message)
 {
-	Serial.println(F("HA"));
-	Serial.flush();
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
-	Serial.println(message->GetMessageCode());
-	Serial.flush();
-	return;
-	/*WORD degrees = reinterpret_cast<PNEWANGLEREQUEST>(message)->Degrees();
-	Serial.println(degrees);
-	Serial.flush();
-	return;*/
+
+	Serial.print(F("NEW MSG - CODE: "));
+	PrintLineAndFlush(message->GetMessageCode());
+	WORD w = 0;
 
 	switch (msgCode)
 	{
@@ -275,7 +271,13 @@ VOID OnMessage(PIMESSAGE message)
 		break;
 
 	case MessageCode::NEWANGLE_REQUEST:
-		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle();//&_DegreesNew);
+		
+		PrintLineAndFlush(F("NEW ANGLE"));
+		w = (RCWORD)*reinterpret_cast<PCFIELD>((*reinterpret_cast<PNEWANGLEREQUEST>(message))[0]);
+		PrintLineAndFlush(w);
+		FlushAndDelay();
+
+		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle(&_DegreesNew);
 		break;
 
 	case MessageCode::STATUS_REQUEST:
@@ -285,7 +287,7 @@ VOID OnMessage(PIMESSAGE message)
 
 	case MessageCode::CONTROLLER_STATUS:
 
-		//reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(&_ControllerError, &_ControllerStatusMsg, &_ControllerStatus);
+		reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(&_ControllerError, &_ControllerStatusMsg, &_ControllerStatus);
 		break;
 
 	default:
@@ -328,7 +330,7 @@ VOID _DEBUG_printInputValues()
 	Serial.print(itoa(_ActionButton, valStr, 2));
 	Serial.println();
 
-	Serial.println();
+	FlushAndDelay();
 
 	_ActionLed = !_ActionLed;
 	digitalWrite(PIN_OUT_ACTION_LED, _ActionLed);
@@ -336,7 +338,7 @@ VOID _DEBUG_printInputValues()
 	_StatusLed = !_StatusLed;
 	digitalWrite(PIN_OUT_STATUS_LED, _StatusLed);
 
-	delay(500);
+	delay(DEBUG_INPUT_DELAY_MS);
 }
 
 #pragma endregion

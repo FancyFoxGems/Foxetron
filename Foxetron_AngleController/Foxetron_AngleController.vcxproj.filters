@@ -143,6 +143,9 @@
     <ClInclude Include="..\IttyBitty\IttyBitty_messages.h">
       <Filter>Libraries</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty\IttyBitty_print.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty\IttyBitty_type_traits.h">
       <Filter>Libraries</Filter>
     </ClInclude>
@@ -284,6 +287,9 @@
       <Filter>Libraries</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty\IttyBitty_messages.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty\IttyBitty_print.cpp">
       <Filter>Libraries</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty\IttyBitty_values.cpp">

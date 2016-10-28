@@ -23,7 +23,12 @@ VOID Request::Handle(...) { }
 
 AngleRequest::AngleRequest() : Request(MessageCode::ANGLE_REQUEST, 0) { }
 
-VOID AngleRequest::Handle(...) { }
+VOID AngleRequest::Handle(...)
+{
+	//va_list args;
+	//va_start(args, 0);
+	//va_end(args);
+}
 
 
 // NewAngleRequest
@@ -42,6 +47,10 @@ VOID NewAngleRequest::Handle(...)
 {
 	Serial.println(F("N"));
 	Serial.flush();
+	delay(500);
+	//Serial.println((int)this->Degrees());
+	//Serial.flush();
+	//delay(500);
 }
 
 

@@ -59,6 +59,7 @@
     <ClInclude Include="..\IttyBitty\IttyBitty_info.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_fields.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_messages.h" />
+    <ClInclude Include="..\IttyBitty\IttyBitty_print.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_type_traits.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_util.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_values.h" />
@@ -74,6 +75,7 @@
     <ClCompile Include="..\IttyBitty\IttyBitty_bits.cpp" />
     <ClCompile Include="..\IttyBitty\IttyBitty_fields.cpp" />
     <ClCompile Include="..\IttyBitty\IttyBitty_messages.cpp" />
+    <ClCompile Include="..\IttyBitty\IttyBitty_print.cpp" />
     <ClCompile Include="..\IttyBitty\IttyBitty_values.cpp" />
     <ClCompile Include="..\Foxetron_messages.cpp" />
   </ItemGroup>
