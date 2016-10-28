@@ -152,37 +152,30 @@ int freeRam ()
 }
 
 
-PNEWANGLEREQUEST a = new NewAngleRequest(300);;
-bool b = false;
-//NewAngleRequest a(301);
 VOID loop()
 {
-	//if (b) return;
-	b = true;
+	//PNEWANGLEREQUEST a = new NewAngleRequest(300);
 
-	//if (a == NULL) a = new NewAngleRequest(300);
-	//NewAngleRequest a(300);
+	//a.printTo(Serial);
+	//Serial.println();
 
-	a->printTo(Serial);
-	Serial.println();
-	Serial.flush();
+	//PCCHAR m = a->ToString();
+	//Serial.println(m);
 
-	/*PCCHAR m = a->ToString();
-	Serial.println(m);
-	Serial.flush();
-	m = NULL;*/
+	//Serial.println(a->ToString());
 
-	/*Serial.println(a->ToString());
-	Serial.flush();*/
-	
-	Serial.println();
-	Serial.print("LP:");
-	Serial.println(freeRam());
-	Serial.flush();
+	//Serial.flush();
+	delay(500);
 
 	//delete a;
+	//a = NULL;
 	
-	delay(2000);
+	Serial.println();
+	Serial.print("RAM: ");
+	Serial.println(freeRam());
+	Serial.flush();
+	
+	delay(3000);
 
 #ifdef DEBUG_INPUTS
 	_DEBUG_printInputValues();
