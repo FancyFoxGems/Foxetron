@@ -247,8 +247,6 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
 
 VOID initializeInterrupts()
 {
-	VarLengthField a;
-	TypedField<SHORT> b;
 	// External interrupts: Angle encoder
 	EIMSK |= 0b00000011;
 	EICRA &= 0b11110101;
@@ -259,8 +257,10 @@ VOID OnMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 
+#ifdef _DEBUG
 	Serial.print(F("NEW MSG - CODE: "));
 	PrintLineAndFlush(message->GetMessageCode());
+#endif
 	WORD w = 0;
 
 	switch (msgCode)
@@ -272,12 +272,11 @@ VOID OnMessage(PIMESSAGE message)
 
 	case MessageCode::NEWANGLE_REQUEST:
 		
+		
 		PrintLineAndFlush(F("NEW ANGLE"));
 		w = (RCWORD)*reinterpret_cast<PCFIELD>((*reinterpret_cast<PNEWANGLEREQUEST>(message))[0]);
 		PrintLineAndFlush(w);
-		FlushAndDelay();
-
-		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle(&_DegreesNew);
+		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle(NULL, NULL);//&_DegreesNew);
 		break;
 
 	case MessageCode::STATUS_REQUEST:
@@ -287,7 +286,7 @@ VOID OnMessage(PIMESSAGE message)
 
 	case MessageCode::CONTROLLER_STATUS:
 
-		reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(&_ControllerError, &_ControllerStatusMsg, &_ControllerStatus);
+		reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(&_ControllerError);//, &_ControllerStatusMsg, &_ControllerStatus);
 		break;
 
 	default:

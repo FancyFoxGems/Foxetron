@@ -133,7 +133,7 @@ namespace Foxetron
 #pragma endregion
 
 
-#pragma region Request DECLARATIONS
+#pragma region Request DEFINITIONS
 
 	CLASS Request : public Message
 	{
@@ -141,7 +141,7 @@ namespace Foxetron
 
 		Request(MessageCode = MessageCode::REQUEST_TYPE, CBYTE paramCount = 0);
 
-		VIRTUAL VOID Handle(...);
+		BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
 
 
@@ -151,7 +151,7 @@ namespace Foxetron
 
 		AngleRequest();
 
-		VIRTUAL VOID Handle(...);
+		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 
@@ -161,9 +161,9 @@ namespace Foxetron
 
 		NewAngleRequest(RCWORD);
 
-		VIRTUAL RCWORD Degrees() const;
-
-		VIRTUAL VOID Handle(...);
+		RCWORD Degrees() const;
+		
+		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 
@@ -173,13 +173,13 @@ namespace Foxetron
 
 		StatusRequest();
 
-		VIRTUAL VOID Handle(...);
+		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 #pragma endregion
 	
 
-#pragma region Response DECLARATIONS
+#pragma region Response DEFINITIONS
 
 	INTERFACE IResponse : public IMessage
 	{
@@ -213,9 +213,9 @@ namespace Foxetron
 
 		Response(RCERROR, MessageCode = MessageCode::RESPONSE_TYPE, CBYTE = 1);
 
-		VIRTUAL RCERROR ErrorCode() const;
+		RCERROR ErrorCode() const;
 
-		VIRTUAL VOID Handle(...);
+		BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
 
 
@@ -225,9 +225,9 @@ namespace Foxetron
 		
 		AngleResponse(RCERROR, RCWORD);
 
-		VIRTUAL RCWORD Degrees() const;
+		RCWORD Degrees() const;
 
-		VIRTUAL VOID Handle(...);
+		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 
@@ -237,7 +237,7 @@ namespace Foxetron
 
 		NewAngleResponse(RCERROR);
 
-		VIRTUAL VOID Handle(...);
+		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 	CLASS StatusResponse : public Response
@@ -246,9 +246,9 @@ namespace Foxetron
 
 		StatusResponse(RCERROR, PCCHAR, MessageCode = MessageCode::RESPONSE_TYPE, CBYTE = 2);
 
-		VIRTUAL PCCHAR StatusMessage() const;
+		PCCHAR StatusMessage() const;
 
-		VIRTUAL VOID Handle(...);
+		BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
 
 	
@@ -258,9 +258,9 @@ namespace Foxetron
 
 		ControllerStatusResponse(RCERROR, RCCONTROLLERSTATUS, PCCHAR = NULL);
 
-		VIRTUAL RCCONTROLLERSTATUS StatusCode() const;
+		RCCONTROLLERSTATUS StatusCode() const;
 
-		VIRTUAL VOID Handle(...);
+		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 
@@ -270,9 +270,9 @@ namespace Foxetron
 
 		DriverStatusResponse(RCERROR, RCDRIVERSTATUS, PCCHAR = NULL);
 		
-		VIRTUAL RCDRIVERSTATUS StatusCode() const;
+		RCDRIVERSTATUS StatusCode() const;
 
-		VIRTUAL VOID Handle(...);
+		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 #pragma endregion

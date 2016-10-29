@@ -7,27 +7,28 @@
 
 #include "Foxetron_messages.h"
 
+using namespace IttyBitty;
 using namespace Foxetron;
 
 
-#pragma region Request DEFINITIONS
+#pragma region Request IMPLEMENTATIONS
 
 // Request
 
 Request::Request(MessageCode messageCode, CBYTE paramCount) : Message((CBYTE)messageCode, paramCount) { }
 
-VOID Request::Handle(...) { }
-
+BOOL Request::Handle(PVOID results, PCVOID state)
+{
+	return TRUE;
+}
 
 // AngleRequest
 
 AngleRequest::AngleRequest() : Request(MessageCode::ANGLE_REQUEST, 0) { }
 
-VOID AngleRequest::Handle(...)
+BOOL AngleRequest::Handle(PVOID results, PCVOID state)
 {
-	//va_list args;
-	//va_start(args, 0);
-	//va_end(args);
+	return TRUE;
 }
 
 
@@ -43,14 +44,16 @@ RCWORD NewAngleRequest::Degrees() const
 	return (RCWORD)*reinterpret_cast<PCFIELD>(_Params[0]);
 }
 
-VOID NewAngleRequest::Handle(...)
+BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
 {
 	Serial.println(F("N"));
 	Serial.flush();
 	delay(500);
-	//Serial.println((int)this->Degrees());
-	//Serial.flush();
-	//delay(500);
+	Serial.println((int)this->Degrees());
+	Serial.flush();
+	delay(500);
+
+	return TRUE;
 }
 
 
@@ -58,13 +61,16 @@ VOID NewAngleRequest::Handle(...)
 
 StatusRequest::StatusRequest() : Request(MessageCode::STATUS_REQUEST, 0) { }
 
-VOID StatusRequest::Handle(...) { }
+BOOL StatusRequest::Handle(PVOID results, PCVOID state)
+{
+	return TRUE;
+}
 
 
 #pragma endregion
 
 
-#pragma region Response DEFINITIONS
+#pragma region Response IMPLEMENTATIONS
 
 // Response
 
@@ -76,7 +82,10 @@ RCERROR Response::ErrorCode() const
 	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
 }
 
-VOID Response::Handle(...) { }
+BOOL Response::Handle(PVOID results, PCVOID state)
+{
+	return TRUE;
+}
 
 
 // AngleResponse
@@ -90,8 +99,9 @@ RCWORD AngleResponse::Degrees() const
 	return (RCWORD)*reinterpret_cast<PCFIELD>(_Params[1]);
 }
 
-VOID AngleResponse::Handle(...)
+BOOL AngleResponse::Handle(PVOID results, PCVOID state)
 {
+	return TRUE;
 }
 
 
@@ -99,8 +109,9 @@ VOID AngleResponse::Handle(...)
 
 NewAngleResponse::NewAngleResponse(RCERROR error) : Response(error, MessageCode::NEWANGLE_RESPONSE) { }
 
-VOID NewAngleResponse::Handle(...)
+BOOL NewAngleResponse::Handle(PVOID results, PCVOID state)
 {
+	return TRUE;
 }
 
 
@@ -116,8 +127,9 @@ PCCHAR StatusResponse::StatusMessage() const
 	return (PCCHAR)*reinterpret_cast<PCVARLENGTHFIELD>(_Params[1]);
 }
 
-VOID StatusResponse::Handle(...)
+BOOL StatusResponse::Handle(PVOID results, PCVOID state)
 {
+	return TRUE;
 }
 
 
@@ -134,8 +146,9 @@ RCCONTROLLERSTATUS ControllerStatusResponse::StatusCode() const
 	return reinterpret_cast<RCCONTROLLERSTATUS>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[2]));
 }
 
-VOID ControllerStatusResponse::Handle(...)
+BOOL ControllerStatusResponse::Handle(PVOID results, PCVOID state)
 {
+	return TRUE;
 }
 
 
@@ -152,8 +165,9 @@ RCDRIVERSTATUS DriverStatusResponse::StatusCode() const
 	return reinterpret_cast<RCDRIVERSTATUS>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[2]));
 }
 
-VOID DriverStatusResponse::Handle(...)
+BOOL DriverStatusResponse::Handle(PVOID results, PCVOID state)
 {
+	return TRUE;
 }
 
 #pragma endregion
