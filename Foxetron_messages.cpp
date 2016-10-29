@@ -46,12 +46,6 @@ RCWORD NewAngleRequest::Degrees() const
 
 BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
 {
-	Serial.println(F("N"));
-	Serial.flush();
-	delay(500);
-	Serial.println((int)this->Degrees());
-	Serial.flush();
-	delay(500);
 
 	return TRUE;
 }

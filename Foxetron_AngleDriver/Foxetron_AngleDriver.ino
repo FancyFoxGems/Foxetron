@@ -144,7 +144,7 @@ VOID serialEvent()
 	WaitForMessage(Serial, OnMessage);
 }
 
-int freeRam ()
+int freeRam()
 {
   extern int __heap_start, *__brkval; 
   int v; 
@@ -261,27 +261,22 @@ VOID OnMessage(PIMESSAGE message)
 	Serial.print(F("NEW MSG - CODE: "));
 	PrintLineAndFlush(message->GetMessageCode());
 #endif
-	WORD w = 0;
 
 	switch (msgCode)
 	{
 	case MessageCode::ANGLE_REQUEST:
 
-		reinterpret_cast<PANGLEREQUEST>(message)->Handle();
+		reinterpret_cast<PANGLEREQUEST>(message)->Handle(NULL, &_Degrees);
 		break;
 
 	case MessageCode::NEWANGLE_REQUEST:
 		
-		
-		PrintLineAndFlush(F("NEW ANGLE"));
-		w = (RCWORD)*reinterpret_cast<PCFIELD>((*reinterpret_cast<PNEWANGLEREQUEST>(message))[0]);
-		PrintLineAndFlush(w);
-		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle(NULL, NULL);//&_DegreesNew);
+		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle(&_DegreesNew);
 		break;
 
 	case MessageCode::STATUS_REQUEST:
 
-		reinterpret_cast<PSTATUSREQUEST>(message)->Handle();
+		reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, NULL);
 		break;
 
 	case MessageCode::CONTROLLER_STATUS:
