@@ -28,10 +28,6 @@
 
 #pragma region INCLUDES
 
-// ITTY BITTY
-#include "IttyBitty_print.h"
-#include "IttyBitty_info.h"
-
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
 
@@ -39,6 +35,9 @@
 #include "Foxetron_messages.h"
 
 using namespace Foxetron;
+
+// ITTY BITTY
+#include "IttyBitty_base.h"
 
 // PROJECT LIBS
 
@@ -115,6 +114,17 @@ Error _ControllerError		= Error::SUCCESS;
 PCCHAR _ControllerStatusMsg	= NULL;
 ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 
+
+#pragma region PROGRAM FUNCTION DECLARATIONS
+
+VOID cleanUp();
+VOID initializeInterrupts();
+
+//VOID onMessage(PIMESSAGE);
+MESSAGEHANDLER onMessage;
+
+VOID DEBUG_printInputValues();
+
 #pragma endregion
 
 
@@ -132,6 +142,8 @@ VOID setup()
 
 	initializePins();
 	initializeInterrupts();
+
+	//pinMode()
 }
 
 VOID cleanUp()
@@ -141,7 +153,7 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	WaitForMessage(Serial, OnMessage);
+	WaitForMessage(Serial, onMessage);
 }
 
 int freeRam()
@@ -150,7 +162,6 @@ int freeRam()
   int v; 
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
 }
-
 
 VOID loop()
 {
@@ -253,7 +264,7 @@ VOID initializeInterrupts()
 	EICRA |= 0b00000101;
 }
 
-VOID OnMessage(PIMESSAGE message)
+VOID onMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 

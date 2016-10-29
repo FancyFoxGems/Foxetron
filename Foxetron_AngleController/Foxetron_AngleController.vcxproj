@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Release|Win32">
@@ -38,7 +38,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\VaRGB;C:\RC\Sketchbook\libraries\EEPROM;C:\RC\Sketchbook\libraries\phi_interfaces;C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\IttyBitty\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\Foxetron\Foxetron_AngleController;C:\Program Files (x86)\Arduino\hardware\tools\avr/avr/include/;C:\Program Files (x86)\Arduino\hardware\tools\avr//avr/include/avr/;C:\Program Files (x86)\Arduino\hardware\tools\avr/lib\gcc\avr\4.8.1\include;C:\RC\Sketchbook\Foxetron;C:\RC\Sketchbook\Foxetron\IttyBitty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\VaRGB;C:\RC\Sketchbook\libraries\EEPROM;C:\RC\Sketchbook\libraries\phi_interfaces;C:\RC\Sketchbook\libraries\EEPROM\utility;C:\RC\Sketchbook\libraries\IttyBitty\utility;C:\RC\Sketchbook\libraries\phi_interfaces\utility;C:\RC\Sketchbook\libraries\VaRGB\utility;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\Foxetron\Foxetron_AngleController;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\VaRGB;C:\RC\Sketchbook\libraries\EEPROM;C:\RC\Sketchbook\libraries\phi_interfaces;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\iyanzvn1.cat\Micro Platforms\default\debuggers;C:\RC\Sketchbook\libraries;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\tools\avr/avr/include/;C:\Program Files (x86)\Arduino\hardware\tools\avr//avr/include/avr/;C:\Program Files (x86)\Arduino\hardware\tools\avr/lib\gcc\avr\4.8.1\include;C:\RC\Sketchbook\Foxetron;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>C:\RC\Sketchbook\Foxetron\Foxetron_AngleController\__vm\.Foxetron_AngleController.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;_DEBUG=1;ITTYBITTY_BASE=1;F_CPU=16000000L;ARDUINO=10608;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;__cplusplus=201103L;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -63,20 +63,23 @@
     <ClInclude Include="..\..\libraries\VaRGB\VaRGBCurves.h" />
     <ClInclude Include="..\..\libraries\Wire\utility\twi.h" />
     <ClInclude Include="..\..\libraries\Wire\Wire.h" />
+    <!--
     <ClInclude Include="..\IttyBitty\avr_cpunames.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_aliases.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_bits.h" />
+    <ClInclude Include="..\IttyBitty\IttyBitty_bytes.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_info.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_fields.h" />
+    <ClInclude Include="..\IttyBitty\IttyBitty_gpio.h" />
+    <ClInclude Include="..\IttyBitty\IttyBitty_gpio_arduino.h" />
+    <ClInclude Include="..\IttyBitty\IttyBitty_gpio_portpins.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_messages.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_print.h" />
+    <ClInclude Include="..\IttyBitty\IttyBitty_registers.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_type_traits.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_util.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_values.h" />
-    <!-- <ClInclude Include="..\IttyBitty\IttyBitty_registers.h" /> -->
-    <!-- <ClInclude Include="..\IttyBitty\IttyBitty_gpio.h" /> -->
-    <!-- <ClInclude Include="..\IttyBitty\IttyBitty_gpio_arduino.h" /> -->
-    <!-- <ClInclude Include="..\IttyBitty\IttyBitty_gpio_portpins.h" /> -->
+    -->
     <ClInclude Include="libs\LiquidCrystal_I2C.custom.h" />
     <ClInclude Include="libs\BigCrystal_I2C.custom.h" />
     <ClInclude Include="libs\BigFont.h" />
@@ -127,17 +130,21 @@
     <ClCompile Include="..\..\libraries\VaRGB\VaRGBPlatform.cpp" />
     <ClCompile Include="..\..\libraries\Wire\utility\twi.c" />
     <ClCompile Include="..\..\libraries\Wire\Wire.cpp" />
+    <!--
+    <ClCompile Include="..\IttyBitty\IttyBitty_bits.cpp" />
+    <ClCompile Include="..\IttyBitty\IttyBitty_bytes.cpp" />
+    <ClCompile Include="..\IttyBitty\IttyBitty_fields.cpp" />
+    <ClCompile Include="..\IttyBitty\IttyBitty_gpio.cpp" />
+    <ClCompile Include="..\IttyBitty\IttyBitty_messages.cpp" />
+    <ClCompile Include="..\IttyBitty\IttyBitty_print.cpp" />
+    <ClCompile Include="..\IttyBitty\IttyBitty_values.cpp" />
+    -->
     <ClCompile Include="libs\LiquidCrystal_I2C.custom.cpp" />
     <ClCompile Include="libs\BigCrystal_I2C.custom.cpp" />
     <ClCompile Include="libs\BigFont.c" />
     <ClCompile Include="libs\DB.cpp" />
     <ClCompile Include="libs\MENWIZ.custom.cpp" />
     <ClCompile Include="libs\phi_prompt.custom.cpp" />
-    <ClCompile Include="..\IttyBitty\IttyBitty_bits.cpp" />
-    <ClCompile Include="..\IttyBitty\IttyBitty_fields.cpp" />
-    <ClCompile Include="..\IttyBitty\IttyBitty_messages.cpp" />
-    <ClCompile Include="..\IttyBitty\IttyBitty_print.cpp" />
-    <ClCompile Include="..\IttyBitty\IttyBitty_values.cpp" />
     <ClCompile Include="..\Foxetron_messages.cpp" />
     <ClCompile Include="Foxetron_LCD.cpp" />
     <ClCompile Include="Foxetron_RGB.cpp" />
@@ -162,7 +169,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties vm.upload.useprogrammer="0" arduino.build.auto_discover_includes="1" VM_ReCompileCoreOnProjectMacroChange="" arduino.upload.port="COM19" VM_ADDITIONAL_COMPILER_C_ELF_FLAGS="-Wl,--relax" VM_ADDITIONAL_PREPROC="ITTYBITTY_BASE=1" VM_ADDITIONAL_COMPILER_FLAGS="-Wno-unknown-pragmas -mcall-prologues" />
+      <UserProperties VM_AUTOGEN_PROTOTYPES="0" vm.upload.useprogrammer="0" arduino.build.auto_discover_includes="1" VM_ReCompileCoreOnProjectMacroChange="" arduino.upload.port="COM19" VM_ADDITIONAL_COMPILER_C_ELF_FLAGS="-Wl,--relax" VM_ADDITIONAL_PREPROC="ITTYBITTY_BASE=1" VM_ADDITIONAL_COMPILER_FLAGS="-Wno-unknown-pragmas -mcall-prologues" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

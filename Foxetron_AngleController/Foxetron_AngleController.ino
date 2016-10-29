@@ -29,9 +29,6 @@
 
 #pragma region INCLUDES
 
-// ITTY BITTY
-#include "IttyBitty_info.h"
-
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
 #include "Foxetron_LCD_chars.h"
@@ -43,6 +40,9 @@
 #include "Foxetron_EEPROM.h"
 
 using namespace Foxetron;
+
+// ITTY BITTY
+#include "IttyBitty_base.h"
 
 // PROJECT LIBS
 //#include "libs/LiquidCrystal_I2C.custom.h"		// included by other project libs
@@ -179,6 +179,22 @@ DriverStatus _DriverStatus	= DriverStatus::IDLE;
 #pragma endregion
 
 
+#pragma region PROGRAM FUNCTION DECLARATIONS
+
+VOID cleanUp();
+VOID initializeInterrupts();
+
+MESSAGEHANDLER onMessage;
+
+VOID printLCDSplash();
+
+VOID DEBUG_displayKeyCodes();
+VOID DEBUG_printInputValues();
+VOID DEBUG_displayCustomChars();
+
+#pragma endregion
+
+
 #pragma region PROGRAM OUTLINE: ENTRY POINT, LOOP, ETC.
 
 VOID setup()
@@ -196,14 +212,9 @@ VOID setup()
 	LCD.printBig(F("Fox"), 2, 0);
 }
 
-VOID cleanUp()
-{
-	freeRGB();
-}
-
 VOID serialEvent()
 {
-	WaitForMessage(Serial, OnMessage);
+	WaitForMessage(Serial, onMessage);
 }
 
 VOID loop()
@@ -306,22 +317,12 @@ VOID initializeInterrupts()
 	PCMSK2 = 0b11110000;
 }
 
-VOID printLCDSplash()
+VOID cleanUp()
 {
-	LCD.print(F("Foxetron test..."));
-
-	delay(200);
-
-	for (BYTE i = 0; i < 16; i++)
-	{
-		LCD.scrollDisplayLeft();
-		delay(20);
-	}
-
-	LCD.clear();
+	freeRGB();
 }
 
-VOID OnMessage(PIMESSAGE message)
+VOID onMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 
@@ -344,13 +345,28 @@ VOID OnMessage(PIMESSAGE message)
 
 	case MessageCode::DRIVER_STATUS:
 
-		reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(&_DriverError, &_DriverStatusMsg, &_DriverStatus);
+		reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(&_DriverError);//, &_DriverStatusMsg, &_DriverStatus);
 		break;
 
 	default:
 
 		break;
 	}
+}
+
+VOID printLCDSplash()
+{
+	LCD.print(F("Foxetron test..."));
+
+	delay(200);
+
+	for (BYTE i = 0; i < 16; i++)
+	{
+		LCD.scrollDisplayLeft();
+		delay(20);
+	}
+
+	LCD.clear();
 }
 
 #pragma endregion

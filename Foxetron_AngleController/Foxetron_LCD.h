@@ -6,6 +6,8 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
+#pragma GCC diagnostic ignored "-Wparentheses"
+
 #ifndef _FOXETRON_LCD_H
 #define _FOXETRON_LCD_H
 

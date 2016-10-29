@@ -5,6 +5,9 @@
 ***********************************************************************************************/
 
 
+#pragma GCC diagnostic ignored "-Wdelete-non-virtual-dtor"
+
+
 #include "Foxetron_RGB.h"
 
 
@@ -81,7 +84,7 @@ VOID freeRGB()
 			delete _RgbCurves[i];
 	}
 
-	delete[] _RgbCurves;
+	//delete[] _RgbCurves;
 }
 
 #pragma endregion

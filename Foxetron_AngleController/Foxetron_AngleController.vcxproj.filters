@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="__vm">
@@ -48,7 +48,10 @@
     <Filter Include="src\_micro-api-readonly\libraries\Wire\utility">
       <UniqueIdentifier>{fe857060-5396-4e66-88bf-f13dece7286f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries">
+    <Filter Include="IttyBitty">
+      <UniqueIdentifier>{e1395598-fb7c-4ba2-8ec1-6293564d85b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs">
       <UniqueIdentifier>{d1395598-fb7c-4ba2-8ec1-6293564d85b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -68,7 +71,14 @@
     <None Include="..\..\libraries\Wire\library.properties">
       <Filter>src\_micro-api-readonly\libraries\Wire</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Foxetron_AngleController.ino" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h">
+      <Filter>__vm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\libraries\EEPROM\EEPROM.h">
@@ -86,74 +96,45 @@
     <ClInclude Include="..\..\libraries\Wire\utility\twi.h">
       <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="libs\LiquidCrystal_I2C.custom.h">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
     <ClInclude Include="libs\BigCrystal_I2C.custom.h">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
     <ClInclude Include="libs\BigFont.h">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
     <ClInclude Include="libs\DB.h">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
     <ClInclude Include="libs\MENWIZ.custom.h">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
     <ClInclude Include="libs\phi_prompt.custom.h">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
-    <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h">
-      <Filter>__vm</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="..\Foxetron_messages.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="Foxetron_pins.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="Foxetron_LCD_chars.h">
+    <ClInclude Include="Foxetron_EEPROM.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="Foxetron_LCD.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="Foxetron_LCD_chars.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="Foxetron_RGB.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="Foxetron_EEPROM.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty\avr_cpunames.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty\IttyBitty_aliases.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty\IttyBitty_bits.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty\IttyBitty_fields.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty\IttyBitty_info.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty\IttyBitty_messages.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty\IttyBitty_print.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty\IttyBitty_type_traits.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty\IttyBitty_util.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty\IttyBitty_values.h">
-      <Filter>Libraries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -262,49 +243,38 @@
     <ClCompile Include="..\..\libraries\Wire\utility\twi.c">
       <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="libs\LiquidCrystal_I2C.custom.cpp">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
     <ClCompile Include="libs\BigFont.c">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
     <ClCompile Include="libs\DB.cpp">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
     <ClCompile Include="libs\BigCrystal_I2C.custom.cpp">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
     <ClCompile Include="libs\MENWIZ.custom.cpp">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
     <ClCompile Include="libs\phi_prompt.custom.cpp">
-      <Filter>Libraries</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
-    <ClCompile Include="..\IttyBitty\IttyBitty_bits.cpp">
-      <Filter>Libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty\IttyBitty_fields.cpp">
-      <Filter>Libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty\IttyBitty_messages.cpp">
-      <Filter>Libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty\IttyBitty_print.cpp">
-      <Filter>Libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty\IttyBitty_values.cpp">
-      <Filter>Libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="Foxetron_LCD.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="Foxetron_RGB.cpp">
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Foxetron_messages.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="Foxetron_EEPROM.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Foxetron_messages.cpp">
+    <ClCompile Include="Foxetron_LCD.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Foxetron_RGB.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
