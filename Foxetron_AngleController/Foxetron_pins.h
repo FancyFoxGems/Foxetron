@@ -13,7 +13,7 @@
 #pragma region INCLUDES
 
 //  ITTY BITTY
-#include "IttyBitty_util.h"
+#include "IttyBitty_gpio.h"
 
 #pragma endregion
 
@@ -62,7 +62,7 @@
 INLINE VOID initializePins()
 {
 	// Initialize Arduino pin mapping
-	//InitGPIO();
+	InitGPIO();
 
 
 	// REAR PINS
@@ -70,42 +70,42 @@ INLINE VOID initializePins()
 	// [Pins 0 (RX) & 1 (TX): USART serial communication --[angle feedback]--> AVR uC stepper motor angle controller]
 
 	// Angle encoder
-	pinMode(PIN_ANGLE_ENCODER_A, INPUT);			// Channel A
-	pinMode(PIN_ANGLE_ENCODER_B, INPUT);			// Channel B
+	SET_ARDUINO_PIN_MODE(PIN_ANGLE_ENCODER_A, INPUT);			// Channel A
+	SET_ARDUINO_PIN_MODE(PIN_ANGLE_ENCODER_B, INPUT);			// Channel B
 
-													// LED buttons
-	pinMode(PIN_LED_BUTTON_1, INPUT);				// LED button #1
-	pinMode(PIN_LED_BUTTON_2, INPUT);				// LED button #2
-	pinMode(PIN_LED_BUTTON_3, INPUT);				// LED button #3
-	pinMode(PIN_LED_BUTTON_4, INPUT);				// LED button #4
-	pinMode(PIN_LED_BUTTON_5, INPUT);				// LED button #5
+	// LED buttons
+	SET_ARDUINO_PIN_MODE(PIN_LED_BUTTON_1, INPUT);				// LED button #1
+	SET_ARDUINO_PIN_MODE(PIN_LED_BUTTON_2, INPUT);				// LED button #2
+	SET_ARDUINO_PIN_MODE(PIN_LED_BUTTON_3, INPUT);				// LED button #3
+	SET_ARDUINO_PIN_MODE(PIN_LED_BUTTON_4, INPUT);				// LED button #4
+	SET_ARDUINO_PIN_MODE(PIN_LED_BUTTON_5, INPUT);				// LED button #5
 
-													// [Pins 9-11: RGB LED - 9: red / 10: green / 11: blue]
-	pinMode(PIN_PWM_RGB_LED_RED, OUTPUT);
-	pinMode(PIN_PWM_RGB_LED_GREEN, OUTPUT);
-	pinMode(PIN_PWM_RGB_LED_BLUE, OUTPUT);
+	// [Pins 9-11: RGB LED - 9: red / 10: green / 11: blue]
+	SET_ARDUINO_PIN_MODE(PIN_PWM_RGB_LED_RED, OUTPUT);
+	SET_ARDUINO_PIN_MODE(PIN_PWM_RGB_LED_GREEN, OUTPUT);
+	SET_ARDUINO_PIN_MODE(PIN_PWM_RGB_LED_BLUE, OUTPUT);
 
 	// [Pin 12 (PB4); FREE]
-	pinMode(PIN_12, INPUT_PULLUP);
+	SET_ARDUINO_PIN_MODE(PIN_12, INPUT_PULLUP);
 
 
 	// FRONT PINS
 
-	pinMode(PIN_OUT_STATUS_LED, OUTPUT);			// Status LED
+	SET_ARDUINO_PIN_MODE(PIN_OUT_STATUS_LED, OUTPUT);			// Status LED
 
-													// Menu encoder
-	pinMode(PIN_MENU_ENCODER_A, INPUT_PULLUP);		// Channel A
-	pinMode(PIN_MENU_ENCODER_B, INPUT_PULLUP);		// Channel B
+	// Menu encoder
+	SET_ARDUINO_PIN_MODE(PIN_MENU_ENCODER_A, INPUT_PULLUP);		// Channel A
+	SET_ARDUINO_PIN_MODE(PIN_MENU_ENCODER_B, INPUT_PULLUP);		// Channel B
 
-													// Menu buttons
-	pinMode(PIN_SELECT_BUTTON, INPUT_PULLUP);		// Select button
-	pinMode(PIN_SHIFT_BUTTON, INPUT_PULLUP);		// Shift button
+	// Menu buttons
+	SET_ARDUINO_PIN_MODE(PIN_SELECT_BUTTON, INPUT_PULLUP);		// Select button
+	SET_ARDUINO_PIN_MODE(PIN_SHIFT_BUTTON, INPUT_PULLUP);		// Shift button
 
-													// [Pin A7 (ADC6; analog only): Mode switch
-	pinMode(PIN_ADC_MODE_SWITCH, INPUT_PULLUP);
+	// [Pin A7 (ADC6; analog only): Mode switch
+	SET_ARDUINO_PIN_MODE(PIN_ADC_MODE_SWITCH, INPUT_PULLUP);
 
 	// [Pin A6 (ADC6; analog only); FREE]
-	pinMode(PIN_ADC_6, INPUT_PULLUP);
+	SET_ARDUINO_PIN_MODE(PIN_ADC_6, INPUT_PULLUP);
 
 	// [Pins 18 & 19 - SDA: 18/A4 & SCL: 19/A5 | I2C --> PCF8574T port expander --> RGB HD44780]
 }

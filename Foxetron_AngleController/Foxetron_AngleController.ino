@@ -455,13 +455,13 @@ VOID DEBUG_printInputValues()
 		DDRB &= ~(1 << 0);
 	}
 
-	_ModeSwitch = analogRead(7) > 500 ? TRUE : FALSE;
+	_ModeSwitch		= analogRead(7) > 500 ? TRUE : FALSE;
 
-	_MenuEncoderA = digitalRead(14);
-	_MenuEncoderB = digitalRead(15);
+	_MenuEncoderA	= digitalRead(14);
+	_MenuEncoderB	= digitalRead(15);
 
-	_SelectButton = !digitalRead(16);
-	_ShiftButton = !digitalRead(17);
+	_SelectButton	= !digitalRead(16);
+	_ShiftButton	= !digitalRead(17);
 
 
 	// REAR INPUTS

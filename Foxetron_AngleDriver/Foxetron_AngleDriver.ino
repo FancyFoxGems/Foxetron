@@ -60,7 +60,7 @@ using namespace Foxetron;
 
 // PROGRAM OPTIONS
 
-#define DEBUG_INPUTS			0
+#define DEBUG_INPUTS			1
 #define DEBUG_INPUT_DELAY_MS	500
 
 #if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
@@ -300,9 +300,9 @@ VOID DEBUG_printInputValues()
 	_AngleEncoderA	= digitalRead(PIN_ANGLE_ENCODER_A);
 	_AngleEncoderB	= digitalRead(PIN_ANGLE_ENCODER_B);
 
-	_ActionButton = !digitalRead(PIN_BUTTON_ACTION);
+	_ActionButton	= !digitalRead(PIN_BUTTON_ACTION);
 	_OneShotButton	= !digitalRead(PIN_BUTTON_ONESHOT);
-	_LatchButton = !digitalRead(PIN_BUTTON_LATCH);
+	_LatchButton	= !digitalRead(PIN_BUTTON_LATCH);
 
 
 	// REAR INPUTS

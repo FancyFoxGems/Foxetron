@@ -13,7 +13,9 @@
 #pragma region INCLUDES
 
 //  ITTY BITTY
-#include "IttyBitty_util.h"
+#include "IttyBitty_gpio.h"
+
+using namespace IttyBitty;
 
 #pragma endregion
 
@@ -45,27 +47,27 @@
 INLINE VOID initializePins()
 {
 	// Initialize Arduino pin mapping
-	//InitGPIO();
+	InitGPIO();
 
 	// REAR PINS
 
 	// [Pins 0 (RX) & 1 (TX): USART serial communication --[angle feedback, commands, etc.]--> AVR uC stepper motor angle controller]
 
 	// Angle encoder
-	pinMode(PIN_ANGLE_ENCODER_A, INPUT);			// Channel A
-	pinMode(PIN_ANGLE_ENCODER_B, INPUT);			// Channel B
+	SET_ARDUINO_PIN_MODE(PIN_ANGLE_ENCODER_A, INPUT);			// Channel A
+	SET_ARDUINO_PIN_MODE(PIN_ANGLE_ENCODER_B, INPUT);			// Channel B
 
 
 	// FRONT PINS
 
-	pinMode(PIN_OUT_STATUS_LED, OUTPUT);
+	SET_ARDUINO_PIN_MODE(PIN_OUT_STATUS_LED, OUTPUT);
 
-	pinMode(PIN_OUT_ACTION_LED, OUTPUT);
+	SET_ARDUINO_PIN_MODE(PIN_OUT_ACTION_LED, OUTPUT);
 
 	// Mast control inputs
-	pinMode(PIN_BUTTON_ACTION, INPUT_PULLUP);
-	pinMode(PIN_BUTTON_ONESHOT, INPUT_PULLUP);
-	pinMode(PIN_BUTTON_LATCH, INPUT_PULLUP);
+	SET_ARDUINO_PIN_MODE(PIN_BUTTON_ACTION, INPUT_PULLUP);
+	SET_ARDUINO_PIN_MODE(PIN_BUTTON_ONESHOT, INPUT_PULLUP);
+	SET_ARDUINO_PIN_MODE(PIN_BUTTON_LATCH, INPUT_PULLUP);
 }
 
 #pragma endregion
