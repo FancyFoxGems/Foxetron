@@ -144,7 +144,7 @@ VOID setup()
 	initializePins();
 	initializeInterrupts();
 	
-	PinD2::SetMode(INPUT_PULLUP);
+	//PinD2::SetMode(INPUT_PULLUP);
 }
 
 VOID cleanUp()

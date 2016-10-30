@@ -49,6 +49,7 @@ INLINE VOID initializePins()
 	// Initialize Arduino pin mapping
 	InitGPIO();
 
+
 	// REAR PINS
 
 	// [Pins 0 (RX) & 1 (TX): USART serial communication --[angle feedback, commands, etc.]--> AVR uC stepper motor angle controller]
@@ -60,8 +61,8 @@ INLINE VOID initializePins()
 
 	// FRONT PINS
 
+	// LEDs
 	SET_ARDUINO_PIN_MODE(PIN_OUT_STATUS_LED, OUTPUT);
-
 	SET_ARDUINO_PIN_MODE(PIN_OUT_ACTION_LED, OUTPUT);
 
 	// Mast control inputs
