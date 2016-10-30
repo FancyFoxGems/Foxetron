@@ -224,7 +224,7 @@ VOID loop()
 	LCD.clear();
 	LCD.home();
 	LCD.print(_AngleReading);
-	Serial.println(_AngleReading);
+	PrintLine((LONG)_AngleReading);
 
 #ifdef DEBUG_INPUTS
 
@@ -507,36 +507,36 @@ VOID DEBUG_printInputValues()
 	LCD.setCursor(14, 1);
 	LCD.print(itoa(_ShiftButton, valStr, 2));
 
-
-	Serial.print(itoa(_AngleEncoderA, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_AngleEncoderB, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_LedButton1, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_LedButton2, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_LedButton3, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_LedButton4, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_LedButton5, valStr, 2));
-	Serial.println();
+	
+	PrintBit((BIT)_AngleEncoderA);
+	PrintString(F(" "));
+	PrintBit((BIT)_AngleEncoderB);
+	PrintString(F(" "));
+	PrintBit((BIT)_LedButton1);
+	PrintString(F(" "));
+	PrintBit((BIT)_LedButton2);
+	PrintString(F(" "));
+	PrintBit((BIT)_LedButton3);
+	PrintString(F(" "));
+	PrintBit((BIT)_LedButton4);
+	PrintString(F(" "));
+	PrintBit((BIT)_LedButton5);
+	PrintLine();
 
 	Serial.print(itoa(_ModeSwitchVal, valStr, 10));
-	Serial.print(F(" / "));
-	Serial.print(itoa(_ModeSwitch, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_MenuEncoderA, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_MenuEncoderB, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_SelectButton, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_ShiftButton, valStr, 2));
-	Serial.println();
+	PrintString(F(" / "));
+	PrintBit((BIT)_ModeSwitch);
+	PrintString(F(" "));
+	PrintBit((BIT)_MenuEncoderA);
+	PrintString(F(" "));
+	PrintBit((BIT)_MenuEncoderB);
+	PrintString(F(" "));
+	PrintBit((BIT)_SelectButton);
+	PrintString(F(" "));
+	PrintBit((BIT)_ShiftButton);
+	PrintLine();
 
-	Serial.println();
+	PrintLine();
 }
 
 VOID DEBUG_displayCustomChars()

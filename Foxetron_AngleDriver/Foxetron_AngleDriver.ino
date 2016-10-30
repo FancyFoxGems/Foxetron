@@ -17,6 +17,7 @@
 * See the included GNU General Public License text for more details.
 *****************************************************************************************************/
 
+
 // GCC WARNING SUPPRESSIONS
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
@@ -28,6 +29,9 @@
 
 #pragma region INCLUDES
 
+// ITTY BITTY
+#include "IttyBitty.h"
+
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
 
@@ -35,9 +39,6 @@
 #include "Foxetron_messages.h"
 
 using namespace Foxetron;
-
-// ITTY BITTY
-#include "IttyBitty_base.h"
 
 // PROJECT LIBS
 
@@ -62,11 +63,12 @@ using namespace Foxetron;
 #define DEBUG_INPUTS			0
 #define DEBUG_INPUT_DELAY_MS	500
 
-#define SERIAL_BAUD_RATE		115200
-
 #if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
 	#undef DEBUG_INPUTS
 #endif
+
+#define SERIAL_BAUD_RATE		115200
+#define SERIAL_DELAY_MS			100
 
 #pragma endregion
 
@@ -120,7 +122,6 @@ ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 VOID cleanUp();
 VOID initializeInterrupts();
 
-//VOID onMessage(PIMESSAGE);
 MESSAGEHANDLER onMessage;
 
 VOID DEBUG_printInputValues();
@@ -135,15 +136,15 @@ VOID setup()
 	Serial.begin(SERIAL_BAUD_RATE);
 
 #ifdef _DEBUG
-	PrintLineAndFlush("\nREADY!");
+	PrintLine("\nREADY!\n", Serial);
 #endif
 
 	atexit(cleanUp);
 
 	initializePins();
 	initializeInterrupts();
-
-	//pinMode()
+	
+	PinD2::SetMode(INPUT_PULLUP);
 }
 
 VOID cleanUp()
@@ -158,39 +159,27 @@ VOID serialEvent()
 
 int freeRam()
 {
-  extern int __heap_start, *__brkval; 
-  int v; 
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+	extern int __heap_start, *__brkval; 
+	int v; 
+	return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
 }
 
 VOID loop()
-{
-	//PNEWANGLEREQUEST a = new NewAngleRequest(300);
-
-	//a.printTo(Serial);
-	//Serial.println();
-
-	//PCCHAR m = a->ToString();
-	//Serial.println(m);
-
-	//Serial.println(a->ToString());
-
-	//Serial.flush();
-	//delay(500);
-
-	//delete a;
-	//a = NULL;
-	
+{	
 #ifdef _DEBUG	
-	Serial.print("\nRAM: ");
-	Serial.println(freeRam());
-	FlushAndDelay();
+	
+	PrintBitLine(PinD2::Check());
+
+	PrintString("RAM: ");
+	PrintLine((WORD)freeRam());
+	PrintLine("\n");
+
 #endif
 
 	delay(3000);
 
 #ifdef DEBUG_INPUTS
-	_DEBUG_printInputValues();
+	DEBUG_printInputValues();
 #endif
 }
 
@@ -216,8 +205,8 @@ STATIC INLINE VOID _ISR_AngleEncoder_updateAngleReading()
 		--_AngleReading;
 
 #ifdef DEBUG_INPUTS
-	Serial.print(F("ANGLE: "));
-	PrintLineAndFlush(_AngleReading);
+	PrintString(F("ANGLE: "));
+	PrintLine((LONG)_AngleReading);
 #endif
 }
 
@@ -269,8 +258,8 @@ VOID onMessage(PIMESSAGE message)
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 
 #ifdef _DEBUG
-	Serial.print(F("NEW MSG - CODE: "));
-	PrintLineAndFlush(message->GetMessageCode());
+	PrintString(F("NEW MSG - CODE: "));
+	PrintLine(message->GetMessageCode());
 #endif
 
 	switch (msgCode)
@@ -306,10 +295,8 @@ VOID onMessage(PIMESSAGE message)
 
 #pragma region DEBUG UTILITY FUNCTIONS
 
-VOID _DEBUG_printInputValues()
+VOID DEBUG_printInputValues()
 {
-	STATIC CHAR valStr[2];
-
 	_AngleEncoderA	= digitalRead(PIN_ANGLE_ENCODER_A);
 	_AngleEncoderB	= digitalRead(PIN_ANGLE_ENCODER_B);
 
@@ -320,22 +307,22 @@ VOID _DEBUG_printInputValues()
 
 	// REAR INPUTS
 
-	Serial.print(itoa(_AngleEncoderA, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_AngleEncoderB, valStr, 2));
-	Serial.println();
+	PrintBit((BIT)_AngleEncoderA);
+	PrintString(F(" "));
+	PrintBit((BIT)_AngleEncoderB);
+	PrintLine();
 
 
 	// FRONT INPUTS
+	
+	PrintBit((BIT)_LatchButton);
+	PrintString(F(" "));
+	PrintBit((BIT)_OneShotButton);
+	PrintString(F(" "));
+	PrintBit((BIT)_ActionButton);
+	PrintLine();
 
-	Serial.print(itoa(_LatchButton, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_OneShotButton, valStr, 2));
-	Serial.print(F(" "));
-	Serial.print(itoa(_ActionButton, valStr, 2));
-	Serial.println();
-
-	FlushAndDelay();
+	PrintLine();
 
 	_ActionLed = !_ActionLed;
 	digitalWrite(PIN_OUT_ACTION_LED, _ActionLed);
