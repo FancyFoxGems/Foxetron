@@ -60,17 +60,17 @@ namespace Foxetron
 		IDLE
 	};
 
-	typedef enum MessageCode * PMESSAGECODE, & RMESSAGECODE;
-	typedef const enum MessageCode * PCMESSAGECODE, & RCMESSAGECODE;
+	typedef enum MessageCode * PMESSAGECODE, & RMESSAGECODE, ** PPMESSAGECODE;
+	typedef const enum MessageCode * PCMESSAGECODE, & RCMESSAGECODE, ** PPCMESSAGECODE;
 
-	typedef enum Error * PERROR, & RERROR;
-	typedef const enum Error * PCERROR, & RCERROR;
+	typedef enum Error * PERROR, & RERROR, ** PPERROR;
+	typedef const enum Error * PCERROR, & RCERROR, ** PPCERROR;
 
-	typedef enum ControllerStatus * PCONTROLLERSTATUS, & RCONTROLLERSTATUS;
-	typedef const enum ControllerStatus * PCCONTROLLERSTATUS, & RCCONTROLLERSTATUS;
+	typedef enum ControllerStatus * PCONTROLLERSTATUS, & RCONTROLLERSTATUS, ** PPCONTROLLERSTATUS;
+	typedef const enum ControllerStatus * PCCONTROLLERSTATUS, & RCCONTROLLERSTATUS, ** PPCCONTROLLERSTATUS;
 
-	typedef enum DriverStatus * PDRIVERSTATUS, & RDRIVERSTATUS;
-	typedef const enum DriverStatus * PCDRIVERSTATUS, & RCDRIVERSTATUS;
+	typedef enum DriverStatus * PDRIVERSTATUS, & RDRIVERSTATUS, ** PPDRIVERSTATUS;
+	typedef const enum DriverStatus * PCDRIVERSTATUS, & RCDRIVERSTATUS, ** PPCDRIVERSTATUS;
 
 #pragma endregion
 
@@ -140,8 +140,6 @@ namespace Foxetron
 	public:
 
 		Request(MessageCode = MessageCode::REQUEST_TYPE, CBYTE paramCount = 0);
-
-		BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
 
 

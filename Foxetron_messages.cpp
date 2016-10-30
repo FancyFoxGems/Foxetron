@@ -17,10 +17,6 @@ using namespace Foxetron;
 
 Request::Request(MessageCode messageCode, CBYTE paramCount) : Message((CBYTE)messageCode, paramCount) { }
 
-BOOL Request::Handle(PVOID results, PCVOID state)
-{
-	return TRUE;
-}
 
 // AngleRequest
 
@@ -28,6 +24,10 @@ AngleRequest::AngleRequest() : Request(MessageCode::ANGLE_REQUEST, 0) { }
 
 BOOL AngleRequest::Handle(PVOID results, PCVOID state)
 {
+#ifdef DEBUG_MESSAGES
+	PrintLine(F("AngleRequest::Handle"));
+#endif
+
 	return TRUE;
 }
 
@@ -46,6 +46,11 @@ RCWORD NewAngleRequest::Degrees() const
 
 BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
 {
+#ifdef DEBUG_MESSAGES
+	PrintLine(F("NewAngleRequest::Handle"));
+#endif
+	
+	*((PPWORD)results)[0] = this->Degrees();
 
 	return TRUE;
 }
@@ -57,6 +62,10 @@ StatusRequest::StatusRequest() : Request(MessageCode::STATUS_REQUEST, 0) { }
 
 BOOL StatusRequest::Handle(PVOID results, PCVOID state)
 {
+#ifdef DEBUG_MESSAGES
+	PrintLine(F("StatusRequest::Handle"));
+#endif
+
 	return TRUE;
 }
 
@@ -69,7 +78,10 @@ BOOL StatusRequest::Handle(PVOID results, PCVOID state)
 // Response
 
 
-Response::Response(RCERROR error, MessageCode msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount) { }
+Response::Response(RCERROR error, MessageCode msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount)
+{
+	_Params[0] = new Field((BYTE)error);
+}
 
 RCERROR Response::ErrorCode() const
 {
@@ -78,6 +90,12 @@ RCERROR Response::ErrorCode() const
 
 BOOL Response::Handle(PVOID results, PCVOID state)
 {
+#ifdef DEBUG_MESSAGES
+	PrintLine(F("Response::Handle"));
+#endif
+	
+	*((PPERROR)results)[0] = this->ErrorCode();
+
 	return TRUE;
 }
 
@@ -95,6 +113,14 @@ RCWORD AngleResponse::Degrees() const
 
 BOOL AngleResponse::Handle(PVOID results, PCVOID state)
 {
+#ifdef DEBUG_MESSAGES
+	PrintLine(F("AngleResponse::Handle"));
+#endif
+
+	Response::Handle(results, state);
+	
+	*((PPWORD)results)[1] = this->Degrees();
+
 	return TRUE;
 }
 
@@ -105,6 +131,12 @@ NewAngleResponse::NewAngleResponse(RCERROR error) : Response(error, MessageCode:
 
 BOOL NewAngleResponse::Handle(PVOID results, PCVOID state)
 {
+#ifdef DEBUG_MESSAGES
+	PrintLine(F("NewAngleResponse::Handle"));
+#endif
+
+	Response::Handle(results, state);
+
 	return TRUE;
 }
 
@@ -123,6 +155,14 @@ PCCHAR StatusResponse::StatusMessage() const
 
 BOOL StatusResponse::Handle(PVOID results, PCVOID state)
 {
+#ifdef DEBUG_MESSAGES
+	PrintLine(F("StatusResponse::Handle"));
+#endif
+
+	Response::Handle(results, state);
+	
+	*((PPCCHAR *)results)[1] = this->StatusMessage();
+
 	return TRUE;
 }
 
@@ -142,6 +182,14 @@ RCCONTROLLERSTATUS ControllerStatusResponse::StatusCode() const
 
 BOOL ControllerStatusResponse::Handle(PVOID results, PCVOID state)
 {
+#ifdef DEBUG_MESSAGES
+	PrintLine(F("ControllerStatusResponse::Handle"));
+#endif
+
+	StatusResponse::Handle(results, state);
+	
+	*((PPCONTROLLERSTATUS)results)[2] = this->StatusCode();
+
 	return TRUE;
 }
 
@@ -161,6 +209,14 @@ RCDRIVERSTATUS DriverStatusResponse::StatusCode() const
 
 BOOL DriverStatusResponse::Handle(PVOID results, PCVOID state)
 {
+#ifdef DEBUG_MESSAGES
+	PrintLine(F("DriverStatusResponse::Handle"));
+#endif
+
+	StatusResponse::Handle(results, state);
+	
+	*((PPDRIVERSTATUS)results)[2] = this->StatusCode();
+
 	return TRUE;
 }
 

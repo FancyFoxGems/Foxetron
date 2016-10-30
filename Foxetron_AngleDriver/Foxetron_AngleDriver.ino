@@ -60,7 +60,7 @@ using namespace Foxetron;
 
 // PROGRAM OPTIONS
 
-#define DEBUG_INPUTS			1
+#define DEBUG_INPUTS			0
 #define DEBUG_INPUT_DELAY_MS	500
 
 #if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
@@ -109,8 +109,9 @@ VBOOL _ActionLed		= HIGH;
 WORD _Degrees				= 0;
 WORD _DegreesNew			= 0;
 
-//Error * _ERROR				= NULL;
-//DriverStatus _DriverStatus	= DriverStatus::IDLE;
+Error _DriverError			= Error::SUCCESS;
+PCCHAR _DriverStatusMsg		= NULL;
+DriverStatus _DriverStatus	= DriverStatus::IDLE;
 
 Error _ControllerError		= Error::SUCCESS;
 PCCHAR _ControllerStatusMsg	= NULL;
@@ -143,8 +144,6 @@ VOID setup()
 
 	initializePins();
 	initializeInterrupts();
-	
-	//PinD2::SetMode(INPUT_PULLUP);
 }
 
 VOID cleanUp()
@@ -166,20 +165,28 @@ int freeRam()
 
 VOID loop()
 {	
-#ifdef _DEBUG	
-	
-	PrintBitLine(PinD2::Check());
+#ifdef _DEBUG
 
 	PrintString("RAM: ");
 	PrintLine((WORD)freeRam());
 	PrintLine("\n");
 
-#endif
-
 	delay(3000);
 
+#endif
+
 #ifdef DEBUG_INPUTS
+
 	DEBUG_printInputValues();
+
+	_ActionLed = !_ActionLed;
+	WRITE_ARDUINO_PIN(PIN_OUT_ACTION_LED, _ActionLed);
+
+	_StatusLed = !_StatusLed;
+	WRITE_ARDUINO_PIN(PIN_OUT_STATUS_LED, _StatusLed);
+
+	delay(DEBUG_INPUT_DELAY_MS);
+
 #endif
 }
 
@@ -257,36 +264,69 @@ VOID onMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 
-#ifdef _DEBUG
+#ifdef DEBUG_MESSAGES
 	PrintString(F("NEW MSG - CODE: "));
 	PrintLine(message->GetMessageCode());
 #endif
 
+	PPVOID results = NULL;
+	PPCVOID state = NULL;
+
 	switch (msgCode)
 	{
 	case MessageCode::ANGLE_REQUEST:
+		
+		state = new PCVOID[1] { &_Degrees };
+		reinterpret_cast<PANGLEREQUEST>(message)->Handle(NULL, state);
 
-		reinterpret_cast<PANGLEREQUEST>(message)->Handle(NULL, &_Degrees);
 		break;
 
 	case MessageCode::NEWANGLE_REQUEST:
 		
-		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle(&_DegreesNew);
+		results = new PVOID[1] { &_DegreesNew };
+		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle(results);
+		
+		#ifdef DEBUG_MESSAGES
+			PrintLine(_DegreesNew);
+		#endif
+
 		break;
 
 	case MessageCode::STATUS_REQUEST:
+		
+		state = new PCVOID[3] { &_DriverError, &_DriverStatusMsg, &_DriverStatus };
+		reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, state);
 
-		reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, NULL);
 		break;
 
 	case MessageCode::CONTROLLER_STATUS:
 
-		reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(&_ControllerError);//, &_ControllerStatusMsg, &_ControllerStatus);
+		results = new PVOID[3] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus };
+		reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(results);
+		
+		#ifdef DEBUG_MESSAGES
+			PrintLine((BYTE)_ControllerError);
+			PrintLine(_ControllerStatusMsg);
+			PrintLine((BYTE)_ControllerStatus);
+		#endif
+
 		break;
 
 	default:
 
 		break;
+	}
+
+	if (results)
+	{
+		delete[] results;
+		results = NULL;
+	}
+
+	if (state)
+	{
+		delete[] state;
+		state = NULL;
 	}
 }
 
@@ -323,14 +363,6 @@ VOID DEBUG_printInputValues()
 	PrintLine();
 
 	PrintLine();
-
-	_ActionLed = !_ActionLed;
-	digitalWrite(PIN_OUT_ACTION_LED, _ActionLed);
-
-	_StatusLed = !_StatusLed;
-	digitalWrite(PIN_OUT_STATUS_LED, _StatusLed);
-
-	delay(DEBUG_INPUT_DELAY_MS);
 }
 
 #pragma endregion

@@ -72,6 +72,8 @@ using namespace Foxetron;
 // PROGRAM OPTIONS
 
 #define DEBUG_INPUTS			0
+#define DEBUG_INPUT_DELAY_MS	500
+
 #define SERIAL_ENABLE
 #define SERIAL_BAUD_RATE		115200
 
@@ -224,16 +226,15 @@ VOID loop()
 	LCD.clear();
 	LCD.home();
 	LCD.print(_AngleReading);
-	PrintLine((LONG)_AngleReading);
 
 #ifdef DEBUG_INPUTS
 
 	DEBUG_printInputValues();
 
 	_StatusLED = !_StatusLED;
-	digitalWrite(13, _StatusLED);
+	WRITE_ARDUINO_PIN(13, _StatusLED);
 
-	delay(100);
+	delay(DEBUG_INPUT_DELAY_MS);
 
 #endif
 }
@@ -258,6 +259,11 @@ STATIC INLINE VOID _ISR_AngleEncoder_updateAngleReading()
 		++_AngleReading;
 	else
 		--_AngleReading;
+
+#ifdef DEBUG_INPUTS
+	PrintString(F("ANGLE: "));
+	PrintLine((LONG)_AngleReading);
+#endif
 }
 
 // CHANNEL A
@@ -326,31 +332,74 @@ VOID onMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 
+#ifdef DEBUG_MESSAGES
+	PrintString(F("NEW MSG - CODE: "));
+	PrintLine(message->GetMessageCode());
+#endif
+
+	PPVOID results = NULL;
+	PPCVOID state = NULL;
+
 	switch (msgCode)
 	{
 	case MessageCode::STATUS_REQUEST:
+		
+		state = new PCVOID[3] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus };
+		reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, state);
 
-		reinterpret_cast<PSTATUSREQUEST>(message)->Handle();
 		break;
 
 	case MessageCode::ANGLE_RESPONSE:
+		
+		results = new PVOID[2] { &_DriverError, &_Degrees };
+		reinterpret_cast<PANGLERESPONSE>(message)->Handle(results, state);
+		
+		#ifdef DEBUG_MESSAGES
+			PrintLine((BYTE)_DriverError);
+			PrintLine(_Degrees);
+		#endif
 
-		reinterpret_cast<PANGLERESPONSE>(message)->Handle(&_DriverError, &_Degrees);
 		break;
 
 	case MessageCode::NEWANGLE_RESPONSE:
+		
+		results = new PVOID[1] { &_DriverError };
+		reinterpret_cast<PANGLERESPONSE>(message)->Handle(results);
+		
+		#ifdef DEBUG_MESSAGES
+			PrintLine((BYTE)_DriverError);
+		#endif
 
-		reinterpret_cast<PANGLERESPONSE>(message)->Handle(&_DriverError);
 		break;
 
 	case MessageCode::DRIVER_STATUS:
+		
+		results = new PVOID[3] { &_DriverError, &_DriverStatusMsg, &_DriverStatus };
+		reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(results);
+		
+		#ifdef DEBUG_MESSAGES
+			PrintLine((BYTE)_DriverError);
+			PrintLine(_DriverStatusMsg);
+			PrintLine((BYTE)_DriverStatus);
+		#endif
 
-		reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(&_DriverError);//, &_DriverStatusMsg, &_DriverStatus);
 		break;
 
 	default:
 
 		break;
+	}
+
+	if (results)
+	{
+		delete[] results;
+		results = NULL;
+	}
+
+	if (state)
+	{
+		delete[] state;
+		state = NULL;
 	}
 }
 
