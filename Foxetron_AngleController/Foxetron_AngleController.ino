@@ -336,7 +336,8 @@ VOID onMessage(PIMESSAGE message)
 	PrintString(F("NEW MSG - CODE: "));
 	PrintLine(message->GetMessageCode());
 #endif
-
+	
+	BOOL msgHandled = FALSE;
 	PPVOID results = NULL;
 	PPCVOID state = NULL;
 
@@ -344,46 +345,50 @@ VOID onMessage(PIMESSAGE message)
 	{
 	case MessageCode::STATUS_REQUEST:
 		
-		state = new PCVOID[3] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus };
-		reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, state);
+		state = new PCVOID[4] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus, NULL };
+		msgHandled = reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, state);
 
 		break;
+
 
 	case MessageCode::ANGLE_RESPONSE:
 		
 		results = new PVOID[2] { &_DriverError, &_Degrees };
-		reinterpret_cast<PANGLERESPONSE>(message)->Handle(results, state);
+		msgHandled = reinterpret_cast<PANGLERESPONSE>(message)->Handle(results, state);
 		
-		#ifdef DEBUG_MESSAGES
-			PrintLine((BYTE)_DriverError);
-			PrintLine(_Degrees);
-		#endif
+	#ifdef DEBUG_MESSAGES
+		PrintLine((BYTE)_DriverError);
+		PrintLine(_Degrees);
+	#endif
 
 		break;
+
 
 	case MessageCode::NEWANGLE_RESPONSE:
 		
 		results = new PVOID[1] { &_DriverError };
-		reinterpret_cast<PANGLERESPONSE>(message)->Handle(results);
+		msgHandled = reinterpret_cast<PNEWANGLERESPONSE>(message)->Handle(results);
 		
-		#ifdef DEBUG_MESSAGES
-			PrintLine((BYTE)_DriverError);
-		#endif
+	#ifdef DEBUG_MESSAGES
+		PrintLine((BYTE)_DriverError);
+	#endif
 
 		break;
+
 
 	case MessageCode::DRIVER_STATUS:
 		
 		results = new PVOID[3] { &_DriverError, &_DriverStatusMsg, &_DriverStatus };
-		reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(results);
+		msgHandled = reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(results);
 		
-		#ifdef DEBUG_MESSAGES
-			PrintLine((BYTE)_DriverError);
-			PrintLine(_DriverStatusMsg);
-			PrintLine((BYTE)_DriverStatus);
-		#endif
+	#ifdef DEBUG_MESSAGES
+		PrintLine((BYTE)_DriverError);
+		PrintLine(_DriverStatusMsg);
+		PrintLine((BYTE)_DriverStatus);
+	#endif
 
 		break;
+
 
 	default:
 

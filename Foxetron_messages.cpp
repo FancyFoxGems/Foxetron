@@ -17,6 +17,19 @@ using namespace Foxetron;
 
 Request::Request(MessageCode messageCode, CBYTE paramCount) : Message((CBYTE)messageCode, paramCount) { }
 
+BOOL Request::Handle(PVOID results, PCVOID state)
+{
+#ifdef Request
+	PrintLine(F("AngleRequest::Handle"));
+#endif
+	
+#ifdef DEBUG_MESSAGES
+	PrintLine();
+#endif
+
+	return TRUE;
+}
+
 
 // AngleRequest
 
@@ -28,7 +41,17 @@ BOOL AngleRequest::Handle(PVOID results, PCVOID state)
 	PrintLine(F("AngleRequest::Handle"));
 #endif
 
-	return TRUE;
+	RCERROR driverError = *((PPCERROR)state)[0];
+	RCWORD degrees = *((PPCWORD)state)[1];
+
+#ifdef DEBUG_MESSAGES
+	PrintLine((BYTE)driverError);
+	PrintLine(degrees);
+#endif
+
+	AngleResponse(driverError, degrees).printTo(Serial);
+
+	return Request::Handle(results, state);
 }
 
 
@@ -51,8 +74,16 @@ BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
 #endif
 	
 	*((PPWORD)results)[0] = this->Degrees();
+	
+	RCERROR driverError = *((PPCERROR)state)[0];
 
-	return TRUE;
+#ifdef DEBUG_MESSAGES
+	PrintLine((BYTE)driverError);
+#endif
+
+	NewAngleResponse(driverError).printTo(Serial);
+	
+	return Request::Handle(results, state);
 }
 
 
@@ -65,8 +96,25 @@ BOOL StatusRequest::Handle(PVOID results, PCVOID state)
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("StatusRequest::Handle"));
 #endif
+	
+	RCERROR error = *((PPCERROR)state)[0];	
+	PCCHAR statusMsg = *((PPCCHAR *)state)[1];	
+	RCBYTE statusCode = *((PPCBYTE)state)[2];
+	BOOL isDriverStatus = (((PPBYTE)state)[3] != NULL);
 
-	return TRUE;
+#ifdef DEBUG_MESSAGES
+	PrintLine((BYTE)error);
+	PrintLine(statusMsg);
+	PrintLine(statusCode);
+	PrintLine(isDriverStatus);
+#endif
+
+	if (isDriverStatus)
+		DriverStatusResponse(error, (RCDRIVERSTATUS)statusCode, statusMsg).printTo(Serial);
+	else
+		ControllerStatusResponse(error, (RCCONTROLLERSTATUS)statusCode, statusMsg).printTo(Serial);
+	
+	return Request::Handle(results, state);
 }
 
 
@@ -80,12 +128,12 @@ BOOL StatusRequest::Handle(PVOID results, PCVOID state)
 
 Response::Response(RCERROR error, MessageCode msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount)
 {
-	_Params[0] = new Field((BYTE)error);
+	_Params[0] = new Field((RCBYTE)error);
 }
 
 RCERROR Response::ErrorCode() const
 {
-	return reinterpret_cast<RCERROR>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]));
+	return (RCERROR)(RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]);
 }
 
 BOOL Response::Handle(PVOID results, PCVOID state)

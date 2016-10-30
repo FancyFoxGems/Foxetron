@@ -110,7 +110,7 @@ WORD _Degrees				= 0;
 WORD _DegreesNew			= 0;
 
 Error _DriverError			= Error::SUCCESS;
-PCCHAR _DriverStatusMsg		= NULL;
+PCCHAR _DriverStatusMsg		= "ASDF";
 DriverStatus _DriverStatus	= DriverStatus::IDLE;
 
 Error _ControllerError		= Error::SUCCESS;
@@ -269,6 +269,7 @@ VOID onMessage(PIMESSAGE message)
 	PrintLine(message->GetMessageCode());
 #endif
 
+	BOOL msgHandled = FALSE;
 	PPVOID results = NULL;
 	PPCVOID state = NULL;
 
@@ -276,41 +277,87 @@ VOID onMessage(PIMESSAGE message)
 	{
 	case MessageCode::ANGLE_REQUEST:
 		
-		state = new PCVOID[1] { &_Degrees };
-		reinterpret_cast<PANGLEREQUEST>(message)->Handle(NULL, state);
+		state = new PCVOID[2] { &_DriverError, &_Degrees };
+		msgHandled = reinterpret_cast<PANGLEREQUEST>(message)->Handle(NULL, state);
 
 		break;
+
 
 	case MessageCode::NEWANGLE_REQUEST:
 		
 		results = new PVOID[1] { &_DegreesNew };
-		reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle(results);
+		state = new PCVOID[1] { &_DriverError };
+		msgHandled = reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle(results, state);
 		
-		#ifdef DEBUG_MESSAGES
-			PrintLine(_DegreesNew);
-		#endif
+	#ifdef DEBUG_MESSAGES
+		PrintLine(_DegreesNew);
+	#endif
 
 		break;
+
 
 	case MessageCode::STATUS_REQUEST:
 		
-		state = new PCVOID[3] { &_DriverError, &_DriverStatusMsg, &_DriverStatus };
-		reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, state);
+		state = new PCVOID[4] { &_DriverError, &_DriverStatusMsg, &_DriverStatus, (PCVOID)TRUE };
+		msgHandled = reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, state);
 
 		break;
+
 
 	case MessageCode::CONTROLLER_STATUS:
 
 		results = new PVOID[3] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus };
-		reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(results);
+		msgHandled = reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(results);
 		
-		#ifdef DEBUG_MESSAGES
-			PrintLine((BYTE)_ControllerError);
-			PrintLine(_ControllerStatusMsg);
-			PrintLine((BYTE)_ControllerStatus);
-		#endif
+	#ifdef DEBUG_MESSAGES
+		PrintLine((BYTE)_ControllerError);
+		PrintLine(_ControllerStatusMsg);
+		PrintLine((BYTE)_ControllerStatus);
+	#endif
+		
+		break;
+
+		
+
+	case MessageCode::ANGLE_RESPONSE:
+		
+		results = new PVOID[2] { &_DriverError, &_Degrees };
+		msgHandled = reinterpret_cast<PANGLERESPONSE>(message)->Handle(results, state);
+		
+	#ifdef DEBUG_MESSAGES
+		PrintLine((BYTE)_DriverError);
+		PrintLine(_Degrees);
+	#endif
 
 		break;
+
+
+	case MessageCode::NEWANGLE_RESPONSE:
+		
+		results = new PVOID[1] { &_DriverError };
+		msgHandled = reinterpret_cast<PNEWANGLERESPONSE>(message)->Handle(results);
+		
+	#ifdef DEBUG_MESSAGES
+		PrintLine((BYTE)_DriverError);
+	#endif
+
+		break;
+
+
+	case MessageCode::DRIVER_STATUS:
+		
+		results = new PVOID[3] { &_DriverError, &_DriverStatusMsg, &_DriverStatus };
+		msgHandled = reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(results);
+		
+	#ifdef DEBUG_MESSAGES
+		PrintLine((BYTE)_DriverError);
+		PrintLine(_DriverStatusMsg);
+		PrintLine((BYTE)_DriverStatus);
+	#endif
+
+		break;
+
+
 
 	default:
 

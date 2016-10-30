@@ -38,8 +38,8 @@ namespace Foxetron
 		STATUS_REQUEST		= REQUEST_TYPE | STATUS_TYPE,
 
 		// Response types
-		ANGLE_RESPONSE		= RESPONSE_TYPE | 0x1,
-		NEWANGLE_RESPONSE	= RESPONSE_TYPE | 0x2,
+		ANGLE_RESPONSE		= RESPONSE_TYPE | ANGLE_TYPE,
+		NEWANGLE_RESPONSE	= RESPONSE_TYPE | NEWANGLE_TYPE,
 		STATUS_RESPONSE		= RESPONSE_TYPE | STATUS_TYPE,
 		CONTROLLER_STATUS	= STATUS_RESPONSE | 0x1,
 		DRIVER_STATUS		= STATUS_RESPONSE | 0x2
@@ -60,17 +60,17 @@ namespace Foxetron
 		IDLE
 	};
 
-	typedef enum MessageCode * PMESSAGECODE, & RMESSAGECODE, ** PPMESSAGECODE;
-	typedef const enum MessageCode * PCMESSAGECODE, & RCMESSAGECODE, ** PPCMESSAGECODE;
+	typedef enum MessageCode MESSAGECODE, * PMESSAGECODE, & RMESSAGECODE, ** PPMESSAGECODE;
+	typedef const enum MessageCode CMESSAGECODE, * PCMESSAGECODE, & RCMESSAGECODE, ** PPCMESSAGECODE;
 
-	typedef enum Error * PERROR, & RERROR, ** PPERROR;
-	typedef const enum Error * PCERROR, & RCERROR, ** PPCERROR;
+	typedef enum Error ERROR, * PERROR, & RERROR, ** PPERROR;
+	typedef const enum Error CERROR, * PCERROR, & RCERROR, ** PPCERROR;
 
-	typedef enum ControllerStatus * PCONTROLLERSTATUS, & RCONTROLLERSTATUS, ** PPCONTROLLERSTATUS;
-	typedef const enum ControllerStatus * PCCONTROLLERSTATUS, & RCCONTROLLERSTATUS, ** PPCCONTROLLERSTATUS;
+	typedef enum ControllerStatus CONTROLLERSTATUS, * PCONTROLLERSTATUS, & RCONTROLLERSTATUS, ** PPCONTROLLERSTATUS;
+	typedef const enum ControllerStatus CCONTROLLERSTATUS, * PCCONTROLLERSTATUS, & RCCONTROLLERSTATUS, ** PPCCONTROLLERSTATUS;
 
-	typedef enum DriverStatus * PDRIVERSTATUS, & RDRIVERSTATUS, ** PPDRIVERSTATUS;
-	typedef const enum DriverStatus * PCDRIVERSTATUS, & RCDRIVERSTATUS, ** PPCDRIVERSTATUS;
+	typedef enum DriverStatus DRIVERSTATUS, * PDRIVERSTATUS, & RDRIVERSTATUS, ** PPDRIVERSTATUS;
+	typedef const enum DriverStatus CDRIVERSTATUS, * PCDRIVERSTATUS, & RCDRIVERSTATUS, ** PPCDRIVERSTATUS;
 
 #pragma endregion
 
@@ -140,6 +140,8 @@ namespace Foxetron
 	public:
 
 		Request(MessageCode = MessageCode::REQUEST_TYPE, CBYTE paramCount = 0);
+
+		BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
 
 
@@ -179,7 +181,7 @@ namespace Foxetron
 
 #pragma region Response DEFINITIONS
 
-	INTERFACE IResponse : public IMessage
+	INTERFACE IResponse
 	{
 	public:
 
@@ -192,7 +194,7 @@ namespace Foxetron
 	};
 	
 
-	INTERFACE IStatusResponse : public IResponse
+	INTERFACE IStatusResponse
 	{
 	public:
 
@@ -211,7 +213,7 @@ namespace Foxetron
 
 		Response(RCERROR, MessageCode = MessageCode::RESPONSE_TYPE, CBYTE = 1);
 
-		RCERROR ErrorCode() const;
+		RCERROR ErrorCode() const final;
 
 		BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
@@ -238,13 +240,13 @@ namespace Foxetron
 		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
-	CLASS StatusResponse : public Response
+	CLASS StatusResponse : public Response, public IStatusResponse
 	{
 	public:
 
 		StatusResponse(RCERROR, PCCHAR, MessageCode = MessageCode::RESPONSE_TYPE, CBYTE = 2);
 
-		PCCHAR StatusMessage() const;
+		PCCHAR StatusMessage() const final;
 
 		BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
