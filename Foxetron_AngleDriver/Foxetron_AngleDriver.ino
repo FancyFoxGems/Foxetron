@@ -297,12 +297,12 @@ VOID onMessage(PIMESSAGE message)
 
 VOID DEBUG_printInputValues()
 {
-	_AngleEncoderA	= digitalRead(PIN_ANGLE_ENCODER_A);
-	_AngleEncoderB	= digitalRead(PIN_ANGLE_ENCODER_B);
+	_AngleEncoderA	= CHECK_ARDUINO_PIN(PIN_ANGLE_ENCODER_A);
+	_AngleEncoderB	= CHECK_ARDUINO_PIN(PIN_ANGLE_ENCODER_B);
 
-	_ActionButton	= !digitalRead(PIN_BUTTON_ACTION);
-	_OneShotButton	= !digitalRead(PIN_BUTTON_ONESHOT);
-	_LatchButton	= !digitalRead(PIN_BUTTON_LATCH);
+	_ActionButton	= !CHECK_ARDUINO_PIN(PIN_BUTTON_ACTION);
+	_OneShotButton	= !CHECK_ARDUINO_PIN(PIN_BUTTON_ONESHOT);
+	_LatchButton	= !CHECK_ARDUINO_PIN(PIN_BUTTON_LATCH);
 
 
 	// REAR INPUTS

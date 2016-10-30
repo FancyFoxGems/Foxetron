@@ -62,7 +62,7 @@
 INLINE VOID initializePins()
 {
 	// Initialize Arduino pin mapping
-	InitGPIO();
+	IttyBitty::InitGPIO();
 
 
 	// REAR PINS

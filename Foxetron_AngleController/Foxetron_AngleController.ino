@@ -407,10 +407,10 @@ VOID DEBUG_printInputValues()
 {
 	STATIC CHAR valStr[5];
 
-	_AngleEncoderA = digitalRead(2);
-	_AngleEncoderB = digitalRead(3);
+	_AngleEncoderA = CHECK_ARDUINO_PIN(2);
+	_AngleEncoderB = CHECK_ARDUINO_PIN(3);
 
-	_LedButton1 = digitalRead(4);
+	_LedButton1 = CHECK_ARDUINO_PIN(4);
 	if (_LedButton1)
 	{
 		PORTD |= (1 << 4);
@@ -419,7 +419,7 @@ VOID DEBUG_printInputValues()
 		DDRD &= ~(1 << 4);
 	}
 
-	_LedButton2 = digitalRead(5);
+	_LedButton2 = CHECK_ARDUINO_PIN(5);
 	if (_LedButton2)
 	{
 		PORTD |= (1 << 5);
@@ -428,7 +428,7 @@ VOID DEBUG_printInputValues()
 		DDRD &= ~(1 << 5);
 	}
 
-	_LedButton3 = digitalRead(6);
+	_LedButton3 = CHECK_ARDUINO_PIN(6);
 	if (_LedButton3)
 	{
 		PORTD |= (1 << 6);
@@ -437,7 +437,7 @@ VOID DEBUG_printInputValues()
 		DDRD &= ~(1 << 6);
 	}
 
-	_LedButton4 = digitalRead(7);
+	_LedButton4 = CHECK_ARDUINO_PIN(7);
 	if (_LedButton4)
 	{
 		PORTD |= (1 << 7);
@@ -446,7 +446,7 @@ VOID DEBUG_printInputValues()
 		DDRD &= ~(1 << 7);
 	}
 
-	_LedButton5 = digitalRead(8);
+	_LedButton5 = CHECK_ARDUINO_PIN(8);
 	if (_LedButton5)
 	{
 		PORTB |= (1 << 0);
@@ -457,11 +457,11 @@ VOID DEBUG_printInputValues()
 
 	_ModeSwitch		= analogRead(7) > 500 ? TRUE : FALSE;
 
-	_MenuEncoderA	= digitalRead(14);
-	_MenuEncoderB	= digitalRead(15);
+	_MenuEncoderA	= CHECK_ARDUINO_PIN(14);
+	_MenuEncoderB	= CHECK_ARDUINO_PIN(15);
 
-	_SelectButton	= !digitalRead(16);
-	_ShiftButton	= !digitalRead(17);
+	_SelectButton	= !CHECK_ARDUINO_PIN(16);
+	_ShiftButton	= !CHECK_ARDUINO_PIN(17);
 
 
 	// REAR INPUTS
