@@ -125,7 +125,6 @@ BOOL StatusRequest::Handle(PVOID results, PCVOID state)
 
 // Response
 
-
 Response::Response(RCERROR error, MessageCode msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount)
 {
 	_Params[0] = new Field((RCBYTE)error);

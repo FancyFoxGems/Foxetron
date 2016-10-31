@@ -141,7 +141,7 @@ namespace Foxetron
 
 		Request(MessageCode = MessageCode::REQUEST_TYPE, CBYTE paramCount = 0);
 
-		BOOL Handle(PVOID = NULL, PCVOID = NULL);
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
 
 
@@ -151,7 +151,7 @@ namespace Foxetron
 
 		AngleRequest();
 
-		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 
@@ -163,7 +163,7 @@ namespace Foxetron
 
 		RCWORD Degrees() const;
 		
-		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 
@@ -173,7 +173,7 @@ namespace Foxetron
 
 		StatusRequest();
 
-		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 #pragma endregion
@@ -215,7 +215,7 @@ namespace Foxetron
 
 		RCERROR ErrorCode() const final;
 
-		BOOL Handle(PVOID = NULL, PCVOID = NULL);
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
 
 
@@ -227,7 +227,7 @@ namespace Foxetron
 
 		RCWORD Degrees() const;
 
-		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 
@@ -237,18 +237,18 @@ namespace Foxetron
 
 		NewAngleResponse(RCERROR);
 
-		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 	CLASS StatusResponse : public Response, public IStatusResponse
 	{
 	public:
 
-		StatusResponse(RCERROR, PCCHAR, MessageCode = MessageCode::RESPONSE_TYPE, CBYTE = 2);
+		StatusResponse(RCERROR, PCCHAR, MessageCode = MessageCode::STATUS_RESPONSE, CBYTE = 2);
 
 		PCCHAR StatusMessage() const final;
 
-		BOOL Handle(PVOID = NULL, PCVOID = NULL);
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
 
 	
@@ -260,7 +260,7 @@ namespace Foxetron
 
 		RCCONTROLLERSTATUS StatusCode() const;
 
-		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 
@@ -272,7 +272,7 @@ namespace Foxetron
 		
 		RCDRIVERSTATUS StatusCode() const;
 
-		BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 #pragma endregion
