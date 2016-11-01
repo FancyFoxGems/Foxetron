@@ -13,7 +13,7 @@
 #pragma region INCLUDES
 
 //  ITTY BITTY
-#include "IttyBitty_gpio.h"
+#include "IttyBitty_GPIO.h"
 
 #pragma endregion
 

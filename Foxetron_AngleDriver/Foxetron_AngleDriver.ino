@@ -142,8 +142,11 @@ VOID setup()
 
 	atexit(cleanUp);
 
-	//initializePins();
-	//initializeInterrupts();
+	initializePins();
+	initializeInterrupts();
+
+	//ExtEEPROM.write(0, 24);
+	//PrintLine(ExtEEPROM.read(0));
 }
 
 VOID cleanUp()
