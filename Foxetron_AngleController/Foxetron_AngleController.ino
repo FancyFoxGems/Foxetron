@@ -207,9 +207,9 @@ VOID setup()
 
 	initializePins();
 	initializeLCD();
-	initializeInterrupts();
-
 	initializeRGB();
+
+	initializeInterrupts();
 
 	LCD.printBig(F("Fox"), 2, 0);
 }
@@ -219,8 +219,25 @@ VOID serialEvent()
 	WaitForMessage(Serial, onMessage);
 }
 
-VOID loop()
+int freeRam()
 {
+	extern int __heap_start, *__brkval; 
+	int v; 
+	return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+}
+
+VOID loop()
+{	
+#ifdef _DEBUG
+
+	PrintString(F("\nRAM: "));
+	PrintLine((WORD)freeRam());
+	PrintLine();
+
+	delay(3000);
+
+#endif
+
 	RGB.tickAndDelay();
 
 	LCD.clear();

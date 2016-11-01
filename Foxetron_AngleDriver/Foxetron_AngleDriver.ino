@@ -142,13 +142,13 @@ VOID setup()
 
 	atexit(cleanUp);
 
-	initializePins();
-	initializeInterrupts();
+	//initializePins();
+	//initializeInterrupts();
 }
 
 VOID cleanUp()
 {
-
+	PrintString(F("** FATAL ERROR **"));
 }
 
 VOID serialEvent()
@@ -167,9 +167,9 @@ VOID loop()
 {	
 #ifdef _DEBUG
 
-	PrintString("RAM: ");
+	PrintString(F("\nRAM: "));
 	PrintLine((WORD)freeRam());
-	PrintLine("\n");
+	PrintLine();
 
 	delay(3000);
 
