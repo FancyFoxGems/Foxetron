@@ -31,6 +31,7 @@
 
 // ITTY BITTY
 #include "IttyBitty.h"
+#include "IttyBitty_EEPROM_I2C.h"
 
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
@@ -144,9 +145,9 @@ VOID setup()
 
 	initializePins();
 	initializeInterrupts();
-
-	//ExtEEPROM.write(0, 24);
-	//PrintLine(ExtEEPROM.read(0));
+	
+	ExtEEPROM.Write(0, 24);
+	PrintLine(ExtEEPROM.Read(0));
 }
 
 VOID cleanUp()
