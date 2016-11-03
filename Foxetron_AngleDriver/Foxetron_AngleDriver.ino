@@ -146,29 +146,40 @@ VOID setup()
 	initializePins();
 	initializeInterrupts();
 
-	Wire.begin();
-	
-	for (word i = 38; i < 238; i++)
-		ExtEEPROM.Write((CWORD)i, (CSIZE)(i - 38));
-	
-	for (word i = 38; i < 238; i++)
+	BYTE data[10];
+
+	PrintLine("READ 0-10");
+	for (word i = 0; i < 10; i++)
 		PrintLine(ExtEEPROM.Read(i));
+	
+	PrintLine("\nWRITE 0-10 * 2");
+	for (word i = 0; i < 10; i++)
+		PrintLine(ExtEEPROM.Write((CWORD)i, (CSIZE)(i * 2)));
 
-	BYTE data[200];
+	PrintLine("\nREAD 0-10 * 2");
+	for (word i = 0; i < 10; i++)
+		PrintLine(ExtEEPROM.Read(i));
+	
+	for (word i = 0; i < 10; i++)
+		data[i] = i;
+	
+	PrintLine("\nWRITE BLOCK i");
+	PrintLine(ExtEEPROM.Write(0, data, 10));
 
-	ExtEEPROM.Read(38, data, 200);
-	for (word i = 38; i < 238; i++)
+	PrintLine("\nREAD BLOCK i");
+	ExtEEPROM.Read(0, data, 10);
+	for (word i = 0; i < 10; i++)
 		PrintLine(data[i]);
 	
-	for (word i = 38; i < 238; i++)
-		data[i] = data[i] + 38;
-	for (word i = 38; i < 238; i++)
-		PrintLine(data[i]);
+	for (word i = 0; i < 10; i++)
+		data[i] = i * 2;
+	
+	PrintLine("\nUPDATE BLOCK i * 2");
+	PrintLine(ExtEEPROM.Update(0, data, 10));
 
-	ExtEEPROM.Write(38, data, 200);
-
-	ExtEEPROM.Read(38, data, 200);
-	for (word i = 38; i < 238; i++)
+	PrintLine("\nREAD BLOCK i * 2");
+	ExtEEPROM.Read(0, data, 10);
+	for (word i = 0; i < 10; i++)
 		PrintLine(data[i]);
 }
 
@@ -192,6 +203,8 @@ int freeRam()
 VOID loop()
 {	
 #ifdef _DEBUG
+
+	return;
 
 	PrintString(F("\nRAM: "));
 	PrintLine((WORD)freeRam());
