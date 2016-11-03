@@ -25,7 +25,7 @@
 #pragma GCC diagnostic ignored "-Wvirtual-move-assign"
 #pragma GCC diagnostic ignored "-Wreorder"
 #pragma GCC diagnostic ignored "-Wparentheses"
-
+#pragma GCC diagnostic ignored "-Wunused-variable"
 
 #pragma region INCLUDES
 
@@ -69,7 +69,7 @@ using namespace Foxetron;
 #endif
 
 #define SERIAL_BAUD_RATE		115200
-#define SERIAL_DELAY_MS			100
+#define SERIAL_DELAY_MS			1
 
 #pragma endregion
 
@@ -145,10 +145,31 @@ VOID setup()
 
 	initializePins();
 	initializeInterrupts();
+
+	Wire.begin();
 	
-	PrintLine(ExtEEPROM.Read(0));
-	ExtEEPROM.Write(0, 151);
-	PrintLine(ExtEEPROM.Read(0));
+	for (word i = 38; i < 238; i++)
+		ExtEEPROM.Write((CWORD)i, (CSIZE)(i - 38));
+	
+	for (word i = 38; i < 238; i++)
+		PrintLine(ExtEEPROM.Read(i));
+
+	BYTE data[200];
+
+	ExtEEPROM.Read(38, data, 200);
+	for (word i = 38; i < 238; i++)
+		PrintLine(data[i]);
+	
+	for (word i = 38; i < 238; i++)
+		data[i] = data[i] + 38;
+	for (word i = 38; i < 238; i++)
+		PrintLine(data[i]);
+
+	ExtEEPROM.Write(38, data, 200);
+
+	ExtEEPROM.Read(38, data, 200);
+	for (word i = 38; i < 238; i++)
+		PrintLine(data[i]);
 }
 
 VOID cleanUp()

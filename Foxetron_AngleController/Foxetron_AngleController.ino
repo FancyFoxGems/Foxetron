@@ -25,6 +25,7 @@
 #pragma GCC diagnostic ignored "-Wvirtual-move-assign"
 #pragma GCC diagnostic ignored "-Wreorder"
 #pragma GCC diagnostic ignored "-Wparentheses"
+#pragma GCC diagnostic ignored "-Wunused-variable"
 
 
 #pragma region INCLUDES
