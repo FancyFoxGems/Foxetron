@@ -146,7 +146,8 @@ VOID setup()
 	initializePins();
 	initializeInterrupts();
 	
-	ExtEEPROM.Write(0, 24);
+	PrintLine(ExtEEPROM.Read(0));
+	ExtEEPROM.Write(0, 151);
 	PrintLine(ExtEEPROM.Read(0));
 }
 
