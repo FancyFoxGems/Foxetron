@@ -20,6 +20,9 @@ phi_prompt Arduino Library
 Copyright © 2015 Dr. John Liu.
 Released under the GNU General Public License v3.0.
 ---------------------------------------------------------------------------------
+RTCLib Arduino Library (Adafruit fork; based on JeeLab's original)
+Released to the Public Domain.
+---------------------------------------------------------------------------------
 
 *********************************************************************************
 

@@ -45,6 +45,7 @@ using namespace Foxetron;
 
 // 3RD-PARTY LIBS
 #include "HalfStepper.h"					// well...1st-party in this case, really.
+#include "RTCLib.h"
 
 // ARDUINO LIBS
 
@@ -146,41 +147,28 @@ VOID setup()
 	initializePins();
 	initializeInterrupts();
 
-	BYTE data[10];
+	Wire.begin();
 
-	PrintLine("READ 0-10");
-	for (word i = 0; i < 10; i++)
-		PrintLine(ExtEEPROM.Read(i));
-	
-	PrintLine("\nWRITE 0-10 * 2");
-	for (word i = 0; i < 10; i++)
-		PrintLine(ExtEEPROM.Write((CWORD)i, (CSIZE)(i * 2)));
+	DateTime d = DS1307::now();
+	PrintLine(d.secondstime());
+	PrintLine(d.year());
+	PrintLine(d.month());
+	PrintLine(d.day());
+	PrintLine(d.hour());
+	PrintLine(d.minute());
+	PrintLine(d.second());
 
-	PrintLine("\nREAD 0-10 * 2");
-	for (word i = 0; i < 10; i++)
-		PrintLine(ExtEEPROM.Read(i));
-	
-	for (word i = 0; i < 10; i++)
-		data[i] = i;
-	
-	PrintLine("\nWRITE BLOCK i");
-	PrintLine(ExtEEPROM.Write(0, data, 10));
+	DateTime current(F(__DATE__), F(__TIME__));
+	DS1307::adjust(current);
 
-	PrintLine("\nREAD BLOCK i");
-	ExtEEPROM.Read(0, data, 10);
-	for (word i = 0; i < 10; i++)
-		PrintLine(data[i]);
-	
-	for (word i = 0; i < 10; i++)
-		data[i] = i * 2;
-	
-	PrintLine("\nUPDATE BLOCK i * 2");
-	PrintLine(ExtEEPROM.Update(0, data, 10));
-
-	PrintLine("\nREAD BLOCK i * 2");
-	ExtEEPROM.Read(0, data, 10);
-	for (word i = 0; i < 10; i++)
-		PrintLine(data[i]);
+	d = DS1307::now();
+	PrintLine(d.secondstime());
+	PrintLine(d.year());
+	PrintLine(d.month());
+	PrintLine(d.day());
+	PrintLine(d.hour());
+	PrintLine(d.minute());
+	PrintLine(d.second());
 }
 
 VOID cleanUp()

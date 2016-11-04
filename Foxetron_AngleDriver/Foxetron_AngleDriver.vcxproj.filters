@@ -38,6 +38,9 @@
     <ClInclude Include="__vm\.Foxetron_AngleDriver.vsarduino.h">
       <Filter>__vm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\libraries\RTCLib\RTCLib.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\libraries\HalfStepper\HalfStepper.h">
@@ -126,6 +129,9 @@
       <Filter>src\_micro-api-readonly\core</Filter>
     </ClCompile>
     <ClCompile Include="..\Foxetron_messages.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\RTCLib\RTCLib.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
