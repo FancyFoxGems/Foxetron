@@ -19,13 +19,23 @@
 
 
 // GCC WARNING SUPPRESSIONS
+
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wunused-function"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wparentheses"
+#pragma GCC diagnostic ignored "-Wreturn-type"
+#pragma GCC diagnostic ignored "-Wconversion-null"
+#pragma GCC diagnostic ignored "-Wchar-subscripts"
+#pragma GCC diagnostic ignored "-Wreorder"
+#pragma GCC diagnostic ignored "-Wsequence-point"
+#pragma GCC diagnostic ignored "-Wsign-compare"
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #pragma GCC diagnostic ignored "-Wpointer-arith"
 #pragma GCC diagnostic ignored "-Wvirtual-move-assign"
-#pragma GCC diagnostic ignored "-Wreorder"
-#pragma GCC diagnostic ignored "-Wparentheses"
-#pragma GCC diagnostic ignored "-Wunused-variable"
+
 
 #pragma region INCLUDES
 
@@ -45,9 +55,9 @@ using namespace Foxetron;
 
 // 3RD-PARTY LIBS
 #include "HalfStepper.h"					// well...1st-party in this case, really.
-#include "RTCLib.h"
 
 // ARDUINO LIBS
+#include "SD.h"
 
 // ARDUINO CORE
 //#include <Arduino.h>							// included by project/3rd-party libs
@@ -144,31 +154,35 @@ VOID setup()
 
 	atexit(cleanUp);
 
-	initializePins();
-	initializeInterrupts();
+	//initializePins();
+	//initializeInterrupts();
 
-	Wire.begin();
+	//SetPinMode(SS, OUTPUT);
+	pinMode(SS, OUTPUT);
+	digitalWrite(SS, HIGH);
 
-	DateTime d = DS1307::now();
-	PrintLine(d.secondstime());
-	PrintLine(d.year());
-	PrintLine(d.month());
-	PrintLine(d.day());
-	PrintLine(d.hour());
-	PrintLine(d.minute());
-	PrintLine(d.second());
+	Sd2Card card;
+	PrintLine((CBYTE)card.init(SPI_QUARTER_SPEED, 10));
+	
+	PrintLine((CDWORD)card.cardSize());
+	PrintLine((CBYTE)card.type());
 
-	DateTime current(F(__DATE__), F(__TIME__));
-	DS1307::adjust(current);
+	SDClass sd;
+	PrintLine((CBYTE)sd.begin());
 
-	d = DS1307::now();
-	PrintLine(d.secondstime());
-	PrintLine(d.year());
-	PrintLine(d.month());
-	PrintLine(d.day());
-	PrintLine(d.hour());
-	PrintLine(d.minute());
-	PrintLine(d.second());
+	File f = sd.open("TEST.TXT", FILE_WRITE);
+	if (!f) PrintLine("OPEN FAILED");
+	PrintLine((CBYTE)f.println("test"));
+	f.flush();
+	f.close();
+
+	f = sd.open("TEST.TXT");
+	if (!f) PrintLine("OPEN FAILED");
+	BYTE buffer[5];
+	PrintLine((CBYTE)f.read(buffer, 4));
+	buffer[4] = '\0';
+	PrintLine(reinterpret_cast<PCCHAR>(buffer));
+	f.close();
 }
 
 VOID cleanUp()
@@ -178,7 +192,7 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	WaitForMessage(Serial, onMessage);
+	//WaitForMessage(Serial, onMessage);
 }
 
 int freeRam()
@@ -286,7 +300,7 @@ VOID initializeInterrupts()
 	EICRA &= 0b11110101;
 	EICRA |= 0b00000101;
 }
-
+/*
 VOID onMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
@@ -403,7 +417,7 @@ VOID onMessage(PIMESSAGE message)
 		state = NULL;
 	}
 }
-
+*/
 #pragma endregion
 
 

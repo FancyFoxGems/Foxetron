@@ -77,8 +77,21 @@ _______  .______                 __       __   __    __
 
 http://liudr.wordpress.com
 */
+
 #ifndef phi_prompt_h
 #define phi_prompt_h
+
+
+// GCC WARNING SUPPRESSIONS
+
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic ignored "-Wreturn-type"
+#pragma GCC diagnostic ignored "-Wchar-subscripts"
+#pragma GCC diagnostic ignored "-Wsign-compare"
+
+
 // To disable the simple functions to save some SRAM, uncomment the next line.
 //#define disable_simple_fns
 

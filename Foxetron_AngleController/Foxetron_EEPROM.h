@@ -13,13 +13,13 @@
 #pragma region INCLUDES
 
 // ITTY BITTY
-#include "IttyBitty_util.h"
+#include "IttyBitty_EEPROM_I2C.h"
 
 // ARDUINO LIBS
 //#include <EEPROM.h>			// included by DB 3rd-party library
 
 // 3RD-PARTY LIBS
-#include "libs/DB.h"
+//#include "libs/DB.h"
 
 #pragma endregion
 

@@ -9,6 +9,14 @@
 #define _RTCLIB_H_
 
 
+// GCC WARNING SUPPRESSIONS
+
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wunused-function"
+#pragma GCC diagnostic ignored "-Wsequence-point"
+#pragma GCC diagnostic ignored "-Wsign-compare"
+
+
 #include <Arduino.h>
 class TimeSpan;
 

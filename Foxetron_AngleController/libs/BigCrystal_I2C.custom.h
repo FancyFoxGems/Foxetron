@@ -5,8 +5,15 @@
 #ifndef BigCrystal_I2C_h
 #define BigCrystal_I2C_h
 
+
+// GCC WARNING SUPPRESSIONS
+
+#pragma GCC diagnostic ignored "-Wunused-value"
+
+
 #include "BigFont.h"
 #include "LiquidCrystal_I2C.custom.h"
+
 
 class BigCrystal_I2C : public LiquidCrystal_I2C
 {

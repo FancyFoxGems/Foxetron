@@ -31,8 +31,20 @@
 #ifndef MENWIZ_h
 #define MENWIZ_h
 
+
+// GCC WARNING SUPPRESSIONS
+
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic ignored "-Wreturn-type"
+#pragma GCC diagnostic ignored "-Wconversion-null"
+#pragma GCC diagnostic ignored "-Wsign-compare"
+
+
 #define EEPROM_SUPPORT     //uncomment if you want to use the readEeprom and writeEeprom methods!
 //#define BUTTON_SUPPORT     //uncomment if you want to use the readEeprom and writeEeprom methods!
+
 
 #include <avr/pgmspace.h>
 

@@ -19,13 +19,22 @@
 
 
 // GCC WARNING SUPPRESSIONS
+
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wunused-function"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wparentheses"
+#pragma GCC diagnostic ignored "-Wreturn-type"
+#pragma GCC diagnostic ignored "-Wconversion-null"
+#pragma GCC diagnostic ignored "-Wchar-subscripts"
+#pragma GCC diagnostic ignored "-Wreorder"
+#pragma GCC diagnostic ignored "-Wsequence-point"
+#pragma GCC diagnostic ignored "-Wsign-compare"
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #pragma GCC diagnostic ignored "-Wpointer-arith"
 #pragma GCC diagnostic ignored "-Wvirtual-move-assign"
-#pragma GCC diagnostic ignored "-Wreorder"
-#pragma GCC diagnostic ignored "-Wparentheses"
-#pragma GCC diagnostic ignored "-Wunused-variable"
 
 
 #pragma region INCLUDES
@@ -50,13 +59,14 @@ using namespace Foxetron;
 #include "libs/BigCrystal_I2C.custom.h"
 #include "libs/MENWIZ.custom.h"
 #include "libs/phi_prompt.custom.h"
+#include "libs/RTCLib.custom.h"
 
 // 3RD-PARTY LIBS
 //#include "VaRGB.h"							// included by Foxetron_RGB
 //#include "VaRGBCurves.h"						// included by Foxetron_RGB
 
 // ARDUINO LIBS
-//#include <EEPROM.h>							// included by Foxetron_EEPROM
+//#include <EEPROM.h>							// included by project/3rd-party libs
 //#include <Wire.h>								// included by project/3rd-party libs
 
 // ARDUINO CORE
@@ -100,8 +110,6 @@ using namespace Foxetron;
 		"in %0, %1"	"\n"								\
 	: "=&r" (current) : "I" (_SFR_IO_ADDR(PINC)) );
 */
-
-#define COUNT(var) (SIZEOF(var) / SIZEOF(0[var]))
 
 #pragma endregion
 
