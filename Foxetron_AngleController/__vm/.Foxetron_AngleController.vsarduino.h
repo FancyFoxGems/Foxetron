@@ -13,7 +13,7 @@
 #define __AVR_ATmega328p__
 #define __AVR_ATmega328P__
 #define _DEBUG 1
-#define ITTYBITTY_BASE 1
+#define EXCLUDE_ITTYBITTY_FULL_BYTES 1
 #define DEBUG_MESSAGES 1
 #define F_CPU 16000000L
 #define ARDUINO 10608

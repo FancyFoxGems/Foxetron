@@ -62,12 +62,12 @@ BOOL AngleRequest::Handle(PVOID results, PCVOID state)
 
 NewAngleRequest::NewAngleRequest(RCWORD degrees) : Request(MessageCode::NEWANGLE_REQUEST, 1)
 {
-	_Params[0] = new Field(degrees);
+	_Params[0] = new PARAM(degrees);
 }
 
 RCWORD NewAngleRequest::Degrees() const
 {
-	return (RCWORD)*reinterpret_cast<PCFIELD>(_Params[0]);
+	return (RCWORD)*reinterpret_cast<PCPARAM>(_Params[0]);
 }
 
 BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
@@ -136,12 +136,12 @@ BOOL StatusRequest::Handle(PVOID results, PCVOID state)
 
 Response::Response(RCERROR error, MessageCode msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount)
 {
-	_Params[0] = new Field((RCBYTE)error);
+	_Params[0] = new PARAM((RCBYTE)error);
 }
 
 RCERROR Response::ErrorCode() const
 {
-	return (RCERROR)(RCBYTE)*reinterpret_cast<PCFIELD>(_Params[0]);
+	return (RCERROR)(RCBYTE)*reinterpret_cast<PCPARAM>(_Params[0]);
 }
 
 BOOL Response::Handle(PVOID results, PCVOID state)
@@ -160,11 +160,11 @@ BOOL Response::Handle(PVOID results, PCVOID state)
 
 AngleResponse::AngleResponse(RCERROR error, RCWORD degrees) : Response(error, MessageCode::ANGLE_RESPONSE, 2)
 {
-	_Params[1] = new Field(degrees);
+	_Params[1] = new PARAM(degrees);
 }
 RCWORD AngleResponse::Degrees() const
 {
-	return (RCWORD)*reinterpret_cast<PCFIELD>(_Params[1]);
+	return (RCWORD)*reinterpret_cast<PCPARAM>(_Params[1]);
 }
 
 BOOL AngleResponse::Handle(PVOID results, PCVOID state)
@@ -203,12 +203,12 @@ BOOL NewAngleResponse::Handle(PVOID results, PCVOID state)
 
 StatusResponse::StatusResponse(RCERROR error, PCCHAR statusMsg, MessageCode msgCode, CBYTE paramCount) : Response(error, msgCode, paramCount)
 {
-	_Params[1] = new VarLengthField(statusMsg);
+	_Params[1] = new VarLengthParam(statusMsg);
 }
 
 PCCHAR StatusResponse::StatusMessage() const
 {
-	return (PCCHAR)*reinterpret_cast<PCVARLENGTHFIELD>(_Params[1]);
+	return (PCCHAR)*reinterpret_cast<PCVARLENGTHPARAM>(_Params[1]);
 }
 
 BOOL StatusResponse::Handle(PVOID results, PCVOID state)
@@ -231,12 +231,12 @@ BOOL StatusResponse::Handle(PVOID results, PCVOID state)
 ControllerStatusResponse::ControllerStatusResponse(RCERROR error, RCCONTROLLERSTATUS controllerStatus, PCCHAR statusMsg) 
 	: StatusResponse(error, statusMsg, MessageCode::CONTROLLER_STATUS, 3)
 {
-	_Params[2] = new Field((BYTE)controllerStatus);
+	_Params[2] = new PARAM((BYTE)controllerStatus);
 }
 
 RCCONTROLLERSTATUS ControllerStatusResponse::StatusCode() const
 {
-	return reinterpret_cast<RCCONTROLLERSTATUS>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[2]));
+	return reinterpret_cast<RCCONTROLLERSTATUS>((RCBYTE)*reinterpret_cast<PCPARAM>(_Params[2]));
 }
 
 BOOL ControllerStatusResponse::Handle(PVOID results, PCVOID state)
@@ -259,12 +259,12 @@ BOOL ControllerStatusResponse::Handle(PVOID results, PCVOID state)
 DriverStatusResponse::DriverStatusResponse(RCERROR error, RCDRIVERSTATUS driverStatus, PCCHAR statusMsg) 
 	: StatusResponse(error, statusMsg, MessageCode::DRIVER_STATUS, 3)
 {
-	_Params[2] = new Field((BYTE)driverStatus);
+	_Params[2] = new PARAM((BYTE)driverStatus);
 }
 
 RCDRIVERSTATUS DriverStatusResponse::StatusCode() const
 {
-	return reinterpret_cast<RCDRIVERSTATUS>((RCBYTE)*reinterpret_cast<PCFIELD>(_Params[2]));
+	return reinterpret_cast<RCDRIVERSTATUS>((RCBYTE)*reinterpret_cast<PCPARAM>(_Params[2]));
 }
 
 BOOL DriverStatusResponse::Handle(PVOID results, PCVOID state)

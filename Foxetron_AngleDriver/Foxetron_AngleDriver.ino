@@ -41,7 +41,6 @@
 
 // ITTY BITTY
 #include "IttyBitty.h"
-#include "IttyBitty_EEPROM_I2C.h"
 
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
@@ -60,7 +59,7 @@ using namespace Foxetron;
 #include "SD.h"
 
 // ARDUINO CORE
-//#include <Arduino.h>							// included by project/3rd-party libs
+//#include "Arduino.h"							// included by project/3rd-party libs
 
 // AVR LibC
 //#include <avr/pgmspace.h>						// included by project 3rd-party libs
@@ -157,10 +156,6 @@ VOID setup()
 	//initializePins();
 	//initializeInterrupts();
 
-	//SetPinMode(SS, OUTPUT);
-	pinMode(SS, OUTPUT);
-	digitalWrite(SS, HIGH);
-
 	Sd2Card card;
 	PrintLine((CBYTE)card.init(SPI_QUARTER_SPEED, 10));
 	
@@ -221,10 +216,10 @@ VOID loop()
 	DEBUG_printInputValues();
 
 	_ActionLed = !_ActionLed;
-	WRITE_ARDUINO_PIN(PIN_OUT_ACTION_LED, _ActionLed);
+	WritePin(PIN_OUT_ACTION_LED, _ActionLed);
 
 	_StatusLed = !_StatusLed;
-	WRITE_ARDUINO_PIN(PIN_OUT_STATUS_LED, _StatusLed);
+	WritePin(PIN_OUT_STATUS_LED, _StatusLed);
 
 	delay(DEBUG_INPUT_DELAY_MS);
 
@@ -425,12 +420,12 @@ VOID onMessage(PIMESSAGE message)
 
 VOID DEBUG_printInputValues()
 {
-	_AngleEncoderA	= CHECK_ARDUINO_PIN(PIN_ANGLE_ENCODER_A);
-	_AngleEncoderB	= CHECK_ARDUINO_PIN(PIN_ANGLE_ENCODER_B);
+	_AngleEncoderA	= CheckPin(PIN_ANGLE_ENCODER_A);
+	_AngleEncoderB	= CheckPin(PIN_ANGLE_ENCODER_B);
 
-	_ActionButton	= !CHECK_ARDUINO_PIN(PIN_BUTTON_ACTION);
-	_OneShotButton	= !CHECK_ARDUINO_PIN(PIN_BUTTON_ONESHOT);
-	_LatchButton	= !CHECK_ARDUINO_PIN(PIN_BUTTON_LATCH);
+	_ActionButton	= !CheckPin(PIN_BUTTON_ACTION);
+	_OneShotButton	= !CheckPin(PIN_BUTTON_ONESHOT);
+	_LatchButton	= !CheckPin(PIN_BUTTON_LATCH);
 
 
 	// REAR INPUTS

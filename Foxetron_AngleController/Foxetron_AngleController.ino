@@ -66,11 +66,11 @@ using namespace Foxetron;
 //#include "VaRGBCurves.h"						// included by Foxetron_RGB
 
 // ARDUINO LIBS
-//#include <EEPROM.h>							// included by project/3rd-party libs
-//#include <Wire.h>								// included by project/3rd-party libs
+//#include "EEPROM.h"							// included by project/3rd-party libs
+//#include "Wire.h"								// included by project/3rd-party libs
 
 // ARDUINO CORE
-//#include <Arduino.h>							// included by project/3rd-party libs
+//#include "Arduino.h"							// included by project/3rd-party libs
 
 // AVR LibC
 //#include <avr/pgmspace.h>						// included by project 3rd-party libs
@@ -258,7 +258,7 @@ VOID loop()
 	DEBUG_printInputValues();
 
 	_StatusLED = !_StatusLED;
-	WRITE_ARDUINO_PIN(13, _StatusLED);
+	WritePin(13, _StatusLED);
 
 	delay(DEBUG_INPUT_DELAY_MS);
 
@@ -487,10 +487,10 @@ VOID DEBUG_printInputValues()
 {
 	STATIC CHAR valStr[5];
 
-	_AngleEncoderA = CHECK_ARDUINO_PIN(2);
-	_AngleEncoderB = CHECK_ARDUINO_PIN(3);
+	_AngleEncoderA = CheckPin(2);
+	_AngleEncoderB = CheckPin(3);
 
-	_LedButton1 = CHECK_ARDUINO_PIN(4);
+	_LedButton1 = CheckPin(4);
 	if (_LedButton1)
 	{
 		PORTD |= (1 << 4);
@@ -499,7 +499,7 @@ VOID DEBUG_printInputValues()
 		DDRD &= ~(1 << 4);
 	}
 
-	_LedButton2 = CHECK_ARDUINO_PIN(5);
+	_LedButton2 = CheckPin(5);
 	if (_LedButton2)
 	{
 		PORTD |= (1 << 5);
@@ -508,7 +508,7 @@ VOID DEBUG_printInputValues()
 		DDRD &= ~(1 << 5);
 	}
 
-	_LedButton3 = CHECK_ARDUINO_PIN(6);
+	_LedButton3 = CheckPin(6);
 	if (_LedButton3)
 	{
 		PORTD |= (1 << 6);
@@ -517,7 +517,7 @@ VOID DEBUG_printInputValues()
 		DDRD &= ~(1 << 6);
 	}
 
-	_LedButton4 = CHECK_ARDUINO_PIN(7);
+	_LedButton4 = CheckPin(7);
 	if (_LedButton4)
 	{
 		PORTD |= (1 << 7);
@@ -526,7 +526,7 @@ VOID DEBUG_printInputValues()
 		DDRD &= ~(1 << 7);
 	}
 
-	_LedButton5 = CHECK_ARDUINO_PIN(8);
+	_LedButton5 = CheckPin(8);
 	if (_LedButton5)
 	{
 		PORTB |= (1 << 0);
@@ -537,11 +537,11 @@ VOID DEBUG_printInputValues()
 
 	_ModeSwitch		= analogRead(7) > 500 ? TRUE : FALSE;
 
-	_MenuEncoderA	= CHECK_ARDUINO_PIN(14);
-	_MenuEncoderB	= CHECK_ARDUINO_PIN(15);
+	_MenuEncoderA	= CheckPin(14);
+	_MenuEncoderB	= CheckPin(15);
 
-	_SelectButton	= !CHECK_ARDUINO_PIN(16);
-	_ShiftButton	= !CHECK_ARDUINO_PIN(17);
+	_SelectButton	= !CheckPin(16);
+	_ShiftButton	= !CheckPin(17);
 
 
 	// REAR INPUTS

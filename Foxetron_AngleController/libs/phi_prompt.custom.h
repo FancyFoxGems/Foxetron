@@ -85,6 +85,7 @@ http://liudr.wordpress.com
 // GCC WARNING SUPPRESSIONS
 
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wunused-value"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wreturn-type"
