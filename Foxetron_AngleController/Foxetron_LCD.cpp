@@ -8,7 +8,7 @@
 #include "Foxetron_LCD.h"
 
 
-#pragma region GLOBAL VARIABLES
+#pragma region GLOBAL VARIABLE DEFINITIONS
 
 // LCD display
 BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)

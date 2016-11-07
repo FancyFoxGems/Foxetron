@@ -34,9 +34,7 @@
 #pragma endregion
 
 
-#pragma region GLOBAL VARIABLES
-
-// RGB LED / VaRGB CONFIGURATION
+#pragma region GLOBAL VARIABLE DECLARATIONS
 
 using namespace vargb;
 

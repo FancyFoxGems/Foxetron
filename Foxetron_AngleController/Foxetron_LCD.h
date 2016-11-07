@@ -65,7 +65,7 @@
 #pragma endregion
 
 
-#pragma region GLOBAL VARIABLES
+#pragma region LCD GLOBAL VARIABLE DECLARATION
 
 // LCD display
 EXTERN BigCrystal_I2C LCD;

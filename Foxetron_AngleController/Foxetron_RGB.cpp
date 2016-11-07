@@ -11,7 +11,7 @@
 #include "Foxetron_RGB.h"
 
 
-#pragma region GLOBAL VARIABLES
+#pragma region GLOBAL VARIABLE DEFINITIONS
 
 // RGB LED / VaRGB CONFIGURATION
 
@@ -40,7 +40,7 @@ Curve::Linear * _RgbCurves[] =
 #pragma endregion
 
 
-#pragma region VaRGB CALLBACK FUNCTIONS
+#pragma region [VaRGB] CALLBACK FUNCTIONS
 
 VOID RGB_callback_SetColor(ColorSettings * colors)
 {
