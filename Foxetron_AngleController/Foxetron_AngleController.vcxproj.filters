@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="__vm">
@@ -80,22 +80,22 @@
       <Filter>__vm</Filter>
     </ClInclude>
     <ClInclude Include="libs\LiquidCrystal_I2C.custom.h">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
     <ClInclude Include="libs\BigCrystal_I2C.custom.h">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
     <ClInclude Include="libs\BigFont.h">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
     <ClInclude Include="libs\MENWIZ.custom.h">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
     <ClInclude Include="libs\phi_prompt.custom.h">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
     <ClInclude Include="libs\RTClib.custom.h">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -242,25 +242,23 @@
       <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
     </ClCompile>
     <ClCompile Include="libs\LiquidCrystal_I2C.custom.cpp">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
     <ClCompile Include="libs\BigCrystal_I2C.custom.cpp">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
     <ClCompile Include="libs\BigFont.c">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
     <ClCompile Include="libs\MENWIZ.custom.cpp">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
     <ClCompile Include="libs\phi_prompt.custom.cpp">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
     <ClCompile Include="libs\RTClib.custom.cpp">
-      <Filter>src</Filter>
+      <Filter>libs</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\Foxetron_messages.cpp">
       <Filter>src</Filter>
     </ClCompile>

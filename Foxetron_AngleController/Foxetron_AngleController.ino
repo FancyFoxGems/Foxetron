@@ -51,15 +51,17 @@
 
 using namespace Foxetron;
 
-// ITTY BITTY
-#include "IttyBitty.h"
-
 // PROJECT LIBS
 //#include "libs/LiquidCrystal_I2C.custom.h"		// included by other project libs
 #include "libs/BigCrystal_I2C.custom.h"
 #include "libs/MENWIZ.custom.h"
 #include "libs/phi_Prompt.custom.h"
 #include "libs/RTCLib.custom.h"
+
+// ITTY BITTY
+#include "IttyBitty.h"
+
+using namespace IttyBitty;
 
 // 3RD-PARTY LIBS
 //#include "VaRGB.h"							// included by Foxetron_RGB
@@ -233,7 +235,7 @@ VOID loop()
 #ifdef _DEBUG
 
 	PrintString(F("\nRAM: "));
-	PrintLine((WORD)SramFree());
+	PrintLine((CWORD)SramFree());
 	PrintLine();
 
 	delay(3000);

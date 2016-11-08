@@ -39,9 +39,6 @@
 
 #pragma region INCLUDES
 
-// ITTY BITTY
-#include "IttyBitty.h"
-
 // PROJECT INCLUDES
 #include "Foxetron_pins.h"
 
@@ -51,6 +48,11 @@
 using namespace Foxetron;
 
 // PROJECT LIBS
+
+// ITTY BITTY
+#include "IttyBitty.h"
+
+using namespace IttyBitty;
 
 // 3RD-PARTY LIBS
 #include "HalfStepper.h"					// well...1st-party in this case, really.
@@ -165,14 +167,14 @@ VOID setup()
 	SDClass sd;
 	PrintLine((CBYTE)sd.begin());
 
-	File f = sd.open("TEST.TXT", FILE_WRITE);
-	if (!f) PrintLine("OPEN FAILED");
-	PrintLine((CBYTE)f.println("test"));
+	File f = sd.open(F("TEST.TXT"), FILE_WRITE);
+	if (!f) PrintLine(F("OPEN FAILED"));
+	PrintLine((CBYTE)f.println(F("test")));
 	f.flush();
 	f.close();
 
-	f = sd.open("TEST.TXT");
-	if (!f) PrintLine("OPEN FAILED");
+	f = sd.open(F("TEST.TXT"));
+	if (!f) PrintLine(F("OPEN FAILED"));
 	BYTE buffer[5];
 	PrintLine((CBYTE)f.read(buffer, 4));
 	buffer[4] = '\0';
@@ -197,7 +199,7 @@ VOID loop()
 	return;
 
 	PrintString(F("\nRAM: "));
-	PrintLine((WORD)SramFree());
+	PrintLine((CWORD)SramFree());
 	PrintLine();
 
 	delay(3000);
