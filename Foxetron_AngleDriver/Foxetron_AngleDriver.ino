@@ -131,8 +131,6 @@ ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 
 #pragma region PROGRAM FUNCTION DECLARATIONS
 
-CWORD SramFree();
-
 VOID CleanUp();
 VOID InitializeInterrupts();
 
@@ -155,8 +153,8 @@ VOID setup()
 
 	atexit(CleanUp);
 
-	//InitializePins();
-	//InitializeInterrupts();
+	InitializePins();
+	InitializeInterrupts();
 
 	Sd2Card card;
 	PrintLine((CBYTE)card.init(SPI_QUARTER_SPEED, 10));
@@ -283,23 +281,16 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
 
 #pragma region PROGRAM FUNCTIONS
 
-CWORD SramFree()
-{
-	EXTERN INT __heap_start, *__brkval; 
-	WORD v; 
-	return (CWORD) &v - (__brkval == 0 ? (CWORD) &__heap_start : (CWORD) __brkval); 
-}
-
 VOID CleanUp() { }
 
-VOID OnitializeInterrupts()
+VOID InitializeInterrupts()
 {
 	// External interrupts: Angle encoder
 	EIMSK |= 0b00000011;
 	EICRA &= 0b11110101;
 	EICRA |= 0b00000101;
 }
-/*
+
 VOID OnMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
@@ -416,7 +407,7 @@ VOID OnMessage(PIMESSAGE message)
 		state = NULL;
 	}
 }
-*/
+
 #pragma endregion
 
 

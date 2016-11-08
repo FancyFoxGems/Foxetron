@@ -52,7 +52,7 @@
 using namespace Foxetron;
 
 // ITTY BITTY
-#include "IttyBitty_base.h"
+#include "IttyBitty.h"
 
 // PROJECT LIBS
 //#include "libs/LiquidCrystal_I2C.custom.h"		// included by other project libs
@@ -192,8 +192,6 @@ DriverStatus _DriverStatus	= DriverStatus::IDLE;
 
 #pragma region PROGRAM FUNCTION DECLARATIONS
 
-CWORD SramFree();
-
 VOID CleanUp();
 VOID InitializeInterrupts();
 
@@ -217,10 +215,10 @@ VOID setup()
 	atexit(CleanUp);
 
 	InitializePins();
+	InitializeInterrupts();
+
 	LCD_Initialize();
 	RGB_Initialize();
-
-	InitializeInterrupts();
 
 	LCD.printBig(F("Fox"), 2, 0);
 }
@@ -329,13 +327,6 @@ ISR(PCINT2_vect, ISR_NOBLOCK)
 
 
 #pragma region PROGRAM FUNCTIONS
-
-CWORD SramFree()
-{
-	EXTERN INT __heap_start, *__brkval; 
-	WORD v; 
-	return (CWORD) &v - (__brkval == 0 ? (CWORD) &__heap_start : (CWORD) __brkval); 
-}
 
 VOID CleanUp()
 {
