@@ -45,17 +45,17 @@ namespace Foxetron
 		DRIVER_STATUS		= STATUS_RESPONSE | 0x2
 	};
 
-	enum Error : BYTE
+	ENUM Error : BYTE
 	{
 		SUCCESS = 0
 	};
 
-	enum ControllerStatus : BYTE
+	ENUM ControllerStatus : BYTE
 	{
 		NONE
 	};
 
-	enum DriverStatus : BYTE
+	ENUM DriverStatus : BYTE
 	{
 		IDLE
 	};
@@ -159,9 +159,9 @@ namespace Foxetron
 	{
 	public:
 
-		NewAngleRequest(RCWORD);
+		NewAngleRequest(CWORD);
 
-		RCWORD Degrees() const;
+		CWORD Degrees() const;
 		
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
@@ -185,7 +185,7 @@ namespace Foxetron
 	{
 	public:
 
-		VIRTUAL RCERROR ErrorCode() const = 0;
+		VIRTUAL CERROR ErrorCode() const = 0;
 
 
 	protected:
@@ -211,9 +211,9 @@ namespace Foxetron
 	{
 	public:
 
-		Response(RCERROR, MessageCode = MessageCode::RESPONSE_TYPE, CBYTE = 1);
+		Response(CERROR, MessageCode = MessageCode::RESPONSE_TYPE, CBYTE = 1);
 
-		RCERROR ErrorCode() const final;
+		CERROR ErrorCode() const final;
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
@@ -223,9 +223,9 @@ namespace Foxetron
 	{
 	public:
 		
-		AngleResponse(RCERROR, RCWORD);
+		AngleResponse(CERROR, CWORD);
 
-		RCWORD Degrees() const;
+		CWORD Degrees() const;
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
@@ -235,7 +235,7 @@ namespace Foxetron
 	{
 	public:
 
-		NewAngleResponse(RCERROR);
+		NewAngleResponse(CERROR);
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
@@ -244,7 +244,7 @@ namespace Foxetron
 	{
 	public:
 
-		StatusResponse(RCERROR, PCCHAR, MessageCode = MessageCode::STATUS_RESPONSE, CBYTE = 2);
+		StatusResponse(CERROR, PCCHAR, MessageCode = MessageCode::STATUS_RESPONSE, CBYTE = 2);
 
 		PCCHAR StatusMessage() const final;
 
@@ -256,9 +256,9 @@ namespace Foxetron
 	{
 	public:
 
-		ControllerStatusResponse(RCERROR, RCCONTROLLERSTATUS, PCCHAR = NULL);
+		ControllerStatusResponse(CERROR, CCONTROLLERSTATUS, PCCHAR = NULL);
 
-		RCCONTROLLERSTATUS StatusCode() const;
+		CCONTROLLERSTATUS StatusCode() const;
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
@@ -268,9 +268,9 @@ namespace Foxetron
 	{
 	public:
 
-		DriverStatusResponse(RCERROR, RCDRIVERSTATUS, PCCHAR = NULL);
+		DriverStatusResponse(CERROR, CDRIVERSTATUS, PCCHAR = NULL);
 		
-		RCDRIVERSTATUS StatusCode() const;
+		CDRIVERSTATUS StatusCode() const;
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};

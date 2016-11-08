@@ -41,8 +41,8 @@ BOOL AngleRequest::Handle(PVOID results, PCVOID state)
 	PrintLine(F("AngleRequest::Handle"));
 #endif
 
-	RCERROR driverError = *((PPCERROR)state)[0];
-	RCWORD degrees = *((PPCWORD)state)[1];
+	CERROR driverError = *((PPCERROR)state)[0];
+	CWORD degrees = *((PPCWORD)state)[1];
 
 #ifdef DEBUG_MESSAGES
 	PrintLine((BYTE)driverError);
@@ -60,14 +60,14 @@ BOOL AngleRequest::Handle(PVOID results, PCVOID state)
 
 // NewAngleRequest
 
-NewAngleRequest::NewAngleRequest(RCWORD degrees) : Request(MessageCode::NEWANGLE_REQUEST, 1)
+NewAngleRequest::NewAngleRequest(CWORD degrees) : Request(MessageCode::NEWANGLE_REQUEST, 1)
 {
 	_Params[0] = new PARAM(degrees);
 }
 
-RCWORD NewAngleRequest::Degrees() const
+CWORD NewAngleRequest::Degrees() const
 {
-	return (RCWORD)*reinterpret_cast<PCPARAM>(_Params[0]);
+	return (CWORD)*reinterpret_cast<PCPARAM>(_Params[0]);
 }
 
 BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
@@ -78,7 +78,7 @@ BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
 	
 	*((PPWORD)results)[0] = this->Degrees();
 	
-	RCERROR driverError = *((PPCERROR)state)[0];
+	CERROR driverError = *((PPCERROR)state)[0];
 
 #ifdef DEBUG_MESSAGES
 	PrintLine((BYTE)driverError);
@@ -103,9 +103,9 @@ BOOL StatusRequest::Handle(PVOID results, PCVOID state)
 	PrintLine(F("StatusRequest::Handle"));
 #endif
 	
-	RCERROR error = *((PPCERROR)state)[0];	
+	CERROR error = *((PPCERROR)state)[0];	
 	PCCHAR statusMsg = *((PPCCHAR *)state)[1];	
-	RCBYTE statusCode = *((PPCBYTE)state)[2];
+	CBYTE statusCode = *((PPCBYTE)state)[2];
 	BOOL isDriverStatus = (((PPBYTE)state)[3] != NULL);
 
 #ifdef DEBUG_MESSAGES
@@ -119,9 +119,9 @@ BOOL StatusRequest::Handle(PVOID results, PCVOID state)
 		return FALSE;
 
 	if (isDriverStatus)
-		DriverStatusResponse(error, (RCDRIVERSTATUS)statusCode, statusMsg).Transmit();
+		DriverStatusResponse(error, (CDRIVERSTATUS)statusCode, statusMsg).Transmit();
 	else
-		ControllerStatusResponse(error, (RCCONTROLLERSTATUS)statusCode, statusMsg).Transmit();
+		ControllerStatusResponse(error, (CCONTROLLERSTATUS)statusCode, statusMsg).Transmit();
 	
 	return TRUE;
 }
@@ -134,14 +134,14 @@ BOOL StatusRequest::Handle(PVOID results, PCVOID state)
 
 // Response
 
-Response::Response(RCERROR error, MessageCode msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount)
+Response::Response(CERROR error, MessageCode msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount)
 {
-	_Params[0] = new PARAM((RCBYTE)error);
+	_Params[0] = new PARAM((CBYTE)error);
 }
 
-RCERROR Response::ErrorCode() const
+CERROR Response::ErrorCode() const
 {
-	return (RCERROR)(RCBYTE)*reinterpret_cast<PCPARAM>(_Params[0]);
+	return (CERROR)(CBYTE)*reinterpret_cast<PCPARAM>(_Params[0]);
 }
 
 BOOL Response::Handle(PVOID results, PCVOID state)
@@ -158,13 +158,13 @@ BOOL Response::Handle(PVOID results, PCVOID state)
 
 // AngleResponse
 
-AngleResponse::AngleResponse(RCERROR error, RCWORD degrees) : Response(error, MessageCode::ANGLE_RESPONSE, 2)
+AngleResponse::AngleResponse(CERROR error, CWORD degrees) : Response(error, MessageCode::ANGLE_RESPONSE, 2)
 {
 	_Params[1] = new PARAM(degrees);
 }
-RCWORD AngleResponse::Degrees() const
+CWORD AngleResponse::Degrees() const
 {
-	return (RCWORD)*reinterpret_cast<PCPARAM>(_Params[1]);
+	return (CWORD)*reinterpret_cast<PCPARAM>(_Params[1]);
 }
 
 BOOL AngleResponse::Handle(PVOID results, PCVOID state)
@@ -184,7 +184,7 @@ BOOL AngleResponse::Handle(PVOID results, PCVOID state)
 
 // NewAngleResponse
 
-NewAngleResponse::NewAngleResponse(RCERROR error) : Response(error, MessageCode::NEWANGLE_RESPONSE) { }
+NewAngleResponse::NewAngleResponse(CERROR error) : Response(error, MessageCode::NEWANGLE_RESPONSE) { }
 
 BOOL NewAngleResponse::Handle(PVOID results, PCVOID state)
 {
@@ -201,7 +201,7 @@ BOOL NewAngleResponse::Handle(PVOID results, PCVOID state)
 
 // StatusResponse
 
-StatusResponse::StatusResponse(RCERROR error, PCCHAR statusMsg, MessageCode msgCode, CBYTE paramCount) : Response(error, msgCode, paramCount)
+StatusResponse::StatusResponse(CERROR error, PCCHAR statusMsg, MessageCode msgCode, CBYTE paramCount) : Response(error, msgCode, paramCount)
 {
 	_Params[1] = new VarLengthParam(statusMsg);
 }
@@ -228,13 +228,13 @@ BOOL StatusResponse::Handle(PVOID results, PCVOID state)
 
 // ControllerStatusResponse
 
-ControllerStatusResponse::ControllerStatusResponse(RCERROR error, RCCONTROLLERSTATUS controllerStatus, PCCHAR statusMsg) 
+ControllerStatusResponse::ControllerStatusResponse(CERROR error, CCONTROLLERSTATUS controllerStatus, PCCHAR statusMsg) 
 	: StatusResponse(error, statusMsg, MessageCode::CONTROLLER_STATUS, 3)
 {
-	_Params[2] = new PARAM((BYTE)controllerStatus);
+	_Params[2] = new PARAM((CBYTE)controllerStatus);
 }
 
-RCCONTROLLERSTATUS ControllerStatusResponse::StatusCode() const
+CCONTROLLERSTATUS ControllerStatusResponse::StatusCode() const
 {
 	return reinterpret_cast<RCCONTROLLERSTATUS>((RCBYTE)*reinterpret_cast<PCPARAM>(_Params[2]));
 }
@@ -256,13 +256,13 @@ BOOL ControllerStatusResponse::Handle(PVOID results, PCVOID state)
 
 // DriverStatusResponse
 
-DriverStatusResponse::DriverStatusResponse(RCERROR error, RCDRIVERSTATUS driverStatus, PCCHAR statusMsg) 
+DriverStatusResponse::DriverStatusResponse(CERROR error, CDRIVERSTATUS driverStatus, PCCHAR statusMsg) 
 	: StatusResponse(error, statusMsg, MessageCode::DRIVER_STATUS, 3)
 {
-	_Params[2] = new PARAM((BYTE)driverStatus);
+	_Params[2] = new PARAM((CBYTE)driverStatus);
 }
 
-RCDRIVERSTATUS DriverStatusResponse::StatusCode() const
+CDRIVERSTATUS DriverStatusResponse::StatusCode() const
 {
 	return reinterpret_cast<RCDRIVERSTATUS>((RCBYTE)*reinterpret_cast<PCPARAM>(_Params[2]));
 }
