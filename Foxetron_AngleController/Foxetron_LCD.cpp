@@ -18,7 +18,7 @@ BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 
 
 #pragma region PROGRAM FUNCTIONS
 
-VOID initializeLCD()
+VOID LCD_Initialize()
 {
 	LCD.init();
 	LCD.backlight();
@@ -39,7 +39,7 @@ VOID initializeLCD()
 
 #pragma region UTILITY FUNCTIONS
 
-CONST CHAR * CONST LCD_invertChar(CONST CHAR * lcdChar, BYTE charWidth)
+CONST CHAR * CONST LCD_InvertChar(CONST CHAR * lcdChar, BYTE charWidth)
 {
 	PCHAR newLcdChar = new CHAR[SIZEOF(lcdChar)];
 
@@ -49,14 +49,14 @@ CONST CHAR * CONST LCD_invertChar(CONST CHAR * lcdChar, BYTE charWidth)
 	return const_cast<CONST CHAR *>(newLcdChar);
 }
 
-CONST CHAR * LCD_invertChar_P(CONST CHAR * lcdChar, BYTE charWidth)
+CONST CHAR * LCD_InvertChar_P(CONST CHAR * lcdChar, BYTE charWidth)
 {
 	PCHAR lcdCharData = new CHAR[SIZEOF(lcdChar)];
 
 	for (BYTE i = 0; i < SIZEOF(lcdChar); i++)
 		lcdCharData[i] = pgm_read_byte_near(lcdChar++);
 
-	return LCD_invertChar(const_cast<CONST CHAR *>(lcdCharData), charWidth);
+	return LCD_InvertChar(const_cast<CONST CHAR *>(lcdCharData), charWidth);
 }
 
 #pragma endregion

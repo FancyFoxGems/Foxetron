@@ -40,7 +40,7 @@
 #pragma region INCLUDES
 
 // PROJECT INCLUDES
-#include "Foxetron_pins.h"
+#include "Foxetron_Pins.h"
 #include "Foxetron_LCD_chars.h"
 
 // PROJECT MODULES
@@ -58,7 +58,7 @@ using namespace Foxetron;
 //#include "libs/LiquidCrystal_I2C.custom.h"		// included by other project libs
 #include "libs/BigCrystal_I2C.custom.h"
 #include "libs/MENWIZ.custom.h"
-#include "libs/phi_prompt.custom.h"
+#include "libs/phi_Prompt.custom.h"
 #include "libs/RTCLib.custom.h"
 
 // 3RD-PARTY LIBS
@@ -192,16 +192,18 @@ DriverStatus _DriverStatus	= DriverStatus::IDLE;
 
 #pragma region PROGRAM FUNCTION DECLARATIONS
 
-VOID cleanUp();
-VOID initializeInterrupts();
+CWORD SramFree();
 
-MESSAGEHANDLER onMessage;
+VOID CleanUp();
+VOID InitializeInterrupts();
 
-VOID printLCDSplash();
+MESSAGEHANDLER OnMessage;
 
-VOID DEBUG_displayKeyCodes();
-VOID DEBUG_printInputValues();
-VOID DEBUG_displayCustomChars();
+VOID PrintLCDSplash();
+
+VOID DEBUG_DisplayKeyCodes();
+VOID DEBUG_PrintInputValues();
+VOID DEBUG_DisplayCustomChars();
 
 #pragma endregion
 
@@ -212,27 +214,20 @@ VOID setup()
 {
 	Serial.begin(SERIAL_BAUD_RATE);
 
-	atexit(cleanUp);
+	atexit(CleanUp);
 
-	initializePins();
-	initializeLCD();
-	initializeRGB();
+	InitializePins();
+	LCD_Initialize();
+	RGB_Initialize();
 
-	initializeInterrupts();
+	InitializeInterrupts();
 
 	LCD.printBig(F("Fox"), 2, 0);
 }
 
 VOID serialEvent()
 {
-	WaitForMessage(Serial, onMessage);
-}
-
-int freeRam()
-{
-	extern int __heap_start, *__brkval; 
-	int v; 
-	return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+	WaitForMessage(Serial, OnMessage);
 }
 
 VOID loop()
@@ -240,14 +235,14 @@ VOID loop()
 #ifdef _DEBUG
 
 	PrintString(F("\nRAM: "));
-	PrintLine((WORD)freeRam());
+	PrintLine((WORD)SramFree());
 	PrintLine();
 
 	delay(3000);
 
 #endif
 
-	RGB.tickAndDelay();
+	RGB_Step();
 
 	LCD.clear();
 	LCD.home();
@@ -255,7 +250,7 @@ VOID loop()
 
 #ifdef DEBUG_INPUTS
 
-	DEBUG_printInputValues();
+	DEBUG_PrintInputValues();
 
 	_StatusLED = !_StatusLED;
 	WritePin(13, _StatusLED);
@@ -311,7 +306,7 @@ ISR(INT1_vect)
 ISR(PCINT0_vect, ISR_NOBLOCK)
 {
 	_LedButton5 = PINB && (1 >> 0);
-	//_pin12var = PINB && (1 >> 4);
+	//_Pin12var = PINB && (1 >> 4);
 }
 
 // PORT C (PCINT8:14): MENU ENCODER & BUTTONS
@@ -335,7 +330,19 @@ ISR(PCINT2_vect, ISR_NOBLOCK)
 
 #pragma region PROGRAM FUNCTIONS
 
-VOID initializeInterrupts()
+CWORD SramFree()
+{
+	EXTERN INT __heap_start, *__brkval; 
+	WORD v; 
+	return (CWORD) &v - (__brkval == 0 ? (CWORD) &__heap_start : (CWORD) __brkval); 
+}
+
+VOID CleanUp()
+{
+	RGB_Free();
+}
+
+VOID InitializeInterrupts()
 {
 	// External interrupts: Angle encoder
 	EIMSK |= 0b00000011;
@@ -349,12 +356,7 @@ VOID initializeInterrupts()
 	PCMSK2 = 0b11110000;
 }
 
-VOID cleanUp()
-{
-	freeRGB();
-}
-
-VOID onMessage(PIMESSAGE message)
+VOID OnMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 
@@ -434,7 +436,7 @@ VOID onMessage(PIMESSAGE message)
 	}
 }
 
-VOID printLCDSplash()
+VOID PrintLCDSplash()
 {
 	LCD.print(F("Foxetron test..."));
 
@@ -456,7 +458,7 @@ VOID printLCDSplash()
 
 // DEBUG UTILITY FUNCTIONS
 
-VOID DEBUG_displayKeyCodes()
+VOID DEBUG_DisplayKeyCodes()
 {
 	uint8_t i = 0;
 
@@ -483,7 +485,7 @@ VOID DEBUG_displayKeyCodes()
 }
 
 
-VOID DEBUG_printInputValues()
+VOID DEBUG_PrintInputValues()
 {
 	STATIC CHAR valStr[5];
 
@@ -619,7 +621,7 @@ VOID DEBUG_printInputValues()
 	PrintLine();
 }
 
-VOID DEBUG_displayCustomChars()
+VOID DEBUG_DisplayCustomChars()
 {
 	LCD.createChar(0, LCD_CHAR_FOX);
 	LCD.createChar(1, LCD_CHAR_GEM_SMALL);
@@ -631,7 +633,7 @@ VOID DEBUG_displayCustomChars()
 	LCD.createChar(6, LCD_CHAR_CLOCKWISE);
 	LCD.createChar(7, LCD_CHAR_NOTES);
 
-	DEBUG_displayKeyCodes();
+	DEBUG_DisplayKeyCodes();
 
 
 	LCD.createChar(0, LCD_CHAR_SHAPE_ROUND);
@@ -643,7 +645,7 @@ VOID DEBUG_displayCustomChars()
 	LCD.createChar(6, LCD_CHAR_SHAPE_TRIANGLE);
 	LCD.createChar(7, LCD_CHAR_SHAPE_SPECIAL);
 
-	DEBUG_displayKeyCodes();
+	DEBUG_DisplayKeyCodes();
 
 
 	LCD.createChar(0, LCD_CHAR_CUT_BRILLIANT);
@@ -654,7 +656,7 @@ VOID DEBUG_displayCustomChars()
 	LCD.createChar(4, LCD_CHAR_ARROW_LEFT_LARGE);
 	LCD.createChar(5, LCD_CHAR_ARROW_RIGHT_LARGE);
 
-	DEBUG_displayKeyCodes();
+	DEBUG_DisplayKeyCodes();
 }
 
 #pragma endregion

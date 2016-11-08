@@ -131,12 +131,14 @@ ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 
 #pragma region PROGRAM FUNCTION DECLARATIONS
 
-VOID cleanUp();
-VOID initializeInterrupts();
+CWORD SramFree();
 
-MESSAGEHANDLER onMessage;
+VOID CleanUp();
+VOID InitializeInterrupts();
 
-VOID DEBUG_printInputValues();
+MESSAGEHANDLER OnMessage;
+
+VOID DEBUG_PrintInputValues();
 
 #pragma endregion
 
@@ -151,10 +153,10 @@ VOID setup()
 	PrintLine("\nREADY!\n", Serial);
 #endif
 
-	atexit(cleanUp);
+	atexit(CleanUp);
 
-	//initializePins();
-	//initializeInterrupts();
+	//InitializePins();
+	//InitializeInterrupts();
 
 	Sd2Card card;
 	PrintLine((CBYTE)card.init(SPI_QUARTER_SPEED, 10));
@@ -187,14 +189,7 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	//WaitForMessage(Serial, onMessage);
-}
-
-int freeRam()
-{
-	extern int __heap_start, *__brkval; 
-	int v; 
-	return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+	//WaitForMessage(Serial, OnMessage);
 }
 
 VOID loop()
@@ -204,7 +199,7 @@ VOID loop()
 	return;
 
 	PrintString(F("\nRAM: "));
-	PrintLine((WORD)freeRam());
+	PrintLine((WORD)SramFree());
 	PrintLine();
 
 	delay(3000);
@@ -213,7 +208,7 @@ VOID loop()
 
 #ifdef DEBUG_INPUTS
 
-	DEBUG_printInputValues();
+	DEBUG_PrintInputValues();
 
 	_ActionLed = !_ActionLed;
 	WritePin(PIN_OUT_ACTION_LED, _ActionLed);
@@ -288,7 +283,16 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
 
 #pragma region PROGRAM FUNCTIONS
 
-VOID initializeInterrupts()
+CWORD SramFree()
+{
+	EXTERN INT __heap_start, *__brkval; 
+	WORD v; 
+	return (CWORD) &v - (__brkval == 0 ? (CWORD) &__heap_start : (CWORD) __brkval); 
+}
+
+VOID CleanUp() { }
+
+VOID OnitializeInterrupts()
 {
 	// External interrupts: Angle encoder
 	EIMSK |= 0b00000011;
@@ -296,7 +300,7 @@ VOID initializeInterrupts()
 	EICRA |= 0b00000101;
 }
 /*
-VOID onMessage(PIMESSAGE message)
+VOID OnMessage(PIMESSAGE message)
 {
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 
@@ -418,7 +422,7 @@ VOID onMessage(PIMESSAGE message)
 
 #pragma region DEBUG UTILITY FUNCTIONS
 
-VOID DEBUG_printInputValues()
+VOID DEBUG_PrintInputValues()
 {
 	_AngleEncoderA	= CheckPin(PIN_ANGLE_ENCODER_A);
 	_AngleEncoderB	= CheckPin(PIN_ANGLE_ENCODER_B);

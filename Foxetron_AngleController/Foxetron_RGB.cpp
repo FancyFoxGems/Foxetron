@@ -15,7 +15,7 @@
 
 // RGB LED / VaRGB CONFIGURATION
 
-VaRGB RGB(RGB_callback_SetColor, RGB_callback_ScheduleComplete);
+VaRGB RGB(RGB_OnSetColor, RGB_OnScheduleComplete);
 
 Schedule * _RgbSchedule = new Schedule();
 
@@ -42,14 +42,14 @@ Curve::Linear * _RgbCurves[] =
 
 #pragma region [VaRGB] CALLBACK FUNCTIONS
 
-VOID RGB_callback_SetColor(ColorSettings * colors)
+VOID RGB_OnSetColor(ColorSettings * colors)
 {
 	analogWrite(PIN_PWM_RGB_LED_RED, colors->red);
 	analogWrite(PIN_PWM_RGB_LED_GREEN, colors->green);
 	analogWrite(PIN_PWM_RGB_LED_BLUE, colors->blue);
 }
 
-VOID RGB_callback_ScheduleComplete(Schedule * schedule)
+VOID RGB_OnScheduleComplete(Schedule * schedule)
 {
 	RGB.resetTicks();
 	RGB.setSchedule(schedule);
@@ -60,7 +60,7 @@ VOID RGB_callback_ScheduleComplete(Schedule * schedule)
 
 #pragma region PROGRAM FUNCTIONS
 
-VOID initializeRGB()
+VOID RGB_Initialize()
 {
 	_RgbSchedule->addTransition(_RgbCurveFlasher);
 	_RgbSchedule->addTransition(_RgbCurveSine);
@@ -71,7 +71,12 @@ VOID initializeRGB()
 	RGB.setSchedule(_RgbSchedule);
 }
 
-VOID freeRGB()
+VOID RGB_Step()
+{
+	RGB.tickAndDelay();
+}
+
+VOID RGB_Free()
 {
 	delete _RgbSchedule;
 

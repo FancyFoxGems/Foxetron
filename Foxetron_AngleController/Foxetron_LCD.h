@@ -75,10 +75,10 @@ EXTERN BigCrystal_I2C LCD;
 
 #pragma region FUNCTION DECLARATIONS
 
-VOID initializeLCD();
+VOID LCD_Initialize();
 
-CONST CHAR * CONST LCD_invertChar(CONST CHAR *, BYTE = 5);
-CONST CHAR * LCD_invertChar_P(CONST CHAR *, BYTE = 5);
+CONST CHAR * CONST LCD_InvertChar(CONST CHAR *, BYTE = 5);
+CONST CHAR * LCD_InvertChar_P(CONST CHAR *, BYTE = 5);
 
 #pragma endregion
 

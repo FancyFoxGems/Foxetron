@@ -38,8 +38,8 @@
 
 using namespace vargb;
 
-VOID RGB_callback_SetColor(ColorSettings *);
-VOID RGB_callback_ScheduleComplete(Schedule *);
+VOID RGB_OnSetColor(ColorSettings *);
+VOID RGB_OnScheduleComplete(Schedule *);
 
 EXTERN VaRGB RGB;
 
@@ -54,8 +54,9 @@ EXTERN Curve::Linear * _RgbCurves[];
 
 #pragma region FUNCTION DECLARATIONS
 
-VOID initializeRGB();
-VOID freeRGB();
+VOID RGB_Initialize();
+VOID RGB_Step();
+VOID RGB_Free();
 
 #pragma region FUNCTION DECLARATIONS
 

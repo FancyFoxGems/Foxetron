@@ -42,7 +42,7 @@
 
 #pragma region PROGRAM FUNCTIONS
 
-INLINE VOID initializePins()
+INLINE VOID InitializePins()
 {
 	// Initialize Arduino pin mapping
 	IttyBitty::InitGPIO();
