@@ -41,7 +41,7 @@ VOID LCD_Initialize()
 
 CONST CHAR * CONST LCD_InvertChar(CONST CHAR * lcdChar, BYTE charWidth)
 {
-	PCHAR newLcdChar = new CHAR[SIZEOF(lcdChar)];
+	PCHAR newLcdChar = new char[SIZEOF(lcdChar)];
 
 	for (BYTE pixY = 0; pixY < SIZEOF(lcdChar); pixY++)
 		newLcdChar[pixY] = lcdChar[pixY] ^ (1 << charWidth - 1);
@@ -51,7 +51,7 @@ CONST CHAR * CONST LCD_InvertChar(CONST CHAR * lcdChar, BYTE charWidth)
 
 CONST CHAR * LCD_InvertChar_P(CONST CHAR * lcdChar, BYTE charWidth)
 {
-	PCHAR lcdCharData = new CHAR[SIZEOF(lcdChar)];
+	PCHAR lcdCharData = new char[SIZEOF(lcdChar)];
 
 	for (BYTE i = 0; i < SIZEOF(lcdChar); i++)
 		lcdCharData[i] = pgm_read_byte_near(lcdChar++);
