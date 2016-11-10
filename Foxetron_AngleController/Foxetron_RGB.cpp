@@ -82,7 +82,7 @@ VOID RGB_Free()
 
 	delete _RgbCurveFlasher;
 	delete _RgbCurveSine;
-	
+
 	for (BYTE i = 0; i < SIZEOF(_RgbCurves) / SIZEOF(_RgbCurves[0]); i++)
 	{
 		if (_RgbCurves[i] != NULL)

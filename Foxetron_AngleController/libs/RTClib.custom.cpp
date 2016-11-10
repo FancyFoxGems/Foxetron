@@ -145,7 +145,7 @@ DateTime::DateTime(const char* date, const char* time)
 {
 	// sample input: date = "Dec 26 2009", time = "12:34:56"
 	yOff = conv2d(date + 9);
-	// Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec 
+	// Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
 	switch (date[0])
 	{
 	case 'J': m = date[1] == 'a' ? 1 : m = date[2] == 'n' ? 6 : 7; break;

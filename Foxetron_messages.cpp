@@ -22,7 +22,7 @@ BOOL Request::Handle(PVOID results, PCVOID state)
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("Request::Handle"));
 #endif
-	
+
 #ifdef DEBUG_MESSAGES
 	PrintLine();
 #endif
@@ -75,9 +75,9 @@ BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("NewAngleRequest::Handle"));
 #endif
-	
+
 	*((PPWORD)results)[0] = this->Degrees();
-	
+
 	CERROR driverError = *((PPCERROR)state)[0];
 
 #ifdef DEBUG_MESSAGES
@@ -86,7 +86,7 @@ BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
 
 	if (!Request::Handle(results, state))
 		return FALSE;
-	
+
 	NewAngleResponse(driverError).Transmit();
 
 	return TRUE;
@@ -102,9 +102,9 @@ BOOL StatusRequest::Handle(PVOID results, PCVOID state)
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("StatusRequest::Handle"));
 #endif
-	
-	CERROR error = *((PPCERROR)state)[0];	
-	PCCHAR statusMsg = *((PPCCHAR *)state)[1];	
+
+	CERROR error = *((PPCERROR)state)[0];
+	PCCHAR statusMsg = *((PPCCHAR *)state)[1];
 	CBYTE statusCode = *((PPCBYTE)state)[2];
 	BOOL isDriverStatus = (((PPBYTE)state)[3] != NULL);
 
@@ -122,7 +122,7 @@ BOOL StatusRequest::Handle(PVOID results, PCVOID state)
 		DriverStatusResponse(error, (CDRIVERSTATUS)statusCode, statusMsg).Transmit();
 	else
 		ControllerStatusResponse(error, (CCONTROLLERSTATUS)statusCode, statusMsg).Transmit();
-	
+
 	return TRUE;
 }
 
@@ -149,7 +149,7 @@ BOOL Response::Handle(PVOID results, PCVOID state)
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("Response::Handle"));
 #endif
-	
+
 	*((PPERROR)results)[0] = this->ErrorCode();
 
 	return TRUE;
@@ -175,7 +175,7 @@ BOOL AngleResponse::Handle(PVOID results, PCVOID state)
 
 	if (!Response::Handle(results, state))
 		return FALSE;
-	
+
 	*((PPWORD)results)[1] = this->Degrees();
 
 	return TRUE;
@@ -191,7 +191,7 @@ BOOL NewAngleResponse::Handle(PVOID results, PCVOID state)
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("NewAngleResponse::Handle"));
 #endif
-	
+
 	if (!Response::Handle(results, state))
 		return FALSE;
 
@@ -216,10 +216,10 @@ BOOL StatusResponse::Handle(PVOID results, PCVOID state)
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("StatusResponse::Handle"));
 #endif
-	
+
 	if (!Response::Handle(results, state))
 		return FALSE;
-	
+
 	*((PPCCHAR *)results)[1] = this->StatusMessage();
 
 	return TRUE;
@@ -228,7 +228,7 @@ BOOL StatusResponse::Handle(PVOID results, PCVOID state)
 
 // ControllerStatusResponse
 
-ControllerStatusResponse::ControllerStatusResponse(CERROR error, CCONTROLLERSTATUS controllerStatus, PCCHAR statusMsg) 
+ControllerStatusResponse::ControllerStatusResponse(CERROR error, CCONTROLLERSTATUS controllerStatus, PCCHAR statusMsg)
 	: StatusResponse(error, statusMsg, MessageCode::CONTROLLER_STATUS, 3)
 {
 	_Params[2] = new PARAM((CBYTE)controllerStatus);
@@ -247,7 +247,7 @@ BOOL ControllerStatusResponse::Handle(PVOID results, PCVOID state)
 
 	if (!StatusResponse::Handle(results, state))
 		return FALSE;
-	
+
 	*((PPCONTROLLERSTATUS)results)[2] = this->StatusCode();
 
 	return TRUE;
@@ -256,7 +256,7 @@ BOOL ControllerStatusResponse::Handle(PVOID results, PCVOID state)
 
 // DriverStatusResponse
 
-DriverStatusResponse::DriverStatusResponse(CERROR error, CDRIVERSTATUS driverStatus, PCCHAR statusMsg) 
+DriverStatusResponse::DriverStatusResponse(CERROR error, CDRIVERSTATUS driverStatus, PCCHAR statusMsg)
 	: StatusResponse(error, statusMsg, MessageCode::DRIVER_STATUS, 3)
 {
 	_Params[2] = new PARAM((CBYTE)driverStatus);
@@ -272,10 +272,10 @@ BOOL DriverStatusResponse::Handle(PVOID results, PCVOID state)
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("DriverStatusResponse::Handle"));
 #endif
-	
+
 	if (!StatusResponse::Handle(results, state))
 		return FALSE;
-	
+
 	*((PPDRIVERSTATUS)results)[2] = this->StatusCode();
 
 	return TRUE;

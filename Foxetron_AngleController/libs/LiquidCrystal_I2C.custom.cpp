@@ -366,5 +366,3 @@ uint8_t LiquidCrystal_I2C::init_bargraph(uint8_t graphtype) { return 0; }
 void LiquidCrystal_I2C::draw_horizontal_graph(uint8_t row, uint8_t column, uint8_t len, uint8_t pixel_col_end) { }
 void LiquidCrystal_I2C::draw_vertical_graph(uint8_t row, uint8_t column, uint8_t len, uint8_t pixel_row_end) { }
 void LiquidCrystal_I2C::setContrast(uint8_t new_val) { }
-
-

@@ -6,5 +6,3 @@
 
 
 #include "Foxetron_EEPROM.h"
-
-

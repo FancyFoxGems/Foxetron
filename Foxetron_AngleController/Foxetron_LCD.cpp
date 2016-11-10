@@ -60,4 +60,3 @@ CONST CHAR * LCD_InvertChar_P(CONST CHAR * lcdChar, BYTE charWidth)
 }
 
 #pragma endregion
-

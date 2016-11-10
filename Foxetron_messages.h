@@ -74,7 +74,7 @@ namespace Foxetron
 
 #pragma endregion
 
-	
+
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	// REQUESTS
@@ -162,7 +162,7 @@ namespace Foxetron
 		NewAngleRequest(CWORD);
 
 		CWORD Degrees() const;
-		
+
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
@@ -177,7 +177,7 @@ namespace Foxetron
 	};
 
 #pragma endregion
-	
+
 
 #pragma region Response DEFINITIONS
 
@@ -192,7 +192,7 @@ namespace Foxetron
 
 		IResponse() { }
 	};
-	
+
 
 	INTERFACE IStatusResponse
 	{
@@ -222,7 +222,7 @@ namespace Foxetron
 	CLASS AngleResponse : public Response
 	{
 	public:
-		
+
 		AngleResponse(CERROR, CWORD);
 
 		CWORD Degrees() const;
@@ -251,7 +251,7 @@ namespace Foxetron
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
 	};
 
-	
+
 	CLASS ControllerStatusResponse : public StatusResponse
 	{
 	public:
@@ -269,7 +269,7 @@ namespace Foxetron
 	public:
 
 		DriverStatusResponse(CERROR, CDRIVERSTATUS, PCCHAR = NULL);
-		
+
 		CDRIVERSTATUS StatusCode() const;
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
