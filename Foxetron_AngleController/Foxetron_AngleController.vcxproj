@@ -182,7 +182,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties VM_AUTOGEN_PROTOTYPES="0" vm.upload.useprogrammer="0" arduino.build.auto_discover_includes="1" VM_ReCompileLibsOnSourceMacroChange="1" VM_ReCompileCoreOnProjectMacroChange="1" arduino.upload.port="COM19" VM_ADDITIONAL_COMPILER_C_ELF_FLAGS="-Wl,--relax" VM_ADDITIONAL_PREPROC="EXCLUDE_ITTYBITTY_FULL_BYTES=1;DEBUG_MESSAGES=1" VM_ADDITIONAL_COMPILER_FLAGS="-Wno-unknown-pragmas -mcall-prologues" />
+      <UserProperties VM_AUTOGEN_PROTOTYPES="0" vm.upload.useprogrammer="0" arduino.build.auto_discover_includes="1" VM_ReCompileLibsOnSourceMacroChange="1" VM_ReCompileCoreOnProjectMacroChange="1" arduino.upload.port="COM19" VM_ADDITIONAL_COMPILER_C_ELF_FLAGS="-Wl,--relax" VM_ADDITIONAL_PREPROC="NO_ITTYBITTY_FULL_BYTES=1;DEBUG_MESSAGES=1" VM_ADDITIONAL_COMPILER_FLAGS="-Wno-unknown-pragmas -mcall-prologues" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

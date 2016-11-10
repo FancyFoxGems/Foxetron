@@ -135,7 +135,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties VM_ADDITIONAL_COMPILER_S_FLAGS="" VM_AUTOGEN_PROTOTYPES="0" vm.upload.useprogrammer="0" VM_ADDITIONAL_COMPILER_AR_FLAGS="" VM_ADDITIONAL_COMPILER_CPP_FLAGS="" arduino.build.auto_discover_includes="1" VM_ADDITIONAL_COMPILER_ELF2HEX_FLAGS="" VM_ADDITIONAL_COMPILER_C_FLAGS="" VM_ReCompileLibsOnSourceMacroChange="1" VM_ReCompileCoreOnProjectMacroChange="1" arduino.upload.port="COM19" VM_ADDITIONAL_COMPILER_C_ELF_FLAGS="-Wl,--relax" VM_ADDITIONAL_PREPROC="EXCLUDE_ITTYBITTY_FULL_BYTES=1;DEBUG_MESSAGES=1" VM_ADDITIONAL_COMPILER_FLAGS="-Wno-unknown-pragmas -mcall-prologues" />
+      <UserProperties VM_ADDITIONAL_COMPILER_S_FLAGS="" VM_AUTOGEN_PROTOTYPES="0" vm.upload.useprogrammer="0" VM_ADDITIONAL_COMPILER_AR_FLAGS="" VM_ADDITIONAL_COMPILER_CPP_FLAGS="" arduino.build.auto_discover_includes="1" VM_ADDITIONAL_COMPILER_ELF2HEX_FLAGS="" VM_ADDITIONAL_COMPILER_C_FLAGS="" VM_ReCompileLibsOnSourceMacroChange="1" VM_ReCompileCoreOnProjectMacroChange="1" arduino.upload.port="COM19" VM_ADDITIONAL_COMPILER_C_ELF_FLAGS="-Wl,--relax" VM_ADDITIONAL_PREPROC="NO_ITTYBITTY_FULL_BYTES=1;DEBUG_MESSAGES=1" VM_ADDITIONAL_COMPILER_FLAGS="-Wno-unknown-pragmas -mcall-prologues" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
