@@ -1,3 +1,9 @@
 [submodule "IttyBitty"]
 	path = IttyBitty
 	url = https://github.com/FancyFoxGems/IttyBitty
+[submodule "Foxetron_AngleController\\libs\\VaRGB"]
+	path = Foxetron_AngleController\\libs\\VaRGB
+	url = https://github.com/psychogenic/VaRGB
+[submodule "Foxetron_AngleDriver\\libs\\HalfStepper"]
+	path = Foxetron_AngleDriver\\libs\\HalfStepper
+	url = https://github.com/FancyFoxGems/HalfStepper
