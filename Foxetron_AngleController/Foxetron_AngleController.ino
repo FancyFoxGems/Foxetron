@@ -231,7 +231,7 @@ VOID serialEvent()
 }
 
 VOID loop()
-{	
+{
 #ifdef _DEBUG
 
 	PrintString(F("\nRAM: "));
@@ -357,7 +357,7 @@ VOID OnMessage(PIMESSAGE message)
 	PrintString(F("NEW MSG - CODE: "));
 	PrintLine(message->GetMessageCode());
 #endif
-	
+
 	BOOL msgHandled = FALSE;
 	PPVOID results = NULL;
 	PPCVOID state = NULL;
@@ -365,7 +365,7 @@ VOID OnMessage(PIMESSAGE message)
 	switch (msgCode)
 	{
 	case MessageCode::STATUS_REQUEST:
-		
+
 		state = new PCVOID[4] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus, NULL };
 		msgHandled = reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, state);
 
@@ -373,10 +373,10 @@ VOID OnMessage(PIMESSAGE message)
 
 
 	case MessageCode::ANGLE_RESPONSE:
-		
+
 		results = new PVOID[2] { &_DriverError, &_Degrees };
 		msgHandled = reinterpret_cast<PANGLERESPONSE>(message)->Handle(results, state);
-		
+
 	#ifdef DEBUG_MESSAGES
 		PrintLine((BYTE)_DriverError);
 		PrintLine(_Degrees);
@@ -386,10 +386,10 @@ VOID OnMessage(PIMESSAGE message)
 
 
 	case MessageCode::NEWANGLE_RESPONSE:
-		
+
 		results = new PVOID[1] { &_DriverError };
 		msgHandled = reinterpret_cast<PNEWANGLERESPONSE>(message)->Handle(results);
-		
+
 	#ifdef DEBUG_MESSAGES
 		PrintLine((BYTE)_DriverError);
 	#endif
@@ -398,10 +398,10 @@ VOID OnMessage(PIMESSAGE message)
 
 
 	case MessageCode::DRIVER_STATUS:
-		
+
 		results = new PVOID[3] { &_DriverError, &_DriverStatusMsg, &_DriverStatus };
 		msgHandled = reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(results);
-		
+
 	#ifdef DEBUG_MESSAGES
 		PrintLine((BYTE)_DriverError);
 		PrintLine(_DriverStatusMsg);
@@ -582,7 +582,7 @@ VOID DEBUG_PrintInputValues()
 	LCD.setCursor(14, 1);
 	LCD.print(itoa(_ShiftButton, valStr, 2));
 
-	
+
 	PrintBit((BIT)_AngleEncoderA);
 	PrintString(F(" "));
 	PrintBit((BIT)_AngleEncoderB);

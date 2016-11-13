@@ -1,0 +1,409 @@
+cls
+avr-nm -C -S -l -f sysv C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328\Foxetron_AngleDriver.ino.elf
+
+Name                  Value   Class        Type         Size     Line  Section
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+.do_clear_bss_loop  |00000160|   t  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:678
+.do_clear_bss_start |00000162|   t  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:679
+__bad_interrupt     |00000186|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__brkval            |00800666|   B  |            OBJECT|00000002|     |.bss
+__bss_end           |0080066a|   B  |            NOTYPE|        |     |.bss
+__bss_start         |008001fe|   B  |            NOTYPE|        |     |.bss
+__ctors_end         |0000011c|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:681
+__ctors_start       |00000110|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:673
+__data_end          |008001fe|   D  |            NOTYPE|        |     |.data
+__data_load_end     |00004b8c|   A  |            NOTYPE|        |     |*ABS*
+__data_load_start   |00004a8e|   A  |            NOTYPE|        |     |*ABS*
+__data_start        |00800100|   D  |            NOTYPE|        |     |.data
+__do_clear_bss      |00000158|   T  |            NOTYPE|00000010|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:678
+__do_copy_data      |00000142|   T  |            NOTYPE|00000016|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:677
+__do_global_ctors   |00000168|   T  |            NOTYPE|00000016|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:679
+__do_global_dtors   |00004a76|   T  |            NOTYPE|00000016|     |.text
+__dtors_end         |0000011e|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:681
+__dtors_start       |0000011c|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:681
+__eeprom_end        |00810000|   N  |            NOTYPE|        |     |.comment
+__empty             |00004530|   t  |              FUNC|00000002|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/hooks.c:28
+__epilogue_restores__|000045ec|   T  |            NOTYPE|00000036|     |.text
+__flp               |00800668|   B  |            OBJECT|00000002|     |.bss
+__fuse_byte_high_or_extended|        |   U  |            NOTYPE|        |     |*UND*
+__heap_end          |00000000|   W  |            NOTYPE|        |     |*ABS*
+__heap_start        |0080066b|   B  |            NOTYPE|        |     |.noinit
+__init              |0000011e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:681
+__malloc_heap_end   |00800100|   D  |            OBJECT|00000002|     |.data
+__malloc_heap_start |00800102|   D  |            OBJECT|00000002|     |.data
+__malloc_margin     |00800104|   D  |            OBJECT|00000002|     |.data
+__muluhisi3         |000045a0|   T  |            NOTYPE|00000016|     |.text
+__prologue_saves__  |000045b4|   T  |            NOTYPE|00000038|     |.text
+__stack             |000008ff|   W  |            NOTYPE|        |     |*ABS*
+__stop_program      |00004a8c|   t  |            NOTYPE|        |     |.text
+__strlen_P          |00004a04|   T  |              FUNC|00000012|     |.text
+__tablejump__       |0000457a|   T  |            NOTYPE|00000008|     |.text
+__tablejump2__      |00004576|   T  |            NOTYPE|00000004|     |.text
+__tcf_0             |0000288e|   t  |              FUNC|0000000e|     |.text
+__tcf_1             |00002ddc|   t  |              FUNC|0000000a|     |.text
+__trampolines_end   |00000076|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:668
+__trampolines_start |00000076|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:668
+__udivmodsi4        |00004532|   T  |            NOTYPE|00000044|     |.text
+__udivmodsi4_ep     |00004558|   t  |            NOTYPE|        |     |.text
+__udivmodsi4_loop   |0000453e|   t  |            NOTYPE|        |     |.text
+__umulhisi3         |00004582|   T  |            NOTYPE|0000001e|     |.text
+__vector_1          |000001da|   T  |              FUNC|0000008c|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:254
+__vector_10         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_11         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_12         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_13         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_14         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_15         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_16         |00003b46|   T  |              FUNC|00000094|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:45
+__vector_17         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_18         |000040c0|   T  |              FUNC|00000064|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/HardwareSerial0.cpp:40
+__vector_19         |00004124|   T  |              FUNC|0000004c|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/HardwareSerial0.cpp:59
+__vector_2          |00000266|   T  |              FUNC|00000084|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:260
+__vector_20         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_21         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_22         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_23         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_24         |000038f4|   T  |              FUNC|00000256|     |.text    C:\RC\Sketchbook\libraries\Wire\utility/twi.c:365
+__vector_25         |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_3          |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_4          |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_5          |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_6          |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_7          |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_8          |00000186|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:684
+__vector_9          |000002ea|   T  |              FUNC|00000016|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:269
+__vector_default    |00000000|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:644
+__vectors           |00000000|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:644
+_AngleEncoderA      |00800204|   B  |            OBJECT|00000001|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:101
+_AngleEncoderB      |00800203|   B  |            OBJECT|00000001|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:102
+_AngleReading       |008001fe|   B  |            OBJECT|00000004|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:105
+_AngleUp            |00800202|   B  |            OBJECT|00000001|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:104
+_edata              |008001fe|   d  |            NOTYPE|        |     |.data
+_end                |0080066b|   B  |            NOTYPE|        |     |.noinit
+_etext              |00004a8e|   t  |            NOTYPE|        |     |.text
+_exit               |00004a76|   T  |            NOTYPE|        |     |.text
+_GLOBAL__sub_D_ARDUINO_PORT_TO_MODE|00003264|   t  |              FUNC|00000062|     |.text
+_GLOBAL__sub_I___vector_18|00004180|   t  |              FUNC|00000086|     |.text
+_GLOBAL__sub_I__ZN5SDLib20getNextPathComponentEPKcPjPc|00000afa|   t  |              FUNC|00000046|     |.text
+_GLOBAL__sub_I__ZN7Sd2Card11cardCommandEhm|0000121e|   t  |              FUNC|0000000c|     |.text
+_GLOBAL__sub_I__ZN7TwoWire8rxBufferE|00003862|   t  |              FUNC|0000000a|     |.text
+_GLOBAL__sub_I__ZN9IttyBitty24SERIAL_EEPROM_TIMEOUT_MSE|00002ecc|   t  |              FUNC|00000012|     |.text
+_GLOBAL__sub_I_ARDUINO_PORT_TO_MODE|000031d2|   t  |              FUNC|000000aa|     |.text
+SetPinMode(unsigned int, unsigned char)|00003164|   T  |              FUNC|0000006e|     |.text C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:87
+serialEvent()       |000001d6|   T  |              FUNC|00000002|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:192
+InitializePins()    |0000018a|   W  |              FUNC|0000004c|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_pins.h:45
+serialEventRun()    |00003e9a|   W  |              FUNC|0000001c|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/HardwareSerial.cpp:63
+Serial0_available() |0000416e|   T  |              FUNC|00000014|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/HardwareSerial0.cpp:75
+InitializeInterrupts()|00000300|   T  |              FUNC|00000018|     |.text  C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:290
+CleanUp()           |00000188|   T  |              FUNC|00000002|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:288
+operator delete(void*)|0000422a|   T  |              FUNC|00000006|     |.text  C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/new.cpp:39
+guard variable for IttyBitty::_BitProxy::NULL_OBJECT()::NULL_BITREF|00800484|   b  |            OBJECT|00000008|     |.bss
+guard variable for IttyBitty::ByteField::NULL_OBJECT()::NULL_BYTEFIELD|0080047c|   b  |            OBJECT|00000008|     |.bss
+guard variable for IttyBitty::ByteField::operator IttyBitty::ByteField**()::sillyPtr|00800474|   b  |            OBJECT|00000008|     |.bss
+guard variable for IttyBitty::ByteField::Bytes() const::thisClone|0080046c|   b  |            OBJECT|00000008|     |.bss
+chip_select_asserted|00800252|   b  |            OBJECT|00000001|     |.bss
+spiRec()            |00000b9c|   t  |              FUNC|00000008|     |.text    C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:46
+settings            |00800253|   b  |            OBJECT|00000002|     |.bss
+HardwareSerial::_tx_udr_empty_irq()|00003eb4|   T  |              FUNC|00000042|     |.text
+HardwareSerial::peek()|00003e56|   T  |              FUNC|0000001c|     |.text
+HardwareSerial::read()|00003e72|   T  |              FUNC|00000028|     |.text
+HardwareSerial::begin(unsigned long, unsigned char)|00004000|   T  |              FUNC|000000c4|     |.text
+HardwareSerial::flush()|00003ef6|   T  |              FUNC|00000044|     |.text
+HardwareSerial::write(unsigned char)|00003f38|   T  |              FUNC|000000ca|     |.text
+HardwareSerial::available()|00003e40|   T  |              FUNC|00000016|     |.text
+Print::printNumber(unsigned long, unsigned char)|00004324|   T  |              FUNC|0000009e|     |.text
+Print::print(unsigned long, int)|000043be|   T  |              FUNC|0000001e|     |.text
+Print::print(__FlashStringHelper const*)|0000429c|   T  |              FUNC|00000042|     |.text
+Print::write(char const*)|0000426e|   W  |              FUNC|0000002e|     |.text
+Print::write(unsigned char const*, unsigned int)|0000422e|   T  |              FUNC|00000044|     |.text
+Print::println(unsigned char, int)|000043da|   T  |              FUNC|0000002e|     |.text
+Print::println(unsigned long, int)|00004404|   T  |              FUNC|00000024|     |.text
+Print::println(__FlashStringHelper const*)|000042e4|   T  |              FUNC|00000024|     |.text
+Print::println(char const*)|00004304|   T  |              FUNC|00000024|     |.text
+Print::println()    |000042dc|   T  |              FUNC|0000000a|     |.text
+SDLib::SD           |00800209|   B  |            OBJECT|00000049|     |.bss
+SDLib::File::peek() |0000067e|   T  |              FUNC|00000056|     |.text
+SDLib::File::read(void*, unsigned int)|0000075e|   T  |              FUNC|00000016|     |.text
+SDLib::File::read() |0000066a|   T  |              FUNC|00000016|     |.text
+SDLib::File::size() |00000792|   T  |              FUNC|00000020|     |.text
+SDLib::File::close()|0000080c|   T  |              FUNC|00000024|     |.text
+SDLib::File::flush()|0000062c|   T  |              FUNC|00000010|     |.text
+SDLib::File::write(unsigned char)|000005c8|   T  |              FUNC|0000002e|     |.text
+SDLib::File::write(unsigned char const*, unsigned int)|000005f6|   T  |              FUNC|00000036|     |.text
+SDLib::File::position()|00000772|   T  |              FUNC|00000020|     |.text
+SDLib::File::available()|000007b2|   T  |              FUNC|0000005e|     |.text
+SDLib::File::File(SdFile, char const*)|000006d2|   T  |              FUNC|00000066|     |.text  C:\RC\Sketchbook\libraries\SD\src/File.cpp:83
+SDLib::File::File() |00000738|   T  |              FUNC|00000026|     |.text    C:\RC\Sketchbook\libraries\SD\src/File.cpp:40
+SDLib::File::File(SdFile, char const*)|000006d2|   T  |              FUNC|00000066|     |.text
+SDLib::File::File() |00000738|   T  |              FUNC|00000026|     |.text
+SDLib::File::operator bool()|00000830|   T  |              FUNC|0000001a|     |.text
+SDLib::SDClass::getParentDir(char const*, int*)|00000946|   T  |              FUNC|000000e6|     |.text C:\RC\Sketchbook\libraries\SD\src/SD.cpp:353
+SDLib::SDClass::open(char const*, unsigned char)|00000a24|   T  |              FUNC|000000e4|     |.text        C:\RC\Sketchbook\libraries\SD\src/SD.cpp:409
+SDLib::SDClass::begin(unsigned char)|0000084a|   T  |              FUNC|0000005e|     |.text    C:\RC\Sketchbook\libraries\SD\src/SD.cpp:337
+SdFile::addCluster()|0000122a|   T  |              FUNC|00000054|     |.text
+SdFile::make83Name(char const*, unsigned char*)|0000136c|   T  |              FUNC|00000070|     |.text
+SdFile::readDirCache()|00001650|   T  |              FUNC|0000008c|     |.text
+SdFile::addDirCluster()|0000127e|   T  |              FUNC|000000c2|     |.text
+SdFile::cacheDirEntry(unsigned char)|0000133c|   T  |              FUNC|00000032|     |.text
+SdFile::openCachedEntry(unsigned char, unsigned char)|00001a10|   T  |              FUNC|000000d2|     |.text
+SdFile::open(SdFile*, char const*, unsigned char)|00001ade|   T  |              FUNC|00000198|     |.text
+SdFile::read(void*, unsigned int)|0000147a|   T  |              FUNC|000001dc|     |.text
+SdFile::read()      |0000063c|   W  |              FUNC|00000030|     |.text
+SdFile::sync()      |00001810|   T  |              FUNC|00000088|     |.text
+SdFile::close()     |00001894|   T  |              FUNC|0000001c|     |.text
+SdFile::write(unsigned char)|00001f50|   T  |              FUNC|00000024|     |.text
+SdFile::write(void const*, unsigned int)|00001c6a|   T  |              FUNC|000002f4|     |.text
+SdFile::seekSet(unsigned long)|000016da|   T  |              FUNC|00000138|     |.text
+SdFile::openRoot(SdVolume*)|000013dc|   T  |              FUNC|000000a0|     |.text
+SdFile::truncate(unsigned long)|000018ae|   T  |              FUNC|00000170|     |.text
+SdFile::dateTime_   |00800255|   B  |            OBJECT|00000002|     |.bss
+SdFile::SdFile(SdFile const&)|000008a4|   W  |              FUNC|000000a2|     |.text   C:\RC\Sketchbook\libraries\SD\src/SD.cpp:348
+SdFile::SdFile(SdFile const&)|000008a4|   W  |              FUNC|000000a2|     |.text
+String::invalidate()|0000442e|   T  |              FUNC|00000024|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:138
+String::changeBuffer(unsigned int)|00004450|   T  |              FUNC|00000034|     |.text      C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:155
+String::copy(__FlashStringHelper const*, unsigned int)|000044b8|   T  |              FUNC|0000003e|     |.text  C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:181
+String::reserve(unsigned int)|00004482|   T  |              FUNC|00000038|     |.text
+String::operator=(__FlashStringHelper const*)|000044ee|   T  |              FUNC|0000003a|     |.text   C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:246
+String::String(__FlashStringHelper const*)|0000451e|   T  |              FUNC|00000014|     |.text      C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:252
+String::String(__FlashStringHelper const*)|0000451e|   T  |              FUNC|00000014|     |.text
+String::~String()   |00004424|   T  |              FUNC|0000000c|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:124
+String::~String()   |00004424|   T  |              FUNC|0000000c|     |.text
+Sd2Card::setSckRate(unsigned char)|00000c1e|   T  |              FUNC|00000056|     |.text      C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:501
+Sd2Card::writeBlock(unsigned long, unsigned char const*)|00001190|   T  |              FUNC|0000009c|     |.text        C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:568
+Sd2Card::cardCommand(unsigned char, unsigned long)|00000ca8|   T  |              FUNC|000000c4|     |.text      C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:106
+Sd2Card::waitNotBusy(unsigned int)|00000c74|   T  |              FUNC|00000036|     |.text      C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:531
+Sd2Card::readRegister(unsigned char, void*)|00000fec|   T  |              FUNC|00000070|     |.text     C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:470
+Sd2Card::chipSelectLow()|00000bc2|   T  |              FUNC|0000002e|     |.text        C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:172
+Sd2Card::chipSelectHigh()|00000ba2|   T  |              FUNC|00000022|     |.text       C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:162
+Sd2Card::waitStartBlock()|00000ea2|   T  |              FUNC|0000004a|     |.text       C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:541
+Sd2Card::init(unsigned char, unsigned char)|00000d5e|   T  |              FUNC|00000168|     |.text     C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:242
+Sd2Card::readEnd()  |00000bee|   T  |              FUNC|00000034|     |.text
+Sd2Card::cardSize() |0000104e|   T  |              FUNC|000000e2|     |.text    C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:140
+Sd2Card::readData(unsigned long, unsigned int, unsigned int, unsigned char*)|00000ee8|   T  |              FUNC|000000f2|     |.text    C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:377
+Sd2Card::readBlock(unsigned long, unsigned char*)|00000fce|   T  |              FUNC|00000020|     |.text       C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:363
+Sd2Card::writeData(unsigned char, unsigned char const*)|0000112e|   T  |              FUNC|0000006e|     |.text C:\RC\Sketchbook\libraries\SD\src\utility/Sd2Card.cpp:615
+TwoWire::transmitting|0080050d|   B  |            OBJECT|00000001|     |.bss
+TwoWire::rxBufferIndex|00800531|   B  |            OBJECT|00000001|     |.bss
+TwoWire::txBufferIndex|0080050f|   B  |            OBJECT|00000001|     |.bss
+TwoWire::rxBufferLength|00800530|   B  |            OBJECT|00000001|     |.bss
+TwoWire::txBufferLength|0080050e|   B  |            OBJECT|00000001|     |.bss
+TwoWire::peek()     |0000376c|   T  |              FUNC|0000001e|     |.text
+TwoWire::read()     |00003746|   T  |              FUNC|00000026|     |.text
+TwoWire::begin()    |0000384e|   T  |              FUNC|00000016|     |.text
+TwoWire::flush()    |0000378a|   T  |              FUNC|00000002|     |.text
+TwoWire::write(unsigned char)|000037d4|   T  |              FUNC|00000060|     |.text
+TwoWire::write(unsigned char const*, unsigned int)|0000378c|   T  |              FUNC|0000004e|     |.text
+TwoWire::rxBuffer   |00800532|   B  |            OBJECT|00000020|     |.bss
+TwoWire::txBuffer   |00800510|   B  |            OBJECT|00000020|     |.bss
+TwoWire::available()|00003736|   T  |              FUNC|00000010|     |.text
+TwoWire::TwoWire()  |0000382e|   T  |              FUNC|00000020|     |.text    C:\RC\Sketchbook\libraries\Wire/Wire.cpp:965
+TwoWire::TwoWire()  |0000382e|   T  |              FUNC|00000020|     |.text
+SdVolume::cacheFlush()|00001f72|   T  |              FUNC|00000076|     |.text
+SdVolume::cacheDirty_|0080025b|   B  |            OBJECT|00000001|     |.bss
+SdVolume::cacheBuffer_|0080025e|   B  |            OBJECT|00000200|     |.bss
+SdVolume::cacheRawBlock(unsigned long, unsigned char)|00001fe4|   T  |              FUNC|00000076|     |.text   C:\RC\Sketchbook\libraries\SD\src\utility/SdVolume.cpp:116
+SdVolume::cacheZeroBlock(unsigned long)|00002058|   T  |              FUNC|0000004c|     |.text C:\RC\Sketchbook\libraries\SD\src\utility/SdVolume.cpp:127
+SdVolume::allocContiguous(unsigned long, unsigned long*)|00002374|   T  |              FUNC|0000022a|     |.text        C:\RC\Sketchbook\libraries\SD\src\utility/SdVolume.cpp:31
+SdVolume::cacheBlockNumber_|00800106|   D  |            OBJECT|00000004|     |.data
+SdVolume::cacheMirrorBlock_|00800257|   B  |            OBJECT|00000004|     |.bss
+SdVolume::init(Sd2Card*, unsigned char)|00002618|   T  |              FUNC|00000210|     |.text C:\RC\Sketchbook\libraries\SD\src\utility/SdVolume.cpp:227
+SdVolume::fatPut(unsigned long, unsigned long)|00002260|   T  |              FUNC|00000116|     |.text
+SdVolume::sdCard_   |0080025c|   B  |            OBJECT|00000002|     |.bss
+SdVolume::freeChain(unsigned long)|00002596|   T  |              FUNC|00000086|     |.text      C:\RC\Sketchbook\libraries\SD\src\utility/SdVolume.cpp:195
+SPIClass::initialized|00800208|   B  |            OBJECT|00000001|     |.bss
+SPIClass::interruptMask|00800206|   B  |            OBJECT|00000001|     |.bss
+SPIClass::interruptMode|00800207|   B  |            OBJECT|00000001|     |.bss
+SPIClass::interruptSave|00800205|   B  |            OBJECT|00000001|     |.bss
+SPIClass::endTransaction() [clone .part.3]|00000b40|   t  |              FUNC|0000001a|     |.text      C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI\src/SPI.h:271
+SPIClass::beginTransaction(SPISettings)|00000b5a|   W  |              FUNC|00000034|     |.text
+SPIClass::begin()   |0000055c|   T  |              FUNC|0000006c|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI\src/SPI.cpp:26
+SPIClass::transfer(unsigned char)|00000b8e|   W  |              FUNC|0000000e|     |.text
+IttyBitty::DisableWdt()|0000012a|   T  |              FUNC|00000018|     |.text
+IttyBitty::FlushAndDelay(HardwareSerial&)|000036ce|   T  |              FUNC|0000001c|     |.text
+IttyBitty::_PortRegisters::operator=(IttyBitty::_PortRegisters const&)|00003000|   W  |              FUNC|00000036|     |.text
+IttyBitty::_PortRegisters::_PortRegisters(IttyBitty::_PortRegisters const&)|00002faa|   W  |              FUNC|0000005c|     |.text     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.h:180
+IttyBitty::_PortRegisters::_PortRegisters(IttyBitty::_PortRegisters const&)|00002faa|   W  |              FUNC|0000005c|     |.text
+IttyBitty::_PortRegisters::~_PortRegisters()|00002f86|   W  |              FUNC|00000010|     |.text
+IttyBitty::_PortRegisters::~_PortRegisters()|00002edc|   W  |              FUNC|0000000c|     |.text    C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.h:130
+IttyBitty::_PortRegisters::~_PortRegisters()|00002edc|   W  |              FUNC|0000000c|     |.text
+IttyBitty::_InitializeArduinoPinTables()|0000312a|   T  |              FUNC|00000034|     |.text
+IttyBitty::_InitializeArduinoPortTables()|000030d8|   T  |              FUNC|00000052|     |.text
+IttyBitty::_Port::SetPinMode(unsigned int, unsigned char)|00002f4c|   W  |              FUNC|00000010|     |.text
+IttyBitty::_Port::SetPinMode(unsigned int, IttyBitty::PinModeBasic)|00002f3c|   W  |              FUNC|00000010|     |.text
+IttyBitty::_Port::SetPinMode(unsigned int, IttyBitty::PinMode)|00003334|   W  |              FUNC|00000088|     |.text
+IttyBitty::_Port::SetPin(unsigned int)|00003516|   W  |              FUNC|00000048|     |.text
+IttyBitty::_Port::ClearPin(unsigned int)|0000355a|   W  |              FUNC|00000048|     |.text
+IttyBitty::_Port::PinState(unsigned int)|00002f5c|   W  |              FUNC|0000002a|     |.text
+IttyBitty::_Port::ResetPin(unsigned int)|000035fa|   W  |              FUNC|000000e8|     |.text
+IttyBitty::_Port::WritePin(unsigned int, bool)|000034ce|   W  |              FUNC|0000004c|     |.text
+IttyBitty::_Port::TogglePin(unsigned int)|0000359e|   W  |              FUNC|00000060|     |.text
+IttyBitty::_Port::operator=(IttyBitty::_Port const&)|00003034|   W  |              FUNC|0000005c|     |.text
+IttyBitty::_Port::_Port(IttyBitty::ByteField&, IttyBitty::ByteField&, IttyBitty::ByteField&)|0000308c|   W  |              FUNC|0000004c|     |.text    C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.h:192
+IttyBitty::_Port::_Port(IttyBitty::ByteField&, IttyBitty::ByteField&, IttyBitty::ByteField&)|0000308c|   W  |              FUNC|0000004c|     |.text
+IttyBitty::_Port::~_Port()|00002f96|   W  |              FUNC|00000016|     |.text
+IttyBitty::_Port::~_Port()|00002ee8|   W  |              FUNC|00000028|     |.text      C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.h:178
+IttyBitty::_Port::~_Port()|00002ee8|   W  |              FUNC|00000028|     |.text
+IttyBitty::_Port::operator[](unsigned int)|00002f20|   W  |              FUNC|0000001c|     |.text
+IttyBitty::_MCUSR   |0080066a|   B  |            OBJECT|00000001|     |.noinit
+IttyBitty::_BitPack::BitSize()|00002824|   T  |              FUNC|00000006|     |.text
+IttyBitty::InitGPIO()|0000315e|   T  |              FUNC|0000000a|     |.text
+IttyBitty::_BitProxy::NULL_OBJECT()|00002c7e|   T  |              FUNC|00000034|     |.text
+IttyBitty::_BitProxy::Flip()|00002954|   T  |              FUNC|00000026|     |.text
+IttyBitty::_BitProxy::operator=(bool)|000028fc|   T  |              FUNC|00000058|     |.text
+IttyBitty::_BitProxy::operator=(IttyBitty::_BitProxy const&)|000028c6|   T  |              FUNC|00000036|     |.text
+IttyBitty::_BitProxy::~_BitProxy()|00002c0e|   T  |              FUNC|00000010|     |.text
+IttyBitty::_BitProxy::~_BitProxy()|00002882|   T  |              FUNC|0000000c|     |.text      C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_bytes.cpp:43
+IttyBitty::_BitProxy::~_BitProxy()|00002882|   T  |              FUNC|0000000c|     |.text
+IttyBitty::ByteField::NULL_OBJECT()|00002e68|   T  |              FUNC|00000024|     |.text
+IttyBitty::ByteField::SetLowNybble(unsigned char)|00002b78|   T  |              FUNC|00000046|     |.text
+IttyBitty::ByteField::ReferenceFrom(IttyBitty::ByteField const&)|00002abe|   T  |              FUNC|00000020|     |.text
+IttyBitty::ByteField::SetHighNybble(unsigned char)|00002bd0|   T  |              FUNC|0000003e|     |.text
+IttyBitty::ByteField::Bit(unsigned int)|00002cb2|   T  |              FUNC|00000066|     |.text
+IttyBitty::ByteField::Byte(unsigned int)|00002a6a|   T  |              FUNC|00000002|     |.text
+IttyBitty::ByteField::Flip(unsigned int)|00002a1e|   T  |              FUNC|00000032|     |.text
+IttyBitty::ByteField::PointTo(unsigned char volatile*)|00002ab6|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::CopyFrom(IttyBitty::ByteField const&)|00002a88|   T  |              FUNC|00000026|     |.text
+IttyBitty::ByteField::SetValue(unsigned char)|00002a7a|   T  |              FUNC|0000000e|     |.text
+IttyBitty::ByteField::operator=(IttyBitty::ByteField&&)|00002de4|   T  |              FUNC|00000044|     |.text
+IttyBitty::ByteField::operator=(IttyBitty::ByteField const&)|00002e26|   T  |              FUNC|00000044|     |.text
+IttyBitty::ByteField::ByteField(unsigned char volatile*)|00002dac|   T  |              FUNC|00000012|     |.text        C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_bytes.cpp:94
+IttyBitty::ByteField::ByteField(unsigned char const&)|00002d16|   T  |              FUNC|00000034|     |.text   C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_bytes.cpp:226
+IttyBitty::ByteField::ByteField()|00002d82|   T  |              FUNC|0000002c|     |.text       C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_bytes.cpp:345
+IttyBitty::ByteField::ByteField(unsigned char volatile*)|00002dac|   T  |              FUNC|00000012|     |.text
+IttyBitty::ByteField::ByteField(unsigned char const&)|00002d16|   T  |              FUNC|00000034|     |.text
+IttyBitty::ByteField::ByteField()|00002d82|   T  |              FUNC|0000002c|     |.text
+IttyBitty::ByteField::operator IttyBitty::ByteField**()|000029ca|   T  |              FUNC|0000001c|     |.text
+IttyBitty::ByteField::operator char volatile**()|000029b4|   T  |              FUNC|00000010|     |.text
+IttyBitty::ByteField::operator unsigned char volatile**()|000029a0|   T  |              FUNC|00000004|     |.text
+IttyBitty::ByteField::operator char volatile*()|00002b46|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator unsigned char volatile*()|00002b36|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator IttyBitty::_BitPack volatile*()|00002b5e|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator char volatile&()|00002b4e|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator unsigned char volatile&()|00002b3e|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::~ByteField()|00002dbe|   T  |              FUNC|0000001e|     |.text      C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_bytes.cpp:119
+IttyBitty::ByteField::~ByteField()|00002dbe|   T  |              FUNC|0000001e|     |.text
+IttyBitty::ByteField::operator[](unsigned int)|000029f6|   T  |              FUNC|0000001c|     |.text
+IttyBitty::PrintLine(unsigned char, HardwareSerial&)|000036e8|   T  |              FUNC|00000018|     |.text
+IttyBitty::PrintLine(__FlashStringHelper const*, HardwareSerial&)|00003726|   T  |              FUNC|00000014|     |.text
+IttyBitty::PrintLine(char const*, HardwareSerial&)|00003716|   T  |              FUNC|00000014|     |.text
+IttyBitty::PrintLine(unsigned long const&, HardwareSerial&)|000036fc|   T  |              FUNC|0000001e|     |.text
+SdVolume::fatGet(unsigned long, unsigned long*) const|000020a2|   T  |              FUNC|000000ec|     |.text
+SdVolume::chainSize(unsigned long, unsigned long*) const|0000218c|   T  |              FUNC|000000d6|     |.text        C:\RC\Sketchbook\libraries\SD\src\utility/SdVolume.cpp:140
+IttyBitty::_Port::GetPinMode(unsigned int) const|000032ae|   W  |              FUNC|0000008e|     |.text
+IttyBitty::_Port::CheckPinSet(unsigned int) const|00003440|   W  |              FUNC|0000004a|     |.text
+IttyBitty::_Port::CheckPinUnset(unsigned int) const|00003486|   W  |              FUNC|0000004c|     |.text
+IttyBitty::_Port::ReadPin(unsigned int) const|000033b4|   W  |              FUNC|0000004a|     |.text
+IttyBitty::_Port::CheckPin(unsigned int) const|000033fa|   W  |              FUNC|0000004a|     |.text
+IttyBitty::_Port::operator[](unsigned int) const|00002f10|   W  |              FUNC|00000010|     |.text
+IttyBitty::_BitPack::Bit(unsigned int) const|0000282a|   T  |              FUNC|00000058|     |.text    C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_bits.cpp:73
+IttyBitty::_BitProxy::operator bool() const|0000289c|   T  |              FUNC|0000002a|     |.text
+IttyBitty::ByteField::HighNybble() const|00002bbe|   T  |              FUNC|00000012|     |.text
+IttyBitty::ByteField::CloneByValue() const|00002d4a|   T  |              FUNC|0000003a|     |.text
+IttyBitty::ByteField::CloneByReference() const|00002c1e|   T  |              FUNC|0000002a|     |.text
+IttyBitty::ByteField::Bit(unsigned int) const|00002c74|   T  |              FUNC|0000000c|     |.text
+IttyBitty::ByteField::Byte(unsigned int) const|00002e8a|   T  |              FUNC|00000044|     |.text
+IttyBitty::ByteField::Mask(unsigned char) const|00002ade|   T  |              FUNC|00000028|     |.text
+IttyBitty::ByteField::Mask(IttyBitty::ByteField const&) const|00002b06|   T  |              FUNC|00000030|     |.text
+IttyBitty::ByteField::Size() const|00002a12|   T  |              FUNC|00000006|     |.text
+IttyBitty::ByteField::Bytes() const|00002a4e|   T  |              FUNC|0000001c|     |.text
+IttyBitty::ByteField::Value() const|00002a6c|   T  |              FUNC|0000000e|     |.text
+IttyBitty::ByteField::Pointer() const|00002aae|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::BitWidth() const|00002c48|   T  |              FUNC|0000002e|     |.text
+IttyBitty::ByteField::ByteSize() const|00002a18|   T  |              FUNC|00000006|     |.text
+IttyBitty::ByteField::LowNybble() const|00002b66|   T  |              FUNC|00000012|     |.text
+IttyBitty::ByteField::operator char const() const|00002988|   T  |              FUNC|00000010|     |.text
+IttyBitty::ByteField::operator unsigned char const() const|0000297a|   T  |              FUNC|0000000e|     |.text
+IttyBitty::ByteField::operator char const*() const|000029a4|   T  |              FUNC|00000010|     |.text
+IttyBitty::ByteField::operator unsigned char const*() const|00002998|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator IttyBitty::ByteField*() const|000029c4|   T  |              FUNC|00000006|     |.text
+IttyBitty::ByteField::operator IttyBitty::_BitPack const volatile*() const|00002b56|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator[](unsigned int) const|000029e6|   T  |              FUNC|00000010|     |.text
+operator new(unsigned int)|00004226|   T  |              FUNC|00000006|     |.text      C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/new.cpp:31
+vtable for HardwareSerial|008001dc|   V  |            OBJECT|00000010|     |.data
+vtable for SdFile   |0080012a|   V  |            OBJECT|00000008|     |.data
+vtable for TwoWire  |008001cc|   V  |            OBJECT|00000010|     |.data
+vtable for SDLib::File|00800118|   V  |            OBJECT|00000010|     |.data
+vtable for IttyBitty::_PortRegisters|00800198|   V  |            OBJECT|0000000a|     |.data
+vtable for IttyBitty::_Port|008001a2|   V  |            OBJECT|0000002a|     |.data
+vtable for IttyBitty::_BitProxy|00800132|   V  |            OBJECT|00000010|     |.data
+vtable for IttyBitty::ByteField|00800142|   V  |            OBJECT|00000056|     |.data
+setup::__c          |0000009c|   t  |            OBJECT|00000009|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:658
+setup::__c          |00000090|   t  |            OBJECT|0000000c|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:656
+setup::__c          |0000008b|   t  |            OBJECT|00000005|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:656
+setup::__c          |00000082|   t  |            OBJECT|00000009|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:656
+setup::__c          |00000076|   t  |            OBJECT|0000000c|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:668
+SdFile::make83Name(char const*, unsigned char*)::__c|000000a5|   t  |            OBJECT|00000010|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:659
+IttyBitty::_BitProxy::NULL_OBJECT()::NULL_BITREF|00800467|   b  |            OBJECT|00000005|     |.bss
+IttyBitty::ByteField::NULL_OBJECT()::NULL_BYTEFIELD|00800462|   b  |            OBJECT|00000005|     |.bss
+IttyBitty::ByteField::operator IttyBitty::ByteField**()::sillyPtr|00800460|   b  |            OBJECT|00000002|     |.bss
+IttyBitty::ByteField::Bytes() const::thisClone|0080045e|   b  |            OBJECT|00000002|     |.bss
+ARDUINO_PIN_TO_MASK |008004c7|   B  |            OBJECT|00000014|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:31
+ARDUINO_PIN_TO_PORT |008004db|   B  |            OBJECT|00000014|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:30
+ARDUINO_PORT_TO_INPUT|008004ef|   B  |            OBJECT|00000006|     |.bss    C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:28
+ARDUINO_PORT_TO_MODE|008004fb|   B  |            OBJECT|00000006|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:26
+ARDUINO_PORT_TO_OUTPUT|008004f5|   B  |            OBJECT|00000006|     |.bss   C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:27
+atexit              |00004206|   W  |              FUNC|00000006|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/main.cpp:23
+DDRB_REG            |008004c2|   B  |            OBJECT|00000005|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:167
+DDRC_REG            |008004af|   B  |            OBJECT|00000005|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:171
+DDRD_REG            |0080049c|   B  |            OBJECT|00000005|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:175
+delay               |00003c38|   T  |              FUNC|00000074|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:106
+digital_pin_to_bit_mask_PGM|000000c9|   T  |            OBJECT|00000014|     |.text     C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h:155
+digital_pin_to_port_PGM|000000dd|   T  |            OBJECT|00000014|     |.text C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h:132
+digital_pin_to_timer_PGM|000000b5|   T  |            OBJECT|00000014|     |.text        C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h:178
+digitalWrite        |00003de0|   T  |              FUNC|00000066|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring_digital.c:138
+exit                |00004a76|   W  |            NOTYPE|        |     |.text
+ExtEEPROM           |0080048c|   B  |            OBJECT|00000002|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_EEPROM_I2C.cpp:27
+free                |00004752|   T  |              FUNC|0000011e|     |.text
+init                |00003ca6|   T  |              FUNC|00000076|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:241
+initVariant         |0000420c|   W  |              FUNC|00000002|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/main.cpp:28
+loop                |000001d8|   T  |              FUNC|00000002|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:197
+main                |0000420e|   T  |              FUNC|0000001e|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/main.cpp:33
+malloc              |00004622|   T  |              FUNC|00000130|     |.text
+memcmp              |00004a16|   T  |              FUNC|0000001a|     |.text
+memcpy              |00004a30|   T  |              FUNC|00000012|     |.text
+micros              |00003bf2|   T  |              FUNC|00000046|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:79
+millis              |00003bda|   T  |              FUNC|00000018|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:65
+PINB_REG            |008004b8|   B  |            OBJECT|00000005|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:167
+PINC_REG            |008004a5|   B  |            OBJECT|00000005|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:171
+PIND_REG            |00800492|   B  |            OBJECT|00000005|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:175
+pinMode             |00003d6e|   T  |              FUNC|00000072|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring_digital.c:29
+port_to_input_PGM   |000000f1|   T  |            OBJECT|0000000a|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h:124
+port_to_mode_PGM    |00000105|   T  |            OBJECT|0000000a|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h:108
+port_to_output_PGM  |000000fb|   T  |            OBJECT|0000000a|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h:116
+PortB               |008004b4|   B  |            OBJECT|00000004|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:167
+PORTB_REG           |008004bd|   B  |            OBJECT|00000005|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:167
+PortC               |008004a1|   B  |            OBJECT|00000004|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:171
+PORTC_REG           |008004aa|   B  |            OBJECT|00000005|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:171
+PortD               |0080048e|   B  |            OBJECT|00000004|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:175
+PORTD_REG           |00800497|   B  |            OBJECT|00000005|     |.bss     C:\RC\Sketchbook\libraries\IttyBitty/IttyBitty_GPIO.cpp:175
+realloc             |00004870|   T  |              FUNC|00000194|     |.text
+Serial              |008005c9|   B  |            OBJECT|0000009d|     |.bss     C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/HardwareSerial0.cpp:70
+setup               |00000318|   T  |              FUNC|0000025e|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleDriver\nano_atmega328/Foxetron_AngleDriver.cpp:150
+strchr              |00004a42|   T  |              FUNC|00000016|     |.text
+strcpy_P            |000049f6|   T  |              FUNC|0000000e|     |.text
+strncpy             |00004a58|   T  |              FUNC|0000001e|     |.text
+timer0_fract        |008005c0|   b  |            OBJECT|00000001|     |.bss     C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:40
+timer0_millis       |008005c1|   B  |            OBJECT|00000004|     |.bss     C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:39
+timer0_overflow_count|008005c5|   B  |            OBJECT|00000004|     |.bss    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:38
+turnOffPWM          |00003d1c|   t  |              FUNC|00000052|     |.text
+twi_error           |00800552|   b  |            OBJECT|00000001|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:62
+twi_init            |0000386a|   T  |              FUNC|0000003c|     |.text    C:\RC\Sketchbook\libraries\Wire\utility/twi.c:70
+twi_inRepStart      |008005bc|   b  |            OBJECT|00000001|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:46
+twi_masterBuffer    |00800598|   b  |            OBJECT|00000020|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:51
+twi_masterBufferIndex|00800597|   b  |            OBJECT|00000001|     |.bss    C:\RC\Sketchbook\libraries\Wire\utility/twi.c:52
+twi_masterBufferLength|00800596|   b  |            OBJECT|00000001|     |.bss   C:\RC\Sketchbook\libraries\Wire\utility/twi.c:53
+twi_onSlaveReceive  |008005b8|   b  |            OBJECT|00000002|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:49
+twi_onSlaveTransmit |008005ba|   b  |            OBJECT|00000002|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:48
+twi_releaseBus      |000038e8|   T  |              FUNC|0000000c|     |.text    C:\RC\Sketchbook\libraries\Wire\utility/twi.c:356
+twi_rxBuffer        |00800554|   b  |            OBJECT|00000020|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:59
+twi_rxBufferIndex   |00800553|   b  |            OBJECT|00000001|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:60
+twi_sendStop        |008005bd|   b  |            OBJECT|00000001|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:45
+twi_slarw           |008005be|   b  |            OBJECT|00000001|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:44
+twi_state           |008005bf|   b  |            OBJECT|00000001|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:43
+twi_stop            |000038d4|   T  |              FUNC|00000014|     |.text    C:\RC\Sketchbook\libraries\Wire\utility/twi.c:335
+twi_transmit        |000038a2|   T  |              FUNC|00000032|     |.text    C:\RC\Sketchbook\libraries\Wire\utility/twi.c:268
+twi_txBuffer        |00800576|   b  |            OBJECT|00000020|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:55
+twi_txBufferIndex   |00800575|   b  |            OBJECT|00000001|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:56
+twi_txBufferLength  |00800574|   b  |            OBJECT|00000001|     |.bss     C:\RC\Sketchbook\libraries\Wire\utility/twi.c:57
+Wire                |00800501|   B  |            OBJECT|0000000c|     |.bss     C:\RC\Sketchbook\libraries\Wire/Wire.cpp:1082
+yield               |00004530|   W  |              FUNC|00000002|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/hooks.c:28

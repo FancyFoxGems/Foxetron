@@ -43,9 +43,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Metadata", "Metadata", "{F5FF9CAF-1028-4D93-AEB5-9DCF3507F4A3}"
 	ProjectSection(SolutionItems) = preProject
+		AngleController Memory Usage Raw.txt = AngleController Memory Usage Raw.txt
+		AngleController Memory Usage.xlsx = AngleController Memory Usage.xlsx
+		AngleDriver Memory Usage Raw.txt = AngleDriver Memory Usage Raw.txt
+		AngleDriver Memory Usage.xlsx = AngleDriver Memory Usage.xlsx
 		LICENSE = LICENSE
-		Memory Usage Raw.txt = Memory Usage Raw.txt
-		Memory Usage.xlsx = Memory Usage.xlsx
 		Message Examples.txt = Message Examples.txt
 		README.md = README.md
 	EndProjectSection
