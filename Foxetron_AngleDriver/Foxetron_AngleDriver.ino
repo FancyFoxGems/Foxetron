@@ -58,7 +58,6 @@ using namespace IttyBitty;
 #include "HalfStepper.h"					// well...1st-party in this case, really.
 
 // ARDUINO LIBS
-#include "SD.h"
 
 // ARDUINO CORE
 //#include "Arduino.h"							// included by project/3rd-party libs
@@ -157,29 +156,6 @@ VOID setup()
 
 	InitializePins();
 	InitializeInterrupts();
-
-	Sd2Card card;
-	PrintLine((CBYTE)card.init(SPI_QUARTER_SPEED, 10));
-	
-	PrintLine((CDWORD)card.cardSize());
-	PrintLine((CBYTE)card.type());
-
-	SDClass sd;
-	PrintLine((CBYTE)sd.begin());
-
-	File f = sd.open(F("TEST.TXT"), FILE_WRITE);
-	if (!f) PrintLine(F("OPEN FAILED"));
-	PrintLine((CBYTE)f.println(F("test")));
-	f.flush();
-	f.close();
-
-	f = sd.open(F("TEST.TXT"));
-	if (!f) PrintLine(F("OPEN FAILED"));
-	BYTE buffer[5];
-	PrintLine((CBYTE)f.read(buffer, 4));
-	buffer[4] = '\0';
-	PrintLine(reinterpret_cast<PCCHAR>(buffer));
-	f.close();
 }
 
 VOID cleanUp()
@@ -189,11 +165,11 @@ VOID cleanUp()
 
 VOID serialEvent()
 {
-	//WaitForMessage(Serial, OnMessage);
+	WaitForMessage(Serial, OnMessage);
 }
 
 VOID loop()
-{	
+{
 #ifdef _DEBUG
 
 	return;
@@ -309,7 +285,7 @@ VOID OnMessage(PIMESSAGE message)
 	switch (msgCode)
 	{
 	case MessageCode::ANGLE_REQUEST:
-		
+
 		state = new PCVOID[2] { &_DriverError, &_Degrees };
 		msgHandled = reinterpret_cast<PANGLEREQUEST>(message)->Handle(NULL, state);
 
@@ -317,11 +293,11 @@ VOID OnMessage(PIMESSAGE message)
 
 
 	case MessageCode::NEWANGLE_REQUEST:
-		
+
 		results = new PVOID[1] { &_DegreesNew };
 		state = new PCVOID[1] { &_DriverError };
 		msgHandled = reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle(results, state);
-		
+
 	#ifdef DEBUG_MESSAGES
 		PrintLine(_DegreesNew);
 	#endif
@@ -330,7 +306,7 @@ VOID OnMessage(PIMESSAGE message)
 
 
 	case MessageCode::STATUS_REQUEST:
-		
+
 		state = new PCVOID[4] { &_DriverError, &_DriverStatusMsg, &_DriverStatus, (PCVOID)TRUE };
 		msgHandled = reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, state);
 
@@ -341,22 +317,22 @@ VOID OnMessage(PIMESSAGE message)
 
 		results = new PVOID[3] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus };
 		msgHandled = reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(results);
-		
+
 	#ifdef DEBUG_MESSAGES
 		PrintLine((BYTE)_ControllerError);
 		PrintLine(_ControllerStatusMsg);
 		PrintLine((BYTE)_ControllerStatus);
 	#endif
-		
+
 		break;
 
-		
+
 
 	case MessageCode::ANGLE_RESPONSE:
-		
+
 		results = new PVOID[2] { &_DriverError, &_Degrees };
 		msgHandled = reinterpret_cast<PANGLERESPONSE>(message)->Handle(results, state);
-		
+
 	#ifdef DEBUG_MESSAGES
 		PrintLine((BYTE)_DriverError);
 		PrintLine(_Degrees);
@@ -366,10 +342,10 @@ VOID OnMessage(PIMESSAGE message)
 
 
 	case MessageCode::NEWANGLE_RESPONSE:
-		
+
 		results = new PVOID[1] { &_DriverError };
 		msgHandled = reinterpret_cast<PNEWANGLERESPONSE>(message)->Handle(results);
-		
+
 	#ifdef DEBUG_MESSAGES
 		PrintLine((BYTE)_DriverError);
 	#endif
@@ -378,10 +354,10 @@ VOID OnMessage(PIMESSAGE message)
 
 
 	case MessageCode::DRIVER_STATUS:
-		
+
 		results = new PVOID[3] { &_DriverError, &_DriverStatusMsg, &_DriverStatus };
 		msgHandled = reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(results);
-		
+
 	#ifdef DEBUG_MESSAGES
 		PrintLine((BYTE)_DriverError);
 		PrintLine(_DriverStatusMsg);
@@ -434,7 +410,7 @@ VOID DEBUG_PrintInputValues()
 
 
 	// FRONT INPUTS
-	
+
 	PrintBit((BIT)_LatchButton);
 	PrintString(F(" "));
 	PrintBit((BIT)_OneShotButton);
