@@ -69,15 +69,15 @@ using namespace Foxetron;
 using namespace IttyBitty;
 
 // 3RD-PARTY LIBS
-#include "HalfStepper.h"					// well...1st-party in this case, really.
+#include "HalfStepper.h"				// Well...1st-party in this case, really.
 
 // ARDUINO LIBS
 
 // ARDUINO CORE
-//#include "Arduino.h"							// included by project/3rd-party libs
+//#include "Arduino.h"						// Included by project/3rd-party libs
 
 // AVR LibC
-//#include <avr/pgmspace.h>						// included by project 3rd-party libs
+//#include <avr/pgmspace.h>					// Included by project 3rd-party libs
 
 #pragma endregion
 
@@ -86,32 +86,45 @@ using namespace IttyBitty;
 
 // PROGRAM OPTIONS
 
-#define DEBUG_INPUTS			0
-#define DEBUG_INPUT_DELAY_MS	500
+#define DEBUG_INPUTS					0				// Whether to print values of pin input signals
+#define DEBUG_INPUT_DELAY_MS			500				// Period by which input signal values should be printed when debugging
 
 #if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
 	#undef DEBUG_INPUTS
 #endif
 
-#define SERIAL_BAUD_RATE		115200
-#define SERIAL_DELAY_MS			1
+#define SERIAL_BAUD_RATE				115200			// (Debugging) UART baud rate
+#define SERIAL_DELAY_MS					1				// Delay for waiting on serial buffer to flush when printing debug statements
+
+#define ANGLE_PRECISION_FACTOR			100				// Scaling factor of °s for angle measurement & adjustment calculations
+
+#define ANGLE_ERROR_CORRECTION_FACTOR	0				// (Additional) correction to apply to the motor's error margin for angle ajustments
 
 
 // PROGRAM CONSTANTS
+#define ANGLE_STEP_PRECISION_FACTOR_FACTOR				10
 
-#define ANGLE_PRECISION_FACTOR					100
+#define ANGLE_ENCODER_STEPS_RESOLUTION					8192		// 2,048 steps(/360°)/channel × 2 channels × 2 (quadrature signal encoding)
+#define ANGLE_MOTOR_STEPS_RESOLUTION					144000		// 200 steps(/revolution) × 2 (half-stepping mode) × 2 (dual phasing) × 180 (revolutions/360°)
+																			// NOTE: Foxetron angle adjustment factor: 2°/revolution --^
 
-#define ANGLE_ENCODER_STEPS_RESOLUTION			8192		// 2,048 steps(/360°)/channel × 2 channels × 2 (quadrature signal encoding)
-#define ANGLE_MOTOR_STEPS_RESOLUTION			800			// 200 steps(/360°) × 2 (half-stepping mode) × 2 (dual phasing)
+#pragma endregion
 
-#define ANGLE_STEP_PRECISION_FACTOR_FACTOR		ANGLE_PRECISION_FACTOR
-#define ANGLE_STEP_PRECISION_FACTOR				(ANGLE_PRECISION_FACTOR * ANGLE_STEP_PRECISION_FACTOR_FACTOR)
 
-#define ANGLE_DEGREES_PER_ENCODER_STEP			((DWORD)(360 * ANGLE_STEP_PRECISION_FACTOR)/(DWORD)ANGLE_ENCODER_STEPS_RESOLUTION)	// < 439 (0.0439°/step)
-#define ANGLE_ENCODER_STEPS_PER_DEGREE			((DWORD)(ANGLE_ENCODER_STEPS_RESOLUTION * ANGLE_PRECISION_FACTOR)/(DWORD)360)		// < 2,275 (22.75 steps/°)
+#pragma region PROGRAM CONSTANTS
 
-#define ANGLE_DEGREES_PER_MOTOR_STEP			((DWORD)(360 * ANGLE_STEP_PRECISION_FACTOR)/(DWORD)ANGLE_MOTOR_STEPS_RESOLUTION)	// 4,500 (0.4500°/step)
-#define ANGLE_MOTOR_STEPS_PER_DEGREE			((DWORD)(ANGLE_MOTOR_STEPS_RESOLUTION * ANGLE_PRECISION_FACTOR)/(DWORD)360)			// < 222 (2.22 steps/°)
+CDWORD ANGLE_STEP_PRECISION_FACTOR			= (CDWORD)ANGLE_PRECISION_FACTOR * (CDWORD)ANGLE_STEP_PRECISION_FACTOR_FACTOR;				// 1,000
+CDWORD ANGLE_STEP_SCALING_FACTOR			= (CDWORD)ANGLE_PRECISION_FACTOR * (CDWORD)ANGLE_STEP_PRECISION_FACTOR;						// 100,000
+
+CDWORD ANGLE_ENCODER_DEGREES_PER_STEP		= (CDWORD)360 * ANGLE_STEP_SCALING_FACTOR/(CDWORD)ANGLE_ENCODER_STEPS_RESOLUTION;			// > 4,394 (0.04394°/step)
+CDWORD ANGLE_ENCODER_STEPS_PER_DEGREE		= (CDWORD)ANGLE_ENCODER_STEPS_RESOLUTION * (CDWORD)ANGLE_STEP_PRECISION_FACTOR/(CDWORD)360;	// > 22,755 (22.75 steps/°)
+CDWORD ANGLE_ENCODER_DEGREE_ERROR_MARGIN	= ANGLE_ENCODER_DEGREES_PER_STEP / 2 + ANGLE_ERROR_CORRECTION_FACTOR;						// +/- > 2,197  (0.02197°)
+CDWORD ANGLE_ENCODER_STEP_ERROR_MARGIN		= ANGLE_ENCODER_STEPS_PER_DEGREE / 2 + ANGLE_ERROR_CORRECTION_FACTOR;						// +/- > 11,377 (11.37 steps)
+
+CDWORD ANGLE_MOTOR_DEGREES_PER_STEP			= (CDWORD)360 * ANGLE_STEP_SCALING_FACTOR/(CDWORD)ANGLE_MOTOR_STEPS_RESOLUTION;				// 250 (0.00250°/step)
+CDWORD ANGLE_MOTOR_STEPS_PER_DEGREE			= (CDWORD)ANGLE_MOTOR_STEPS_RESOLUTION * (CDWORD)ANGLE_STEP_PRECISION_FACTOR/(CDWORD)360;	// 400,000 (40.00 steps/°)
+CDWORD ANGLE_MOTOR_DEGREE_ERROR_MARGIN		= ANGLE_MOTOR_DEGREES_PER_STEP / 2 + ANGLE_ERROR_CORRECTION_FACTOR;							// +/- 125 (0.00125°)
+CDWORD ANGLE_MOTOR_STEP_ERROR_MARGIN		= ANGLE_MOTOR_STEPS_PER_DEGREE / 2 + ANGLE_ERROR_CORRECTION_FACTOR;							// +/- 200,000 (20.00 steps)
 
 #pragma endregion
 
@@ -121,25 +134,27 @@ using namespace IttyBitty;
 // INPUTS
 
 // Angle encoder
-VBOOL _AngleEncoderA	= FALSE;	// Pin 2 / PD2 (INT0)
-VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1)
+VBOOL _AngleEncoderA		= FALSE;	// Pin 2 / PD2 (INT0)
+VBOOL _AngleEncoderB		= FALSE;	// Pin 3 / PD3 (INT1)
+//VBOOL _AngleEncoderZ		= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
+//VBOOL _AngleEncoderU		= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
-VBOOL _AngleUp			= FALSE;
-VDWORD _AngleReading	= 0;
-WORD _AngleDelta		= 0;
-WORD _AngleVelocity		= 0;
+VBOOL _AngleEncoderUp		= FALSE;
+VDWORD _AngleEncoderSteps	= 0;
+WORD _AngleEncoderDelta		= 0;
+WORD _AngleEncoderVelocity	= 0;
 
 // Mast control inputs
-VBOOL _ActionButton		= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
-VBOOL _OneShotButton	= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
-VBOOL _LatchButton		= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
+VBOOL _ActionButton			= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
+VBOOL _OneShotButton		= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
+VBOOL _LatchButton			= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
 
 // LEDs
-VBOOL _StatusLed		= LOW;
-VBOOL _ActionLed		= HIGH;
+VBOOL _StatusLed			= LOW;
+VBOOL _ActionLed			= HIGH;
 
 
 // STATE
@@ -158,11 +173,16 @@ ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 #pragma endregion
 
 
-#pragma region PROGRAM CONST-EXPRESSION FUNCTIONS
+#pragma region ANGLE MEASUREMENT & ADJUSTMENT EXPRESSION FUNCTIONS
 
-STATIC CONST CBOOL IsAngleWithinPrecision()
+STATIC CWORD DegreesFromAngleEncoderSteps()
 {
-	return _Degrees - _DegreesNew < 4;
+	return (CWORD)(_AngleEncoderSteps * ANGLE_STEP_PRECISION_FACTOR / ANGLE_ENCODER_STEPS_PER_DEGREE);
+}
+
+STATIC CBOOL IsAngleAdjustmentWithinErrorMargin()
+{
+	return (CDWORD)(_Degrees - _DegreesNew) * (CDWORD)ANGLE_STEP_PRECISION_FACTOR_FACTOR * ANGLE_MOTOR_STEPS_PER_DEGREE < ANGLE_MOTOR_STEP_ERROR_MARGIN;
 }
 
 #pragma endregion
@@ -244,21 +264,21 @@ VOID loop()
 
 #define _ISR_ANGLE_ENCODER_READ_CHANNEL(channel, other_channel, increment_comparison)					\
 	_AngleEncoder ## channel = !_AngleEncoder ## channel;												\
-	_AngleUp = (_AngleEncoder ## channel increment_comparison _AngleEncoder ## other_channel);			\
-	_ISR_AngleEncoder_updateAngleReading();
+	_AngleEncoderUp = (_AngleEncoder ## channel increment_comparison _AngleEncoder ## other_channel);	\
+	_ISR_AngleEncoder_UpdateAngleSteps();
 
-STATIC INLINE VOID _ISR_AngleEncoder_updateAngleReading() ALWAYS_INLINE;
+STATIC INLINE VOID _ISR_AngleEncoder_UpdateAngleSteps() ALWAYS_INLINE;
 
-STATIC INLINE VOID _ISR_AngleEncoder_updateAngleReading()
+STATIC INLINE VOID _ISR_AngleEncoder_UpdateAngleSteps()
 {
-	if (_AngleUp)
-		++_AngleReading;
+	if (_AngleEncoderUp)
+		++_AngleEncoderSteps;
 	else
-		--_AngleReading;
+		--_AngleEncoderSteps;
 
 #ifdef DEBUG_INPUTS
 	PrintString(F("ANGLE: "));
-	PrintLine((LONG)_AngleReading);
+	PrintLine((CDWORD)_AngleEncoderSteps);
 #endif
 }
 

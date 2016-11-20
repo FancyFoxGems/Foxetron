@@ -39,7 +39,7 @@ VOID LCD_Initialize()
 
 #pragma region UTILITY FUNCTIONS
 
-PCCHAR CONST LCD_InvertChar(PCCHAR lcdChar, BYTE charWidth)
+PCCHAR LCD_InvertChar(PCCHAR lcdChar, BYTE charWidth)
 {
 	PCHAR newLcdChar = new char[SIZEOF(lcdChar)];
 

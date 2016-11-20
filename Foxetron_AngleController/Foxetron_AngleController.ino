@@ -69,7 +69,7 @@
 using namespace Foxetron;
 
 // PROJECT LIBS
-//#include "libs/LiquidCrystal_I2C.custom.h"		// included by other project libs
+//#include "libs/LiquidCrystal_I2C.custom.h"	// Included by other project libs
 #include "libs/BigCrystal_I2C.custom.h"
 #include "libs/MENWIZ.custom.h"
 #include "libs/phi_Prompt.custom.h"
@@ -81,18 +81,18 @@ using namespace Foxetron;
 using namespace IttyBitty;
 
 // 3RD-PARTY LIBS
-//#include "VaRGB.h"							// included by Foxetron_RGB
-//#include "VaRGBCurves.h"						// included by Foxetron_RGB
+//#include "VaRGB.h"						// Included by Foxetron_RGB
+//#include "VaRGBCurves.h"					// Included by Foxetron_RGB
 
 // ARDUINO LIBS
-//#include "EEPROM.h"							// included by project/3rd-party libs
-//#include "Wire.h"								// included by project/3rd-party libs
+//#include "EEPROM.h"						// Included by project/3rd-party libs
+//#include "Wire.h"							// Included by project/3rd-party libs
 
 // ARDUINO CORE
-//#include "Arduino.h"							// included by project/3rd-party libs
+//#include "Arduino.h"						// Included by project/3rd-party libs
 
 // AVR LibC
-//#include <avr/pgmspace.h>						// included by project 3rd-party libs
+//#include <avr/pgmspace.h>					// Included by project 3rd-party libs
 
 #pragma endregion
 
@@ -101,38 +101,17 @@ using namespace IttyBitty;
 
 // PROGRAM OPTIONS
 
-#define DEBUG_INPUTS			0
-#define DEBUG_INPUT_DELAY_MS	500
+#define DEBUG_INPUTS					0				// Whether to print values of pin input signals
+#define DEBUG_INPUT_DELAY_MS			500				// Period by which input signal values should be printed when debugging
 
 #if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
 	#undef DEBUG_INPUTS
 #endif
 
-#define SERIAL_BAUD_RATE		115200
-#define SERIAL_DELAY_MS			1
+#define SERIAL_BAUD_RATE				115200			// (Debugging) UART baud rate
+#define SERIAL_DELAY_MS					1				// Delay for waiting on serial buffer to flush when printing debug statements
 
-
-// LCD CONSTANTS
-
-#define LCD_I2C_ADDRESS			0x27
-#define LCD_CHAR_COLS			16
-#define LCD_CHAR_ROWS			2
-
-
-// PROGRAM CONSTANTS
-
-#define ANGLE_PRECISION_FACTOR					1000
-
-
-/* MACROS */
-
-/*
-#define READ_PORT(port_Letter, state_variable)			\
-	asm volatile("\t"									\
-		"push %0"	"\n\t"								\
-		"in %0, %1"	"\n"								\
-	: "=&r" (current) : "I" (_SFR_IO_ADDR(PINC)) );
-*/
+#define ANGLE_PRECISION_FACTOR			100				// Scaling factor of °s for angle measurement
 
 #pragma endregion
 
@@ -151,50 +130,50 @@ using namespace IttyBitty;
 
 // INPUTS
 
-VBOOL _AngleEncoderA	= FALSE;	// Pin 2 / PD2 (INT0)
-VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1)
+VBOOL _AngleEncoderA		= FALSE;	// Pin 2 / PD2 (INT0)
+VBOOL _AngleEncoderB		= FALSE;	// Pin 3 / PD3 (INT1)
 //VBOOL _AngleEncoderZ		= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
 //VBOOL _AngleEncoderU		= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
-VBOOL _AngleUp			= FALSE;
-VDWORD _AngleReading	= 0;
-WORD _AngleDelta		= 0;
-WORD _AngleVelocity		= 0;
+VBOOL _AngleEncoderUp		= FALSE;
+VDWORD _AngleEncoderSteps	= 0;
+WORD _AngleEncoderDelta		= 0;
+WORD _AngleEncoderVelocity	= 0;
 
-VBOOL _LedButton1		= FALSE;	// Pin 4 / PD4 (PCINT20)
-VBOOL _LedButton2		= FALSE;	// Pin 5 / PD5 (PCINT21)
-VBOOL _LedButton3		= FALSE;	// Pin 6 / PD6 (PCINT22)
-VBOOL _LedButton4		= FALSE;	// Pin 7 / PD7 (PCINT23)
-VBOOL _LedButton5		= FALSE;	// Pin 8 / PB0 (PCINT0)
+VBOOL _LedButton1			= FALSE;	// Pin 4 / PD4 (PCINT20)
+VBOOL _LedButton2			= FALSE;	// Pin 5 / PD5 (PCINT21)
+VBOOL _LedButton3			= FALSE;	// Pin 6 / PD6 (PCINT22)
+VBOOL _LedButton4			= FALSE;	// Pin 7 / PD7 (PCINT23)
+VBOOL _LedButton5			= FALSE;	// Pin 8 / PB0 (PCINT0)
 
 // [FREE PIN: Pin 12 / PB4 (PCINT4)]
 
 // [FREE PIN: Pin A6 / ADC6]
 
-BOOL _ModeSwitch		= FALSE;	// A7 / ADC7
-WORD _ModeSwitchVal		= 0;
+VBOOL _ModeSwitch			= FALSE;	// A7 / ADC7
+VWORD _ModeSwitchVal		= 0;
 
 // Menu rotary encoder
-VBOOL _MenuEncoderA		= FALSE;	// Pin 14/A0 / PC0 (PCINT8)
-VBOOL _MenuEncoderB		= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
+VBOOL _MenuEncoderA			= FALSE;	// Pin 14/A0 / PC0 (PCINT8)
+VBOOL _MenuEncoderB			= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
 
-BOOL _MenuUp			= FALSE;
-DWORD _MenuReading		= 0;
-WORD _MenuDelta			= 0;
-WORD _MenuVelocity		= 0;
+VBOOL _MenuEncoderUp		= FALSE;
+VDWORD _MenuEncoderSteps	= 0;
+WORD _MenuEncoderDelta		= 0;
+WORD _MenuEncoderVelocity	= 0;
 
-VBOOL _SelectButton		= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
-VBOOL _ShiftButton		= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
+VBOOL _SelectButton			= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
+VBOOL _ShiftButton			= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
 
 // LEDs
-VBYTE _RgbRed			= 0;		// Pin 9 / PB1
-VBYTE _RgbGreen			= 0;		// Pin 10 / PB2
-VBYTE _RgbBlue			= 0;		// Pin 11 / PB3
+VBYTE _RgbRed				= 0;		// Pin 9 / PB1
+VBYTE _RgbGreen				= 0;		// Pin 10 / PB2
+VBYTE _RgbBlue				= 0;		// Pin 11 / PB3
 
-VBOOL _StatusLED		= LOW;		// Pin 13 / PB5
+VBOOL _StatusLED			= LOW;		// Pin 13 / PB5
 
 
 // STATE
@@ -267,7 +246,7 @@ VOID loop()
 
 	LCD.clear();
 	LCD.home();
-	LCD.print(_AngleReading);
+	LCD.print(_AngleEncoderSteps);
 
 #ifdef DEBUG_INPUTS
 
@@ -290,21 +269,24 @@ VOID loop()
 
 #define _ISR_ANGLE_ENCODER_READ_CHANNEL(channel, other_channel, increment_comparison)					\
 	_AngleEncoder ## channel = !_AngleEncoder ## channel;												\
-	_AngleUp = (_AngleEncoder ## channel increment_comparison _AngleEncoder ## other_channel);			\
-	_ISR_AngleEncoder_updateAngleReading();
+	_AngleEncoderUp = (_AngleEncoder ## channel increment_comparison _AngleEncoder ## other_channel);	\
+	_ISR_Encoder_UpdateEncoderSteps(_AngleEncoderUp, _AngleEncoderSteps, F("ANGLE ENCODER: "));
 
-STATIC INLINE VOID _ISR_AngleEncoder_updateAngleReading() ALWAYS_INLINE;
+STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps(VBOOL const &, VDWORD &, FLASH_STRING = NULL) ALWAYS_INLINE;
 
-STATIC INLINE VOID _ISR_AngleEncoder_updateAngleReading()
+STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps(VBOOL const & encoderUp, VDWORD & encoderSteps, FLASH_STRING encoderLabel)
 {
-	if (_AngleUp)
-		++_AngleReading;
+	if (encoderUp)
+		++encoderSteps;
 	else
-		--_AngleReading;
+		--encoderSteps;
 
 #ifdef DEBUG_INPUTS
-	PrintString(F("ANGLE: "));
-	PrintLine((LONG)_AngleReading);
+	if (encoderLabel)
+		PrintString(encoderLabel);
+	else
+		PrintString(F("MENU ENCODER: "));
+	PrintLine((CDWORD)encoderSteps);
 #endif
 }
 
@@ -333,8 +315,20 @@ ISR(PCINT0_vect, ISR_NOBLOCK)
 // PORT C (PCINT8:14): MENU ENCODER & BUTTONS
 ISR(PCINT1_vect, ISR_NOBLOCK)
 {
-	_MenuEncoderA = PINC && (1 >> 3);
-	_MenuEncoderB = PINC && (1 >> 2);
+	if (_MenuEncoderA != PINC && (1 >> 3))
+	{
+		_MenuEncoderA = PINC && (1 >> 3);
+		_MenuEncoderUp = (_MenuEncoderA == _MenuEncoderB);
+		_ISR_Encoder_UpdateEncoderSteps(_MenuEncoderUp, _MenuEncoderSteps);
+	}
+
+	if (_MenuEncoderB != PINC && (1 >> 2))
+	{
+		_MenuEncoderB = PINC && (1 >> 2);
+		_MenuEncoderUp = (_MenuEncoderA != _MenuEncoderB);
+		_ISR_Encoder_UpdateEncoderSteps(_MenuEncoderUp, _MenuEncoderSteps);
+	}
+
 	_SelectButton = PINC && (1 >> 1);
 	_ShiftButton = PINC && (1 >> 0);
 }
