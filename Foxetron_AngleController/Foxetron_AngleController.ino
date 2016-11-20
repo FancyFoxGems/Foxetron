@@ -101,17 +101,18 @@ using namespace IttyBitty;
 
 // PROGRAM OPTIONS
 
-#define DEBUG_INPUTS					0				// Whether to print values of pin input signals
-#define DEBUG_INPUT_DELAY_MS			500				// Period by which input signal values should be printed when debugging
+#define DEBUG_INPUTS							0				// Whether to print values of pin input signals
+#define DEBUG_INPUT_DELAY_MS					500				// Period by which input signal values should be printed when debugging
 
 #if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
 	#undef DEBUG_INPUTS
 #endif
 
-#define SERIAL_BAUD_RATE				115200			// (Debugging) UART baud rate
-#define SERIAL_DELAY_MS					1				// Delay for waiting on serial buffer to flush when printing debug statements
+#define SERIAL_BAUD_RATE						115200			// (Debugging) UART baud rate
+#define SERIAL_DELAY_MS							1				// Delay for waiting on serial buffer to flush when printing debug statements
 
-#define ANGLE_PRECISION_FACTOR			100				// Scaling factor of °s for angle measurement
+#define ANGLE_DEGREE_PRECISION_FACTOR			100				// Scaling factor of °s for angle measurement
+#define ANGLE_ACTUAL_DEGRESS_PER_DEGREE_VALUE	ANGLE_DEGREE_PRECISION_FACTOR
 
 #pragma endregion
 
