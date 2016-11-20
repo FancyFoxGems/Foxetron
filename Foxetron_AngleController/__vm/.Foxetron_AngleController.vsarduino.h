@@ -14,8 +14,8 @@
 #define __AVR_ATmega328P__
 #define _DEBUG 1
 #define DEBUG_MESSAGES 1
-#define NO_ITTYBITTY_SD
 #define NO_ITTYBITTY_FULL_BYTES
+#define NO_ITTYBITTY_SD
 #define F_CPU 16000000L
 #define ARDUINO 10608
 #define ARDUINO_AVR_NANO

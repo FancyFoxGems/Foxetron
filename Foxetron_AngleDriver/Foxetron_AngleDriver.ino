@@ -3,6 +3,20 @@
 * Created:	10/2/2016
 * Author:	Tom Biuso <tjbtech@yahoo.com>
 *
+* Target Architecture:	Atmel AVR / ATmega series 8-bit MCUs
+* Supported Platforms:	Arduino, AVR LibC, (AVR GCC)
+*
+*		Memory Usage:	~19.15 KB Program Memory (Flash ROM) / 1565 B SRAM
+*		NOTE: ^-- w/ #define NO_ITTYBITTY_FULL_BYTES
+*
+* [Hardware Platform]
+*	MCU:			Arduino Nano w/ Atmel ATmega 328P
+*	Motor Driver:		Dual L9110s-based chip module
+*	Stepper Motor:	2-phase bipolar, NEMA 17, 50 oz. @ 2.8 V / 1.68 A
+*	Other Components:	1 x Blue LED 5mm
+*	Hardware:		Aluminum enclosure; GT2 36T pulley; GT2 belt, ~10 in.;
+*						headers, connectors, wires, mounts, etc.
+*
 * This file is part of the Foxetron program suite.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
@@ -244,15 +258,6 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
 {
 
 }
-
-
-// SERIAL EVENTS
-
-// USART RECEIVE
-/*ISR(USART_RX_vect, ISR_NOBLOCK)
-{
-
-}*/
 
 #pragma endregion
 

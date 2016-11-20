@@ -3,6 +3,23 @@
 * Created:	10/2/2016
 * Author:	Tom Biuso <tjbtech@yahoo.com>
 *
+* Target Architecture:	Atmel AVR / ATmega series 8-bit MCUs
+* Supported Platforms:	Arduino, AVR LibC, (AVR GCC)
+*
+*		Memory Usage:	~25.39 KB Program Memory (Flash ROM) / 1549 B SRAM
+*		NOTE: ^-- w/ #define NO_ITTYBITTY_FULL_BYTES
+*
+* [Hardware Platform]
+*	MCU:			Arduino Nano-like clone w/ Atmel ATmega 1284P
+*	LCD:				HD44780 16x2, RGB backlight; I2C "backpack"
+*	RTC & EEPROM:	Tiny RTC module w/ DS1307Z + 24C32N
+*	Power Supply:		LM317 adjustable voltage regulator
+*	Switches/Features:	1 x SPDT; 1 x rotary encoder w/ pushbutton switch
+*	Buttons:			1 x square momentary, tactile; 1 x round momentary;
+*						5 x momentary, tactile w/ blue LED backlight
+*	Other Components:	1 x RGB LED  10mm, diffused; 1 x Red LED 5mm; 3-wire brushless fan
+*	Hardware:		Aluminum enclosure; DC plug; headers, connectors, wires, mounts, etc.
+*
 * This file is part of the Foxetron program suite.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
@@ -325,7 +342,7 @@ ISR(PCINT2_vect, ISR_NOBLOCK)
 	_LedButton2 = PIND && (1 >> 5);
 	_LedButton3 = PIND && (1 >> 6);
 	_LedButton4 = PIND && (1 >> 7);
-}// TIMER EVENTS// TIMER 2 OVERFLOWISR(TIMER2_OVF_vect, ISR_NOBLOCK){}// SERIAL EVENTS// USART RECEIVE/*ISR(USART_RX_vect, ISR_NOBLOCK){}*/#pragma endregion
+}// TIMER EVENTS// TIMER 2 OVERFLOWISR(TIMER2_OVF_vect, ISR_NOBLOCK){}#pragma endregion
 
 
 #pragma region PROGRAM FUNCTIONS
