@@ -86,8 +86,10 @@ using namespace IttyBitty;
 
 // PROGRAM OPTIONS
 
+#define DEBUG_MEMORY_INFO_INTERVAL_MS			3000			// Period by which available RAM should be printed when debugging
+
 #define DEBUG_INPUTS							0				// Whether to print values of pin input signals
-#define DEBUG_INPUT_DELAY_MS					500				// Period by which input signal values should be printed when debugging
+#define DEBUG_INPUTS_INTERVAL_MS				500				// Period by which input signal values should be printed when debugging
 
 #if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
 	#undef DEBUG_INPUTS
@@ -168,8 +170,20 @@ VBOOL _ActionLed			= HIGH;
 
 // STATE
 
+#ifdef _DEBUG
+
+DWORD _MemoryInfoLastMS		= 0;
+
+#ifdef DEBUG_INPUTS
+DWORD _PrintInputsLastMS	= 0;
+#endif
+
+#endif
+
 WORD _Degrees				= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 WORD _DegreesNew			= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
+
+BOOL _AngleSet				= TRUE;
 
 Error _DriverError			= Error::SUCCESS;
 PCCHAR _DriverStatusMsg		= "ASDF";
@@ -192,7 +206,8 @@ STATIC CWORD PointsFromAngleEncoderSteps()
 STATIC CBOOL IsAngleAdjustmentWithinErrorMargin(RCDWORD targetMotorSteps)
 {
 	return (CDWORD)_AngleEncoderSteps * ANGLE_STEP_PRECISION_FACTOR / ANGLE_ENCODER_STEPS_PER_POINT
-		- targetMotorSteps * ANGLE_STEP_PRECISION_FACTOR / ANGLE_MOTOR_STEPS_PER_POINT < ANGLE_ENCODER_POINT_ERROR_MARGIN / ANGLE_POINTS_PER_DEGREE_VALUE;
+			- targetMotorSteps * ANGLE_STEP_PRECISION_FACTOR / ANGLE_MOTOR_STEPS_PER_POINT
+		< ANGLE_ENCODER_POINT_ERROR_MARGIN / ANGLE_POINTS_PER_DEGREE_VALUE;
 }
 
 #pragma endregion
@@ -216,14 +231,23 @@ VOID setup()
 {
 	Serial.begin(SERIAL_BAUD_RATE);
 
-#ifdef _DEBUG
-	PrintLine("\nREADY!\n", Serial);
-#endif
-
 	atexit(CleanUp);
 
 	InitializePins();
 	InitializeInterrupts();
+
+
+#ifdef _DEBUG
+
+	PrintLine("\nREADY!\n", Serial);
+
+	_MemoryInfoLastMS = millis();
+
+	#ifdef DEBUG_INPUTS
+		_PrintInputsLastMS = millis();
+	#endif
+
+#endif
 }
 
 VOID cleanUp()
@@ -238,29 +262,35 @@ VOID serialEvent()
 
 VOID loop()
 {
+
+
 #ifdef _DEBUG
 
-	return;
+	if (_MemoryInfoLastMS + DEBUG_MEMORY_INFO_INTERVAL_MS >= millis())
+	{
+		PrintString(F("\nRAM: "));
+		PrintLine((CWORD)SramFree());
+		PrintLine();
 
-	PrintString(F("\nRAM: "));
-	PrintLine((CWORD)SramFree());
-	PrintLine();
+		_ActionLed = !_ActionLed;
+		WritePin(PIN_OUT_ACTION_LED, _ActionLed);
 
-	delay(3000);
+		_StatusLed = !_StatusLed;
+		WritePin(PIN_OUT_STATUS_LED, _StatusLed);
 
-#endif
+		_MemoryInfoLastMS = millis();
+	}
 
-#ifdef DEBUG_INPUTS
+	#ifdef DEBUG_INPUTS
 
-	DEBUG_PrintInputValues();
+	if (_PrintInputsLastMS + DEBUG_INPUTS_INTERVAL_MS >= millis())
+	{
+		DEBUG_PrintInputValues();
 
-	_ActionLed = !_ActionLed;
-	WritePin(PIN_OUT_ACTION_LED, _ActionLed);
+		_PrintInputsLastMS = millis();
+	}
 
-	_StatusLed = !_StatusLed;
-	WritePin(PIN_OUT_STATUS_LED, _StatusLed);
-
-	delay(DEBUG_INPUT_DELAY_MS);
+	#endif
 
 #endif
 }
@@ -310,7 +340,6 @@ ISR(INT1_vect)
 // TIMER 2 OVERFLOW
 ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
 {
-
 }
 
 #pragma endregion
@@ -360,6 +389,8 @@ VOID OnMessage(PIMESSAGE message)
 	#ifdef DEBUG_MESSAGES
 		PrintLine(_DegreesNew);
 	#endif
+
+		_AngleSet = FALSE;
 
 		break;
 
@@ -452,12 +483,12 @@ VOID OnMessage(PIMESSAGE message)
 
 VOID DEBUG_PrintInputValues()
 {
-	_AngleEncoderA	= CheckPin(PIN_ANGLE_ENCODER_A);
-	_AngleEncoderB	= CheckPin(PIN_ANGLE_ENCODER_B);
+	_AngleEncoderA	= CheckPinSet(PIN_ANGLE_ENCODER_A);
+	_AngleEncoderB	= CheckPinSet(PIN_ANGLE_ENCODER_B);
 
-	_ActionButton	= !CheckPin(PIN_BUTTON_ACTION);
-	_OneShotButton	= !CheckPin(PIN_BUTTON_ONESHOT);
-	_LatchButton	= !CheckPin(PIN_BUTTON_LATCH);
+	_ActionButton	= CheckPinUnset(PIN_BUTTON_ACTION);
+	_OneShotButton	= CheckPinUnset(PIN_BUTTON_ONESHOT);
+	_LatchButton	= CheckPinUnset(PIN_BUTTON_LATCH);
 
 
 	// REAR INPUTS

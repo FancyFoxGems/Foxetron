@@ -101,8 +101,10 @@ using namespace IttyBitty;
 
 // PROGRAM OPTIONS
 
+#define DEBUG_MEMORY_INFO_INTERVAL_MS			3000			// Period by which available RAM should be printed when debugging
+
 #define DEBUG_INPUTS							0				// Whether to print values of pin input signals
-#define DEBUG_INPUT_DELAY_MS					500				// Period by which input signal values should be printed when debugging
+#define DEBUG_INPUTS_INTERVAL_MS				500				// Period by which input signal values should be printed when debugging
 
 #if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
 	#undef DEBUG_INPUTS
@@ -174,10 +176,20 @@ VBYTE _RgbRed				= 0;		// Pin 9 / PB1
 VBYTE _RgbGreen				= 0;		// Pin 10 / PB2
 VBYTE _RgbBlue				= 0;		// Pin 11 / PB3
 
-VBOOL _StatusLED			= LOW;		// Pin 13 / PB5
+VBOOL _StatusLed			= LOW;		// Pin 13 / PB5
 
 
 // STATE
+
+#ifdef _DEBUG
+
+DWORD _MemoryInfoLastMS		= 0;
+
+#ifdef DEBUG_INPUTS
+DWORD _PrintInputsLastMS	= 0;
+#endif
+
+#endif
 
 WORD _Degrees				= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 WORD _DegreesNew			= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
@@ -224,6 +236,19 @@ VOID setup()
 	RGB_Initialize();
 
 	LCD.printBig(F("Fox"), 2, 0);
+
+
+#ifdef _DEBUG
+
+	PrintLine("\nREADY!\n", Serial);
+
+	_MemoryInfoLastMS = millis();
+
+	#ifdef DEBUG_INPUTS
+		_PrintInputsLastMS = millis();
+	#endif
+
+#endif
 }
 
 VOID serialEvent()
@@ -233,30 +258,37 @@ VOID serialEvent()
 
 VOID loop()
 {
-#ifdef _DEBUG
-
-	PrintString(F("\nRAM: "));
-	PrintLine((CWORD)SramFree());
-	PrintLine();
-
-	delay(3000);
-
-#endif
-
 	RGB_Step();
 
 	LCD.clear();
 	LCD.home();
 	LCD.print(_AngleEncoderSteps);
 
-#ifdef DEBUG_INPUTS
 
-	DEBUG_PrintInputValues();
+#ifdef _DEBUG
 
-	_StatusLED = !_StatusLED;
-	WritePin(13, _StatusLED);
+	if (_MemoryInfoLastMS + DEBUG_MEMORY_INFO_INTERVAL_MS >= millis())
+	{
+		PrintString(F("\nRAM: "));
+		PrintLine((CWORD)SramFree());
+		PrintLine();
 
-	delay(DEBUG_INPUT_DELAY_MS);
+		_StatusLed = !_StatusLed;
+		WritePin(PIN_OUT_STATUS_LED, _StatusLed);
+
+		_MemoryInfoLastMS = millis();
+	}
+
+	#ifdef DEBUG_INPUTS
+
+	if (_PrintInputsLastMS + DEBUG_INPUTS_INTERVAL_MS >= millis())
+	{
+		DEBUG_PrintInputValues();
+
+		_PrintInputsLastMS = millis();
+	}
+
+	#endif
 
 #endif
 }
@@ -309,39 +341,38 @@ ISR(INT1_vect)
 // PORT B (PCINT0:7): LED BUTTON 5
 ISR(PCINT0_vect, ISR_NOBLOCK)
 {
-	_LedButton5 = PINB && (1 >> 0);
-	//_Pin12var = PINB && (1 >> 4);
+	_LedButton5 = PB0_IS_SET();
 }
 
 // PORT C (PCINT8:14): MENU ENCODER & BUTTONS
 ISR(PCINT1_vect, ISR_NOBLOCK)
 {
-	if (_MenuEncoderA != PINC && (1 >> 3))
+	if (_MenuEncoderA != PC3_IS_SET())
 	{
-		_MenuEncoderA = PINC && (1 >> 3);
+		_MenuEncoderA = PC3_IS_SET();
 		_MenuEncoderUp = (_MenuEncoderA == _MenuEncoderB);
 		_ISR_Encoder_UpdateEncoderSteps(_MenuEncoderUp, _MenuEncoderSteps);
 	}
 
-	if (_MenuEncoderB != PINC && (1 >> 2))
+	if (_MenuEncoderB != PC2_IS_SET())
 	{
-		_MenuEncoderB = PINC && (1 >> 2);
+		_MenuEncoderB = PC2_IS_SET();
 		_MenuEncoderUp = (_MenuEncoderA != _MenuEncoderB);
 		_ISR_Encoder_UpdateEncoderSteps(_MenuEncoderUp, _MenuEncoderSteps);
 	}
 
-	_SelectButton = PINC && (1 >> 1);
-	_ShiftButton = PINC && (1 >> 0);
+	_SelectButton = PC1_IS_SET();
+	_ShiftButton = PC0_IS_SET();
 }
 
 // PORT D (PCINT16:23): LED BUTTONS 1-4
 ISR(PCINT2_vect, ISR_NOBLOCK)
 {
-	_LedButton1 = PIND && (1 >> 4);
-	_LedButton2 = PIND && (1 >> 5);
-	_LedButton3 = PIND && (1 >> 6);
-	_LedButton4 = PIND && (1 >> 7);
-}// TIMER EVENTS// TIMER 2 OVERFLOWISR(TIMER2_OVF_vect, ISR_NOBLOCK){}#pragma endregion
+	_LedButton1 = PD4_IS_SET();
+	_LedButton2 = PD5_IS_SET();
+	_LedButton3 = PD6_IS_SET();
+	_LedButton4 = PD7_IS_SET();
+}// TIMER EVENTS// TIMER 2 OVERFLOWISR(TIMER2_OVF_vect, ISR_NOBLOCK){}#pragma endregion
 
 
 #pragma region PROGRAM FUNCTIONS
@@ -498,10 +529,10 @@ VOID DEBUG_PrintInputValues()
 {
 	STATIC CHAR valStr[5];
 
-	_AngleEncoderA = CheckPin(2);
-	_AngleEncoderB = CheckPin(3);
+	_AngleEncoderA = CheckPinSet(2);
+	_AngleEncoderB = CheckPinSet(3);
 
-	_LedButton1 = CheckPin(4);
+	_LedButton1 = CheckPinSet(4);
 	if (_LedButton1)
 	{
 		PORTD |= (1 << 4);
@@ -510,7 +541,7 @@ VOID DEBUG_PrintInputValues()
 		DDRD &= ~(1 << 4);
 	}
 
-	_LedButton2 = CheckPin(5);
+	_LedButton2 = CheckPinSet(5);
 	if (_LedButton2)
 	{
 		PORTD |= (1 << 5);
@@ -519,7 +550,7 @@ VOID DEBUG_PrintInputValues()
 		DDRD &= ~(1 << 5);
 	}
 
-	_LedButton3 = CheckPin(6);
+	_LedButton3 = CheckPinSet(6);
 	if (_LedButton3)
 	{
 		PORTD |= (1 << 6);
@@ -528,7 +559,7 @@ VOID DEBUG_PrintInputValues()
 		DDRD &= ~(1 << 6);
 	}
 
-	_LedButton4 = CheckPin(7);
+	_LedButton4 = CheckPinSet(7);
 	if (_LedButton4)
 	{
 		PORTD |= (1 << 7);
@@ -537,7 +568,7 @@ VOID DEBUG_PrintInputValues()
 		DDRD &= ~(1 << 7);
 	}
 
-	_LedButton5 = CheckPin(8);
+	_LedButton5 = CheckPinSet(8);
 	if (_LedButton5)
 	{
 		PORTB |= (1 << 0);
@@ -548,11 +579,11 @@ VOID DEBUG_PrintInputValues()
 
 	_ModeSwitch		= analogRead(7) > 500 ? TRUE : FALSE;
 
-	_MenuEncoderA	= CheckPin(14);
-	_MenuEncoderB	= CheckPin(15);
+	_MenuEncoderA	= CheckPinSet(14);
+	_MenuEncoderB	= CheckPinSet(15);
 
-	_SelectButton	= !CheckPin(16);
-	_ShiftButton	= !CheckPin(17);
+	_SelectButton	= CheckPinUnset(16);
+	_ShiftButton	= CheckPinUnset(17);
 
 
 	// REAR INPUTS
