@@ -12,8 +12,8 @@
 * [Hardware Platform]
 *	MCU:			Arduino Nano w/ Atmel ATmega 328P
 *	Motor Driver:		Dual L9110s-based chip module
-*	Stepper Motor:	2-phase bipolar, NEMA 17, 50 oz. @ 2.8 V / 1.68 A
-*	Other Components:	1 x Blue LED 5mm
+*	Stepper Motor:	2-phase bipolar, NEMA 17, 1.8° steps, 50 oz. @ 2.8 V / 1.68 A
+*	Other Components:	1 × Blue LED 5mm
 *	Hardware:		Aluminum enclosure; GT2 36T pulley; GT2 belt, ~10 in.;
 *						headers, connectors, wires, mounts, etc.
 *
@@ -96,10 +96,22 @@ using namespace IttyBitty;
 #define SERIAL_BAUD_RATE		115200
 #define SERIAL_DELAY_MS			1
 
-#pragma endregion
 
+// PROGRAM CONSTANTS
 
-#pragma region PROGRAM CONSTANTS
+#define ANGLE_PRECISION_FACTOR					100
+
+#define ANGLE_ENCODER_STEPS_RESOLUTION			8192		// 2,048 steps(/360°)/channel × 2 channels × 2 (quadrature signal encoding)
+#define ANGLE_MOTOR_STEPS_RESOLUTION			800			// 200 steps(/360°) × 2 (half-stepping mode) × 2 (dual phasing)
+
+#define ANGLE_STEP_PRECISION_FACTOR_FACTOR		ANGLE_PRECISION_FACTOR
+#define ANGLE_STEP_PRECISION_FACTOR				(ANGLE_PRECISION_FACTOR * ANGLE_STEP_PRECISION_FACTOR_FACTOR)
+
+#define ANGLE_DEGREES_PER_ENCODER_STEP			((DWORD)(360 * ANGLE_STEP_PRECISION_FACTOR)/(DWORD)ANGLE_ENCODER_STEPS_RESOLUTION)	// < 439 (0.0439°/step)
+#define ANGLE_ENCODER_STEPS_PER_DEGREE			((DWORD)(ANGLE_ENCODER_STEPS_RESOLUTION * ANGLE_PRECISION_FACTOR)/(DWORD)360)		// < 2,275 (22.75 steps/°)
+
+#define ANGLE_DEGREES_PER_MOTOR_STEP			((DWORD)(360 * ANGLE_STEP_PRECISION_FACTOR)/(DWORD)ANGLE_MOTOR_STEPS_RESOLUTION)	// 4,500 (0.4500°/step)
+#define ANGLE_MOTOR_STEPS_PER_DEGREE			((DWORD)(ANGLE_MOTOR_STEPS_RESOLUTION * ANGLE_PRECISION_FACTOR)/(DWORD)360)			// < 222 (2.22 steps/°)
 
 #pragma endregion
 
@@ -132,8 +144,8 @@ VBOOL _ActionLed		= HIGH;
 
 // STATE
 
-WORD _Degrees				= 0;
-WORD _DegreesNew			= 0;
+WORD _Degrees				= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
+WORD _DegreesNew			= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 
 Error _DriverError			= Error::SUCCESS;
 PCCHAR _DriverStatusMsg		= "ASDF";
@@ -142,6 +154,18 @@ DriverStatus _DriverStatus	= DriverStatus::IDLE;
 Error _ControllerError		= Error::SUCCESS;
 PCCHAR _ControllerStatusMsg	= NULL;
 ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
+
+#pragma endregion
+
+
+#pragma region PROGRAM CONST-EXPRESSION FUNCTIONS
+
+STATIC CONST CBOOL IsAngleWithinPrecision()
+{
+	return _Degrees - _DegreesNew < 4;
+}
+
+#pragma endregion
 
 
 #pragma region PROGRAM FUNCTION DECLARATIONS

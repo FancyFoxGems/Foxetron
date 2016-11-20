@@ -77,8 +77,8 @@ EXTERN BigCrystal_I2C LCD;
 
 VOID LCD_Initialize();
 
-CONST CHAR * CONST LCD_InvertChar(CONST CHAR *, BYTE = 5);
-CONST CHAR * LCD_InvertChar_P(CONST CHAR *, BYTE = 5);
+PCCHAR LCD_InvertChar(PCCHAR, BYTE = 5);
+PCCHAR LCD_InvertChar_P(PCCHAR, BYTE = 5);
 
 #pragma endregion
 

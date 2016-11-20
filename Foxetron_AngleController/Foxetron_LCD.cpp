@@ -39,24 +39,24 @@ VOID LCD_Initialize()
 
 #pragma region UTILITY FUNCTIONS
 
-CONST CHAR * CONST LCD_InvertChar(CONST CHAR * lcdChar, BYTE charWidth)
+PCCHAR CONST LCD_InvertChar(PCCHAR lcdChar, BYTE charWidth)
 {
 	PCHAR newLcdChar = new char[SIZEOF(lcdChar)];
 
 	for (BYTE pixY = 0; pixY < SIZEOF(lcdChar); pixY++)
 		newLcdChar[pixY] = lcdChar[pixY] ^ (1 << charWidth - 1);
 
-	return const_cast<CONST CHAR *>(newLcdChar);
+	return const_cast<PCCHAR>(newLcdChar);
 }
 
-CONST CHAR * LCD_InvertChar_P(CONST CHAR * lcdChar, BYTE charWidth)
+PCCHAR LCD_InvertChar_P(PCCHAR lcdChar, BYTE charWidth)
 {
 	PCHAR lcdCharData = new char[SIZEOF(lcdChar)];
 
 	for (BYTE i = 0; i < SIZEOF(lcdChar); i++)
 		lcdCharData[i] = pgm_read_byte_near(lcdChar++);
 
-	return LCD_InvertChar(const_cast<CONST CHAR *>(lcdCharData), charWidth);
+	return LCD_InvertChar(const_cast<PCCHAR>(lcdCharData), charWidth);
 }
 
 #pragma endregion

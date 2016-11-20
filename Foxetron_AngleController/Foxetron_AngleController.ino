@@ -11,13 +11,13 @@
 *
 * [Hardware Platform]
 *	MCU:			Arduino Nano-like clone w/ Atmel ATmega 1284P
-*	LCD:				HD44780 16x2, RGB backlight; I2C "backpack"
+*	LCD:				HD44780 16×2, RGB backlight; I2C "backpack"
 *	RTC & EEPROM:	Tiny RTC module w/ DS1307Z + 24C32N
 *	Power Supply:		LM317 adjustable voltage regulator
-*	Switches/Features:	1 x SPDT; 1 x rotary encoder w/ pushbutton switch
-*	Buttons:			1 x square momentary, tactile; 1 x round momentary;
-*						5 x momentary, tactile w/ blue LED backlight
-*	Other Components:	1 x RGB LED  10mm, diffused; 1 x Red LED 5mm; 3-wire brushless fan
+*	Switches/Features:	1 × SPDT; 1 × rotary encoder w/ pushbutton switch
+*	Buttons:			1 × square momentary, tactile; 1 × round momentary;
+*						5 × momentary, tactile w/ red LED backlight
+*	Other Components:	1 × RGB LED  10mm, diffused; 1 × Blue LED 5mm; 3-wire brushless fan
 *	Hardware:		Aluminum enclosure; DC plug; headers, connectors, wires, mounts, etc.
 *
 * This file is part of the Foxetron program suite.
@@ -104,12 +104,12 @@ using namespace IttyBitty;
 #define DEBUG_INPUTS			0
 #define DEBUG_INPUT_DELAY_MS	500
 
-#define SERIAL_ENABLE
-#define SERIAL_BAUD_RATE		115200
-
 #if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
 	#undef DEBUG_INPUTS
 #endif
+
+#define SERIAL_BAUD_RATE		115200
+#define SERIAL_DELAY_MS			1
 
 
 // LCD CONSTANTS
@@ -118,6 +118,10 @@ using namespace IttyBitty;
 #define LCD_CHAR_COLS			16
 #define LCD_CHAR_ROWS			2
 
+
+// PROGRAM CONSTANTS
+
+#define ANGLE_PRECISION_FACTOR					1000
 
 
 /* MACROS */
@@ -195,8 +199,8 @@ VBOOL _StatusLED		= LOW;		// Pin 13 / PB5
 
 // STATE
 
-WORD _Degrees				= 0;
-WORD _DegreesNew			= 0;
+WORD _Degrees				= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
+WORD _DegreesNew			= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 
 Error _ControllerError		= Error::SUCCESS;
 PCCHAR _ControllerStatusMsg	= NULL;
