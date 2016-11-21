@@ -142,8 +142,6 @@ VBOOL _AngleEncoderB		= FALSE;	// Pin 3 / PD3 (INT1)
 
 VBOOL _AngleEncoderUp		= FALSE;
 VDWORD _AngleEncoderSteps	= 0;
-WORD _AngleEncoderDelta		= 0;
-WORD _AngleEncoderVelocity	= 0;
 
 VBOOL _LedButton1			= FALSE;	// Pin 4 / PD4 (PCINT20)
 VBOOL _LedButton2			= FALSE;	// Pin 5 / PD5 (PCINT21)
@@ -164,8 +162,6 @@ VBOOL _MenuEncoderB			= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
 
 VBOOL _MenuEncoderUp		= FALSE;
 VDWORD _MenuEncoderSteps	= 0;
-WORD _MenuEncoderDelta		= 0;
-WORD _MenuEncoderVelocity	= 0;
 
 VBOOL _SelectButton			= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
 VBOOL _ShiftButton			= FALSE;	// Pin 17/A3 / PC3 (PCINT11)

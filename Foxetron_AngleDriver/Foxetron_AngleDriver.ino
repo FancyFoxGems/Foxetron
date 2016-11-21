@@ -131,12 +131,12 @@ CDWORD ANGLE_POINT_STEP_PRECISION_FACTOR	= (CDWORD)ANGLE_POINT_STEP_PRECISION_FA
 CDWORD ANGLE_POINTS_PER_ACTUAL_DEGREE		= (CDWORD)ANGLE_POINT_STEP_PRECISION_FACTOR;												// 100,000
 CDWORD ANGLE_POINTS_PER_DEGREE_VALUE		= (CDWORD)ANGLE_POINT_STEP_PRECISION_FACTOR / (CDWORD)ANGLE_DEGREE_PRECISION_FACTOR;		// 1,000
 
-CDWORD ANGLE_ENCODER_STEPS_PER_POINT		= (CDWORD)ANGLE_ENCODER_STEPS_RESOLUTION * ANGLE_POINT_STEP_PRECISION_FACTOR/(CDWORD)360;	// > 22,755 (22.75 steps/°)
+CDWORD ANGLE_ENCODER_STEPS_PER_POINT		= (CDWORD)ANGLE_ENCODER_STEPS_RESOLUTION * ANGLE_POINT_STEP_PRECISION_FACTOR / (CDWORD)360;	// > 22,755 (22.75 steps/°)
 CDWORD ANGLE_ENCODER_STEP_ERROR_MARGIN		= ANGLE_ENCODER_STEPS_PER_POINT / 2 + (CDWORD)ANGLE_ERROR_CORRECTION_FACTOR;				// +/- > 11,377 (11.37 steps)
 CDWORD ANGLE_ENCODER_POINTS_PER_STEP		= (CDWORD)360 * ANGLE_POINT_STEP_PRECISION_FACTOR/(CDWORD)ANGLE_ENCODER_STEPS_RESOLUTION;	// > 4,394 points (0.04394°/step)
 CDWORD ANGLE_ENCODER_POINT_ERROR_MARGIN		= ANGLE_ENCODER_POINTS_PER_STEP / 2 + (CDWORD)ANGLE_ERROR_CORRECTION_FACTOR;				// +/- > 2,197 points  (0.02197°)
 
-CDWORD ANGLE_MOTOR_STEPS_PER_POINT			= (CDWORD)ANGLE_MOTOR_STEPS_RESOLUTION * ANGLE_POINT_STEP_PRECISION_FACTOR/(CDWORD)360;		// 400,000 (400.00 steps/°)
+CDWORD ANGLE_MOTOR_STEPS_PER_POINT			= (CDWORD)ANGLE_MOTOR_STEPS_RESOLUTION * ANGLE_POINT_STEP_PRECISION_FACTOR / (CDWORD)360;	// 400,000 (400.00 steps/°)
 CDWORD ANGLE_MOTOR_STEP_ERROR_MARGIN		= ANGLE_MOTOR_STEPS_PER_POINT / 2;															// +/- 200,000 (200.00 steps)
 CDWORD ANGLE_MOTOR_POINTS_PER_STEP			= (CDWORD)360 * ANGLE_POINT_STEP_PRECISION_FACTOR/(CDWORD)ANGLE_MOTOR_STEPS_RESOLUTION;		// 250 points (0.00250°/step)
 CDWORD ANGLE_MOTOR_POINT_ERROR_MARGIN		= ANGLE_MOTOR_POINTS_PER_STEP / 2;															// +/- 125 points (0.00125°)
@@ -172,7 +172,7 @@ VBOOL _StatusLed			= LOW;
 VBOOL _ActionLed			= HIGH;
 
 // Stepper motor for angle adjustment
-HalfStepper * _Motor		= NULL;
+HalfStepper * Motor			= NULL;
 
 
 // STATE
@@ -190,7 +190,7 @@ DWORD _PrintInputsLastMS	= 0;
 WORD _Degrees				= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 WORD _DegreesNew			= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 
-BOOL _AngleSet				= TRUE;
+DWORD _TargetMotorSteps		= 0;
 
 Error _DriverError			= Error::SUCCESS;
 PCCHAR _DriverStatusMsg		= "ASDF";
@@ -220,10 +220,9 @@ STATIC CWORD PointsFromAngleEncoderSteps()
 	return (CWORD)(_AngleEncoderSteps * ANGLE_STEP_PRECISION_FACTOR / ANGLE_ENCODER_STEPS_PER_POINT);
 }
 
-STATIC CBOOL IsAngleAdjustmentWithinErrorMargin(RCDWORD targetMotorSteps)
+STATIC CBOOL IsAngleAdjustmentWithinErrorMargin()
 {
-	return (CDWORD)_AngleEncoderSteps * ANGLE_STEP_PRECISION_FACTOR / ANGLE_ENCODER_STEPS_PER_POINT
-			- targetMotorSteps * ANGLE_STEP_PRECISION_FACTOR / ANGLE_MOTOR_STEPS_PER_POINT
+	return PointsFromAngleEncoderSteps() - _TargetMotorSteps * ANGLE_STEP_PRECISION_FACTOR / ANGLE_MOTOR_STEPS_PER_POINT
 		< ANGLE_ENCODER_POINT_ERROR_MARGIN / ANGLE_POINTS_PER_DEGREE_VALUE;
 }
 
@@ -259,7 +258,7 @@ VOID setup()
 	InitializeTimers();
 	InitializeInterrupts();
 
-	_Motor = new HalfStepper(ANGLE_MOTOR_STEPS, PIN_OUT_MOTOR_1A, PIN_OUT_MOTOR_1B, PIN_OUT_MOTOR_2A, PIN_OUT_MOTOR_2B);
+	Motor = new HalfStepper(ANGLE_MOTOR_STEPS_RESOLUTION, PIN_OUT_MOTOR_1A, PIN_OUT_MOTOR_1B, PIN_OUT_MOTOR_2A, PIN_OUT_MOTOR_2B);
 
 	sei();
 
@@ -275,14 +274,6 @@ VOID setup()
 	#endif
 
 #endif
-}
-
-VOID cleanUp()
-{
-	delete _Motor;
-	_Motor = NULL;
-
-	PrintString(F("** FATAL ERROR **"));
 }
 
 VOID serialEvent()
@@ -369,7 +360,7 @@ ISR(INT1_vect)
 // TIMER 2: COMPARE MATCH A
 ISR(TIMER2_COMPA_vect, ISR_NOBLOCK)
 {
-	if (!_AngleSet)
+	if (_TargetMotorSteps)
 		DoAngleAdjustmentStep();
 }
 
@@ -378,7 +369,13 @@ ISR(TIMER2_COMPA_vect, ISR_NOBLOCK)
 
 #pragma region PROGRAM FUNCTIONS
 
-VOID CleanUp() { }
+VOID CleanUp()
+{
+	delete Motor;
+	Motor = NULL;
+
+	PrintString(F("** FATAL ERROR **"));
+}
 
 VOID InitializeTimers()
 {
@@ -422,14 +419,13 @@ VOID OnMessage(PIMESSAGE message)
 	case MessageCode::NEWANGLE_REQUEST:
 
 		results = new PVOID[1] { &_DegreesNew };
-		state = new PCVOID[1] { &_DriverError };
 		msgHandled = reinterpret_cast<PNEWANGLEREQUEST>(message)->Handle(results, state);
 
 	#ifdef DEBUG_MESSAGES
 		PrintLine(_DegreesNew);
 	#endif
 
-		_AngleSet = FALSE;
+		_TargetMotorSteps = (DWORD)_DegreesNew * ANGLE_MOTOR_STEPS_PER_POINT;
 
 		break;
 
@@ -454,7 +450,6 @@ VOID OnMessage(PIMESSAGE message)
 	#endif
 
 		break;
-
 
 
 	case MessageCode::ANGLE_RESPONSE:
@@ -496,7 +491,6 @@ VOID OnMessage(PIMESSAGE message)
 		break;
 
 
-
 	default:
 
 		break;
@@ -517,13 +511,16 @@ VOID OnMessage(PIMESSAGE message)
 
 VOID DoAngleAdjustmentStep()
 {
-	DWORD targetMotorSteps = 0;
-
-	if (IsAngleAdjustmentWithinErrorMargin(targetMotorSteps))
+	if (IsAngleAdjustmentWithinErrorMargin())
 	{
-		_AngleSet = TRUE;
+		_TargetMotorSteps = 0;
+
+		NewAngleResponse(_DriverError).Transmit();
+
 		return;
 	}
+
+	_TargetMotorSteps = PointsFromAngleEncoderSteps() * ANGLE_MOTOR_STEPS_PER_POINT;
 }
 
 #pragma endregion

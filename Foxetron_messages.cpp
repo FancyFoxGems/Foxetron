@@ -78,16 +78,8 @@ BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
 
 	*((PPWORD)results)[0] = this->Degrees();
 
-	CERROR driverError = *((PPCERROR)state)[0];
-
-#ifdef DEBUG_MESSAGES
-	PrintLine((BYTE)driverError);
-#endif
-
 	if (!Request::Handle(results, state))
 		return FALSE;
-
-	NewAngleResponse(driverError).Transmit();
 
 	return TRUE;
 }
