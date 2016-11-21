@@ -135,70 +135,72 @@ using namespace IttyBitty;
 
 // INPUTS
 
-VBOOL _AngleEncoderA		= FALSE;	// Pin 2 / PD2 (INT0)
-VBOOL _AngleEncoderB		= FALSE;	// Pin 3 / PD3 (INT1)
-//VBOOL _AngleEncoderZ		= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
-//VBOOL _AngleEncoderU		= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
+VBOOL _AngleEncoderA	= FALSE;	// Pin 2 / PD2 (INT0)
+VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1)
+//VBOOL _AngleEncoderZ	= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
+//VBOOL _AngleEncoderU	= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
-VBOOL _AngleEncoderUp		= FALSE;
-VDWORD _AngleEncoderSteps	= 0;
-
-VBOOL _LedButton1			= FALSE;	// Pin 4 / PD4 (PCINT20)
-VBOOL _LedButton2			= FALSE;	// Pin 5 / PD5 (PCINT21)
-VBOOL _LedButton3			= FALSE;	// Pin 6 / PD6 (PCINT22)
-VBOOL _LedButton4			= FALSE;	// Pin 7 / PD7 (PCINT23)
-VBOOL _LedButton5			= FALSE;	// Pin 8 / PB0 (PCINT0)
+VBOOL _LedButton1		= FALSE;	// Pin 4 / PD4 (PCINT20)
+VBOOL _LedButton2		= FALSE;	// Pin 5 / PD5 (PCINT21)
+VBOOL _LedButton3		= FALSE;	// Pin 6 / PD6 (PCINT22)
+VBOOL _LedButton4		= FALSE;	// Pin 7 / PD7 (PCINT23)
+VBOOL _LedButton5		= FALSE;	// Pin 8 / PB0 (PCINT0)
 
 // [FREE PIN: Pin 12 / PB4 (PCINT4)]
 
 // [FREE PIN: Pin A6 / ADC6]
 
-VBOOL _ModeSwitch			= FALSE;	// A7 / ADC7
-VWORD _ModeSwitchVal		= 0;
+VBOOL _ModeSwitch		= FALSE;	// A7 / ADC7
+VWORD _ModeSwitchVal	= 0;
 
 // Menu rotary encoder
-VBOOL _MenuEncoderA			= FALSE;	// Pin 14/A0 / PC0 (PCINT8)
-VBOOL _MenuEncoderB			= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
+VBOOL _MenuEncoderA		= FALSE;	// Pin 14/A0 / PC0 (PCINT8)
+VBOOL _MenuEncoderB		= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
 
-VBOOL _MenuEncoderUp		= FALSE;
-VDWORD _MenuEncoderSteps	= 0;
-
-VBOOL _SelectButton			= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
-VBOOL _ShiftButton			= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
+VBOOL _SelectButton		= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
+VBOOL _ShiftButton		= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
 
 // LEDs
-VBYTE _RgbRed				= 0;		// Pin 9 / PB1
-VBYTE _RgbGreen				= 0;		// Pin 10 / PB2
-VBYTE _RgbBlue				= 0;		// Pin 11 / PB3
+VBYTE _RgbRed			= 0;		// Pin 9 / PB1
+VBYTE _RgbGreen			= 0;		// Pin 10 / PB2
+VBYTE _RgbBlue			= 0;		// Pin 11 / PB3
 
-VBOOL _StatusLed			= LOW;		// Pin 13 / PB5
+VBOOL _StatusLed		= LOW;		// Pin 13 / PB5
 
 
 // STATE
 
 #ifdef _DEBUG
 
-DWORD _MemoryInfoLastMS		= 0;
+DWORD _MemoryInfoLastMS				= 0;
 
 #ifdef DEBUG_INPUTS
-DWORD _PrintInputsLastMS	= 0;
+DWORD _PrintInputsLastMS			= 0;
 #endif
 
 #endif
 
-WORD _Degrees				= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
-WORD _DegreesNew			= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
+VBOOL _AngleEncoderUp				= FALSE;
+VDWORD _AngleEncoderSteps			= 0;
+DWORD _AngleEncoderStepsLast		= 0;
 
-Error _ControllerError		= Error::SUCCESS;
-PCCHAR _ControllerStatusMsg	= NULL;
+VBOOL _MenuEncoderUp				= FALSE;
+VDWORD _MenuEncoderSteps			= 0;
+DWORD _MenuEncoderStepsLast			= 0;
+
+WORD _Degrees						= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
+WORD _DegreesNew					= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
+
+Error _ControllerError				= Error::SUCCESS;
+PCCHAR _ControllerStatusMsg			= NULL;
 ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 
-Error _DriverError			= Error::SUCCESS;
-PCCHAR _DriverStatusMsg		= NULL;
-DriverStatus _DriverStatus	= DriverStatus::IDLE;
+Error _DriverError					= Error::SUCCESS;
+PCCHAR _DriverStatusMsg				= NULL;
+DriverStatus _DriverStatus			= DriverStatus::IDLE;
 
 #pragma endregion
 
@@ -395,10 +397,10 @@ VOID CleanUp()
 
 VOID InitializeTimers()
 {
-	// Timer 2: Angle adjustment task; 16-bit phase-correct PWM mode
+	// Timer 2: Angle adjustment task; CTC mode
 	SET_BITS(TCCR2B, B(WGM21) OR B(CS22) OR B(CS21) OR B(CS20));
-	OCR1A = (CBYTE)((CDWORD)INPUT_PROCESS_INTERVAL_uS / ((CDWORD)1024 * 1000000 / F_CPU));
-	SET_BIT(TIMSK2, OCIE2A); // Enable CTC interrupt
+	OCR2A = (CBYTE)((CDWORD)INPUT_PROCESS_INTERVAL_uS / ((CDWORD)1024 * 1000000 / F_CPU));
+	SET_BIT(TIMSK2, OCIE2A);
 }
 
 VOID InitializeInterrupts()

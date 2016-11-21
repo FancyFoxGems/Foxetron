@@ -108,6 +108,8 @@ using namespace IttyBitty;
 
 // PROGRAM CONSTANTS
 
+#define uS_PER_SECOND								1000000
+
 #define ANGLE_BASE_PRECISION_FACTOR					ANGLE_DEGREE_PRECISION_FACTOR
 		// ^-- Scaling factor of °s and steps used in derived scaling factors for angle measurement & adjustment calculations
 
@@ -149,55 +151,56 @@ CDWORD ANGLE_MOTOR_POINT_ERROR_MARGIN		= ANGLE_MOTOR_POINTS_PER_STEP / 2;							
 // INPUTS
 
 // Angle encoder
-VBOOL _AngleEncoderA		= FALSE;	// Pin 2 / PD2 (INT0)
-VBOOL _AngleEncoderB		= FALSE;	// Pin 3 / PD3 (INT1)
-//VBOOL _AngleEncoderZ		= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
-//VBOOL _AngleEncoderU		= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
-
-VBOOL _AngleEncoderUp		= FALSE;
-VDWORD _AngleEncoderSteps	= 0;
-WORD _AngleEncoderDelta		= 0;
-WORD _AngleEncoderVelocity	= 0;
+VBOOL _AngleEncoderA	= FALSE;	// Pin 2 / PD2 (INT0)
+VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1)
+//VBOOL _AngleEncoderZ	= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
+//VBOOL _AngleEncoderU	= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
 // Mast control inputs
-VBOOL _ActionButton			= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
-VBOOL _OneShotButton		= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
-VBOOL _LatchButton			= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
+VBOOL _ActionButton		= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
+VBOOL _OneShotButton	= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
+VBOOL _LatchButton		= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
 
 // LEDs
-VBOOL _StatusLed			= LOW;
-VBOOL _ActionLed			= HIGH;
+VBOOL _StatusLed		= LOW;
+VBOOL _ActionLed		= HIGH;
 
 // Stepper motor for angle adjustment
-HalfStepper * Motor			= NULL;
+HalfStepper * Motor		= NULL;
 
 
 // STATE
 
 #ifdef _DEBUG
 
-DWORD _MemoryInfoLastMS		= 0;
+DWORD _MemoryInfoLastMS				= 0;
 
 #ifdef DEBUG_INPUTS
-DWORD _PrintInputsLastMS	= 0;
+DWORD _PrintInputsLastMS			= 0;
 #endif
 
 #endif
 
-WORD _Degrees				= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
-WORD _DegreesNew			= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
+VBOOL _AngleEncoderUp				= FALSE;
+VDWORD _AngleEncoderSteps			= 0;
+DWORD _AngleEncoderStepsLast		= 0;
+WORD _AngleEncoderVelocity			= 0;
 
-DWORD _TargetMotorSteps		= 0;
+LONG _TargetMotorSteps				= 0;
+BOOL _WaitOnMotor					= 0;
 
-Error _DriverError			= Error::SUCCESS;
-PCCHAR _DriverStatusMsg		= "ASDF";
-DriverStatus _DriverStatus	= DriverStatus::IDLE;
+WORD _Degrees						= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
+WORD _DegreesNew					= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 
-Error _ControllerError		= Error::SUCCESS;
-PCCHAR _ControllerStatusMsg	= NULL;
+Error _DriverError					= Error::SUCCESS;
+PCCHAR _DriverStatusMsg				= "ASDF";
+DriverStatus _DriverStatus			= DriverStatus::IDLE;
+
+Error _ControllerError				= Error::SUCCESS;
+PCCHAR _ControllerStatusMsg			= NULL;
 ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 
 #pragma endregion
@@ -217,12 +220,12 @@ STATIC CONSTEXPR CDWORD MicrosecondsPerClockCycle(RCWORD prescaleFactor = 1)
 
 STATIC CWORD PointsFromAngleEncoderSteps()
 {
-	return (CWORD)(_AngleEncoderSteps * ANGLE_STEP_PRECISION_FACTOR / ANGLE_ENCODER_STEPS_PER_POINT);
+	return (CWORD)(_AngleEncoderSteps * ANGLE_POINT_STEP_PRECISION_FACTOR / ANGLE_ENCODER_STEPS_PER_POINT);
 }
 
 STATIC CBOOL IsAngleAdjustmentWithinErrorMargin()
 {
-	return PointsFromAngleEncoderSteps() - _TargetMotorSteps * ANGLE_STEP_PRECISION_FACTOR / ANGLE_MOTOR_STEPS_PER_POINT
+	return PointsFromAngleEncoderSteps() - _TargetMotorSteps * ANGLE_POINT_STEP_PRECISION_FACTOR / ANGLE_MOTOR_STEPS_PER_POINT
 		< ANGLE_ENCODER_POINT_ERROR_MARGIN / ANGLE_POINTS_PER_DEGREE_VALUE;
 }
 
@@ -360,8 +363,22 @@ ISR(INT1_vect)
 // TIMER 2: COMPARE MATCH A
 ISR(TIMER2_COMPA_vect, ISR_NOBLOCK)
 {
+	_AngleEncoderVelocity = (_AngleEncoderStepsLast - _AngleEncoderSteps)
+		* uS_PER_SECOND / ((CDWORD)1024 * 1000000 / F_CPU) / OCR2A;
+	_AngleEncoderStepsLast = _AngleEncoderSteps;
+
 	if (_TargetMotorSteps)
+	{
+		if (_WaitOnMotor)
+		{
+			if (_AngleEncoderVelocity > 0)
+				return;
+
+			_WaitOnMotor = FALSE;
+		}
+
 		DoAngleAdjustmentStep();
+	}
 }
 
 #pragma endregion
@@ -379,10 +396,10 @@ VOID CleanUp()
 
 VOID InitializeTimers()
 {
-	// Timer 2: Angle adjustment task; 16-bit phase-correct PWM mode
+	// Timer 2: Angle adjustment task; CTC mode
 	SET_BITS(TCCR2B, B(WGM21) OR B(CS22) OR B(CS21) OR B(CS20));
-	OCR1A = (CBYTE)((CDWORD)ANGLE_ADJUSTMENT_INTERVAL_uS / ((CDWORD)1024 * 1000000 / F_CPU));
-	SET_BIT(TIMSK2, OCIE2A); // Enable CTC interrupt
+	OCR2A = (CBYTE)((CDWORD)ANGLE_ADJUSTMENT_INTERVAL_uS / ((CDWORD)1024 * 1000000 / F_CPU));
+	SET_BIT(TIMSK2, OCIE2A);
 }
 
 VOID InitializeInterrupts()
@@ -425,7 +442,7 @@ VOID OnMessage(PIMESSAGE message)
 		PrintLine(_DegreesNew);
 	#endif
 
-		_TargetMotorSteps = (DWORD)_DegreesNew * ANGLE_MOTOR_STEPS_PER_POINT;
+		_TargetMotorSteps = MAX_OF(DWORD);
 
 		break;
 
@@ -520,7 +537,10 @@ VOID DoAngleAdjustmentStep()
 		return;
 	}
 
-	_TargetMotorSteps = PointsFromAngleEncoderSteps() * ANGLE_MOTOR_STEPS_PER_POINT;
+	_TargetMotorSteps = (DWORD)_DegreesNew * ANGLE_MOTOR_STEPS_PER_POINT / ANGLE_POINT_STEP_PRECISION_FACTOR
+		- PointsFromAngleEncoderSteps() * ANGLE_MOTOR_STEPS_PER_POINT / ANGLE_POINT_STEP_PRECISION_FACTOR;
+
+	Motor->Step(_TargetMotorSteps);
 }
 
 #pragma endregion
