@@ -33,6 +33,11 @@
 
 // OUTPUT PINS
 
+#define PIN_OUT_MOTOR_1A		4	// Pin 4 / PD4
+#define PIN_OUT_MOTOR_1B		5	// Pin 5 / PD5
+#define PIN_OUT_MOTOR_2A		6	// Pin 6 / PD6
+#define PIN_OUT_MOTOR_2B		7	// Pin 7 / PD7
+
 #define PIN_OUT_STATUS_LED		13	// Pin 13 / PB5
 
 #define PIN_OUT_ACTION_LED		14	// Pin 14/A0 / PC0 (PCINT8)
@@ -55,6 +60,12 @@ INLINE VOID InitializePins()
 	// Angle encoder
 	SetPinMode(PIN_ANGLE_ENCODER_A, INPUT);			// Channel A
 	SetPinMode(PIN_ANGLE_ENCODER_B, INPUT);			// Channel B
+
+	// Stepper motor
+	SetPinMode(PIN_OUT_MOTOR_1A, OUTPUT);
+	SetPinMode(PIN_OUT_MOTOR_1B, OUTPUT);
+	SetPinMode(PIN_OUT_MOTOR_2A, OUTPUT);
+	SetPinMode(PIN_OUT_MOTOR_2B, OUTPUT);
 
 
 	// FRONT PINS

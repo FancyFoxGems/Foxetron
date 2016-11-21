@@ -86,6 +86,9 @@ using namespace IttyBitty;
 
 // PROGRAM OPTIONS
 
+#define SERIAL_BAUD_RATE						115200			// (Debugging) UART baud rate
+#define SERIAL_DELAY_MS							1				// Delay for waiting on serial buffer to flush when printing debug statements
+
 #define DEBUG_MEMORY_INFO_INTERVAL_MS			3000			// Period by which available RAM should be printed when debugging
 
 #define DEBUG_INPUTS							0				// Whether to print values of pin input signals
@@ -95,8 +98,7 @@ using namespace IttyBitty;
 	#undef DEBUG_INPUTS
 #endif
 
-#define SERIAL_BAUD_RATE						115200			// (Debugging) UART baud rate
-#define SERIAL_DELAY_MS							1				// Delay for waiting on serial buffer to flush when printing debug statements
+#define ANGLE_ADJUSTMENT_INTERVAL_uS			5000			// Period by which  angle adjustment checks should be polled and corrected for
 
 #define ANGLE_DEGREE_PRECISION_FACTOR			100				// Scaling factor of °s for angle measurement & adjustment calculations
 #define ANGLE_ACTUAL_DEGRESS_PER_DEGREE_VALUE	ANGLE_DEGREE_PRECISION_FACTOR
@@ -111,6 +113,8 @@ using namespace IttyBitty;
 
 #define ANGLE_STEP_PRECISION_FACTOR_FACTOR			10
 #define ANGLE_POINT_STEP_PRECISION_FACTOR_FACTOR	100
+
+#define ANGLE_MOTOR_STEPS							800
 
 #define ANGLE_ENCODER_STEPS_RESOLUTION				8192		// 2,048 steps(/360°)/channel × 2 channels × 2 (quadrature signal encoding)
 #define ANGLE_MOTOR_STEPS_RESOLUTION				144000		// 200 steps(/revolution) × 2 (half-stepping mode) × 2 (dual phasing) × 180 (revolutions/360°)
@@ -167,6 +171,9 @@ VBOOL _LatchButton			= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 VBOOL _StatusLed			= LOW;
 VBOOL _ActionLed			= HIGH;
 
+// Stepper motor for angle adjustment
+HalfStepper * _Motor		= NULL;
+
 
 // STATE
 
@@ -196,6 +203,16 @@ ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 #pragma endregion
 
 
+#pragma region CONSTEXPR TIMER UTILITY FUNCTIONS
+
+STATIC CONSTEXPR CDWORD MicrosecondsPerClockCycle(RCWORD prescaleFactor = 1)
+{
+	return F_CPU / prescaleFactor;
+}
+
+#pragma endregion
+
+
 #pragma region ANGLE MEASUREMENT & ADJUSTMENT EXPRESSION FUNCTIONS
 
 STATIC CWORD PointsFromAngleEncoderSteps()
@@ -216,9 +233,12 @@ STATIC CBOOL IsAngleAdjustmentWithinErrorMargin(RCDWORD targetMotorSteps)
 #pragma region PROGRAM FUNCTION DECLARATIONS
 
 VOID CleanUp();
+VOID InitializeTimers();
 VOID InitializeInterrupts();
 
 MESSAGEHANDLER OnMessage;
+
+VOID DoAngleAdjustmentStep();
 
 VOID DEBUG_PrintInputValues();
 
@@ -233,13 +253,20 @@ VOID setup()
 
 	atexit(CleanUp);
 
+	cli();
+
 	InitializePins();
+	InitializeTimers();
 	InitializeInterrupts();
+
+	_Motor = new HalfStepper(ANGLE_MOTOR_STEPS, PIN_OUT_MOTOR_1A, PIN_OUT_MOTOR_1B, PIN_OUT_MOTOR_2A, PIN_OUT_MOTOR_2B);
+
+	sei();
 
 
 #ifdef _DEBUG
 
-	PrintLine("\nREADY!\n", Serial);
+	PrintLine(F("\nREADY!\n"), Serial);
 
 	_MemoryInfoLastMS = millis();
 
@@ -252,6 +279,9 @@ VOID setup()
 
 VOID cleanUp()
 {
+	delete _Motor;
+	_Motor = NULL;
+
 	PrintString(F("** FATAL ERROR **"));
 }
 
@@ -262,8 +292,6 @@ VOID serialEvent()
 
 VOID loop()
 {
-
-
 #ifdef _DEBUG
 
 	if (_MemoryInfoLastMS + DEBUG_MEMORY_INFO_INTERVAL_MS >= millis())
@@ -316,6 +344,7 @@ STATIC INLINE VOID _ISR_AngleEncoder_UpdateAngleSteps()
 	else
 		--_AngleEncoderSteps;
 
+
 #ifdef DEBUG_INPUTS
 	PrintString(F("ANGLE: "));
 	PrintLine((CDWORD)_AngleEncoderSteps);
@@ -337,9 +366,11 @@ ISR(INT1_vect)
 
 // TIMER EVENTS
 
-// TIMER 2 OVERFLOW
-ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
+// TIMER 2: COMPARE MATCH A
+ISR(TIMER2_COMPA_vect, ISR_NOBLOCK)
 {
+	if (!_AngleSet)
+		DoAngleAdjustmentStep();
 }
 
 #pragma endregion
@@ -349,12 +380,20 @@ ISR(TIMER2_OVF_vect, ISR_NOBLOCK)
 
 VOID CleanUp() { }
 
+VOID InitializeTimers()
+{
+	// Timer 2: Angle adjustment task; 16-bit phase-correct PWM mode
+	SET_BITS(TCCR2B, B(WGM21) OR B(CS22) OR B(CS21) OR B(CS20));
+	OCR1A = (CBYTE)((CDWORD)ANGLE_ADJUSTMENT_INTERVAL_uS / ((CDWORD)1024 * 1000000 / F_CPU));
+	SET_BIT(TIMSK2, OCIE2A); // Enable CTC interrupt
+}
+
 VOID InitializeInterrupts()
 {
 	// External interrupts: Angle encoder
-	EIMSK |= 0b00000011;
-	EICRA &= 0b11110101;
-	EICRA |= 0b00000101;
+	CLEAR_BITS(EICRA, B(ISC11) OR B(ISC01));
+	SET_BITS(EICRA, B(ISC10) OR B(ISC00));
+	SET_BITS(EIMSK, B(INT1) OR B(INT0));
 }
 
 VOID OnMessage(PIMESSAGE message)
@@ -473,6 +512,17 @@ VOID OnMessage(PIMESSAGE message)
 	{
 		delete[] state;
 		state = NULL;
+	}
+}
+
+VOID DoAngleAdjustmentStep()
+{
+	DWORD targetMotorSteps = 0;
+
+	if (IsAngleAdjustmentWithinErrorMargin(targetMotorSteps))
+	{
+		_AngleSet = TRUE;
+		return;
 	}
 }
 

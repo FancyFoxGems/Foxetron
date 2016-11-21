@@ -101,6 +101,9 @@ using namespace IttyBitty;
 
 // PROGRAM OPTIONS
 
+#define SERIAL_BAUD_RATE						115200			// (Debugging) UART baud rate
+#define SERIAL_DELAY_MS							1				// Delay for waiting on serial buffer to flush when printing debug statements
+
 #define DEBUG_MEMORY_INFO_INTERVAL_MS			3000			// Period by which available RAM should be printed when debugging
 
 #define DEBUG_INPUTS							0				// Whether to print values of pin input signals
@@ -110,8 +113,7 @@ using namespace IttyBitty;
 	#undef DEBUG_INPUTS
 #endif
 
-#define SERIAL_BAUD_RATE						115200			// (Debugging) UART baud rate
-#define SERIAL_DELAY_MS							1				// Delay for waiting on serial buffer to flush when printing debug statements
+#define INPUT_PROCESS_INTERVAL_uS				5000			// Period by which input state changes should be polled and handled
 
 #define ANGLE_DEGREE_PRECISION_FACTOR			100				// Scaling factor of °s for angle measurement
 #define ANGLE_ACTUAL_DEGRESS_PER_DEGREE_VALUE	ANGLE_DEGREE_PRECISION_FACTOR
@@ -208,14 +210,15 @@ DriverStatus _DriverStatus	= DriverStatus::IDLE;
 #pragma region PROGRAM FUNCTION DECLARATIONS
 
 VOID CleanUp();
+VOID InitializeTimers();
 VOID InitializeInterrupts();
 
 MESSAGEHANDLER OnMessage;
 
 VOID PrintLCDSplash();
 
-VOID DEBUG_DisplayKeyCodes();
 VOID DEBUG_PrintInputValues();
+VOID DEBUG_DisplayKeyCodes();
 VOID DEBUG_DisplayCustomChars();
 
 #pragma endregion
@@ -229,8 +232,13 @@ VOID setup()
 
 	atexit(CleanUp);
 
+	cli();
+
 	InitializePins();
+	InitializeTimers();
 	InitializeInterrupts();
+
+	sei();
 
 	LCD_Initialize();
 	RGB_Initialize();
@@ -240,7 +248,7 @@ VOID setup()
 
 #ifdef _DEBUG
 
-	PrintLine("\nREADY!\n", Serial);
+	PrintLine(F("\nREADY!\n"), Serial);
 
 	_MemoryInfoLastMS = millis();
 
@@ -314,12 +322,16 @@ STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps(VBOOL const & encoderUp, VDWO
 	else
 		--encoderSteps;
 
+
 #ifdef DEBUG_INPUTS
+
 	if (encoderLabel)
 		PrintString(encoderLabel);
 	else
 		PrintString(F("MENU ENCODER: "));
+
 	PrintLine((CDWORD)encoderSteps);
+
 #endif
 }
 
@@ -372,7 +384,10 @@ ISR(PCINT2_vect, ISR_NOBLOCK)
 	_LedButton2 = PD5_IS_SET();
 	_LedButton3 = PD6_IS_SET();
 	_LedButton4 = PD7_IS_SET();
-}// TIMER EVENTS// TIMER 2 OVERFLOWISR(TIMER2_OVF_vect, ISR_NOBLOCK){}#pragma endregion
+}// TIMER EVENTS
+
+// TIMER 2: COMPARE MATCH A
+ISR(TIMER2_COMPA_vect, ISR_NOBLOCK){}#pragma endregion
 
 
 #pragma region PROGRAM FUNCTIONS
@@ -382,18 +397,26 @@ VOID CleanUp()
 	RGB_Free();
 }
 
+VOID InitializeTimers()
+{
+	// Timer 2: Angle adjustment task; 16-bit phase-correct PWM mode
+	SET_BITS(TCCR2B, B(WGM21) OR B(CS22) OR B(CS21) OR B(CS20));
+	OCR1A = (CBYTE)((CDWORD)INPUT_PROCESS_INTERVAL_uS / ((CDWORD)1024 * 1000000 / F_CPU));
+	SET_BIT(TIMSK2, OCIE2A); // Enable CTC interrupt
+}
+
 VOID InitializeInterrupts()
 {
 	// External interrupts: Angle encoder
-	EIMSK |= 0b00000011;
-	EICRA &= 0b11110101;
-	EICRA |= 0b00000101;
+	CLEAR_BITS(EICRA, B(ISC11) OR B(ISC01));
+	SET_BITS(EICRA, B(ISC10) OR B(ISC00));
+	SET_BITS(EIMSK, B(INT1) OR B(INT0));
 
-	// Pin change interrupts: LED buttons, menu encoder, and menu buttons
-	PCICR |= 0b00000111;
-	PCMSK0 = 0b00010001;
-	PCMSK1 = 0b00001111;
-	PCMSK2 = 0b11110000;
+	// Pin change interrupts: LED buttons, menu encoder, and menu buttons (ports B/C/D)
+	SET_BITS(PCICR, B(PCIE2) OR B(PCIE1) OR B(PCIE0));
+	SET_BITS(PCMSK0, 0b00010001);
+	SET_BITS(PCMSK1, 0b00001111);
+	SET_BITS(PCMSK2, 0b11110000);
 }
 
 VOID OnMessage(PIMESSAGE message)
@@ -495,35 +518,6 @@ VOID PrintLCDSplash()
 
 
 #pragma region DEBUG UTILITY FUNCTIONS
-
-// DEBUG UTILITY FUNCTIONS
-
-VOID DEBUG_DisplayKeyCodes()
-{
-	uint8_t i = 0;
-
-	while (i < 1)
-	{
-		LCD.clear();
-
-		LCD.print(F("Codes 0x"));
-
-		LCD.print(i, HEX);
-		LCD.print(F("-0x"));
-		LCD.print(i + 16, HEX);
-
-		LCD.setCursor(0, 1);
-
-		for (int j = 0; j < 8; j++)
-			LCD.write(i + j);
-
-		i += 16;
-
-		while (!Serial.available()) delay(100);
-		Serial.read();
-	}
-}
-
 
 VOID DEBUG_PrintInputValues()
 {
@@ -659,6 +653,32 @@ VOID DEBUG_PrintInputValues()
 	PrintLine();
 
 	PrintLine();
+}
+
+VOID DEBUG_DisplayKeyCodes()
+{
+	uint8_t i = 0;
+
+	while (i < 1)
+	{
+		LCD.clear();
+
+		LCD.print(F("Codes 0x"));
+
+		LCD.print(i, HEX);
+		LCD.print(F("-0x"));
+		LCD.print(i + 16, HEX);
+
+		LCD.setCursor(0, 1);
+
+		for (int j = 0; j < 8; j++)
+			LCD.write(i + j);
+
+		i += 16;
+
+		while (!Serial.available()) delay(100);
+		Serial.read();
+	}
 }
 
 VOID DEBUG_DisplayCustomChars()
