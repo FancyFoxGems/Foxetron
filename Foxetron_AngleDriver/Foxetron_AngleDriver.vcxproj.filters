@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="__vm">
@@ -47,7 +47,10 @@
     <ClInclude Include="..\Foxetron_messages.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="Foxetron_pins.h">
+    <ClInclude Include="Foxetron_AngleDriver_pins.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Foxetron_common.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

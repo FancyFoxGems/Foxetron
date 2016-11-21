@@ -27,17 +27,20 @@ namespace Foxetron
 
 
 		// Categories
+		CALIBRATE_TYPE		= 0x08,
 		ANGLE_TYPE			= 0x10,
 		NEWANGLE_TYPE		= 0x20,
 		STATUS_TYPE			= 0x40,
 
 
 		// Request types
+		CALIBRATE_REQUEST	= REQUEST_TYPE | CALIBRATE_TYPE,
 		ANGLE_REQUEST		= REQUEST_TYPE | ANGLE_TYPE,
 		NEWANGLE_REQUEST	= REQUEST_TYPE | NEWANGLE_TYPE,
 		STATUS_REQUEST		= REQUEST_TYPE | STATUS_TYPE,
 
 		// Response types
+		CALIBRATE_RESPONSE	= RESPONSE_TYPE | CALIBRATE_TYPE,
 		ANGLE_RESPONSE		= RESPONSE_TYPE | ANGLE_TYPE,
 		NEWANGLE_RESPONSE	= RESPONSE_TYPE | NEWANGLE_TYPE,
 		STATUS_RESPONSE		= RESPONSE_TYPE | STATUS_TYPE,
@@ -46,6 +49,15 @@ namespace Foxetron
 	};
 
 	TYPEDEF_ENUM_ALIASES(MessageCode, MESSAGECODE);
+
+
+	ENUM AngleMode : BOOL
+	{
+		ABSOLUTE	= TRUE,
+		RELATIVE	= FALSE
+	};
+
+	TYPEDEF_ENUM_ALIASES(AngleMode, ANGLEMODE);
 
 
 	ENUM Error : BYTE
@@ -81,6 +93,9 @@ namespace Foxetron
 	class Request;
 	TYPEDEF_CLASS_ALIASES(Request, REQUEST);
 
+	class CalibrateRequest;
+	TYPEDEF_CLASS_ALIASES(CalibrateRequest, CALIBRATEREQUEST);
+
 	class AngleRequest;
 	TYPEDEF_CLASS_ALIASES(AngleRequest, ANGLEREQUEST);
 
@@ -101,6 +116,9 @@ namespace Foxetron
 
 	class Response;
 	TYPEDEF_CLASS_ALIASES(Response, RESPONSE);
+
+	class CalibrateResponse;
+	TYPEDEF_CLASS_ALIASES(CalibrateResponse, CALIBRATERESPONSE);
 
 	class AngleResponse;
 	TYPEDEF_CLASS_ALIASES(AngleResponse, ANGLERESPONSE);
@@ -129,6 +147,20 @@ namespace Foxetron
 		Request(MessageCode = MessageCode::REQUEST_TYPE, CBYTE paramCount = 0);
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
+	};
+
+
+	CLASS CalibrateRequest : public Request
+	{
+	public:
+
+		CalibrateRequest(CANGLEMODE, CWORD = 0);
+
+		CANGLEMODE Mode() const;
+
+		CWORD Degrees() const;
+
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 
@@ -203,6 +235,16 @@ namespace Foxetron
 		CERROR ErrorCode() const final;
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
+	};
+
+
+	CLASS CalibrateResponse : public Response
+	{
+	public:
+
+		CalibrateResponse(CERROR);
+
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};
 
 

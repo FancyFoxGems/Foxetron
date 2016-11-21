@@ -6,7 +6,7 @@
 * Target Architecture:	Atmel AVR / ATmega series 8-bit MCUs
 * Supported Platforms:	Arduino, AVR LibC, (AVR GCC)
 *
-*		Memory Usage:	~19.15 KB Program Memory (Flash ROM) / 1565 B SRAM
+*		Memory Usage:	~22.96 KB Program Memory (Flash ROM) / 1752 B SRAM
 *		NOTE: ^-- w/ #define NO_ITTYBITTY_FULL_BYTES
 *
 * [Hardware Platform]
@@ -32,41 +32,11 @@
 *****************************************************************************************************/
 
 
-// GCC WARNING SUPPRESSIONS
-
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma GCC diagnostic ignored "-Wunused-function"
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#pragma GCC diagnostic ignored "-Wunused-value"
-#pragma GCC diagnostic ignored "-Wparentheses"
-#pragma GCC diagnostic ignored "-Wreturn-type"
-#pragma GCC diagnostic ignored "-Wconversion-null"
-#pragma GCC diagnostic ignored "-Wchar-subscripts"
-#pragma GCC diagnostic ignored "-Wreorder"
-#pragma GCC diagnostic ignored "-Wsequence-point"
-#pragma GCC diagnostic ignored "-Wsign-compare"
-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
-#pragma GCC diagnostic ignored "-Wpointer-arith"
-#pragma GCC diagnostic ignored "-Wvirtual-move-assign"
-
-
 #pragma region INCLUDES
 
 // PROJECT INCLUDES
-#include "Foxetron_pins.h"
-
-// PROJECT MODULES
-#include "Foxetron_messages.h"
-
-using namespace Foxetron;
-
-// PROJECT LIBS
-
-// ITTY BITTY
-#include "IttyBitty.h"
-
-using namespace IttyBitty;
+#include "Foxetron_common.h"
+#include "Foxetron_AngleDriver_pins.h"
 
 // 3RD-PARTY LIBS
 #include "HalfStepper.h"				// Well...1st-party in this case, really.
@@ -86,29 +56,13 @@ using namespace IttyBitty;
 
 // PROGRAM OPTIONS
 
-#define SERIAL_BAUD_RATE						115200			// (Debugging) UART baud rate
-#define SERIAL_DELAY_MS							1				// Delay for waiting on serial buffer to flush when printing debug statements
-
-#define DEBUG_MEMORY_INFO_INTERVAL_MS			3000			// Period by which available RAM should be printed when debugging
-
-#define DEBUG_INPUTS							0				// Whether to print values of pin input signals
-#define DEBUG_INPUTS_INTERVAL_MS				500				// Period by which input signal values should be printed when debugging
-
-#if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
-	#undef DEBUG_INPUTS
-#endif
-
+#define INPUT_PROCESS_INTERVAL_uS				5000			// Period by which input state changes should be polled and handled
 #define ANGLE_ADJUSTMENT_INTERVAL_uS			5000			// Period by which  angle adjustment checks should be polled and corrected for
-
-#define ANGLE_DEGREE_PRECISION_FACTOR			100				// Scaling factor of °s for angle measurement & adjustment calculations
-#define ANGLE_ACTUAL_DEGRESS_PER_DEGREE_VALUE	ANGLE_DEGREE_PRECISION_FACTOR
 
 #define ANGLE_ERROR_CORRECTION_FACTOR			0				// (Additional) correction to apply to the motor's error margin for angle ajustments
 
 
 // PROGRAM CONSTANTS
-
-#define uS_PER_SECOND								1000000
 
 #define ANGLE_BASE_PRECISION_FACTOR					ANGLE_DEGREE_PRECISION_FACTOR
 		// ^-- Scaling factor of °s and steps used in derived scaling factors for angle measurement & adjustment calculations
@@ -153,8 +107,8 @@ CDWORD ANGLE_MOTOR_POINT_ERROR_MARGIN		= ANGLE_MOTOR_POINTS_PER_STEP / 2;							
 // Angle encoder
 VBOOL _AngleEncoderA	= FALSE;	// Pin 2 / PD2 (INT0)
 VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1)
-//VBOOL _AngleEncoderZ	= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
-//VBOOL _AngleEncoderU	= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
+//VBOOL _AngleEncoderZ	= FALSE;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
+//VBOOL _AngleEncoderU	= FALSE;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
 // Mast control inputs
 VBOOL _ActionButton		= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
@@ -185,18 +139,22 @@ DWORD _PrintInputsLastMS			= 0;
 #endif
 
 VBOOL _AngleEncoderUp				= FALSE;
-VDWORD _AngleEncoderSteps			= 0;
-DWORD _AngleEncoderStepsLast		= 0;
-WORD _AngleEncoderVelocity			= 0;
+VLONG _AngleEncoderSteps			= 0;
+LONG _AngleEncoderStepsLast			= 0;
+SHORT _AngleEncoderVelocity			= 0;
 
 LONG _TargetMotorSteps				= 0;
 BOOL _WaitOnMotor					= 0;
+
+ANGLEMODE _AngleMode				= AngleMode::ABSOLUTE;
+ANGLEMODE _AngleModeLast			= AngleMode::ABSOLUTE;
+WORD _CalibrationDegrees			= 0;
 
 WORD _Degrees						= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 WORD _DegreesNew					= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 
 Error _DriverError					= Error::SUCCESS;
-PCCHAR _DriverStatusMsg				= "ASDF";
+PCCHAR _DriverStatusMsg				= NULL;
 DriverStatus _DriverStatus			= DriverStatus::IDLE;
 
 Error _ControllerError				= Error::SUCCESS;
@@ -206,26 +164,18 @@ ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 #pragma endregion
 
 
-#pragma region CONSTEXPR TIMER UTILITY FUNCTIONS
-
-STATIC CONSTEXPR CDWORD MicrosecondsPerClockCycle(RCWORD prescaleFactor = 1)
-{
-	return F_CPU / prescaleFactor;
-}
-
-#pragma endregion
-
-
 #pragma region ANGLE MEASUREMENT & ADJUSTMENT EXPRESSION FUNCTIONS
 
-STATIC CWORD PointsFromAngleEncoderSteps()
+STATIC CWORD GetPointsFromAngleEncoderSteps()
 {
-	return (CWORD)(_AngleEncoderSteps * ANGLE_POINT_STEP_PRECISION_FACTOR / ANGLE_ENCODER_STEPS_PER_POINT);
+	return (CWORD)(_AngleEncoderSteps * ANGLE_POINT_STEP_PRECISION_FACTOR
+		/ ANGLE_ENCODER_STEPS_PER_POINT) - _CalibrationDegrees;
 }
 
 STATIC CBOOL IsAngleAdjustmentWithinErrorMargin()
 {
-	return PointsFromAngleEncoderSteps() - _TargetMotorSteps * ANGLE_POINT_STEP_PRECISION_FACTOR / ANGLE_MOTOR_STEPS_PER_POINT
+	return GetPointsFromAngleEncoderSteps()
+			- _TargetMotorSteps * ANGLE_POINT_STEP_PRECISION_FACTOR / ANGLE_MOTOR_STEPS_PER_POINT
 		< ANGLE_ENCODER_POINT_ERROR_MARGIN / ANGLE_POINTS_PER_DEGREE_VALUE;
 }
 
@@ -261,7 +211,8 @@ VOID setup()
 	InitializeTimers();
 	InitializeInterrupts();
 
-	Motor = new HalfStepper(ANGLE_MOTOR_STEPS_RESOLUTION, PIN_OUT_MOTOR_1A, PIN_OUT_MOTOR_1B, PIN_OUT_MOTOR_2A, PIN_OUT_MOTOR_2B);
+	Motor = new HalfStepper(ANGLE_MOTOR_STEPS_RESOLUTION,
+		PIN_OUT_MOTOR_1A, PIN_OUT_MOTOR_1B, PIN_OUT_MOTOR_2A, PIN_OUT_MOTOR_2B);
 
 	sei();
 
@@ -361,10 +312,35 @@ ISR(INT1_vect)
 // TIMER EVENTS
 
 // TIMER 2: COMPARE MATCH A
-ISR(TIMER2_COMPA_vect, ISR_NOBLOCK)
+ISR(TIMER2_COMPA_vect, ISR_NOBLOCK){
+	if (_TargetMotorSteps)
+		return;
+
+	_Degrees = GetPointsFromAngleEncoderSteps();
+
+	BOOL sendCalibrationReq = FALSE;
+
+	if (_LatchButton)
+		_AngleMode = AngleMode::RELATIVE;
+	else
+		_AngleMode = AngleMode::ABSOLUTE;
+
+	if (_AngleMode != _AngleModeLast)
+	{
+		_AngleModeLast = _AngleMode;
+
+		sendCalibrationReq = TRUE;
+	}
+
+	if (_ActionButton)	{		if (_LatchButton)			Motor->StepBackward();		else			Motor->StepForward();		AngleResponse(_DriverError, _Degrees).Transmit();	}	else if (_OneShotButton)	{		_CalibrationDegrees = _Degrees;
+		_AngleEncoderSteps = 0;
+
+		sendCalibrationReq = TRUE;	}		if (sendCalibrationReq)		CalibrateRequest(_AngleMode, _CalibrationDegrees).Transmit();}
+
+// TIMER 2: COMPARE MATCH B
+ISR(TIMER2_COMPB_vect, ISR_NOBLOCK)
 {
-	_AngleEncoderVelocity = (_AngleEncoderStepsLast - _AngleEncoderSteps)
-		* uS_PER_SECOND / ((CDWORD)1024 * 1000000 / F_CPU) / OCR2A;
+	_AngleEncoderVelocity = (_AngleEncoderStepsLast - _AngleEncoderSteps) * uS_PER_SECOND / PROCESS_TIMER_OVERFLOW_uS / OCR2B;
 	_AngleEncoderStepsLast = _AngleEncoderSteps;
 
 	if (_TargetMotorSteps)
@@ -398,8 +374,9 @@ VOID InitializeTimers()
 {
 	// Timer 2: Angle adjustment task; CTC mode
 	SET_BITS(TCCR2B, B(WGM21) OR B(CS22) OR B(CS21) OR B(CS20));
-	OCR2A = (CBYTE)((CDWORD)ANGLE_ADJUSTMENT_INTERVAL_uS / ((CDWORD)1024 * 1000000 / F_CPU));
-	SET_BIT(TIMSK2, OCIE2A);
+	OCR2A = (CBYTE)((CDWORD)INPUT_PROCESS_INTERVAL_uS / PROCESS_TIMER_OVERFLOW_uS);
+	OCR2B = (CBYTE)((CDWORD)ANGLE_ADJUSTMENT_INTERVAL_uS / PROCESS_TIMER_OVERFLOW_uS);
+	SET_BITS(TIMSK2, B(OCIE2A) OR B(OCIE2B));
 }
 
 VOID InitializeInterrupts()
@@ -425,6 +402,22 @@ VOID OnMessage(PIMESSAGE message)
 
 	switch (msgCode)
 	{
+	case MessageCode::CALIBRATE_REQUEST:
+
+		state = new PCVOID[1] { &_DriverError };
+		results = new PVOID[2] { &_AngleMode, &_CalibrationDegrees };
+		msgHandled = reinterpret_cast<PCALIBRATEREQUEST>(message)->Handle(results, state);
+
+	#ifdef DEBUG_MESSAGES
+		PrintLine((CBOOL)_AngleMode);
+		PrintLine((CWORD)_CalibrationDegrees);
+	#endif
+
+		_AngleEncoderSteps = 0;
+
+		break;
+
+
 	case MessageCode::ANGLE_REQUEST:
 
 		state = new PCVOID[2] { &_DriverError, &_Degrees };
@@ -455,27 +448,13 @@ VOID OnMessage(PIMESSAGE message)
 		break;
 
 
-	case MessageCode::CONTROLLER_STATUS:
-
-		results = new PVOID[3] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus };
-		msgHandled = reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(results);
-
-	#ifdef DEBUG_MESSAGES
-		PrintLine((BYTE)_ControllerError);
-		PrintLine(_ControllerStatusMsg);
-		PrintLine((BYTE)_ControllerStatus);
-	#endif
-
-		break;
-
-
 	case MessageCode::ANGLE_RESPONSE:
 
 		results = new PVOID[2] { &_DriverError, &_Degrees };
 		msgHandled = reinterpret_cast<PANGLERESPONSE>(message)->Handle(results, state);
 
 	#ifdef DEBUG_MESSAGES
-		PrintLine((BYTE)_DriverError);
+		PrintLine((CBYTE)_DriverError);
 		PrintLine(_Degrees);
 	#endif
 
@@ -488,21 +467,22 @@ VOID OnMessage(PIMESSAGE message)
 		msgHandled = reinterpret_cast<PNEWANGLERESPONSE>(message)->Handle(results);
 
 	#ifdef DEBUG_MESSAGES
-		PrintLine((BYTE)_DriverError);
+		PrintLine((CBYTE)_DriverError);
 	#endif
 
 		break;
 
 
-	case MessageCode::DRIVER_STATUS:
+	case MessageCode::CONTROLLER_STATUS:
 
-		results = new PVOID[3] { &_DriverError, &_DriverStatusMsg, &_DriverStatus };
-		msgHandled = reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(results);
+		results = new PVOID[3] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus };
+		msgHandled = reinterpret_cast<PCONTROLLERSTATUSRESPONSE>(message)->Handle(results);
 
 	#ifdef DEBUG_MESSAGES
-		PrintLine((BYTE)_DriverError);
-		PrintLine(_DriverStatusMsg);
-		PrintLine((BYTE)_DriverStatus);
+		PrintLine((CBYTE)_ControllerError);
+		if (_ControllerStatusMsg)
+			PrintLine(_ControllerStatusMsg);
+		PrintLine((CBYTE)_ControllerStatus);
 	#endif
 
 		break;
@@ -538,7 +518,7 @@ VOID DoAngleAdjustmentStep()
 	}
 
 	_TargetMotorSteps = (DWORD)_DegreesNew * ANGLE_MOTOR_STEPS_PER_POINT / ANGLE_POINT_STEP_PRECISION_FACTOR
-		- PointsFromAngleEncoderSteps() * ANGLE_MOTOR_STEPS_PER_POINT / ANGLE_POINT_STEP_PRECISION_FACTOR;
+		- GetPointsFromAngleEncoderSteps() * ANGLE_MOTOR_STEPS_PER_POINT / ANGLE_POINT_STEP_PRECISION_FACTOR;
 
 	Motor->Step(_TargetMotorSteps);
 }

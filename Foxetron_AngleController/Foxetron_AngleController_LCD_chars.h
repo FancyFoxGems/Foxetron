@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [Foxetron_LCD_chars.h]: HD44780 CUSTOM CHARACTER DATA (IN FLASH PROGRAM SPACE)
+* [Foxetron_AngleController_LCD_chars.h]: HD44780 CUSTOM CHARACTER DATA (IN FLASH PROGRAM SPACE)
 *
 * This file is part of the Foxetron program suite
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.

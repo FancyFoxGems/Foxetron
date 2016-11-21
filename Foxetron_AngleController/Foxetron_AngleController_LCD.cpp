@@ -4,14 +4,16 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
+// GCC WARNING SUPPRESSIONS
+#pragma GCC diagnostic ignored "-Wdelete-non-virtual-dtor"
 
-#include "Foxetron_LCD.h"
+#include "Foxetron_AngleController_LCD.h"
 
 
 #pragma region GLOBAL VARIABLE DEFINITIONS
 
 // LCD display
-BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 (I2C)
+BigCrystal_I2C * LCD = NULL;	// Pin A4/A5 (I2C)
 
 #pragma endregion
 
@@ -20,9 +22,11 @@ BigCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);	// Pin A4/A5 
 
 VOID LCD_Initialize()
 {
-	LCD.init();
-	LCD.backlight();
-	LCD.home();
+	LCD = new BigCrystal_I2C(LCD_I2C_ADDRESS, LCD_CHAR_COLS, LCD_CHAR_ROWS);
+
+	LCD->init();
+	LCD->backlight();
+	LCD->home();
 
 	// Load large font
 	uint8_t customChar[8];
@@ -30,8 +34,14 @@ VOID LCD_Initialize()
 	{
 		for (uint8_t j = 0; j < 8; j++)
 			customChar[j] = pgm_read_byte_near(BF_fontShapes + (i * 8) + j);
-		LCD.createChar(i, customChar);
+		LCD->createChar(i, customChar);
 	}
+}
+
+VOID LCD_Free()
+{
+	delete LCD;
+	LCD = NULL;
 }
 
 #pragma endregion

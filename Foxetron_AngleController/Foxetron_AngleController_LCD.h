@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [Foxetron_LCD.h]: HD44780 LCD DISPLAY MODULE (W/ RGB BACKLIGHT) VIA I2C; LARGE FONT SUPPORT
+* [Foxetron_AngleController_LCD.h]: HD44780 LCD DISPLAY MODULE VIA I2C; LARGE FONT SUPPORT
 *
 * This file is part of the Foxetron program suite
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -18,7 +18,7 @@
 #include "IttyBitty_util.h"
 
 // PROJECT INCLUDES
-#include "Foxetron_pins.h"
+#include "Foxetron_AngleController_pins.h"
 
 // PROJECT LIBS
 #include "libs/BigCrystal_I2C.custom.h"
@@ -68,7 +68,7 @@
 #pragma region LCD GLOBAL VARIABLE DECLARATION
 
 // LCD display
-EXTERN BigCrystal_I2C LCD;
+EXTERN BigCrystal_I2C * LCD;
 
 #pragma endregion
 
@@ -76,6 +76,7 @@ EXTERN BigCrystal_I2C LCD;
 #pragma region FUNCTION DECLARATIONS
 
 VOID LCD_Initialize();
+VOID LCD_Free();
 
 PCCHAR LCD_InvertChar(PCCHAR, BYTE = 5);
 PCCHAR LCD_InvertChar_P(PCCHAR, BYTE = 5);

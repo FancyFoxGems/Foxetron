@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [Foxetron_EEPROM.h]: EEPROM MODULE FOR MANAGING USER SETTINGS & FILE RECORDS
+* [Foxetron_AngleController_EEPROM.h]: EEPROM MODULE FOR MANAGING USER SETTINGS & FILE RECORDS
 *
 * This file is part of the Foxetron program suite
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.

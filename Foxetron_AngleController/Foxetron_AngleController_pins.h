@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [Foxetron_pins.h]: PIN DEFINITIONS FOR THE FOXETRON ANGLE CONTROLLER
+* [Foxetron_AngleController_pins.h]: PIN DEFINITIONS FOR THE FOXETRON ANGLE CONTROLLER
 *
 * This file is part of the Foxetron program suite
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -23,8 +23,8 @@
 
 // INPUT PINS
 
-#define PIN_ANGLE_ENCODER_A		2	// Pin 2 / PD2 (INT0)	- [UNUSED]
-#define PIN_ANGLE_ENCODER_B		3	// Pin 3 / PD3 (INT1)	- [UNUSED]
+//#define PIN_ANGLE_ENCODER_A	2	// Pin 2 / PD2 (INT0)	- [UNUSED]
+//#define PIN_ANGLE_ENCODER_B	3	// Pin 3 / PD3 (INT1)	- [UNUSED]
 //#define PIN_ANGLE_ENCODER_Z	4	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
 //#define PIN_ANGLE_ENCODER_U	5	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
@@ -69,10 +69,6 @@ INLINE VOID InitializePins()
 	// REAR PINS
 
 	// [Pins 0 (RX) & 1 (TX): USART serial communication --[angle feedback]--> AVR uC stepper motor angle controller]
-
-	// Angle encoder
-	SetPinMode(PIN_ANGLE_ENCODER_A, INPUT);			// Channel A
-	SetPinMode(PIN_ANGLE_ENCODER_B, INPUT);			// Channel B
 
 	// LED buttons
 	SetPinMode(PIN_LED_BUTTON_1, INPUT);				// LED button #1

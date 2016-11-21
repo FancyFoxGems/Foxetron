@@ -8,33 +8,33 @@
 #pragma GCC diagnostic ignored "-Wdelete-non-virtual-dtor"
 
 
-#include "Foxetron_RGB.h"
+#include "Foxetron_AngleController_RGB.h"
 
 
 #pragma region GLOBAL VARIABLE DEFINITIONS
 
 // RGB LED / VaRGB CONFIGURATION
 
-VaRGB RGB(RGB_OnSetColor, RGB_OnScheduleComplete);
+VaRGB * RGB = NULL;
 
 Schedule * _RgbSchedule = new Schedule();
 
-Curve::Flasher * _RgbCurveFlasher = new Curve::Flasher(VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, 6, 20);
+Flasher * _RgbCurveFlasher = new Flasher(VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, VaRGB_COLOR_MAXVALUE, 6, 20);
 
-Curve::Sine * _RgbCurveSine = new Curve::Sine(500, VaRGB_COLOR_MAXVALUE, 500, 6, 2);
+Sine * _RgbCurveSine = new Sine(500, VaRGB_COLOR_MAXVALUE, 500, 6, 2);
 
-Curve::Linear * _RgbCurves[] =
+Linear * _RgbCurves[] =
 {
 	// start black
-	new Curve::Linear(0, 0, 0, 0),
+	new Linear(0, 0, 0, 0),
 	// go to ~1/2 red, over one 5 seconds
-	new Curve::Linear(500, 0, 0, 5),
+	new Linear(500, 0, 0, 5),
 	// go to red+blue, over 2s
-	new Curve::Linear(1000, 0, 1000, 2),
+	new Linear(1000, 0, 1000, 2),
 	// back down to ~1/2 red over 2s
-	new Curve::Linear(500, 0, 0, 2),
+	new Linear(500, 0, 0, 2),
 	// fade to black for 5s
-	new Curve::Linear(0, 0, 0, 5),
+	new Linear(0, 0, 0, 5),
 };
 
 #pragma endregion
@@ -51,8 +51,8 @@ VOID RGB_OnSetColor(ColorSettings * colors)
 
 VOID RGB_OnScheduleComplete(Schedule * schedule)
 {
-	RGB.resetTicks();
-	RGB.setSchedule(schedule);
+	RGB->resetTicks();
+	RGB->setSchedule(schedule);
 }
 
 #pragma endregion
@@ -68,28 +68,35 @@ VOID RGB_Initialize()
 	for (uint8_t i = 0; i < 5; i++)
 		_RgbSchedule->addTransition(_RgbCurves[i]);
 
-	RGB.setSchedule(_RgbSchedule);
-}
+	RGB = new VaRGB(RGB_OnSetColor, RGB_OnScheduleComplete);
 
-VOID RGB_Step()
-{
-	RGB.tickAndDelay();
+	RGB->setSchedule(_RgbSchedule);
 }
 
 VOID RGB_Free()
 {
 	delete _RgbSchedule;
+	_RgbSchedule = NULL;
 
 	delete _RgbCurveFlasher;
-	delete _RgbCurveSine;
+	_RgbCurveFlasher = NULL;
 
-	for (BYTE i = 0; i < SIZEOF(_RgbCurves) / SIZEOF(_RgbCurves[0]); i++)
+	delete _RgbCurveSine;
+	_RgbCurveSine = NULL;
+
+	for (BYTE i = 0; i < COUNT(_RgbCurves); i++)
 	{
-		if (_RgbCurves[i] != NULL)
+		if (_RgbCurves[i])
 			delete _RgbCurves[i];
 	}
 
-	//delete[] _RgbCurves;
+	delete RGB;
+	RGB = NULL;
+}
+
+VOID RGB_Step()
+{
+	RGB->tickAndDelay();
 }
 
 #pragma endregion

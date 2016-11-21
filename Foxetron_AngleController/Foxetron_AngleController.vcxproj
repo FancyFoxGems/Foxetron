@@ -38,7 +38,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\EEPROM;C:\RC\Sketchbook\libraries\VaRGB;C:\RC\Sketchbook\libraries\phi_interfaces;C:\RC\Sketchbook\libraries\IttyBitty\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\Foxetron\Foxetron_AngleController;C:\Program Files (x86)\Arduino\hardware\tools\avr/avr/include/;C:\Program Files (x86)\Arduino\hardware\tools\avr//avr/include/avr/;C:\Program Files (x86)\Arduino\hardware\tools\avr/lib\gcc\avr\4.8.1\include;C:\RC\Sketchbook\Foxetron;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\EEPROM;C:\RC\Sketchbook\libraries\VaRGB;C:\RC\Sketchbook\libraries\phi_interfaces;C:\RC\Sketchbook\libraries\EEPROM\utility;C:\RC\Sketchbook\libraries\IttyBitty\utility;C:\RC\Sketchbook\libraries\phi_interfaces\utility;C:\RC\Sketchbook\libraries\VaRGB\utility;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\Foxetron\Foxetron_AngleController;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\EEPROM;C:\RC\Sketchbook\libraries\VaRGB;C:\RC\Sketchbook\libraries\phi_interfaces;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\iyanzvn1.cat\Micro Platforms\default\debuggers;C:\RC\Sketchbook\libraries;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\tools\avr/avr/include/;C:\Program Files (x86)\Arduino\hardware\tools\avr//avr/include/avr/;C:\Program Files (x86)\Arduino\hardware\tools\avr/lib\gcc\avr\4.8.1\include;C:\RC\Sketchbook\Foxetron;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>C:\RC\Sketchbook\Foxetron\Foxetron_AngleController\__vm\.Foxetron_AngleController.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;_DEBUG=1;DEBUG_MESSAGES=1;NO_ITTYBITTY_FULL_BYTES;NO_ITTYBITTY_SD;F_CPU=16000000L;ARDUINO=10608;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;__cplusplus=201103L;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -86,6 +86,7 @@
     <ClInclude Include="..\IttyBitty\IttyBitty_util.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_values.h" />
     -->
+    <ClInclude Include="..\Foxetron_common.h" />
     <ClInclude Include="libs\LiquidCrystal_I2C.custom.h" />
     <ClInclude Include="libs\BigCrystal_I2C.custom.h" />
     <ClInclude Include="libs\BigFont.h" />
@@ -93,11 +94,11 @@
     <ClInclude Include="libs\phi_prompt.custom.h" />
     <ClInclude Include="libs\RTClib.custom.h" />
     <ClInclude Include="..\Foxetron_messages.h" />
-    <ClInclude Include="Foxetron_pins.h" />
-    <ClInclude Include="Foxetron_LCD_chars.h" />
-    <ClInclude Include="Foxetron_LCD.h" />
-    <ClInclude Include="Foxetron_RGB.h" />
-    <ClInclude Include="Foxetron_EEPROM.h" />
+    <ClInclude Include="Foxetron_AngleController_pins.h" />
+    <ClInclude Include="Foxetron_AngleController_LCD_chars.h" />
+    <ClInclude Include="Foxetron_AngleController_LCD.h" />
+    <ClInclude Include="Foxetron_AngleController_RGB.h" />
+    <ClInclude Include="Foxetron_AngleController_EEPROM.h" />
     <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
@@ -159,9 +160,9 @@
     <ClCompile Include="libs\phi_prompt.custom.cpp" />
     <ClCompile Include="libs\RTClib.custom.cpp" />
     <ClCompile Include="..\Foxetron_messages.cpp" />
-    <ClCompile Include="Foxetron_LCD.cpp" />
-    <ClCompile Include="Foxetron_RGB.cpp" />
-    <ClCompile Include="Foxetron_EEPROM.cpp" />
+    <ClCompile Include="Foxetron_AngleController_LCD.cpp" />
+    <ClCompile Include="Foxetron_AngleController_RGB.cpp" />
+    <ClCompile Include="Foxetron_AngleController_EEPROM.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\libraries\BigCrystal_I2C\keywords.txt" />

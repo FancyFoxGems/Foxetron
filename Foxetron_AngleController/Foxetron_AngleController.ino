@@ -6,7 +6,7 @@
 * Target Architecture:	Atmel AVR / ATmega series 8-bit MCUs
 * Supported Platforms:	Arduino, AVR LibC, (AVR GCC)
 *
-*		Memory Usage:	~25.39 KB Program Memory (Flash ROM) / 1549 B SRAM
+*		Memory Usage:	~26.70 KB Program Memory (Flash ROM) / 1604 B SRAM
 *		NOTE: ^-- w/ #define NO_ITTYBITTY_FULL_BYTES
 *
 * [Hardware Platform]
@@ -35,38 +35,17 @@
 *****************************************************************************************************/
 
 
-// GCC WARNING SUPPRESSIONS
-
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma GCC diagnostic ignored "-Wunused-function"
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#pragma GCC diagnostic ignored "-Wunused-value"
-#pragma GCC diagnostic ignored "-Wparentheses"
-#pragma GCC diagnostic ignored "-Wreturn-type"
-#pragma GCC diagnostic ignored "-Wconversion-null"
-#pragma GCC diagnostic ignored "-Wchar-subscripts"
-#pragma GCC diagnostic ignored "-Wreorder"
-#pragma GCC diagnostic ignored "-Wsequence-point"
-#pragma GCC diagnostic ignored "-Wsign-compare"
-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
-#pragma GCC diagnostic ignored "-Wpointer-arith"
-#pragma GCC diagnostic ignored "-Wvirtual-move-assign"
-
-
 #pragma region INCLUDES
 
 // PROJECT INCLUDES
-#include "Foxetron_Pins.h"
-#include "Foxetron_LCD_chars.h"
+#include "Foxetron_common.h"
+#include "Foxetron_AngleController_pins.h"
+#include "Foxetron_AngleController_LCD_chars.h"
 
 // PROJECT MODULES
-#include "Foxetron_messages.h"
-#include "Foxetron_LCD.h"
-#include "Foxetron_RGB.h"
-#include "Foxetron_EEPROM.h"
-
-using namespace Foxetron;
+#include "Foxetron_AngleController_LCD.h"
+#include "Foxetron_AngleController_RGB.h"
+#include "Foxetron_AngleController_EEPROM.h"
 
 // PROJECT LIBS
 //#include "libs/LiquidCrystal_I2C.custom.h"	// Included by other project libs
@@ -74,11 +53,6 @@ using namespace Foxetron;
 #include "libs/MENWIZ.custom.h"
 #include "libs/phi_Prompt.custom.h"
 #include "libs/RTCLib.custom.h"
-
-// ITTY BITTY
-#include "IttyBitty.h"
-
-using namespace IttyBitty;
 
 // 3RD-PARTY LIBS
 //#include "VaRGB.h"						// Included by Foxetron_RGB
@@ -101,22 +75,7 @@ using namespace IttyBitty;
 
 // PROGRAM OPTIONS
 
-#define SERIAL_BAUD_RATE						115200			// (Debugging) UART baud rate
-#define SERIAL_DELAY_MS							1				// Delay for waiting on serial buffer to flush when printing debug statements
-
-#define DEBUG_MEMORY_INFO_INTERVAL_MS			3000			// Period by which available RAM should be printed when debugging
-
-#define DEBUG_INPUTS							0				// Whether to print values of pin input signals
-#define DEBUG_INPUTS_INTERVAL_MS				500				// Period by which input signal values should be printed when debugging
-
-#if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
-	#undef DEBUG_INPUTS
-#endif
-
 #define INPUT_PROCESS_INTERVAL_uS				5000			// Period by which input state changes should be polled and handled
-
-#define ANGLE_DEGREE_PRECISION_FACTOR			100				// Scaling factor of °s for angle measurement
-#define ANGLE_ACTUAL_DEGRESS_PER_DEGREE_VALUE	ANGLE_DEGREE_PRECISION_FACTOR
 
 #pragma endregion
 
@@ -135,10 +94,10 @@ using namespace IttyBitty;
 
 // INPUTS
 
-VBOOL _AngleEncoderA	= FALSE;	// Pin 2 / PD2 (INT0)
-VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1)
-//VBOOL _AngleEncoderZ	= 0;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
-//VBOOL _AngleEncoderU	= 0;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
+//VBOOL _AngleEncoderA= FALSE;	// Pin 2 / PD2 (INT0) - [UNUSED]
+//VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1) - [UNUSED]
+//VBOOL _AngleEncoderZ	= FALSE;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
+//VBOOL _AngleEncoderU	= FALSE;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
 
 VBOOL _LedButton1		= FALSE;	// Pin 4 / PD4 (PCINT20)
 VBOOL _LedButton2		= FALSE;	// Pin 5 / PD5 (PCINT21)
@@ -183,13 +142,13 @@ DWORD _PrintInputsLastMS			= 0;
 
 #endif
 
-VBOOL _AngleEncoderUp				= FALSE;
-VDWORD _AngleEncoderSteps			= 0;
-DWORD _AngleEncoderStepsLast		= 0;
-
 VBOOL _MenuEncoderUp				= FALSE;
 VDWORD _MenuEncoderSteps			= 0;
 DWORD _MenuEncoderStepsLast			= 0;
+WORD _MenuEncoderVelocity			= 0;
+
+ANGLEMODE _AngleMode				= AngleMode::ABSOLUTE;
+WORD _CalibrationDegrees			= 0;
 
 WORD _Degrees						= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 WORD _DegreesNew					= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
@@ -241,7 +200,7 @@ VOID setup()
 	LCD_Initialize();
 	RGB_Initialize();
 
-	LCD.printBig(F("Fox"), 2, 0);
+	LCD->printBig(F("Fox"), 2, 0);
 
 
 #ifdef _DEBUG
@@ -265,10 +224,6 @@ VOID serialEvent()
 VOID loop()
 {
 	RGB_Step();
-
-	LCD.clear();
-	LCD.home();
-	LCD.print(_AngleEncoderSteps);
 
 
 #ifdef _DEBUG
@@ -304,45 +259,39 @@ VOID loop()
 
 #pragma region INTERRUPT VECTORS and SUPPORTING MACROS & INLINED FUNCTIONS
 
-// INT0/INT1: ANGLE ENCODER
+// INT0/INT1: MENU ENCODER
 
-#define _ISR_ANGLE_ENCODER_READ_CHANNEL(channel, other_channel, increment_comparison)					\
-	_AngleEncoder ## channel = !_AngleEncoder ## channel;												\
-	_AngleEncoderUp = (_AngleEncoder ## channel increment_comparison _AngleEncoder ## other_channel);	\
-	_ISR_Encoder_UpdateEncoderSteps(_AngleEncoderUp, _AngleEncoderSteps, F("ANGLE ENCODER: "));
+#define _ISR_MENU_ENCODER_READ_CHANNEL(channel, other_channel, increment_comparison)				\
+	_MenuEncoder ## channel = !_MenuEncoder ## channel;												\
+	_MenuEncoderUp = (_MenuEncoder ## channel increment_comparison _MenuEncoder ## other_channel);	\
+	_ISR_Encoder_UpdateEncoderSteps();
 
-STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps(VBOOL const &, VDWORD &, FLASH_STRING = NULL) ALWAYS_INLINE;
+STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps() ALWAYS_INLINE;
 
-STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps(VBOOL const & encoderUp, VDWORD & encoderSteps, FLASH_STRING encoderLabel)
+STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps()
 {
-	if (encoderUp)
-		++encoderSteps;
+	if (_MenuEncoderUp)
+		++_MenuEncoderSteps;
 	else
-		--encoderSteps;
+		--_MenuEncoderSteps;
 
 
 #ifdef DEBUG_INPUTS
-
-	if (encoderLabel)
-		PrintString(encoderLabel);
-	else
-		PrintString(F("MENU ENCODER: "));
-
-	PrintLine((CDWORD)encoderSteps);
-
+	PrintString(F("MENU ENCODER: "));
+	PrintLine((CDWORD)_MenuEncoderSteps);
 #endif
 }
 
 // CHANNEL A
 ISR(INT0_vect)
 {
-	_ISR_ANGLE_ENCODER_READ_CHANNEL(A, B, == );
+	_ISR_MENU_ENCODER_READ_CHANNEL(A, B, == );
 }
 
 // CHANNEL B
 ISR(INT1_vect)
 {
-	_ISR_ANGLE_ENCODER_READ_CHANNEL(B, A, != );
+	_ISR_MENU_ENCODER_READ_CHANNEL(B, A, != );
 }
 
 
@@ -361,14 +310,14 @@ ISR(PCINT1_vect, ISR_NOBLOCK)
 	{
 		_MenuEncoderA = PC3_IS_SET();
 		_MenuEncoderUp = (_MenuEncoderA == _MenuEncoderB);
-		_ISR_Encoder_UpdateEncoderSteps(_MenuEncoderUp, _MenuEncoderSteps);
+		_ISR_Encoder_UpdateEncoderSteps();
 	}
 
 	if (_MenuEncoderB != PC2_IS_SET())
 	{
 		_MenuEncoderB = PC2_IS_SET();
 		_MenuEncoderUp = (_MenuEncoderA != _MenuEncoderB);
-		_ISR_Encoder_UpdateEncoderSteps(_MenuEncoderUp, _MenuEncoderSteps);
+		_ISR_Encoder_UpdateEncoderSteps();
 	}
 
 	_SelectButton = PC1_IS_SET();
@@ -385,13 +334,16 @@ ISR(PCINT2_vect, ISR_NOBLOCK)
 }// TIMER EVENTS
 
 // TIMER 2: COMPARE MATCH A
-ISR(TIMER2_COMPA_vect, ISR_NOBLOCK){}#pragma endregion
+ISR(TIMER2_COMPA_vect, ISR_NOBLOCK){
+	_MenuEncoderVelocity = (_MenuEncoderStepsLast - _MenuEncoderSteps) * uS_PER_SECOND / PROCESS_TIMER_OVERFLOW_uS / OCR2A;
+	_MenuEncoderStepsLast = _MenuEncoderSteps;}#pragma endregion
 
 
 #pragma region PROGRAM FUNCTIONS
 
 VOID CleanUp()
 {
+	LCD_Free();
 	RGB_Free();
 }
 
@@ -399,7 +351,7 @@ VOID InitializeTimers()
 {
 	// Timer 2: Angle adjustment task; CTC mode
 	SET_BITS(TCCR2B, B(WGM21) OR B(CS22) OR B(CS21) OR B(CS20));
-	OCR2A = (CBYTE)((CDWORD)INPUT_PROCESS_INTERVAL_uS / ((CDWORD)1024 * 1000000 / F_CPU));
+	OCR2A = (CBYTE)((CDWORD)INPUT_PROCESS_INTERVAL_uS / PROCESS_TIMER_OVERFLOW_uS);
 	SET_BIT(TIMSK2, OCIE2A);
 }
 
@@ -432,10 +384,37 @@ VOID OnMessage(PIMESSAGE message)
 
 	switch (msgCode)
 	{
+	case MessageCode::CALIBRATE_REQUEST:
+
+		state = new PCVOID[1] { &_ControllerError };
+		results = new PVOID[2] { &_AngleMode, &_CalibrationDegrees };
+		msgHandled = reinterpret_cast<PCALIBRATEREQUEST>(message)->Handle(results, state);
+
+	#ifdef DEBUG_MESSAGES
+		PrintLine((CBOOL)_AngleMode);
+		PrintLine((CWORD)_CalibrationDegrees);
+	#endif
+
+		break;
+
+
+
 	case MessageCode::STATUS_REQUEST:
 
 		state = new PCVOID[4] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus, NULL };
 		msgHandled = reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, state);
+
+		break;
+
+
+	case MessageCode::CALIBRATE_RESPONSE:
+
+		results = new PVOID[1] { &_DriverError };
+		msgHandled = reinterpret_cast<PCALIBRATERESPONSE>(message)->Handle(results, state);
+
+	#ifdef DEBUG_MESSAGES
+		PrintLine((CBYTE)_DriverError);
+	#endif
 
 		break;
 
@@ -446,7 +425,7 @@ VOID OnMessage(PIMESSAGE message)
 		msgHandled = reinterpret_cast<PANGLERESPONSE>(message)->Handle(results, state);
 
 	#ifdef DEBUG_MESSAGES
-		PrintLine((BYTE)_DriverError);
+		PrintLine((CBYTE)_DriverError);
 		PrintLine(_Degrees);
 	#endif
 
@@ -459,7 +438,7 @@ VOID OnMessage(PIMESSAGE message)
 		msgHandled = reinterpret_cast<PNEWANGLERESPONSE>(message)->Handle(results);
 
 	#ifdef DEBUG_MESSAGES
-		PrintLine((BYTE)_DriverError);
+		PrintLine((CBYTE)_DriverError);
 	#endif
 
 		break;
@@ -471,9 +450,10 @@ VOID OnMessage(PIMESSAGE message)
 		msgHandled = reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(results);
 
 	#ifdef DEBUG_MESSAGES
-		PrintLine((BYTE)_DriverError);
-		PrintLine(_DriverStatusMsg);
-		PrintLine((BYTE)_DriverStatus);
+		PrintLine((CBYTE)_DriverError);
+		if (_DriverStatusMsg)
+			PrintLine(_DriverStatusMsg);
+		PrintLine((CBYTE)_DriverStatus);
 	#endif
 
 		break;
@@ -499,17 +479,17 @@ VOID OnMessage(PIMESSAGE message)
 
 VOID PrintLCDSplash()
 {
-	LCD.print(F("Foxetron test..."));
+	LCD->print(F("Foxetron test..."));
 
 	delay(200);
 
 	for (BYTE i = 0; i < 16; i++)
 	{
-		LCD.scrollDisplayLeft();
+		LCD->scrollDisplayLeft();
 		delay(20);
 	}
 
-	LCD.clear();
+	LCD->clear();
 }
 
 #pragma endregion
@@ -521,111 +501,56 @@ VOID DEBUG_PrintInputValues()
 {
 	STATIC CHAR valStr[5];
 
-	_AngleEncoderA = CheckPinSet(2);
-	_AngleEncoderB = CheckPinSet(3);
-
-	_LedButton1 = CheckPinSet(4);
+	_LedButton1 = CheckPinSet(PIN_LED_BUTTON_1);
 	if (_LedButton1)
-	{
-		PORTD |= (1 << 4);
-		DDRD |= (1 << 4);
-		PORTD &= ~(1 << 4);
-		DDRD &= ~(1 << 4);
-	}
+		ResetPin(PIN_LED_BUTTON_1);
 
-	_LedButton2 = CheckPinSet(5);
+	_LedButton2 = CheckPinSet(PIN_LED_BUTTON_2);
 	if (_LedButton2)
-	{
-		PORTD |= (1 << 5);
-		DDRD |= (1 << 5);
-		PORTD &= ~(1 << 5);
-		DDRD &= ~(1 << 5);
-	}
+		ResetPin(PIN_LED_BUTTON_2);
 
-	_LedButton3 = CheckPinSet(6);
+	_LedButton3 = CheckPinSet(PIN_LED_BUTTON_3);
 	if (_LedButton3)
-	{
-		PORTD |= (1 << 6);
-		DDRD |= (1 << 6);
-		PORTD &= ~(1 << 6);
-		DDRD &= ~(1 << 6);
-	}
+		ResetPin(PIN_LED_BUTTON_3);
 
-	_LedButton4 = CheckPinSet(7);
+	_LedButton4 = CheckPinSet(PIN_LED_BUTTON_4);
 	if (_LedButton4)
-	{
-		PORTD |= (1 << 7);
-		DDRD |= (1 << 7);
-		PORTD &= ~(1 << 7);
-		DDRD &= ~(1 << 7);
-	}
+		ResetPin(PIN_LED_BUTTON_4);
 
-	_LedButton5 = CheckPinSet(8);
+	_LedButton5 = CheckPinSet(PIN_LED_BUTTON_5);
 	if (_LedButton5)
-	{
-		PORTB |= (1 << 0);
-		DDRB |= (1 << 0);
-		PORTB &= ~(1 << 0);
-		DDRB &= ~(1 << 0);
-	}
+		ResetPin(PIN_LED_BUTTON_5);
 
-	_ModeSwitch		= analogRead(7) > 500 ? TRUE : FALSE;
+	_ModeSwitch		= analogRead(PIN_ADC_MODE_SWITCH) > 500 ? TRUE : FALSE;
 
-	_MenuEncoderA	= CheckPinSet(14);
-	_MenuEncoderB	= CheckPinSet(15);
+	_MenuEncoderA	= CheckPinSet(PIN_MENU_ENCODER_A);
+	_MenuEncoderB	= CheckPinSet(PIN_MENU_ENCODER_B);
 
-	_SelectButton	= CheckPinUnset(16);
-	_ShiftButton	= CheckPinUnset(17);
+	_SelectButton	= CheckPinUnset(PIN_SELECT_BUTTON);
+	_ShiftButton	= CheckPinUnset(PIN_SHIFT_BUTTON);
 
 
 	// REAR INPUTS
 
-	LCD.home();
+	LCD->clear();
 
-	LCD.setCursor(0, 0);
-	LCD.print(itoa(_AngleEncoderA, valStr, 2));
+	LCD->home();
 
-	LCD.setCursor(2, 0);
-	LCD.print(itoa(_AngleEncoderB, valStr, 2));
+	LCD->setCursor(4, 0);
+	LCD->print(itoa(_LedButton1, valStr, 2));
 
-	LCD.setCursor(4, 0);
-	LCD.print(itoa(_LedButton1, valStr, 2));
+	LCD->setCursor(6, 0);
+	LCD->print(itoa(_LedButton2, valStr, 2));
 
-	LCD.setCursor(6, 0);
-	LCD.print(itoa(_LedButton2, valStr, 2));
+	LCD->setCursor(8, 0);
+	LCD->print(itoa(_LedButton3, valStr, 2));
 
-	LCD.setCursor(8, 0);
-	LCD.print(itoa(_LedButton3, valStr, 2));
+	LCD->setCursor(10, 0);
+	LCD->print(itoa(_LedButton4, valStr, 2));
 
-	LCD.setCursor(10, 0);
-	LCD.print(itoa(_LedButton4, valStr, 2));
+	LCD->setCursor(12, 0);
+	LCD->print(itoa(_LedButton5, valStr, 2));
 
-	LCD.setCursor(12, 0);
-	LCD.print(itoa(_LedButton5, valStr, 2));
-
-
-	// FRONT INPUTS
-
-	LCD.setCursor(4, 1);
-	LCD.print(itoa(_ModeSwitchVal, valStr, 10));
-
-	LCD.setCursor(8, 1);
-	LCD.print(itoa(_MenuEncoderA, valStr, 2));
-
-	LCD.setCursor(10, 1);
-	LCD.print(itoa(_MenuEncoderB, valStr, 2));
-
-	LCD.setCursor(12, 1);
-	LCD.print(itoa(_SelectButton, valStr, 2));
-
-	LCD.setCursor(14, 1);
-	LCD.print(itoa(_ShiftButton, valStr, 2));
-
-
-	PrintBit((BIT)_AngleEncoderA);
-	PrintString(F(" "));
-	PrintBit((BIT)_AngleEncoderB);
-	PrintString(F(" "));
 	PrintBit((BIT)_LedButton1);
 	PrintString(F(" "));
 	PrintBit((BIT)_LedButton2);
@@ -636,6 +561,24 @@ VOID DEBUG_PrintInputValues()
 	PrintString(F(" "));
 	PrintBit((BIT)_LedButton5);
 	PrintLine();
+
+
+	// FRONT INPUTS
+
+	LCD->setCursor(4, 1);
+	LCD->print(itoa(_ModeSwitchVal, valStr, 10));
+
+	LCD->setCursor(8, 1);
+	LCD->print(itoa(_MenuEncoderA, valStr, 2));
+
+	LCD->setCursor(10, 1);
+	LCD->print(itoa(_MenuEncoderB, valStr, 2));
+
+	LCD->setCursor(12, 1);
+	LCD->print(itoa(_SelectButton, valStr, 2));
+
+	LCD->setCursor(14, 1);
+	LCD->print(itoa(_ShiftButton, valStr, 2));
 
 	Serial.print(itoa(_ModeSwitchVal, valStr, 10));
 	PrintString(F(" / "));
@@ -659,18 +602,18 @@ VOID DEBUG_DisplayKeyCodes()
 
 	while (i < 1)
 	{
-		LCD.clear();
+		LCD->clear();
 
-		LCD.print(F("Codes 0x"));
+		LCD->print(F("Codes 0x"));
 
-		LCD.print(i, HEX);
-		LCD.print(F("-0x"));
-		LCD.print(i + 16, HEX);
+		LCD->print(i, HEX);
+		LCD->print(F("-0x"));
+		LCD->print(i + 16, HEX);
 
-		LCD.setCursor(0, 1);
+		LCD->setCursor(0, 1);
 
 		for (int j = 0; j < 8; j++)
-			LCD.write(i + j);
+			LCD->write(i + j);
 
 		i += 16;
 
@@ -681,38 +624,38 @@ VOID DEBUG_DisplayKeyCodes()
 
 VOID DEBUG_DisplayCustomChars()
 {
-	LCD.createChar(0, LCD_CHAR_FOX);
-	LCD.createChar(1, LCD_CHAR_GEM_SMALL);
-	LCD.createChar(2, LCD_CHAR_GEM);
+	LCD->createChar(0, LCD_CHAR_FOX);
+	LCD->createChar(1, LCD_CHAR_GEM_SMALL);
+	LCD->createChar(2, LCD_CHAR_GEM);
 
-	LCD.createChar(3, LCD_CHAR_ANGLE);
-	LCD.createChar(4, LCD_CHAR_ANGLE_2);
-	LCD.createChar(5, LCD_CHAR_CHECKMARK);
-	LCD.createChar(6, LCD_CHAR_CLOCKWISE);
-	LCD.createChar(7, LCD_CHAR_NOTES);
-
-	DEBUG_DisplayKeyCodes();
-
-
-	LCD.createChar(0, LCD_CHAR_SHAPE_ROUND);
-	LCD.createChar(1, LCD_CHAR_SHAPE_OVAL);
-	LCD.createChar(2, LCD_CHAR_SHAPE_CUSHION);
-	LCD.createChar(3, LCD_CHAR_SHAPE_EMERALD);
-	LCD.createChar(4, LCD_CHAR_SHAPE_BAGUETTE);
-	LCD.createChar(5, LCD_CHAR_SHAPE_TRILLIANT);
-	LCD.createChar(6, LCD_CHAR_SHAPE_TRIANGLE);
-	LCD.createChar(7, LCD_CHAR_SHAPE_SPECIAL);
+	LCD->createChar(3, LCD_CHAR_ANGLE);
+	LCD->createChar(4, LCD_CHAR_ANGLE_2);
+	LCD->createChar(5, LCD_CHAR_CHECKMARK);
+	LCD->createChar(6, LCD_CHAR_CLOCKWISE);
+	LCD->createChar(7, LCD_CHAR_NOTES);
 
 	DEBUG_DisplayKeyCodes();
 
 
-	LCD.createChar(0, LCD_CHAR_CUT_BRILLIANT);
-	LCD.createChar(1, LCD_CHAR_CUT_STEP);
+	LCD->createChar(0, LCD_CHAR_SHAPE_ROUND);
+	LCD->createChar(1, LCD_CHAR_SHAPE_OVAL);
+	LCD->createChar(2, LCD_CHAR_SHAPE_CUSHION);
+	LCD->createChar(3, LCD_CHAR_SHAPE_EMERALD);
+	LCD->createChar(4, LCD_CHAR_SHAPE_BAGUETTE);
+	LCD->createChar(5, LCD_CHAR_SHAPE_TRILLIANT);
+	LCD->createChar(6, LCD_CHAR_SHAPE_TRIANGLE);
+	LCD->createChar(7, LCD_CHAR_SHAPE_SPECIAL);
 
-	LCD.createChar(2, LCD_CHAR_ARROW_UP);
-	LCD.createChar(3, LCD_CHAR_ARROW_DOWN);
-	LCD.createChar(4, LCD_CHAR_ARROW_LEFT_LARGE);
-	LCD.createChar(5, LCD_CHAR_ARROW_RIGHT_LARGE);
+	DEBUG_DisplayKeyCodes();
+
+
+	LCD->createChar(0, LCD_CHAR_CUT_BRILLIANT);
+	LCD->createChar(1, LCD_CHAR_CUT_STEP);
+
+	LCD->createChar(2, LCD_CHAR_ARROW_UP);
+	LCD->createChar(3, LCD_CHAR_ARROW_DOWN);
+	LCD->createChar(4, LCD_CHAR_ARROW_LEFT_LARGE);
+	LCD->createChar(5, LCD_CHAR_ARROW_RIGHT_LARGE);
 
 	DEBUG_DisplayKeyCodes();
 }

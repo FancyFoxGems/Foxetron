@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [Foxetron_pins.h]: PIN DEFINITIONS FOR THE FOXETRON ANGLE DRIVER
+* [Foxetron_AngleDriver_pins.h]: PIN DEFINITIONS FOR THE FOXETRON ANGLE DRIVER
 *
 * This file is part of the Foxetron program suite
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.

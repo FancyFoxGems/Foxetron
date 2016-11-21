@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [Foxetron_RGB.h]: RGB LED FUNCTIONS & VaRGB ARDUINO LIBRARY INTEGRATION
+* [Foxetron_AngleController_RGB.h]: RGB LED FUNCTIONS & VaRGB ARDUINO LIBRARY INTEGRATION
 *
 * This file is part of the Foxetron program suite
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -37,17 +37,18 @@
 #pragma region GLOBAL VARIABLE DECLARATIONS
 
 using namespace vargb;
+using namespace vargb::Curve;
 
 VOID RGB_OnSetColor(ColorSettings *);
 VOID RGB_OnScheduleComplete(Schedule *);
 
-EXTERN VaRGB RGB;
+EXTERN VaRGB * RGB;
 
 EXTERN Schedule * _RgbSchedule;
 
-EXTERN Curve::Flasher * _RgbCurveFlasher;
-EXTERN Curve::Sine * _RgbCurveSine;
-EXTERN Curve::Linear * _RgbCurves[];
+EXTERN Flasher * _RgbCurveFlasher;
+EXTERN Sine * _RgbCurveSine;
+EXTERN Linear * _RgbCurves[];
 
 #pragma endregion
 
@@ -55,8 +56,9 @@ EXTERN Curve::Linear * _RgbCurves[];
 #pragma region FUNCTION DECLARATIONS
 
 VOID RGB_Initialize();
-VOID RGB_Step();
 VOID RGB_Free();
+
+VOID RGB_Step();
 
 #pragma region FUNCTION DECLARATIONS
 

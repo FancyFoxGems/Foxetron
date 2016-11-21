@@ -31,6 +31,44 @@ BOOL Request::Handle(PVOID results, PCVOID state)
 }
 
 
+// CalibrateRequest
+
+CalibrateRequest::CalibrateRequest(CANGLEMODE angleMode, CWORD degrees) : Request(MessageCode::CALIBRATE_REQUEST, 2)
+{
+	_Params[0] = new PARAM((CBOOL)angleMode);
+	_Params[1] = new PARAM(degrees);
+}
+
+CANGLEMODE CalibrateRequest::Mode() const
+{
+	return reinterpret_cast<RCANGLEMODE>((RCBOOL)*reinterpret_cast<PCPARAM>(_Params[0]));
+}
+
+CWORD CalibrateRequest::Degrees() const
+{
+	return (CWORD)*reinterpret_cast<PCPARAM>(_Params[1]);
+}
+
+BOOL CalibrateRequest::Handle(PVOID results, PCVOID state)
+{
+#ifdef DEBUG_MESSAGES
+	PrintLine(F("CalibrateRequest::Handle"));
+#endif
+
+	CERROR driverError = *((PPCERROR)state)[0];
+
+	*((PPANGLEMODE)results)[0] = this->Mode();
+	*((PPWORD)results)[1] = this->Degrees();
+
+	if (!Request::Handle(results, state))
+		return FALSE;
+
+	CalibrateResponse(driverError).Transmit();
+
+	return TRUE;
+}
+
+
 // AngleRequest
 
 AngleRequest::AngleRequest() : Request(MessageCode::ANGLE_REQUEST, 0) { }
@@ -143,6 +181,23 @@ BOOL Response::Handle(PVOID results, PCVOID state)
 #endif
 
 	*((PPERROR)results)[0] = this->ErrorCode();
+
+	return TRUE;
+}
+
+
+// CalibrateResponse
+
+CalibrateResponse::CalibrateResponse(CERROR error) : Response(error, MessageCode::CALIBRATE_RESPONSE) { }
+
+BOOL CalibrateResponse::Handle(PVOID results, PCVOID state)
+{
+#ifdef DEBUG_MESSAGES
+	PrintLine(F("CalibrateResponse::Handle"));
+#endif
+
+	if (!Response::Handle(results, state))
+		return FALSE;
 
 	return TRUE;
 }
