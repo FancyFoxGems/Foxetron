@@ -6,7 +6,7 @@
 * Target Architecture:	Atmel AVR / ATmega series 8-bit MCUs
 * Supported Platforms:	Arduino, AVR LibC, (AVR GCC)
 *
-*		Memory Usage:	~22.96 KB Program Memory (Flash ROM) / 1752 B SRAM
+*		Memory Usage:	~23.43 KB Program Memory (Flash ROM) / 1752 B SRAM
 *		NOTE: ^-- w/ #define NO_ITTYBITTY_FULL_BYTES
 *
 * [Hardware Platform]
@@ -84,7 +84,6 @@
 CDWORD ANGLE_STEP_PRECISION_FACTOR			= (CDWORD)ANGLE_BASE_PRECISION_FACTOR * (CDWORD)ANGLE_STEP_PRECISION_FACTOR_FACTOR;			// 1,000
 CDWORD ANGLE_POINT_STEP_PRECISION_FACTOR	= (CDWORD)ANGLE_POINT_STEP_PRECISION_FACTOR_FACTOR * (CDWORD)ANGLE_STEP_PRECISION_FACTOR;	// 100,000
 
-CDWORD ANGLE_POINTS_PER_ACTUAL_DEGREE		= (CDWORD)ANGLE_POINT_STEP_PRECISION_FACTOR;												// 100,000
 CDWORD ANGLE_POINTS_PER_DEGREE_VALUE		= (CDWORD)ANGLE_POINT_STEP_PRECISION_FACTOR / (CDWORD)ANGLE_DEGREE_PRECISION_FACTOR;		// 1,000
 
 CDWORD ANGLE_ENCODER_STEPS_PER_POINT		= (CDWORD)ANGLE_ENCODER_STEPS_RESOLUTION * ANGLE_POINT_STEP_PRECISION_FACTOR / (CDWORD)360;	// > 22,755 (22.75 steps/°)
@@ -92,10 +91,14 @@ CDWORD ANGLE_ENCODER_STEP_ERROR_MARGIN		= ANGLE_ENCODER_STEPS_PER_POINT / 2 + (C
 CDWORD ANGLE_ENCODER_POINTS_PER_STEP		= (CDWORD)360 * ANGLE_POINT_STEP_PRECISION_FACTOR/(CDWORD)ANGLE_ENCODER_STEPS_RESOLUTION;	// > 4,394 points (0.04394°/step)
 CDWORD ANGLE_ENCODER_POINT_ERROR_MARGIN		= ANGLE_ENCODER_POINTS_PER_STEP / 2 + (CDWORD)ANGLE_ERROR_CORRECTION_FACTOR;				// +/- > 2,197 points  (0.02197°)
 
+CDWORD ANGLE_ENCODER_CALIBRATED_STEPS		= (CDWORD)CALIBRATION_ANGLE_DEGREES * ANGLE_ENCODER_STEPS_PER_POINT;						// 102,397,500 (1,023.75 steps/45°)
+
 CDWORD ANGLE_MOTOR_STEPS_PER_POINT			= (CDWORD)ANGLE_MOTOR_STEPS_RESOLUTION * ANGLE_POINT_STEP_PRECISION_FACTOR / (CDWORD)360;	// 400,000 (400.00 steps/°)
 CDWORD ANGLE_MOTOR_STEP_ERROR_MARGIN		= ANGLE_MOTOR_STEPS_PER_POINT / 2;															// +/- 200,000 (200.00 steps)
 CDWORD ANGLE_MOTOR_POINTS_PER_STEP			= (CDWORD)360 * ANGLE_POINT_STEP_PRECISION_FACTOR/(CDWORD)ANGLE_MOTOR_STEPS_RESOLUTION;		// 250 points (0.00250°/step)
 CDWORD ANGLE_MOTOR_POINT_ERROR_MARGIN		= ANGLE_MOTOR_POINTS_PER_STEP / 2;															// +/- 125 points (0.00125°)
+
+CDWORD ANGLE_MOTOR_CALIBRATED_STEPS			= (CDWORD)CALIBRATION_ANGLE_DEGREES * ANGLE_MOTOR_STEPS_PER_POINT;							// 1,800,000,000 (18,000 steps/45°)
 
 #pragma endregion
 
@@ -148,7 +151,7 @@ BOOL _WaitOnMotor					= 0;
 
 ANGLEMODE _AngleMode				= AngleMode::ABSOLUTE;
 ANGLEMODE _AngleModeLast			= AngleMode::ABSOLUTE;
-WORD _CalibrationDegrees			= 0;
+SHORT _CalibrationSteps				= 0;
 
 WORD _Degrees						= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 WORD _DegreesNew					= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
@@ -166,15 +169,14 @@ ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 
 #pragma region ANGLE MEASUREMENT & ADJUSTMENT EXPRESSION FUNCTIONS
 
-STATIC CWORD GetPointsFromAngleEncoderSteps()
+STATIC CWORD GetDegreesFromAngleEncoderSteps()
 {
-	return (CWORD)(_AngleEncoderSteps * ANGLE_POINT_STEP_PRECISION_FACTOR
-		/ ANGLE_ENCODER_STEPS_PER_POINT) - _CalibrationDegrees;
+	return (CWORD)(_AngleEncoderSteps * ANGLE_POINT_STEP_PRECISION_FACTOR / ANGLE_ENCODER_STEPS_PER_POINT);
 }
 
 STATIC CBOOL IsAngleAdjustmentWithinErrorMargin()
 {
-	return GetPointsFromAngleEncoderSteps()
+	return GetDegreesFromAngleEncoderSteps()
 			- _TargetMotorSteps * ANGLE_POINT_STEP_PRECISION_FACTOR / ANGLE_MOTOR_STEPS_PER_POINT
 		< ANGLE_ENCODER_POINT_ERROR_MARGIN / ANGLE_POINTS_PER_DEGREE_VALUE;
 }
@@ -189,6 +191,9 @@ VOID InitializeTimers();
 VOID InitializeInterrupts();
 
 MESSAGEHANDLER OnMessage;
+
+VOID CalibrateAngle();
+VOID ApplyMotorCalibration();
 
 VOID DoAngleAdjustmentStep();
 
@@ -316,9 +321,13 @@ ISR(TIMER2_COMPA_vect, ISR_NOBLOCK){
 	if (_TargetMotorSteps)
 		return;
 
-	_Degrees = GetPointsFromAngleEncoderSteps();
+	_Degrees = GetDegreesFromAngleEncoderSteps();
 
 	BOOL sendCalibrationReq = FALSE;
+
+	if (_ActionButton)	{		if (_LatchButton)			Motor->StepBackward();		else			Motor->StepForward();		_WaitOnMotor = TRUE;	}	else	{		if (_OneShotButton)		{			CalibrateAngle();
+
+			sendCalibrationReq = TRUE;		}		if (_WaitOnMotor)		{			_WaitOnMotor = FALSE;			AngleResponse(_DriverError, _Degrees).Transmit();		}	}
 
 	if (_LatchButton)
 		_AngleMode = AngleMode::RELATIVE;
@@ -330,17 +339,13 @@ ISR(TIMER2_COMPA_vect, ISR_NOBLOCK){
 		_AngleModeLast = _AngleMode;
 
 		sendCalibrationReq = TRUE;
-	}
-
-	if (_ActionButton)	{		if (_LatchButton)			Motor->StepBackward();		else			Motor->StepForward();		AngleResponse(_DriverError, _Degrees).Transmit();	}	else if (_OneShotButton)	{		_CalibrationDegrees = _Degrees;
-		_AngleEncoderSteps = 0;
-
-		sendCalibrationReq = TRUE;	}		if (sendCalibrationReq)		CalibrateRequest(_AngleMode, _CalibrationDegrees).Transmit();}
+	}			if (sendCalibrationReq)		CalibrateRequest(_AngleMode, _CalibrationSteps).Transmit();}
 
 // TIMER 2: COMPARE MATCH B
 ISR(TIMER2_COMPB_vect, ISR_NOBLOCK)
 {
-	_AngleEncoderVelocity = (_AngleEncoderStepsLast - _AngleEncoderSteps) * uS_PER_SECOND / PROCESS_TIMER_OVERFLOW_uS / OCR2B;
+	_AngleEncoderVelocity = (_AngleEncoderStepsLast - _AngleEncoderSteps)
+		* uS_PER_SECOND / PROCESS_TIMER_OVERFLOW_uS / OCR2B;
 	_AngleEncoderStepsLast = _AngleEncoderSteps;
 
 	if (_TargetMotorSteps)
@@ -405,15 +410,15 @@ VOID OnMessage(PIMESSAGE message)
 	case MessageCode::CALIBRATE_REQUEST:
 
 		state = new PCVOID[1] { &_DriverError };
-		results = new PVOID[2] { &_AngleMode, &_CalibrationDegrees };
+		results = new PVOID[2] { &_AngleMode, &_CalibrationSteps };
 		msgHandled = reinterpret_cast<PCALIBRATEREQUEST>(message)->Handle(results, state);
 
 	#ifdef DEBUG_MESSAGES
 		PrintLine((CBOOL)_AngleMode);
-		PrintLine((CWORD)_CalibrationDegrees);
+		PrintLine((CSHORT)_CalibrationSteps);
 	#endif
 
-		_AngleEncoderSteps = 0;
+		ApplyMotorCalibration();
 
 		break;
 
@@ -506,6 +511,22 @@ VOID OnMessage(PIMESSAGE message)
 	}
 }
 
+VOID CalibrateAngle()
+{
+	_Degrees = CALIBRATION_ANGLE_DEGREES;
+	_AngleEncoderSteps = (CDWORD)ANGLE_ENCODER_CALIBRATED_STEPS / ANGLE_POINT_STEP_PRECISION_FACTOR;
+
+	_CalibrationSteps = (SHORT)((ANGLE_MOTOR_CALIBRATED_STEPS
+		- Motor->GetPosition() * ANGLE_MOTOR_STEPS_PER_POINT) / ANGLE_POINT_STEP_PRECISION_FACTOR);
+
+	ApplyMotorCalibration();
+}
+
+VOID ApplyMotorCalibration()
+{
+	Motor->SetPosition(Motor->GetPosition() + _CalibrationSteps);
+}
+
 VOID DoAngleAdjustmentStep()
 {
 	if (IsAngleAdjustmentWithinErrorMargin())
@@ -518,7 +539,7 @@ VOID DoAngleAdjustmentStep()
 	}
 
 	_TargetMotorSteps = (DWORD)_DegreesNew * ANGLE_MOTOR_STEPS_PER_POINT / ANGLE_POINT_STEP_PRECISION_FACTOR
-		- GetPointsFromAngleEncoderSteps() * ANGLE_MOTOR_STEPS_PER_POINT / ANGLE_POINT_STEP_PRECISION_FACTOR;
+		- GetDegreesFromAngleEncoderSteps() * ANGLE_MOTOR_STEPS_PER_POINT / ANGLE_POINT_STEP_PRECISION_FACTOR;
 
 	Motor->Step(_TargetMotorSteps);
 }

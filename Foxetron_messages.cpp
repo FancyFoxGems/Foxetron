@@ -33,10 +33,10 @@ BOOL Request::Handle(PVOID results, PCVOID state)
 
 // CalibrateRequest
 
-CalibrateRequest::CalibrateRequest(CANGLEMODE angleMode, CWORD degrees) : Request(MessageCode::CALIBRATE_REQUEST, 2)
+CalibrateRequest::CalibrateRequest(CANGLEMODE angleMode, CSHORT calibrationSteps) : Request(MessageCode::CALIBRATE_REQUEST, 2)
 {
 	_Params[0] = new PARAM((CBOOL)angleMode);
-	_Params[1] = new PARAM(degrees);
+	_Params[1] = new PARAM(calibrationSteps);
 }
 
 CANGLEMODE CalibrateRequest::Mode() const
@@ -44,9 +44,9 @@ CANGLEMODE CalibrateRequest::Mode() const
 	return reinterpret_cast<RCANGLEMODE>((RCBOOL)*reinterpret_cast<PCPARAM>(_Params[0]));
 }
 
-CWORD CalibrateRequest::Degrees() const
+CSHORT CalibrateRequest::CalibrationSteps() const
 {
-	return (CWORD)*reinterpret_cast<PCPARAM>(_Params[1]);
+	return (CSHORT)*reinterpret_cast<PCPARAM>(_Params[1]);
 }
 
 BOOL CalibrateRequest::Handle(PVOID results, PCVOID state)
@@ -58,7 +58,7 @@ BOOL CalibrateRequest::Handle(PVOID results, PCVOID state)
 	CERROR driverError = *((PPCERROR)state)[0];
 
 	*((PPANGLEMODE)results)[0] = this->Mode();
-	*((PPWORD)results)[1] = this->Degrees();
+	*((PPSHORT)results)[1] = this->CalibrationSteps();
 
 	if (!Request::Handle(results, state))
 		return FALSE;

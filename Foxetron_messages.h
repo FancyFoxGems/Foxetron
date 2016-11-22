@@ -154,11 +154,11 @@ namespace Foxetron
 	{
 	public:
 
-		CalibrateRequest(CANGLEMODE, CWORD = 0);
+		CalibrateRequest(CANGLEMODE, CSHORT = 0);
 
 		CANGLEMODE Mode() const;
 
-		CWORD Degrees() const;
+		CSHORT CalibrationSteps() const;
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
 	};

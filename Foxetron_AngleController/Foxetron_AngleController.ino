@@ -6,7 +6,7 @@
 * Target Architecture:	Atmel AVR / ATmega series 8-bit MCUs
 * Supported Platforms:	Arduino, AVR LibC, (AVR GCC)
 *
-*		Memory Usage:	~26.70 KB Program Memory (Flash ROM) / 1604 B SRAM
+*		Memory Usage:	~26.87 KB Program Memory (Flash ROM) / 1604 B SRAM
 *		NOTE: ^-- w/ #define NO_ITTYBITTY_FULL_BYTES
 *
 * [Hardware Platform]
@@ -148,7 +148,7 @@ DWORD _MenuEncoderStepsLast			= 0;
 WORD _MenuEncoderVelocity			= 0;
 
 ANGLEMODE _AngleMode				= AngleMode::ABSOLUTE;
-WORD _CalibrationDegrees			= 0;
+SHORT _CalibrationSteps				= 0;
 
 WORD _Degrees						= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
 WORD _DegreesNew					= 0;	// × ANGLE_PRECISION_FACTOR precision scaling factor
@@ -387,12 +387,12 @@ VOID OnMessage(PIMESSAGE message)
 	case MessageCode::CALIBRATE_REQUEST:
 
 		state = new PCVOID[1] { &_ControllerError };
-		results = new PVOID[2] { &_AngleMode, &_CalibrationDegrees };
+		results = new PVOID[2] { &_AngleMode, &_CalibrationSteps };
 		msgHandled = reinterpret_cast<PCALIBRATEREQUEST>(message)->Handle(results, state);
 
 	#ifdef DEBUG_MESSAGES
 		PrintLine((CBOOL)_AngleMode);
-		PrintLine((CWORD)_CalibrationDegrees);
+		PrintLine((CSHORT)_CalibrationSteps);
 	#endif
 
 		break;
