@@ -135,10 +135,10 @@ VBOOL _StatusLed		= LOW;		// Pin 13 / PB5
 
 #ifdef _DEBUG
 
-DWORD _MemoryInfoLastMS				= 0;
+LONG _MemoryInfoLastMS				= 0;
 
 #ifdef DEBUG_INPUTS
-DWORD _PrintInputsLastMS			= 0;
+LONG _PrintInputsLastMS				= 0;
 #endif
 
 #endif
@@ -198,8 +198,20 @@ VOID setup()
 
 	sei();
 
+	Wire.begin();
+
+	Wire.beginTransmission(0xC4 >> 1);
+	Wire.write(0);
+	Wire.endTransmission();
+	delay(500);
+
+	Wire.beginTransmission(0x7C >> 1);
+	Wire.write(0);
+	Wire.endTransmission();
+	delay(500);
+
 	LCD_Initialize();
-	RGB_Initialize();
+	//RGB_Initialize();
 
 	LCD->printBig(F("Fox"), 2, 0);
 
@@ -219,17 +231,17 @@ VOID setup()
 
 VOID serialEvent()
 {
-	WaitForMessage(Serial, OnMessage);
+	//WaitForMessage(Serial, OnMessage);
 }
 
 VOID loop()
 {
-	RGB_Step();
+	//RGB_Step();
 
 
 #ifdef _DEBUG
 
-	if (_MemoryInfoLastMS + DEBUG_MEMORY_INFO_INTERVAL_MS >= millis())
+	if (_MemoryInfoLastMS + DEBUG_MEMORY_INFO_INTERVAL_MS <= millis())
 	{
 		PrintString(F("\nRAM: "));
 		PrintLine((CWORD)SramFree());
@@ -243,7 +255,7 @@ VOID loop()
 
 	#ifdef DEBUG_INPUTS
 
-	if (_PrintInputsLastMS + DEBUG_INPUTS_INTERVAL_MS >= millis())
+	if (_PrintInputsLastMS + DEBUG_INPUTS_INTERVAL_MS <= millis())
 	{
 		DEBUG_PrintInputValues();
 

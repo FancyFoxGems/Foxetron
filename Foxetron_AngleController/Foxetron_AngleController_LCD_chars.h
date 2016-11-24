@@ -13,7 +13,7 @@
 #pragma region INCLUDES
 
 // ITTY BITTY
-#include "IttyBitty_util.h"
+#include "IttyBitty_aliases.h"
 
 // AVR LIBS
 #include <avr/pgmspace.h>
@@ -23,12 +23,7 @@
 
 #pragma region DEFINES
 
-// LCD OPTIONS/CONSTANTS
-
-#define LCD_I2C_ADDRESS			0x27
-
-#define LCD_COLS				16
-#define LCD_ROWS				2
+// LCD CHARACTER OPTIONS/CONSTANTS
 
 #define LCD_CHAR_HEIGHT			8
 #define LCD_CHAR_WIDTH			5
@@ -75,8 +70,7 @@
 #define LCD_SYMBOL_HEART				0x9D
 #define LCD_SYMBOL_COPYRIGHT			0xA9
 #define LCD_SYMBOL_RESERVED				0xAE
-#define LCD_SYMBOL_BLANK				0xFE
-#define LCD_SYMBOL_BLOCK				0xFF
+#define LCD_SYMBOL_BLANK				0x0A
 
 #pragma endregion
 

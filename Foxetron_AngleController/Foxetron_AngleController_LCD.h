@@ -30,6 +30,19 @@
 #pragma endregion
 
 
+#pragma region DEFINES
+
+// LCD OPTIONS/CONSTANTS
+
+//#define LCD_I2C_ADDRESS			0x27
+#define LCD_I2C_ADDRESS			(0x7C >> 1)
+
+#define LCD_COLS				16
+#define LCD_ROWS				2
+
+#pragma endregion
+
+
 #pragma region LCD GLOBAL VARIABLE DECLARATION
 
 // LCD display

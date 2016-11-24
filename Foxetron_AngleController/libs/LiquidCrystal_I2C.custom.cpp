@@ -54,7 +54,7 @@ LiquidCrystal_I2C::LiquidCrystal_I2C(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t
 	_Addr = lcd_Addr;
 	_cols = lcd_cols;
 	_rows = lcd_rows;
-	_backlightval = LCD_NOBACKLIGHT;
+	_backlightval = LCD_BACKLIGHT;
 }
 
 void LiquidCrystal_I2C::init()
@@ -354,6 +354,53 @@ void LiquidCrystal_I2C::printstr(const char c[])
 	//it's here so the user sketch doesn't have to be changed
 	print(c);
 }
+
+
+//  Grove RGB LCD support
+
+void LiquidCrystal_I2C::blinkLED(void)
+{
+	// blink period in seconds = (<reg 7> + 1) / 24
+	// on/off ratio = <reg 6> / 256
+	setReg(0x07, 0x17);  // blink every second
+	setReg(0x06, 0x7f);  // half on, half off
+}
+
+void LiquidCrystal_I2C::noBlinkLED(void)
+{
+	setReg(0x07, 0x00);
+	setReg(0x06, 0xff);
+}
+
+void LiquidCrystal_I2C::setReg(unsigned char addr, unsigned char dta)
+{
+	Wire.beginTransmission(RGB_ADDRESS); // transmit to device #4
+	Wire.write(addr);
+	Wire.write(dta);
+	Wire.endTransmission();    // stop transmitting
+}
+
+void LiquidCrystal_I2C::setRGB(unsigned char r, unsigned char g, unsigned char b)
+{
+	setReg(REG_RED, r);
+	setReg(REG_GREEN, g);
+	setReg(REG_BLUE, b);
+}
+
+const unsigned char color_define[4][3] =
+{
+	{255, 255, 255},            // white
+	{255, 0, 0},                // red
+	{0, 255, 0},                // green
+	{0, 0, 255},                // blue
+};
+
+void LiquidCrystal_I2C::setColor(unsigned char color)
+{
+	if(color > 3)return ;
+	setRGB(color_define[color][0], color_define[color][1], color_define[color][2]);
+}
+
 
 
 // unsupported API functions

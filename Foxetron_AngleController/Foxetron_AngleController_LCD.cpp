@@ -28,6 +28,7 @@ VOID LCD_Initialize()
 
 	LCD->init();
 	LCD->backlight();
+	LCD->setColorAll();
 	LCD->home();
 
 

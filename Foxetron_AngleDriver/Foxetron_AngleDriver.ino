@@ -133,10 +133,10 @@ HalfStepper * Motor		= NULL;
 
 #ifdef _DEBUG
 
-DWORD _MemoryInfoLastMS				= 0;
+LONG _MemoryInfoLastMS				= 0;
 
 #ifdef DEBUG_INPUTS
-DWORD _PrintInputsLastMS			= 0;
+LONG _PrintInputsLastMS				= 0;
 #endif
 
 #endif
@@ -244,7 +244,7 @@ VOID loop()
 {
 #ifdef _DEBUG
 
-	if (_MemoryInfoLastMS + DEBUG_MEMORY_INFO_INTERVAL_MS >= millis())
+	if (_MemoryInfoLastMS + DEBUG_MEMORY_INFO_INTERVAL_MS <= millis())
 	{
 		PrintString(F("\nRAM: "));
 		PrintLine((CWORD)SramFree());
@@ -261,7 +261,7 @@ VOID loop()
 
 	#ifdef DEBUG_INPUTS
 
-	if (_PrintInputsLastMS + DEBUG_INPUTS_INTERVAL_MS >= millis())
+	if (_PrintInputsLastMS + DEBUG_INPUTS_INTERVAL_MS <= millis())
 	{
 		DEBUG_PrintInputValues();
 
