@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 		..\libraries\ClickEncoder\ClickEncoder.cpp = ..\libraries\ClickEncoder\ClickEncoder.cpp
 		..\libraries\ClickEncoder\ClickEncoder.h = ..\libraries\ClickEncoder\ClickEncoder.h
 		..\libraries\VaRGB\includes\Curve.h = ..\libraries\VaRGB\includes\Curve.h
+		..\libraries\ArduinoMenu\src\menuFields.h = ..\libraries\ArduinoMenu\src\menuFields.h
 		..\libraries\OneButton\OneButton.cpp = ..\libraries\OneButton\OneButton.cpp
 		..\libraries\OneButton\OneButton.h = ..\libraries\OneButton\OneButton.h
 		..\libraries\VaRGB\includes\Schedule.h = ..\libraries\VaRGB\includes\Schedule.h

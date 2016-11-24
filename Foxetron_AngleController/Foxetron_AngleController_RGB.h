@@ -53,14 +53,14 @@ EXTERN Linear * _RgbCurves[];
 #pragma endregion
 
 
-#pragma region FUNCTION DECLARATIONS
+#pragma region PROGRAM FUNCTION DECLARATIONS
 
 VOID RGB_Initialize();
 VOID RGB_Free();
 
 VOID RGB_Step();
 
-#pragma region FUNCTION DECLARATIONS
+#pragma endregion
 
 
 #endif

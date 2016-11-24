@@ -58,7 +58,7 @@ VOID RGB_OnScheduleComplete(Schedule * schedule)
 #pragma endregion
 
 
-#pragma region PROGRAM FUNCTIONS
+#pragma region PROGRAM FUNCTION DEFINITIONS
 
 VOID RGB_Initialize()
 {

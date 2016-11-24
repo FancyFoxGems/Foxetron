@@ -40,7 +40,6 @@
 // PROJECT INCLUDES
 #include "Foxetron_common.h"
 #include "Foxetron_AngleController_pins.h"
-#include "Foxetron_AngleController_LCD_chars.h"
 
 // PROJECT MODULES
 #include "Foxetron_AngleController_LCD.h"
@@ -76,6 +75,8 @@
 // PROGRAM OPTIONS
 
 #define INPUT_PROCESS_INTERVAL_uS				5000			// Period by which input state changes should be polled and handled
+
+#define MODE_SWITCH_THRESHOLD					500				// ADC value at which >= readings set mode switch state to TRUE
 
 #pragma endregion
 
@@ -264,7 +265,7 @@ VOID loop()
 #define _ISR_MENU_ENCODER_READ_CHANNEL(channel, other_channel, increment_comparison)				\
 	_MenuEncoder ## channel = !_MenuEncoder ## channel;												\
 	_MenuEncoderUp = (_MenuEncoder ## channel increment_comparison _MenuEncoder ## other_channel);	\
-	_ISR_Encoder_UpdateEncoderSteps();
+	if (_MenuEncoder ## channel == _MenuEncoder ## other_channel) _ISR_Encoder_UpdateEncoderSteps();
 
 STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps() ALWAYS_INLINE;
 
@@ -336,7 +337,8 @@ ISR(PCINT2_vect, ISR_NOBLOCK)
 // TIMER 2: COMPARE MATCH A
 ISR(TIMER2_COMPA_vect, ISR_NOBLOCK){
 	_MenuEncoderVelocity = (_MenuEncoderStepsLast - _MenuEncoderSteps) * uS_PER_SECOND / PROCESS_TIMER_OVERFLOW_uS / OCR2A;
-	_MenuEncoderStepsLast = _MenuEncoderSteps;}#pragma endregion
+	_MenuEncoderStepsLast = _MenuEncoderSteps;
+	_ModeSwitch	= analogRead(PIN_ADC_MODE_SWITCH) > MODE_SWITCH_THRESHOLD;}#pragma endregion
 
 
 #pragma region PROGRAM FUNCTIONS
@@ -521,7 +523,7 @@ VOID DEBUG_PrintInputValues()
 	if (_LedButton5)
 		ResetPin(PIN_LED_BUTTON_5);
 
-	_ModeSwitch		= analogRead(PIN_ADC_MODE_SWITCH) > 500 ? TRUE : FALSE;
+	_ModeSwitch	= analogRead(PIN_ADC_MODE_SWITCH) > MODE_SWITCH_THRESHOLD;
 
 	_MenuEncoderA	= CheckPinSet(PIN_MENU_ENCODER_A);
 	_MenuEncoderB	= CheckPinSet(PIN_MENU_ENCODER_B);
