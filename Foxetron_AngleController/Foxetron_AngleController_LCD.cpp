@@ -186,6 +186,24 @@ namespace Foxetron
 		return fullCellChar;
 	}
 
+	PBYTE LCD_CreateGraphPartialCellChar(BYTE cellPercentage, PBYTE fullCellChar)
+	{
+		PBYTE partialCellChar = new byte[LCD_CHAR_HEIGHT];
+
+		Serial.println(cellPercentage);
+		Serial.println(B(cellPercentage * LCD_CHAR_WIDTH / 100) - 1);
+		Serial.println();
+		Serial.flush();
+		delay(5);
+		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+		{
+			partialCellChar[pixY] = MASK(fullCellChar[pixY],
+				LCD_CHAR_LINE_PIXEL_ROW - (B((100 - cellPercentage) * LCD_CHAR_WIDTH / 100) - 1));
+		}
+
+		return partialCellChar;
+	}
+
 	PBYTE LCD_CreateGraphSemiCellChar(PBYTE fullCellChar)
 	{
 		PBYTE semiCellChar = new byte[LCD_CHAR_HEIGHT];
@@ -196,26 +214,12 @@ namespace Foxetron
 		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 		{
 			if (pixY % 2)
-				semiCellChar[pixY] &= LCD_CHAR_SEMI_MASK_ODD;
+				semiCellChar[pixY] = fullCellChar[pixY] BAND LCD_CHAR_SEMI_MASK_ODD;
 			else
-				semiCellChar[pixY] &= LCD_CHAR_SEMI_MASK_EVEN;
+				semiCellChar[pixY] = fullCellChar[pixY] BAND LCD_CHAR_SEMI_MASK_EVEN;
 		}
 
 		return semiCellChar;
-	}
-
-	PBYTE LCD_CreateGraphPartialCellChar(BYTE cellPercentage, PBYTE fullCellChar)
-	{
-		PBYTE partialCellChar = new byte[LCD_CHAR_HEIGHT];
-
-		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-		{
-			partialCellChar[pixY] = fullCellChar[pixY] BAND
-				(LCD_CHAR_LINE_PIXEL_ROW - (B(cellPercentage == 100 ?
-					LCD_CHAR_WIDTH - 1 : cellPercentage * LCD_CHAR_WIDTH / 100) - 1));
-		}
-
-		return partialCellChar;
 	}
 
 #pragma endregion
@@ -241,7 +245,7 @@ namespace Foxetron
 		PBYTE newLcdChar = new byte[LCD_CHAR_HEIGHT];
 
 		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-			newLcdChar[pixY] = LCD_CHAR_PIXEL_ROW_MASK - lcdChar[pixY];
+			newLcdChar[pixY] = LCD_CHAR_LINE_PIXEL_ROW - lcdChar[pixY];
 
 		return newLcdChar;
 	}
@@ -333,7 +337,7 @@ namespace Foxetron
 
 		BYTE cellPercentage = 0;
 
-		for (BYTE col = 0; row < widthChars; col++)
+		for (BYTE col = 0; col < widthChars; col++)
 		{
 			LCD->setCursor(col + startCol, row);
 

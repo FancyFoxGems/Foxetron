@@ -42,8 +42,6 @@
 #define LCD_CHAR_HEIGHT			8
 #define LCD_CHAR_WIDTH			5
 
-#define LCD_CHAR_PIXEL_ROW_MASK	0b00011111
-
 #pragma endregion
 
 
@@ -208,12 +206,12 @@ namespace Foxetron
 	TYPEDEF_ENUM_ALIASES(LcdGraphOptions, LCDGRAPHOPTIONS);
 
 
+	#define LCD_GRAPH_PARTIAL_STYLE_MASK	0x80
+
 	STATIC CLCDGRAPHCELLSTYLE LcdGraphOptionsToLcdGraphCellStyle(CLCDGRAPHOPTIONS lcdGraphOptions)
 	{
-		return static_cast<CLCDGRAPHCELLSTYLE>(HIGH_NYBBLE((CBYTE)lcdGraphOptions));
+		return static_cast<CLCDGRAPHCELLSTYLE>(HIGH_NYBBLE(INVERSE_MASK((CBYTE)lcdGraphOptions, LCD_GRAPH_PARTIAL_STYLE_MASK)));
 	}
-
-	#define LCD_GRAPH_PARTIAL_STYLE_MASK	0x80
 
 	STATIC CLCDGRAPHPARTIALSTYLE LcdGraphOptionsToLcdGraphPartialStyle(CLCDGRAPHOPTIONS lcdGraphOptions)
 	{
