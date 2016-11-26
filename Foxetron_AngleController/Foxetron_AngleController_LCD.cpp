@@ -9,6 +9,8 @@
 
 #include "Foxetron_AngleController_LCD.h"
 
+using namespace Foxetron;
+
 #include <avr/pgmspace.h>
 
 
@@ -28,21 +30,9 @@ VOID LCD_Initialize()
 
 	LCD->init();
 	LCD->backlight();
-	LCD->setColorAll();
 	LCD->home();
 
-
-	// Load large font
-
-	BYTE customChar[LCD_CHAR_HEIGHT];
-
-	for (BYTE i = 0; i < LCD_CHAR_HEIGHT; i++)
-	{
-		for (BYTE j = 0; j < LCD_CHAR_HEIGHT; j++)
-			customChar[j] = pgm_read_byte_near(BF_fontShapes + (i * LCD_CHAR_HEIGHT) + j);
-
-		LCD->createChar(i, customChar);
-	}
+	//LCD_LoadBigFont();
 }
 
 VOID LCD_Free()
@@ -58,21 +48,26 @@ namespace Foxetron
 {
 #pragma region UTILITY FUNCTION DEFINITIONS
 
-	PCCHAR LCD_CreateScrollBarChar(BYTE cellPercentage, CLCDSCROLLBARINDICATOR indicator)
+	PBYTE LCD_CreateScrollBarChar(BYTE cellPercentage, CLCDSCROLLBARINDICATOR indicator)
 	{
-		PCHAR scrollBarChar = new char[LCD_CHAR_HEIGHT];
+		PBYTE scrollBarChar = new byte[LCD_CHAR_HEIGHT];
+
+		BYTE scrollerRow = cellPercentage == 100 ? LCD_CHAR_HEIGHT - 1 : cellPercentage * LCD_CHAR_HEIGHT / 100;
 
 		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-			scrollBarChar[pixY] = 0;
-
-		scrollBarChar[cellPercentage * LCD_CHAR_HEIGHT / 100] = B(LCD_SCROLLBAR_WIDTH_PIXELS + 1) - 1;
+		{
+			if (pixY == scrollerRow)
+				scrollBarChar[pixY] = LCD_SCROLLER_PIXEL_ROW;
+			else
+				scrollBarChar[pixY] = 0;
+		}
 
 		return scrollBarChar;
 	}
 
-	PCCHAR LCD_CreateGraphSpaceChar(CLCDGRAPHSPACES spaceStyle)
+	PBYTE LCD_CreateGraphSpaceChar(CLCDGRAPHSPACES spaceStyle)
 	{
-		PCHAR spaceChar = new char[LCD_CHAR_HEIGHT];
+		PBYTE spaceChar = new byte[LCD_CHAR_HEIGHT];
 
 		switch (spaceStyle)
 		{
@@ -135,9 +130,9 @@ namespace Foxetron
 		return spaceChar;
 	}
 
-	PCCHAR LCD_CreateGraphFullCellChar(CLCDGRAPHCELLSTYLE cellStyle, PCCHAR spaceChar)
+	PBYTE LCD_CreateGraphFullCellChar(CLCDGRAPHCELLSTYLE cellStyle, PBYTE spaceChar)
 	{
-		PCHAR fullCellChar = new char[LCD_CHAR_HEIGHT];
+		PBYTE fullCellChar = new byte[LCD_CHAR_HEIGHT];
 
 		switch (cellStyle)
 		{
@@ -191,9 +186,9 @@ namespace Foxetron
 		return fullCellChar;
 	}
 
-	PCCHAR LCD_CreateGraphSemiCellChar(PCCHAR fullCellChar)
+	PBYTE LCD_CreateGraphSemiCellChar(PBYTE fullCellChar)
 	{
-		PCHAR semiCellChar = new char[LCD_CHAR_HEIGHT];
+		PBYTE semiCellChar = new byte[LCD_CHAR_HEIGHT];
 
 		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 			semiCellChar[pixY] = fullCellChar[pixY];
@@ -209,14 +204,15 @@ namespace Foxetron
 		return semiCellChar;
 	}
 
-	PCCHAR LCD_CreateGraphPartialCellChar(BYTE cellPercentage, PCCHAR fullCellChar)
+	PBYTE LCD_CreateGraphPartialCellChar(BYTE cellPercentage, PBYTE fullCellChar)
 	{
-		PCHAR partialCellChar = new char[LCD_CHAR_HEIGHT];
+		PBYTE partialCellChar = new byte[LCD_CHAR_HEIGHT];
 
 		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 		{
-			partialCellChar[pixY] = fullCellChar[pixY] &
-				(LCD_CHAR_LINE_PIXEL_ROW - (B(cellPercentage * LCD_CHAR_WIDTH / 100) - 1));
+			partialCellChar[pixY] = fullCellChar[pixY] BAND
+				(LCD_CHAR_LINE_PIXEL_ROW - (B(cellPercentage == 100 ?
+					LCD_CHAR_WIDTH - 1 : cellPercentage * LCD_CHAR_WIDTH / 100) - 1));
 		}
 
 		return partialCellChar;
@@ -227,29 +223,42 @@ namespace Foxetron
 
 #pragma region LCD FUNCTION DEFINITIONS
 
-	PCCHAR LCD_CreateInvertedChar(PCCHAR lcdChar)
+	VOID LCD_LoadBigFont()
 	{
-		PCHAR newLcdChar = new char[COUNTOF(lcdChar)];
+		BYTE customChar[LCD_CHAR_HEIGHT];
 
-		for (BYTE pixY = 0; pixY < COUNT(lcdChar); pixY++)
-			newLcdChar[pixY] = lcdChar[pixY] ^ B(LCD_CHAR_WIDTH - 1);
+		for (BYTE i = 0; i < LCD_CHAR_HEIGHT; i++)
+		{
+			for (BYTE j = 0; j < LCD_CHAR_HEIGHT; j++)
+				customChar[j] = pgm_read_byte_near(BF_fontShapes + (i * LCD_CHAR_HEIGHT) + j);
 
-		return const_cast<PCCHAR>(newLcdChar);
+			LCD->createChar(i, customChar);
+		}
 	}
 
-	PCCHAR LCD_CreateInvertedChar_P(PCCHAR lcdChar)
+	PBYTE LCD_CreateInvertedChar(PBYTE lcdChar)
 	{
-		PCHAR lcdCharData = new char[COUNTOF(lcdChar)];
+		PBYTE newLcdChar = new byte[LCD_CHAR_HEIGHT];
 
-		for (BYTE i = 0; i < COUNTOF(lcdChar); i++)
+		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			newLcdChar[pixY] = LCD_CHAR_PIXEL_ROW_MASK - lcdChar[pixY];
+
+		return newLcdChar;
+	}
+
+	PBYTE LCD_CreateInvertedChar_P(PCCHAR lcdChar)
+	{
+		PCHAR lcdCharData = new char[LCD_CHAR_HEIGHT];
+
+		for (BYTE i = 0; i < LCD_CHAR_HEIGHT; i++)
 			lcdCharData[i] = pgm_read_byte_near(lcdChar++);
 
-		return LCD_CreateInvertedChar(const_cast<PCCHAR>(lcdCharData));
+		return LCD_CreateInvertedChar((PBYTE)lcdCharData);
 	}
 
-	VOID LCD_LoadInvertedChar(BYTE customCharIdx, PCCHAR lcdChar)
+	VOID LCD_LoadInvertedChar(BYTE customCharIdx, PBYTE lcdChar)
 	{
-		PCCHAR invertedLcdChar = LCD_CreateInvertedChar(lcdChar);
+		PBYTE invertedLcdChar = LCD_CreateInvertedChar(lcdChar);
 
 		LCD->createChar(customCharIdx, invertedLcdChar);
 
@@ -258,7 +267,7 @@ namespace Foxetron
 
 	VOID LCD_LoadInvertedChar_P(BYTE customCharIdx, PCCHAR lcdChar)
 	{
-		PCCHAR invertedLcdChar = LCD_CreateInvertedChar_P(lcdChar);
+		PBYTE invertedLcdChar = LCD_CreateInvertedChar_P(lcdChar);
 
 		LCD->createChar(customCharIdx, invertedLcdChar);
 
@@ -269,17 +278,24 @@ namespace Foxetron
 	{
 		BYTE col = LcdScrollBarOptionsToLcdScrollBarPosition(options)
 			== LcdScrollBarPosition::LEFT_POSITION ? 0 : LCD_COLS - 1;
+		BYTE currRow = percentage == 100 ? LCD_ROWS - 1 : percentage * LCD_ROWS / 100;
+
+		PBYTE scrollBarChar = LCD_CreateScrollBarChar(percentage == 100 ? 100 :
+				(percentage % (100 / LCD_ROWS)) * LCD_ROWS,
+			LcdScrollBarOptionsToLcdScrollBarIndicator(options));
+		LCD->createChar(0x7, scrollBarChar);
+
+		delete scrollBarChar;
 
 		for (BYTE row = 0; row < LCD_ROWS; row++)
 		{
-			LCD->setCursor(row, col);
-			LCD->write(LCD_SYMBOL_BLANK);
+			LCD->setCursor(col, row);
+
+			if (row == currRow)
+				LCD->write(0x7);
+			else
+				LCD->write(LCD_SYMBOL_BLANK);
 		}
-
-		LCD->setCursor(percentage * LCD_ROWS / 100, col);
-
-		PCCHAR scrollBarChar = LCD_CreateScrollBarChar(((100 / LCD_ROWS) % percentage) * LCD_ROWS,
-			LcdScrollBarOptionsToLcdScrollBarIndicator(options));
 	}
 
 	VOID LCD_DrawGraph(BYTE row, BYTE startCol, BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options)
@@ -287,15 +303,15 @@ namespace Foxetron
 		CLCDGRAPHCELLSTYLE cellStyle = LcdGraphOptionsToLcdGraphCellStyle(options);
 		CLCDGRAPHSPACES spaceStyle = LcdGraphOptionsToLcdGraphSpaces(options);
 
-		PCCHAR spaceChar = LCD_CreateGraphSpaceChar(spaceStyle);
+		PBYTE spaceChar = LCD_CreateGraphSpaceChar(spaceStyle);
 		LCD->createChar(0x7, spaceChar);
 
-		PCCHAR fullCellChar = LCD_CreateGraphFullCellChar(cellStyle, spaceChar);
+		PBYTE fullCellChar = LCD_CreateGraphFullCellChar(cellStyle, spaceChar);
 		LCD->createChar(0x6, fullCellChar);
 
 		if (percentage % (100 / widthChars) > 0)
 		{
-			PCCHAR partialCellChar = NULL;
+			PBYTE partialCellChar = NULL;
 
 			if (LcdGraphOptionsToLcdGraphPartialStyle(options) == LcdGraphPartialStyle::SEMI_PARTIAL)
 			{
@@ -319,7 +335,7 @@ namespace Foxetron
 
 		for (BYTE col = 0; row < widthChars; col++)
 		{
-			LCD->setCursor(row, col + startCol);
+			LCD->setCursor(col + startCol, row);
 
 			if (percentage <= col * 100 / widthChars)
 				LCD->write(0x7);

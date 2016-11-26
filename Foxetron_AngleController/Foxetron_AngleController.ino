@@ -198,22 +198,10 @@ VOID setup()
 
 	sei();
 
-	Wire.begin();
-
-	Wire.beginTransmission(0xC4 >> 1);
-	Wire.write(0);
-	Wire.endTransmission();
-	delay(500);
-
-	Wire.beginTransmission(0x7C >> 1);
-	Wire.write(0);
-	Wire.endTransmission();
-	delay(500);
-
 	LCD_Initialize();
 	//RGB_Initialize();
 
-	LCD->printBig(F("Fox"), 2, 0);
+	//LCD->printBig(F("Fox"), 2, 0);
 
 
 #ifdef _DEBUG
@@ -234,9 +222,16 @@ VOID serialEvent()
 	//WaitForMessage(Serial, OnMessage);
 }
 
+BYTE percentage = 0;
+
 VOID loop()
 {
 	//RGB_Step();
+
+	LCD_DrawGraph(0, 0, 10, percentage++, LcdGraphOptions::SQUARE_SQUARE);
+	if (percentage > 100)
+		percentage = 0;
+	delay(50);
 
 
 #ifdef _DEBUG
@@ -610,11 +605,13 @@ VOID DEBUG_PrintInputValues()
 	PrintLine();
 }
 
+#define LCD_CHAR_ROWS_TO_DISPLAY	1
+
 VOID DEBUG_DisplayKeyCodes()
 {
 	uint8_t i = 0;
 
-	while (i < 1)
+	while (i < LCD_CHAR_ROWS_TO_DISPLAY)
 	{
 		LCD->clear();
 

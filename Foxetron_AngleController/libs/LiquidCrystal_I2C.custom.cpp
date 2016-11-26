@@ -235,10 +235,9 @@ void LiquidCrystal_I2C::createChar(uint8_t location, uint8_t charmap[])
 {
 	location &= 0x7; // we only have 8 locations 0-7
 	command(LCD_SETCGRAMADDR | (location << 3));
+
 	for (int i = 0; i < 8; i++)
-	{
 		write(charmap[i]);
-	}
 }
 
 //createChar with PROGMEM input
@@ -246,10 +245,9 @@ void LiquidCrystal_I2C::createChar(uint8_t location, const char *charmap)
 {
 	location &= 0x7; // we only have 8 locations 0-7
 	command(LCD_SETCGRAMADDR | (location << 3));
+
 	for (int i = 0; i < 8; i++)
-	{
 		write(pgm_read_byte_near(charmap++));
-	}
 }
 
 // Turn the (optional) backlight off/on
@@ -353,6 +351,35 @@ void LiquidCrystal_I2C::printstr(const char c[])
 	//This function is not identical to the function used for "real" I2C displays
 	//it's here so the user sketch doesn't have to be changed
 	print(c);
+}
+
+uint8_t LiquidCrystal_I2C::printStr(const char * str, uint8_t col, uint8_t row)
+{
+	uint8_t width = 0;
+
+	while (*str != '\0')
+	{
+		this->setCursor(col + width, row);
+		width += this->write(*str++);
+	}
+
+	return width;
+}
+
+uint8_t LiquidCrystal_I2C::printStr(const __FlashStringHelper * str, uint8_t col, uint8_t row)
+{
+	uint8_t width = 0;
+	PGM_P p = reinterpret_cast<PGM_P>(str);
+	char c = pgm_read_byte_near(p++);
+
+	while (c != '\0')
+	{
+		this->setCursor(col + width, row);
+		width += this->write(c);
+		c = pgm_read_byte_near(p++);
+	}
+
+	return width;
 }
 
 

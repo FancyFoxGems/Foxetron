@@ -140,6 +140,9 @@ public:
 
 	void printstr(const char[]);
 
+	uint8_t printStr(const char * str, uint8_t col = 0, uint8_t row = 0);
+	uint8_t printStr(const __FlashStringHelper * str, uint8_t col = 0, uint8_t row = 0);
+
 	////Unsupported API functions (not implemented in this library)
 	uint8_t status();
 

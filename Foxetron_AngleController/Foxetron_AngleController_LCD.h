@@ -34,11 +34,15 @@
 
 // LCD OPTIONS/CONSTANTS
 
-//#define LCD_I2C_ADDRESS			0x27
-#define LCD_I2C_ADDRESS			(0x7C >> 1)
+#define LCD_I2C_ADDRESS			0x27
 
-#define LCD_COLS				16
-#define LCD_ROWS				2
+#define LCD_COLS				20
+#define LCD_ROWS				4
+
+#define LCD_CHAR_HEIGHT			8
+#define LCD_CHAR_WIDTH			5
+
+#define LCD_CHAR_PIXEL_ROW_MASK	0b00011111
 
 #pragma endregion
 
@@ -226,10 +230,12 @@ namespace Foxetron
 
 #pragma region LCD FUNCTION DECLARATIONS
 
-	PCCHAR LCD_CreateInvertedChar(PCCHAR);
-	PCCHAR LCD_CreateInvertedChar_P(PCCHAR);
+	VOID LCD_LoadBigFont();
 
-	VOID LCD_LoadInvertedChar(BYTE, PCCHAR);
+	PBYTE LCD_CreateInvertedChar(PBYTE);
+	PBYTE LCD_CreateInvertedChar_P(PCCHAR);
+
+	VOID LCD_LoadInvertedChar(BYTE, PBYTE);
 	VOID LCD_LoadInvertedChar_P(BYTE, PCCHAR);
 
 	VOID LCD_DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS = LcdScrollBarOptions::LINE);
