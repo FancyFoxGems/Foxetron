@@ -228,7 +228,7 @@ VOID loop()
 {
 	//RGB_Step();
 
-	LCD_DrawGraph(0, 0, 10, percentage++, LcdGraphOptions::SQUARE_SQUARE);
+	LCD_DrawGraph(0, 0, 10, percentage++, LcdGraphOptions::FILLED_CIRCLE);
 	if (percentage > 100)
 		percentage = 0;
 	delay(50);

@@ -46,83 +46,164 @@ VOID LCD_Free()
 
 namespace Foxetron
 {
+#pragma region LCD FUNCTION CONSTANT DEFINITIONS
+
+	CBYTE LCD_CELL_SEMI_MASKS[3][3]	= { { 0x9, 0x12, 0x4 }, { 0x15, 0xA, 0xFF }, { 0x16, 0xD, 0x1B } };
+
+#pragma endregion
+
+
 #pragma region UTILITY FUNCTION DEFINITIONS
 
 	PBYTE LCD_CreateScrollBarChar(BYTE cellPercentage, CLCDSCROLLBARINDICATOR indicator)
 	{
 		PBYTE scrollBarChar = new byte[LCD_CHAR_HEIGHT];
 
-		BYTE scrollerRow = cellPercentage == 100 ? LCD_CHAR_HEIGHT - 1 : cellPercentage * LCD_CHAR_HEIGHT / 100;
+		scrollBarChar[cellPercentage == 100 ? LCD_CELL_LAST_PIXEL_ROW :
+			cellPercentage * LCD_CHAR_HEIGHT / 100] = LCD_SCROLLER_PIXEL_ROW;
 
-		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-		{
-			if (pixY == scrollerRow)
-				scrollBarChar[pixY] = LCD_SCROLLER_PIXEL_ROW;
-			else
-				scrollBarChar[pixY] = 0;
-		}
+		//BYTE scrollerRow = cellPercentage == 100 ? LCD_CELL_LAST_PIXEL_ROW : cellPercentage * LCD_CHAR_HEIGHT / 100;
+
+		//for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+		//{
+		//	if (pixY == scrollerRow)
+		//		scrollBarChar[pixY] = LCD_SCROLLER_PIXEL_ROW;
+		//	else
+		//		scrollBarChar[pixY] = 0;
+		//}
 
 		return scrollBarChar;
 	}
 
-	PBYTE LCD_CreateGraphSpaceChar(CLCDGRAPHSPACES spaceStyle)
+	PBYTE LCD_CreateSpaceChar(CLCDSPACETYLE spaceStyle)
 	{
 		PBYTE spaceChar = new byte[LCD_CHAR_HEIGHT];
 
 		switch (spaceStyle)
 		{
-		case LcdGraphSpaces::DASH_SPACE:
+		case LcdSpaceStyle::DASH_SPACE:
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-				spaceChar[pixY] = 0;
-
-			spaceChar[LCD_CHAR_HEIGHT / 2 + 1] = LCD_CHAR_LINE_PIXEL_ROW;
+			{
+				if (pixY == LCD_CELL_MIDDLE_PIXEL_ROW)
+					spaceChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
+				else
+					spaceChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
+			}
 
 			break;
 
 
-		case LcdGraphSpaces::DOTS_SPACE:
+		case LcdSpaceStyle::PLUS_SPACE:
+
+			for (BYTE pixY = 0; pixY < LCD_CELL_LAST_PIXEL_ROW; pixY++)
+			{
+				switch (pixY)
+				{
+				case 3:
+
+					spaceChar[pixY] = LCD_CELL_SMALL_DASH_PIXEL_ROW;
+					break;
+
+
+				case 2:
+				case 4:
+
+					spaceChar[pixY] = LCD_CELL_CENTER_PIXEL_ROW;
+					break;
+
+
+				default:
+
+					spaceChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
+				}
+			}
+
+			break;
+
+
+		case LcdSpaceStyle::SQUARE_SPACE:
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-				spaceChar[pixY] = 0;
+			{
+				switch (pixY)
+				{
+				case 0:
+				case 1:
 
-			spaceChar[LCD_CHAR_HEIGHT / 2 + 1] = LCD_CHAR_DOTS_PIXEL_ROW;
+					spaceChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
+					break;
 
-			break;
+
+				case 2:
+				case LCD_CHAR_HEIGHT - 2:
+
+					spaceChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
+					break;
 
 
-		case LcdGraphSpaces::PLUS_SPACE:
+				default:
+
+					spaceChar[pixY] = LCD_CELL_FIRST_LAST_PIXEL_ROW;
+				}
+			}
+
+
+		case LcdSpaceStyle::DIAMOND_SPACE:
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-				spaceChar[pixY] = 0;
-
-			spaceChar[2] = LCD_CHAR_CENTER_PIXEL_ROW;
-			spaceChar[3] = LCD_CHAR_SMALL_DASH_PIXEL_ROW;
-			spaceChar[4] = LCD_CHAR_CENTER_PIXEL_ROW;
+				spaceChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_DIAMOND + pixY);
 
 			break;
 
 
-		case LcdGraphSpaces::CIRCLE_SPACE:
+		case LcdSpaceStyle::CIRCLE_SPACE:
 
-			for (BYTE pixY = 1; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
-				spaceChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				spaceChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_CIRCLE + pixY);
 
 			break;
 
 
-		case LcdGraphSpaces::SQUARE_SPACE:
+		case LcdSpaceStyle::LINES_SPACE:
 
-			for (BYTE pixY = 1; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
-				spaceChar[pixY] = LCD_CHAR_FIRST_LAST_PIXEL_ROW;
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			{
+				switch (pixY)
+				{
+				case 0:
+				case LCD_CHAR_HEIGHT - 1:
 
-			spaceChar[1] = LCD_CHAR_LINE_PIXEL_ROW;
-			spaceChar[LCD_CHAR_HEIGHT - 2] = LCD_CHAR_LINE_PIXEL_ROW;
+					spaceChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
+					break;
+
+
+				default:
+
+					spaceChar[pixY] = LCD_CELL_DOTS_PIXEL_ROW;
+				}
+			}
+
+			break;
+
+
+		case LcdSpaceStyle::DOTS_SPACE:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			{
+				if (pixY == LCD_CELL_MIDDLE_PIXEL_ROW)
+					spaceChar[pixY] = LCD_CELL_DOTS_PIXEL_ROW;
+				else
+					spaceChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
+			}
 
 			break;
 
 
 		default:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				spaceChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
 
 			break;
 		}
@@ -130,96 +211,223 @@ namespace Foxetron
 		return spaceChar;
 	}
 
-	PBYTE LCD_CreateGraphFullCellChar(CLCDGRAPHCELLSTYLE cellStyle, PBYTE spaceChar)
+	PBYTE LCD_CreateGraphFullCellChar(CLCDGRAPHCELL cellStyle, PBYTE spaceChar)
 	{
 		PBYTE fullCellChar = new byte[LCD_CHAR_HEIGHT];
 
 		switch (cellStyle)
 		{
-		case LcdGraphCellStyle::BAR_GRAPH:
+		case LcdGraphCell::BLOCK_CELL:
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-				fullCellChar[pixY] = LCD_CHAR_LINE_PIXEL_ROW;
+				fullCellChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
 
 			break;
 
 
-		case LcdGraphCellStyle::LINE_GRAPH:
+		case LcdGraphCell::LINE_CELL:
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 				fullCellChar[pixY] = spaceChar[pixY];
 
-			fullCellChar[LCD_CHAR_HEIGHT / 2 + 1] |= LCD_CHAR_LINE_PIXEL_ROW;
+			fullCellChar[LCD_CELL_MIDDLE_PIXEL_ROW - 1] |= LCD_CELL_LINE_PIXEL_ROW;
+			fullCellChar[LCD_CELL_MIDDLE_PIXEL_ROW] |= LCD_CELL_LINE_PIXEL_ROW;
 
 			break;
 
 
-		case LcdGraphCellStyle::SQUARE_GRAPH:
+		case LcdGraphCell::PLUS_CELL:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				fullCellChar[pixY] = spaceChar[pixY];
+
+			fullCellChar[3] |= LCD_CELL_CENTER_PIXEL_ROW;
+			fullCellChar[4] |= LCD_CELL_SMALL_DASH_PIXEL_ROW;
+			fullCellChar[5] |= LCD_CELL_CENTER_PIXEL_ROW;
+
+			break;
+
+
+		case LcdGraphCell::SQUARE_CELL:
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 			{
 				fullCellChar[pixY] = spaceChar[pixY];
 
 				if (pixY >= 3 && pixY <=5)
-					fullCellChar[pixY] |= LCD_CHAR_SMALL_DASH_PIXEL_ROW;
+					fullCellChar[pixY] |= LCD_CELL_SMALL_DASH_PIXEL_ROW;
 			}
 
 			break;
 
 
-		case LcdGraphCellStyle::DISC_GRAPH:
+		case LcdGraphCell::DISC_CELL:
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 				fullCellChar[pixY] = spaceChar[pixY];
 
 			for (BYTE pixY = 1; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
-				fullCellChar[pixY] |= pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
-
-			fullCellChar[2] |= LCD_CHAR_CENTER_PIXEL_ROW;
-			fullCellChar[3] |= LCD_CHAR_SMALL_DASH_PIXEL_ROW;
-			fullCellChar[4] |= LCD_CHAR_CENTER_PIXEL_ROW;
+				fullCellChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
 
 			break;
+
+
+		case LcdGraphCell::DIAMOND_CELL:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				fullCellChar[pixY] = spaceChar[pixY];
+
+			for (BYTE pixY = 2; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
+				fullCellChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_DIAMOND + pixY);
+
+			fullCellChar[3] |= LCD_CELL_DOTS_SPARSE_PIXEL_ROW;
+			fullCellChar[5] |= LCD_CELL_DOTS_SPARSE_PIXEL_ROW;
+
+			break;
+
+
+		case LcdGraphCell::STRIPES_CELL:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				fullCellChar[pixY] = LCD_CELL_DOTS_PIXEL_ROW;
+
+			break;
+
+
+		default:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				fullCellChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
 		}
 
 
 		return fullCellChar;
 	}
 
-	PBYTE LCD_CreateGraphPartialCellChar(BYTE cellPercentage, PBYTE fullCellChar)
+	PBYTE LCD_CreateGraphPartialCellChar(BYTE cellPercentage, PBYTE fullCellChar, PBYTE spaceChar)
 	{
 		PBYTE partialCellChar = new byte[LCD_CHAR_HEIGHT];
 
-		Serial.println(cellPercentage);
-		Serial.println(B(cellPercentage * LCD_CHAR_WIDTH / 100) - 1);
-		Serial.println();
-		Serial.flush();
-		delay(5);
 		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 		{
-			partialCellChar[pixY] = MASK(fullCellChar[pixY],
-				LCD_CHAR_LINE_PIXEL_ROW - (B((100 - cellPercentage) * LCD_CHAR_WIDTH / 100) - 1));
+			partialCellChar[pixY] = spaceChar[pixY] BOR MASK(fullCellChar[pixY],
+				LCD_CELL_LINE_PIXEL_ROW - (B((100 - cellPercentage) * LCD_CHAR_WIDTH / 100) - 1));
 		}
 
 		return partialCellChar;
 	}
 
-	PBYTE LCD_CreateGraphSemiCellChar(PBYTE fullCellChar)
+	PBYTE LCD_CreateGraphSemiFillCellChar(BYTE cellPercentage, PBYTE fullCellChar)
 	{
 		PBYTE semiCellChar = new byte[LCD_CHAR_HEIGHT];
 
 		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-			semiCellChar[pixY] = fullCellChar[pixY];
-
-		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 		{
-			if (pixY % 2)
-				semiCellChar[pixY] = fullCellChar[pixY] BAND LCD_CHAR_SEMI_MASK_ODD;
+			if (cellPercentage <= 33)
+				semiCellChar[pixY] = MASK(fullCellChar[pixY], LCD_CELL_SEMI_MASKS[0][pixY % 3]);
+			else if (cellPercentage <= 66)
+				semiCellChar[pixY] = MASK(fullCellChar[pixY], LCD_CELL_SEMI_MASKS[1][pixY % 2]);
 			else
-				semiCellChar[pixY] = fullCellChar[pixY] BAND LCD_CHAR_SEMI_MASK_EVEN;
+				semiCellChar[pixY] = MASK(fullCellChar[pixY], LCD_CELL_SEMI_MASKS[2][pixY % 3]);
 		}
 
 		return semiCellChar;
+	}
+
+	PBYTE LCD_CreateSliderMarker(CLCDSLIDERMARKER markerStyle, PBYTE spaceChar)
+	{
+		PBYTE markerChar = new byte[LCD_CHAR_HEIGHT];
+
+		switch (markerStyle)
+		{
+		case LcdSliderMarker::CARET_MARKER:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				markerChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
+
+			break;
+
+
+		case LcdSliderMarker::LINE_MARKER:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				markerChar[pixY] = spaceChar[pixY];
+
+			markerChar[LCD_CELL_MIDDLE_PIXEL_ROW] |= LCD_CELL_LINE_PIXEL_ROW;
+
+			break;
+
+
+		case LcdSliderMarker::PLUS_MARKER:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				markerChar[pixY] = spaceChar[pixY];
+
+			markerChar[3] |= LCD_CELL_CENTER_PIXEL_ROW;
+			markerChar[4] |= LCD_CELL_SMALL_DASH_PIXEL_ROW;
+			markerChar[5] |= LCD_CELL_CENTER_PIXEL_ROW;
+
+			break;
+
+
+		case LcdSliderMarker::SQUARE_MARKER:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			{
+				markerChar[pixY] = spaceChar[pixY];
+
+				if (pixY >= 3 && pixY <=5)
+					markerChar[pixY] |= LCD_CELL_SMALL_DASH_PIXEL_ROW;
+			}
+
+			break;
+
+
+		case LcdSliderMarker::DIAMOND_MARKER:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				markerChar[pixY] = spaceChar[pixY];
+
+			for (BYTE pixY = 1; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
+				markerChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
+
+			break;
+
+
+		case LcdSliderMarker::DISC_MARKER:
+
+			for (BYTE pixY = 1; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
+				markerChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
+
+			break;
+
+
+		case LcdSliderMarker::TRIANGLE_MARKER:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				markerChar[pixY] = spaceChar[pixY];
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				markerChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_TRIANGLE + pixY);
+
+			break;
+
+
+		case LcdSliderMarker::STRIPES_MARKER:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				markerChar[pixY] = LCD_CELL_DOTS_SPARSE_PIXEL_ROW;
+
+			break;
+
+
+		default:
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				markerChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
+		}
+
+		return markerChar;
 	}
 
 #pragma endregion
@@ -245,7 +453,7 @@ namespace Foxetron
 		PBYTE newLcdChar = new byte[LCD_CHAR_HEIGHT];
 
 		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-			newLcdChar[pixY] = LCD_CHAR_LINE_PIXEL_ROW - lcdChar[pixY];
+			newLcdChar[pixY] = LCD_CELL_LINE_PIXEL_ROW - lcdChar[pixY];
 
 		return newLcdChar;
 	}
@@ -304,10 +512,10 @@ namespace Foxetron
 
 	VOID LCD_DrawGraph(BYTE row, BYTE startCol, BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options)
 	{
-		CLCDGRAPHCELLSTYLE cellStyle = LcdGraphOptionsToLcdGraphCellStyle(options);
-		CLCDGRAPHSPACES spaceStyle = LcdGraphOptionsToLcdGraphSpaces(options);
+		CLCDGRAPHCELL cellStyle = LcdGraphOptionsToLcdGraphCell(options);
+		CLCDSPACETYLE spaceStyle = LcdGraphOptionsToLcdSpaceStyle(options);
 
-		PBYTE spaceChar = LCD_CreateGraphSpaceChar(spaceStyle);
+		PBYTE spaceChar = LCD_CreateSpaceChar(spaceStyle);
 		LCD->createChar(0x7, spaceChar);
 
 		PBYTE fullCellChar = LCD_CreateGraphFullCellChar(cellStyle, spaceChar);
@@ -317,14 +525,15 @@ namespace Foxetron
 		{
 			PBYTE partialCellChar = NULL;
 
-			if (LcdGraphOptionsToLcdGraphPartialStyle(options) == LcdGraphPartialStyle::SEMI_PARTIAL)
+			if (LcdGraphOptionsToLcdGraphPartialStyle(options) == LcdGraphPartialStyle::SEMI_FILL_PARTIAL)
 			{
-				partialCellChar = LCD_CreateGraphSemiCellChar(fullCellChar);
+				partialCellChar = LCD_CreateGraphSemiFillCellChar(
+					(percentage % (100 / widthChars)) * widthChars, fullCellChar);
 			}
 			else
 			{
 				partialCellChar = LCD_CreateGraphPartialCellChar(
-					(percentage % (100 / widthChars)) * widthChars, fullCellChar);
+					(percentage % (100 / widthChars)) * widthChars, fullCellChar, spaceChar);
 			}
 
 			LCD->createChar(0x5, partialCellChar);
@@ -334,6 +543,44 @@ namespace Foxetron
 
 		delete spaceChar;
 		delete fullCellChar;
+
+		BYTE cellPercentage = 0;
+
+		for (BYTE col = 0; col < widthChars; col++)
+		{
+			LCD->setCursor(col + startCol, row);
+
+			if (percentage <= col * 100 / widthChars)
+				LCD->write(0x7);
+			else if (percentage >= (col + 1) * 100 / widthChars)
+				LCD->write(0x6);
+			else
+				LCD->write(0x5);
+		}
+	}
+
+	VOID LCD_DrawSlider(BYTE row, BYTE startCol, BYTE widthChars, BYTE percentage, CLCDSLIDEROPTIONS options)
+	{
+		CLCDSLIDERMARKER markerStyle = LcdSliderOptionsToLcdSliderMarker(options);
+		CLCDSPACETYLE spaceStyle = LcdSliderOptionsToLcdSpaceStyle(options);
+
+		PBYTE spaceChar = LCD_CreateSpaceChar(spaceStyle);
+		LCD->createChar(0x7, spaceChar);
+
+		PBYTE markerChar = LCD_CreateSliderMarker(markerStyle, spaceChar);
+		//LCD->createChar(0x6, fullCellChar);
+
+		if (percentage % (100 / widthChars) > 0)
+		{
+			PBYTE partialMarkerChar = NULL;
+
+			LCD->createChar(0x5, partialMarkerChar);
+
+			delete partialMarkerChar;
+		}
+
+		delete spaceChar;
+		delete markerChar;
 
 		BYTE cellPercentage = 0;
 
