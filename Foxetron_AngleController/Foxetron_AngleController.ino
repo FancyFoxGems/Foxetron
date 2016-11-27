@@ -228,10 +228,10 @@ VOID loop()
 {
 	//RGB_Step();
 
-	LCD_DrawGraph(0, 0, 10, percentage++, LcdGraphOptions::FILLED_CIRCLE);
+	LCD_DrawSlider(0, 1, 10, percentage++, LcdSliderOptions::LINES_ENDS);
 	if (percentage > 100)
 		percentage = 0;
-	delay(50);
+	delay(500);
 
 
 #ifdef _DEBUG

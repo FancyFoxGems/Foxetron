@@ -7,6 +7,8 @@
 // GCC WARNING SUPPRESSIONS
 #pragma GCC diagnostic ignored "-Wdelete-non-virtual-dtor"
 
+#include "IttyBitty_util.h"
+
 #include "Foxetron_AngleController_LCD.h"
 
 using namespace Foxetron;
@@ -59,18 +61,15 @@ namespace Foxetron
 	{
 		PBYTE scrollBarChar = new byte[LCD_CHAR_HEIGHT];
 
-		scrollBarChar[cellPercentage == 100 ? LCD_CELL_LAST_PIXEL_ROW :
-			cellPercentage * LCD_CHAR_HEIGHT / 100] = LCD_SCROLLER_PIXEL_ROW;
+		BYTE scrollerRow = cellPercentage == 100 ? LCD_CELL_LAST_PIXEL_ROW : cellPercentage * LCD_CHAR_HEIGHT / 100;
 
-		//BYTE scrollerRow = cellPercentage == 100 ? LCD_CELL_LAST_PIXEL_ROW : cellPercentage * LCD_CHAR_HEIGHT / 100;
-
-		//for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-		//{
-		//	if (pixY == scrollerRow)
-		//		scrollBarChar[pixY] = LCD_SCROLLER_PIXEL_ROW;
-		//	else
-		//		scrollBarChar[pixY] = 0;
-		//}
+		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+		{
+			if (pixY == scrollerRow)
+				scrollBarChar[pixY] = LCD_SCROLLER_PIXEL_ROW;
+			else
+				scrollBarChar[pixY] = 0;
+		}
 
 		return scrollBarChar;
 	}
@@ -96,20 +95,20 @@ namespace Foxetron
 
 		case LcdSpaceStyle::PLUS_SPACE:
 
-			for (BYTE pixY = 0; pixY < LCD_CELL_LAST_PIXEL_ROW; pixY++)
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 			{
 				switch (pixY)
 				{
 				case 3:
+				case 5:
 
-					spaceChar[pixY] = LCD_CELL_SMALL_DASH_PIXEL_ROW;
+					spaceChar[pixY] = LCD_CELL_CENTER_PIXEL_ROW;
 					break;
 
 
-				case 2:
 				case 4:
 
-					spaceChar[pixY] = LCD_CELL_CENTER_PIXEL_ROW;
+					spaceChar[pixY] = LCD_CELL_SMALL_DASH_PIXEL_ROW;
 					break;
 
 
@@ -128,13 +127,6 @@ namespace Foxetron
 			{
 				switch (pixY)
 				{
-				case 0:
-				case 1:
-
-					spaceChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
-					break;
-
-
 				case 2:
 				case LCD_CHAR_HEIGHT - 2:
 
@@ -142,9 +134,17 @@ namespace Foxetron
 					break;
 
 
-				default:
+				case 3:
+				case 4:
+				case 5:
 
 					spaceChar[pixY] = LCD_CELL_FIRST_LAST_PIXEL_ROW;
+					break;
+
+
+				default:
+
+					spaceChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
 				}
 			}
 
@@ -254,7 +254,7 @@ namespace Foxetron
 			{
 				fullCellChar[pixY] = spaceChar[pixY];
 
-				if (pixY >= 3 && pixY <=5)
+				if (pixY >= 3 AND pixY <=5)
 					fullCellChar[pixY] |= LCD_CELL_SMALL_DASH_PIXEL_ROW;
 			}
 
@@ -266,8 +266,8 @@ namespace Foxetron
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 				fullCellChar[pixY] = spaceChar[pixY];
 
-			for (BYTE pixY = 1; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
-				fullCellChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
+			for (BYTE pixY = 2; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
+				fullCellChar[pixY] |= pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
 
 			break;
 
@@ -278,7 +278,7 @@ namespace Foxetron
 				fullCellChar[pixY] = spaceChar[pixY];
 
 			for (BYTE pixY = 2; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
-				fullCellChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_DIAMOND + pixY);
+				fullCellChar[pixY] |= pgm_read_byte_near(LCD_CHAR_SHAPE_DIAMOND + pixY);
 
 			fullCellChar[3] |= LCD_CELL_DOTS_SPARSE_PIXEL_ROW;
 			fullCellChar[5] |= LCD_CELL_DOTS_SPARSE_PIXEL_ROW;
@@ -334,7 +334,7 @@ namespace Foxetron
 		return semiCellChar;
 	}
 
-	PBYTE LCD_CreateSliderMarker(CLCDSLIDERMARKER markerStyle, PBYTE spaceChar)
+	PBYTE LCD_CreateSliderMarker(CLCDSLIDERMARKER markerStyle)
 	{
 		PBYTE markerChar = new byte[LCD_CHAR_HEIGHT];
 
@@ -343,7 +343,26 @@ namespace Foxetron
 		case LcdSliderMarker::CARET_MARKER:
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-				markerChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
+			{
+				switch (pixY)
+				{
+				case 1:
+
+					markerChar[pixY] = LCD_CELL_CENTER_PIXEL_ROW;
+					break;
+
+
+				case 2:
+
+					markerChar[pixY] = LCD_CELL_DOTS_SPARSE_PIXEL_ROW;
+					break;
+
+
+				default:
+
+					markerChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
+				}
+			}
 
 			break;
 
@@ -351,9 +370,7 @@ namespace Foxetron
 		case LcdSliderMarker::LINE_MARKER:
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-				markerChar[pixY] = spaceChar[pixY];
-
-			markerChar[LCD_CELL_MIDDLE_PIXEL_ROW] |= LCD_CELL_LINE_PIXEL_ROW;
+				markerChar[pixY] = LCD_CELL_CENTER_PIXEL_ROW;
 
 			break;
 
@@ -361,11 +378,27 @@ namespace Foxetron
 		case LcdSliderMarker::PLUS_MARKER:
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-				markerChar[pixY] = spaceChar[pixY];
+			{
+				switch (pixY)
+				{
+				case 3:
+				case 5:
 
-			markerChar[3] |= LCD_CELL_CENTER_PIXEL_ROW;
-			markerChar[4] |= LCD_CELL_SMALL_DASH_PIXEL_ROW;
-			markerChar[5] |= LCD_CELL_CENTER_PIXEL_ROW;
+					markerChar[pixY] = LCD_CELL_CENTER_PIXEL_ROW;
+					break;
+
+
+				case 4:
+
+					markerChar[pixY] = LCD_CELL_SMALL_DASH_PIXEL_ROW;
+					break;
+
+
+				default:
+
+					markerChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
+				}
+			}
 
 			break;
 
@@ -374,10 +407,20 @@ namespace Foxetron
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 			{
-				markerChar[pixY] = spaceChar[pixY];
+				switch (pixY)
+				{
+				case 3:
+				case 4:
+				case 5:
 
-				if (pixY >= 3 && pixY <=5)
-					markerChar[pixY] |= LCD_CELL_SMALL_DASH_PIXEL_ROW;
+					markerChar[pixY] = LCD_CELL_SMALL_DASH_PIXEL_ROW;
+					break;
+
+
+				default:
+
+					markerChar[pixY] = 0;
+				}
 			}
 
 			break;
@@ -386,9 +429,6 @@ namespace Foxetron
 		case LcdSliderMarker::DIAMOND_MARKER:
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-				markerChar[pixY] = spaceChar[pixY];
-
-			for (BYTE pixY = 1; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
 				markerChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
 
 			break;
@@ -396,16 +436,13 @@ namespace Foxetron
 
 		case LcdSliderMarker::DISC_MARKER:
 
-			for (BYTE pixY = 1; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 				markerChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
 
 			break;
 
 
 		case LcdSliderMarker::TRIANGLE_MARKER:
-
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-				markerChar[pixY] = spaceChar[pixY];
 
 			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
 				markerChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_TRIANGLE + pixY);
@@ -564,37 +601,98 @@ namespace Foxetron
 		CLCDSLIDERMARKER markerStyle = LcdSliderOptionsToLcdSliderMarker(options);
 		CLCDSPACETYLE spaceStyle = LcdSliderOptionsToLcdSpaceStyle(options);
 
+		if ((CBYTE)LcdSliderOptionsToLcdSliderEnds(options))
+		{
+			LCD->createChar(0x5, LCD_CHAR_SLIDER_END_LEFT);
+
+			LCD->setCursor(startCol, row);
+			LCD->write(0x5);
+
+			LCD->createChar(0x4, LCD_CHAR_SLIDER_END_RIGHT);
+
+			LCD->setCursor(startCol + widthChars - 1, row);
+			LCD->write(0x4);
+
+			++startCol;
+			widthChars -= 2;
+		}
+
 		PBYTE spaceChar = LCD_CreateSpaceChar(spaceStyle);
 		LCD->createChar(0x7, spaceChar);
 
-		PBYTE markerChar = LCD_CreateSliderMarker(markerStyle, spaceChar);
-		//LCD->createChar(0x6, fullCellChar);
+		PBYTE markerChar = LCD_CreateSliderMarker(markerStyle);
 
-		if (percentage % (100 / widthChars) > 0)
+		PBYTE partialMarkerChar = NULL;
+		CHAR cellOffset = 0;
+
+		for (BYTE col = 0; col < widthChars; col++)
 		{
-			PBYTE partialMarkerChar = NULL;
+			if (percentage < 100 / widthChars AND col > 0
+				OR percentage >= 100 / widthChars AND percentage < col * 100 / widthChars
+				OR percentage >= (col + 1) * 100 / widthChars)
+			{
+				LCD->setCursor(col + startCol, row);
+				LCD->write(0x7);
 
-			LCD->createChar(0x5, partialMarkerChar);
+				continue;
+			}
+
+			if(!cellOffset)
+			{
+				cellOffset = ((CHAR)((percentage % (100 / widthChars)) * widthChars) - 50) * (CHAR)LCD_CHAR_WIDTH / 100;
+			}
+			else if (cellOffset < 0)
+			{
+				cellOffset += (CHAR)LCD_CHAR_WIDTH / 100;
+			}
+			else
+			{
+				LCD->setCursor(col + startCol, row);
+				LCD->write(0x7);
+
+				continue;
+			}
+
+			if (!cellOffset)
+			{
+				PrintLine();
+				for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+					markerChar[pixY] |= spaceChar[pixY];
+
+				LCD->createChar(0x6, markerChar);
+
+				LCD->setCursor(col + startCol, row);
+				LCD->write(0x6);
+
+				continue;
+			}
+
+			partialMarkerChar = new byte[LCD_CHAR_HEIGHT];
+
+			if (cellOffset < 0)
+			{
+				for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+					partialMarkerChar[pixY] = MASK(markerChar[pixY] SHL (255 - (CBYTE)cellOffset + 1), LCD_SLIDER_MARKER_COLS_MASK);
+			}
+			else
+			{
+				for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+					partialMarkerChar[pixY] = markerChar[pixY] SHR cellOffset;
+			}
+
+			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				partialMarkerChar[pixY] |= spaceChar[pixY];
+
+			LCD->createChar(0x6, partialMarkerChar);
+
+			LCD->setCursor(col + startCol, row);
+			LCD->write(0x6);
 
 			delete partialMarkerChar;
 		}
 
 		delete spaceChar;
 		delete markerChar;
-
-		BYTE cellPercentage = 0;
-
-		for (BYTE col = 0; col < widthChars; col++)
-		{
-			LCD->setCursor(col + startCol, row);
-
-			if (percentage <= col * 100 / widthChars)
-				LCD->write(0x7);
-			else if (percentage >= (col + 1) * 100 / widthChars)
-				LCD->write(0x6);
-			else
-				LCD->write(0x5);
-		}
 	}
 
 #pragma endregion

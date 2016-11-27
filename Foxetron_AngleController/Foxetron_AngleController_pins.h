@@ -15,6 +15,8 @@
 //  ITTY BITTY
 #include "IttyBitty_gpio.h"
 
+using namespace IttyBitty;
+
 
 #pragma endregion
 
@@ -63,7 +65,7 @@
 INLINE VOID InitializePins()
 {
 	// Initialize Arduino pin mapping
-	IttyBitty::InitGPIO();
+	InitGPIO();
 
 
 	// REAR PINS
