@@ -7,7 +7,6 @@
 
 #include "Foxetron_messages.h"
 
-using namespace IttyBitty;
 using namespace Foxetron;
 
 

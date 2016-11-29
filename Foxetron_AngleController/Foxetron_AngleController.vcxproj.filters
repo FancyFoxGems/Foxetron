@@ -79,15 +79,6 @@
     <ClInclude Include="__vm\.Foxetron_AngleController.vsarduino.h">
       <Filter>__vm</Filter>
     </ClInclude>
-    <ClInclude Include="libs\LiquidCrystal_I2C.custom.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="libs\BigCrystal_I2C.custom.h">
-      <Filter>libs</Filter>
-    </ClInclude>
-    <ClInclude Include="libs\BigFont.h">
-      <Filter>libs</Filter>
-    </ClInclude>
     <ClInclude Include="libs\MENWIZ.custom.h">
       <Filter>libs</Filter>
     </ClInclude>
@@ -101,9 +92,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="Foxetron_AngleController_LCD.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="Foxetron_AngleController_LCD_chars.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="Foxetron_AngleController_pins.h">
@@ -243,15 +231,6 @@
     </ClCompile>
     <ClCompile Include="..\..\libraries\Wire\utility\twi.c">
       <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="libs\LiquidCrystal_I2C.custom.cpp">
-      <Filter>libs</Filter>
-    </ClCompile>
-    <ClCompile Include="libs\BigCrystal_I2C.custom.cpp">
-      <Filter>libs</Filter>
-    </ClCompile>
-    <ClCompile Include="libs\BigFont.c">
-      <Filter>libs</Filter>
     </ClCompile>
     <ClCompile Include="libs\MENWIZ.custom.cpp">
       <Filter>libs</Filter>

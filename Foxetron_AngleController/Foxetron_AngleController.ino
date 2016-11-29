@@ -201,7 +201,7 @@ VOID setup()
 	LCD_Initialize();
 	//RGB_Initialize();
 
-	//LCD->printBig(F("Fox"), 2, 0);
+	//LCD->PrintBig(F("Fox"), 2, 0);
 
 
 #ifdef _DEBUG
@@ -228,7 +228,7 @@ VOID loop()
 {
 	//RGB_Step();
 
-	LCD_DrawSlider(0, 1, 10, percentage++, LcdSliderOptions::LINES_ENDS);
+	LCD->DrawSlider(0, 1, 10, percentage++, LcdSliderOptions::LINES_ENDS);
 	if (percentage > 100)
 		percentage = 0;
 	delay(500);
@@ -494,11 +494,11 @@ VOID PrintLCDSplash()
 
 	for (BYTE i = 0; i < 16; i++)
 	{
-		LCD->scrollDisplayLeft();
+		LCD->ScrollLeft();
 		delay(20);
 	}
 
-	LCD->clear();
+	LCD->Clear();
 }
 
 #pragma endregion
@@ -541,23 +541,23 @@ VOID DEBUG_PrintInputValues()
 
 	// REAR INPUTS
 
-	LCD->clear();
+	LCD->Clear();
 
-	LCD->home();
+	LCD->Home();
 
-	LCD->setCursor(4, 0);
+	LCD->MoveCursor(4, 0);
 	LCD->print(itoa(_LedButton1, valStr, 2));
 
-	LCD->setCursor(6, 0);
+	LCD->MoveCursor(6, 0);
 	LCD->print(itoa(_LedButton2, valStr, 2));
 
-	LCD->setCursor(8, 0);
+	LCD->MoveCursor(8, 0);
 	LCD->print(itoa(_LedButton3, valStr, 2));
 
-	LCD->setCursor(10, 0);
+	LCD->MoveCursor(10, 0);
 	LCD->print(itoa(_LedButton4, valStr, 2));
 
-	LCD->setCursor(12, 0);
+	LCD->MoveCursor(12, 0);
 	LCD->print(itoa(_LedButton5, valStr, 2));
 
 	PrintBit((BIT)_LedButton1);
@@ -574,19 +574,19 @@ VOID DEBUG_PrintInputValues()
 
 	// FRONT INPUTS
 
-	LCD->setCursor(4, 1);
+	LCD->MoveCursor(4, 1);
 	LCD->print(itoa(_ModeSwitchVal, valStr, 10));
 
-	LCD->setCursor(8, 1);
+	LCD->MoveCursor(8, 1);
 	LCD->print(itoa(_MenuEncoderA, valStr, 2));
 
-	LCD->setCursor(10, 1);
+	LCD->MoveCursor(10, 1);
 	LCD->print(itoa(_MenuEncoderB, valStr, 2));
 
-	LCD->setCursor(12, 1);
+	LCD->MoveCursor(12, 1);
 	LCD->print(itoa(_SelectButton, valStr, 2));
 
-	LCD->setCursor(14, 1);
+	LCD->MoveCursor(14, 1);
 	LCD->print(itoa(_ShiftButton, valStr, 2));
 
 	Serial.print(itoa(_ModeSwitchVal, valStr, 10));
@@ -613,7 +613,7 @@ VOID DEBUG_DisplayKeyCodes()
 
 	while (i < LCD_CHAR_ROWS_TO_DISPLAY)
 	{
-		LCD->clear();
+		LCD->Clear();
 
 		LCD->print(F("Codes 0x"));
 
@@ -621,7 +621,7 @@ VOID DEBUG_DisplayKeyCodes()
 		LCD->print(F("-0x"));
 		LCD->print(i + 16, HEX);
 
-		LCD->setCursor(0, 1);
+		LCD->MoveCursor(0, 1);
 
 		for (int j = 0; j < 8; j++)
 			LCD->write(i + j);
@@ -635,38 +635,38 @@ VOID DEBUG_DisplayKeyCodes()
 
 VOID DEBUG_DisplayCustomChars()
 {
-	LCD->createChar(0, LCD_CHAR_FOX);
-	LCD->createChar(1, LCD_CHAR_GEM_SMALL);
-	LCD->createChar(2, LCD_CHAR_GEM);
+	LCD->LoadCustomChar_P(0, LCD_CHAR_FOX);
+	LCD->LoadCustomChar_P(1, LCD_CHAR_GEM_SMALL);
+	LCD->LoadCustomChar_P(2, LCD_CHAR_GEM);
 
-	LCD->createChar(3, LCD_CHAR_ANGLE);
-	LCD->createChar(4, LCD_CHAR_ANGLE_2);
-	LCD->createChar(5, LCD_CHAR_CHECKMARK);
-	LCD->createChar(6, LCD_CHAR_CLOCKWISE);
-	LCD->createChar(7, LCD_CHAR_NOTES);
-
-	DEBUG_DisplayKeyCodes();
-
-
-	LCD->createChar(0, LCD_CHAR_SHAPE_ROUND);
-	LCD->createChar(1, LCD_CHAR_SHAPE_OVAL);
-	LCD->createChar(2, LCD_CHAR_SHAPE_CUSHION);
-	LCD->createChar(3, LCD_CHAR_SHAPE_EMERALD);
-	LCD->createChar(4, LCD_CHAR_SHAPE_BAGUETTE);
-	LCD->createChar(5, LCD_CHAR_SHAPE_TRILLIANT);
-	LCD->createChar(6, LCD_CHAR_SHAPE_TRIANGLE);
-	LCD->createChar(7, LCD_CHAR_SHAPE_SPECIAL);
+	LCD->LoadCustomChar_P(3, LCD_CHAR_ANGLE);
+	LCD->LoadCustomChar_P(4, LCD_CHAR_ANGLE_2);
+	LCD->LoadCustomChar_P(5, LCD_CHAR_CHECKMARK);
+	LCD->LoadCustomChar_P(6, LCD_CHAR_CLOCKWISE);
+	LCD->LoadCustomChar_P(7, LCD_CHAR_NOTES);
 
 	DEBUG_DisplayKeyCodes();
 
 
-	LCD->createChar(0, LCD_CHAR_CUT_BRILLIANT);
-	LCD->createChar(1, LCD_CHAR_CUT_STEP);
+	LCD->LoadCustomChar_P(0, LCD_CHAR_SHAPE_ROUND);
+	LCD->LoadCustomChar_P(1, LCD_CHAR_SHAPE_OVAL);
+	LCD->LoadCustomChar_P(2, LCD_CHAR_SHAPE_CUSHION);
+	LCD->LoadCustomChar_P(3, LCD_CHAR_SHAPE_EMERALD);
+	LCD->LoadCustomChar_P(4, LCD_CHAR_SHAPE_BAGUETTE);
+	LCD->LoadCustomChar_P(5, LCD_CHAR_SHAPE_TRILLIANT);
+	LCD->LoadCustomChar_P(6, LCD_CHAR_SHAPE_TRIANGLE);
+	LCD->LoadCustomChar_P(7, LCD_CHAR_SHAPE_SPECIAL);
 
-	LCD->createChar(2, LCD_CHAR_ARROW_UP);
-	LCD->createChar(3, LCD_CHAR_ARROW_DOWN);
-	LCD->createChar(4, LCD_CHAR_ARROW_LEFT_LARGE);
-	LCD->createChar(5, LCD_CHAR_ARROW_RIGHT_LARGE);
+	DEBUG_DisplayKeyCodes();
+
+
+	LCD->LoadCustomChar_P(0, LCD_CHAR_CUT_BRILLIANT);
+	LCD->LoadCustomChar_P(1, LCD_CHAR_CUT_STEP);
+
+	LCD->LoadCustomChar_P(2, LCD_CHAR_ARROW_UP);
+	LCD->LoadCustomChar_P(3, LCD_CHAR_ARROW_DOWN);
+	LCD->LoadCustomChar_P(4, LCD_CHAR_ARROW_LEFT_LARGE);
+	LCD->LoadCustomChar_P(5, LCD_CHAR_ARROW_RIGHT_LARGE);
 
 	DEBUG_DisplayKeyCodes();
 }

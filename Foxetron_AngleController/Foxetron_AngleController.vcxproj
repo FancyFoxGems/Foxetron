@@ -77,6 +77,8 @@
     <ClInclude Include="..\IttyBitty\IttyBitty_GPIO_arduino.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_GPIO_portpins.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_info.h" />
+    <ClInclude Include="..\IttyBitty\IttyBitty_LCD.h" />
+    <ClInclude Include="..\IttyBitty\IttyBitty_LCD_chars.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_messages.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_print.h" />
     <ClInclude Include="..\IttyBitty\IttyBitty_registers.h" />
@@ -87,15 +89,11 @@
     <ClInclude Include="..\IttyBitty\IttyBitty_values.h" />
     -->
     <ClInclude Include="..\Foxetron_common.h" />
-    <ClInclude Include="libs\LiquidCrystal_I2C.custom.h" />
-    <ClInclude Include="libs\BigCrystal_I2C.custom.h" />
-    <ClInclude Include="libs\BigFont.h" />
     <ClInclude Include="libs\MENWIZ.custom.h" />
     <ClInclude Include="libs\phi_prompt.custom.h" />
     <ClInclude Include="libs\RTClib.custom.h" />
     <ClInclude Include="..\Foxetron_messages.h" />
     <ClInclude Include="Foxetron_AngleController_pins.h" />
-    <ClInclude Include="Foxetron_AngleController_LCD_chars.h" />
     <ClInclude Include="Foxetron_AngleController_LCD.h" />
     <ClInclude Include="Foxetron_AngleController_RGB.h" />
     <ClInclude Include="Foxetron_AngleController_EEPROM.h" />
@@ -147,15 +145,13 @@
     <ClCompile Include="..\IttyBitty\IttyBitty_fields.cpp" />
     <ClCompile Include="..\IttyBitty\IttyBitty_GPIO.cpp" />
     <ClCompile Include="..\IttyBitty\IttyBitty_info.cpp" />
+    <ClCompile Include="..\IttyBitty\IttyBitty_LCD.cpp" />
     <ClCompile Include="..\IttyBitty\IttyBitty_messages.cpp" />
     <ClCompile Include="..\IttyBitty\IttyBitty_print.cpp" />
     <ClCompile Include="..\IttyBitty\IttyBitty_storage.cpp" />
     <ClCompile Include="..\IttyBitty\IttyBitty_storage_adapters.cpp" />
     <ClCompile Include="..\IttyBitty\IttyBitty_values.cpp" />
     -->
-    <ClCompile Include="libs\LiquidCrystal_I2C.custom.cpp" />
-    <ClCompile Include="libs\BigCrystal_I2C.custom.cpp" />
-    <ClCompile Include="libs\BigFont.c" />
     <ClCompile Include="libs\MENWIZ.custom.cpp" />
     <ClCompile Include="libs\phi_prompt.custom.cpp" />
     <ClCompile Include="libs\RTClib.custom.cpp" />
