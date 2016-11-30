@@ -231,7 +231,7 @@ VOID loop()
 	LCD->DrawSlider(0, 1, 10, percentage++, LcdSliderOptions::LINES_ENDS);
 	if (percentage > 100)
 		percentage = 0;
-	delay(500);
+	delay(50);
 
 
 #ifdef _DEBUG

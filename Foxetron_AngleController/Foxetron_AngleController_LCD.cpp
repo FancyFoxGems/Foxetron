@@ -14,7 +14,7 @@
 #pragma region GLOBAL VARIABLE DEFINITIONS
 
 // LCD display
-PLCDI2C<LCD_COLS, LCD_ROWS, LCD_I2C_ADDRESS> LCD = NULL;	// Pin A4/A5 (I2C)
+PLCDI2C<LCD_COLS, LCD_ROWS> LCD = NULL;	// Pin A4/A5 (I2C)
 
 #pragma endregion
 
@@ -23,11 +23,9 @@ PLCDI2C<LCD_COLS, LCD_ROWS, LCD_I2C_ADDRESS> LCD = NULL;	// Pin A4/A5 (I2C)
 
 VOID LCD_Initialize()
 {
-	LCD = new LCD_I2C<LCD_COLS, LCD_ROWS, LCD_I2C_ADDRESS>();
+	LCD = new LCD_I2C<LCD_COLS, LCD_ROWS>(LCD_WRAP_LINES);
 
 	LCD->Init();
-	LCD->BacklightOn();
-	LCD->Home();
 
 	//LCD->LoadBigFont();
 }

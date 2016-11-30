@@ -34,10 +34,10 @@ using namespace IttyBitty;
 
 // LCD OPTIONS/CONSTANTS
 
-#define LCD_I2C_ADDRESS			0x27
-
 #define LCD_COLS				20
 #define LCD_ROWS				4
+
+#define LCD_WRAP_LINES			TRUE
 
 #pragma endregion
 
@@ -59,7 +59,7 @@ PROGMEM CBYTE LCD_CHAR_CUT_STEP[8]				= { 0x0, 0xE, 0x11, 0x1F, 0x11, 0x1F, 0xA,
 #pragma region LCD GLOBAL VARIABLE DECLARATION
 
 // LCD display
-EXTERN PLCDI2C<LCD_COLS, LCD_ROWS, LCD_I2C_ADDRESS> LCD;
+EXTERN PLCDI2C<LCD_COLS, LCD_ROWS> LCD;
 
 #pragma endregion
 
