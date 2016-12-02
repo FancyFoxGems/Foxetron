@@ -25,8 +25,6 @@ VOID LCD_Initialize()
 {
 	LCD = new LCD_I2C<LCD_COLS, LCD_ROWS>(LCD_WRAP_LINES);
 
-	LCD->Init();
-
 	//LCD->LoadBigFont();
 }
 
