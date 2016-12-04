@@ -440,7 +440,7 @@ VOID OnMessage(PIMESSAGE message)
 		PrintLine(_DegreesNew);
 	#endif
 
-		_TargetMotorSteps = MAX_OF(DWORD);
+		_TargetMotorSteps = MAX_DWORD;
 
 		break;
 
