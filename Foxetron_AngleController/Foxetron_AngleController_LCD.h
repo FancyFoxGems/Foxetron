@@ -37,7 +37,7 @@ using namespace IttyBitty;
 #define LCD_COLS				20
 #define LCD_ROWS				4
 
-#define LCD_WRAP_LINES			FALSE
+#define LCD_WRAP_LINES			TRUE
 
 #pragma endregion
 

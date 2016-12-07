@@ -74,9 +74,17 @@
 
 // PROGRAM OPTIONS
 
-#define INPUT_PROCESS_INTERVAL_uS				5000			// Period by which input state changes should be polled and handled
+#define INPUT_PROCESS_INTERVAL_uS		5000			// Period by which input state changes should be polled and handled
 
-#define MODE_SWITCH_THRESHOLD					500				// ADC value at which >= readings set mode switch state to TRUE
+#define MODE_SWITCH_THRESHOLD			500				// ADC value at which >= readings set mode switch state to TRUE
+
+
+// SPASH SCREEN OPTIONS
+
+#define LCD_SPLASH_DELAY_1_MS			1000
+#define LCD_SPLASH_DELAY_2_MS			2000
+#define LCD_SPLASH_SCROLLS				120
+#define LCD_SPLASH_SPEED_MS				30
 
 #pragma endregion
 
@@ -201,8 +209,7 @@ VOID setup()
 	LCD_Initialize();
 	//RGB_Initialize();
 
-	LCD->PrintStringBig_P(F("Fox"), 2, 0);
-	LCD->PrintStringBig_P(F("Fox"), 2, 2);
+	PrintLCDSplash();
 
 
 #ifdef _DEBUG
@@ -502,15 +509,30 @@ VOID OnMessage(PIMESSAGE message)
 
 VOID PrintLCDSplash()
 {
-	LCD->print(F("Foxetron test..."));
+	LCD->PrintStringBig_P(F("Fox"), 4, 0);
 
-	delay(200);
+	delay(LCD_SPLASH_DELAY_1_MS);
 
-	for (BYTE i = 0; i < 16; i++)
+	for (BYTE i = 0; i < LCD_SPLASH_SCROLLS; i++)
 	{
 		LCD->ScrollLeft();
-		delay(20);
+		delay(LCD_SPLASH_SPEED_MS);
 	}
+
+	LCD->Clear();
+
+	LCD->LoadCustomChar_P(0x0, LCD_CHAR_FOX);
+	LCD->LoadCustomChar_P(0x1, LCD_CHAR_GEM_SMALL);
+
+	LCD->WriteAt(0x0, 0, 0);
+	LCD->PrintString_P(F("Foxetron"), 2, 0);
+	LCD->WriteAt(LCD_SYMBOL_COPYRIGHT, 11, 0);
+	LCD->PrintString_P(F("2016"), 12, 0);
+	LCD->WriteAt(0x1, 0, 1);
+	LCD->PrintString_P(F("Fancy Fox Gems"), 1, 1);
+	LCD->WriteAt(0x1, 15, 1);
+
+	delay(LCD_SPLASH_DELAY_2_MS);
 
 	LCD->Clear();
 }
