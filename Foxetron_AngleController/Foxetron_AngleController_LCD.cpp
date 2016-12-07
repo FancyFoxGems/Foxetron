@@ -24,8 +24,6 @@ PLCDI2C<LCD_COLS, LCD_ROWS> LCD = NULL;	// Pin A4/A5 (I2C)
 VOID LCD_Initialize()
 {
 	LCD = new LCD_I2C<LCD_COLS, LCD_ROWS>(LCD_WRAP_LINES);
-
-	//LCD->LoadBigFont();
 }
 
 VOID LCD_Free()

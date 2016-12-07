@@ -201,7 +201,8 @@ VOID setup()
 	LCD_Initialize();
 	//RGB_Initialize();
 
-	//LCD->PrintBig(F("Fox"), 2, 0);
+	LCD->PrintStringBig_P(F("Fox"), 2, 0);
+	LCD->PrintStringBig_P(F("Fox"), 2, 2);
 
 
 #ifdef _DEBUG
@@ -217,21 +218,34 @@ VOID setup()
 #endif
 }
 
+BOOL stopped = FALSE;
+
 VOID serialEvent()
 {
+	if (Serial.read() != '\n')
+		stopped = !stopped;
 	//WaitForMessage(Serial, OnMessage);
 }
 
-BYTE percentage = 0;
+BYTE percentage = 99;
 
 VOID loop()
 {
 	//RGB_Step();
+	return;
+	if (stopped)
+	{
+		delay(1000);
+		return;
+	}
 
-	LCD->DrawSlider(0, 1, 10, percentage++, LcdSliderOptions::LINES_ENDS);
+	LCD->DrawSlider(4, 0, 10, percentage++, LcdSliderOptions::LINE_ENDS);
+	if (percentage == 1)
+		percentage = 99;
 	if (percentage > 100)
 		percentage = 0;
-	delay(50);
+	delay(2500);
+	return;
 
 
 #ifdef _DEBUG
