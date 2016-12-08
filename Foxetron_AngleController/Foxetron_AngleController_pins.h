@@ -64,10 +64,6 @@ using namespace IttyBitty;
 
 INLINE VOID InitializePins()
 {
-	// Initialize Arduino pin mapping
-	InitGPIO();
-
-
 	// REAR PINS
 
 	// [Pins 0 (RX) & 1 (TX): USART serial communication --[angle feedback]--> AVR uC stepper motor angle controller]

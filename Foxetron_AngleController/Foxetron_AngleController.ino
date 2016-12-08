@@ -47,10 +47,8 @@
 #include "Foxetron_AngleController_EEPROM.h"
 
 // PROJECT LIBS
-//#include "libs/LiquidCrystal_I2C.custom.h"	// Included by other project libs
-#include "libs/BigCrystal_I2C.custom.h"
 #include "libs/MENWIZ.custom.h"
-#include "libs/phi_Prompt.custom.h"
+//#include "libs/phi_Prompt.custom.h"
 #include "libs/RTCLib.custom.h"
 
 // 3RD-PARTY LIBS
@@ -192,6 +190,20 @@ VOID DEBUG_DisplayCustomChars();
 
 #pragma region PROGRAM OUTLINE: ENTRY POINT, LOOP, ETC.
 
+menwiz UI;
+int Nav, list, sp=110;
+bool done;
+
+INT GetMenuNav()
+{
+	if (done)
+		Nav = MW_BTNULL;
+	else
+		done = TRUE;
+
+	return Nav;
+}
+
 VOID setup()
 {
 	Serial.begin(SERIAL_BAUD_RATE);
@@ -209,7 +221,26 @@ VOID setup()
 	LCD_Initialize();
 	//RGB_Initialize();
 
-	PrintLCDSplash();
+	//PrintLCDSplash();
+
+	_menu *menu, *menu1, *menu2;
+
+	UI.addUsrNav(&GetMenuNav, 6);
+	UI.begin(20,4);
+
+	menu = UI.addMenu(MW_ROOT, NULL, F("Foxetron"));
+		menu1 = UI.addMenu(MW_VAR, menu, F("Backlight"));
+			menu1->addVar(MW_ACTION, LCD_ToggleBacklight);
+		menu1 = UI.addMenu(MW_VAR, menu, F("INT Variable"));
+			menu1->addVar(MW_AUTO_INT, &sp, 0, 120, 10);
+		menu1 = UI.addMenu(MW_SUBMENU, menu, F("Node3"));
+			menu2 = UI.addMenu(MW_VAR, menu1, F("Choice"));
+				menu2->addVar(MW_LIST, &list);
+					menu2->addItem(MW_LIST, F("Option1"));
+					menu2->addItem(MW_LIST, F("Option2"));
+					menu2->addItem(MW_LIST, F("Option3"));
+
+	UI.draw();
 
 
 #ifdef _DEBUG
@@ -229,30 +260,64 @@ BOOL stopped = FALSE;
 
 VOID serialEvent()
 {
-	if (Serial.read() != '\n')
+	switch (Serial.read())
+	{
+	case '.':
 		stopped = !stopped;
+		break;
+
+	case 'u':
+	case 'w':
+		Nav = MW_BTU;
+		break;
+
+	case 'd':
+	case 'z':
+		Nav = MW_BTD;
+		break;
+
+	case 'l':
+	case 'a':
+		Nav = MW_BTL;
+		break;
+
+	case 'r':
+	case 's':
+		Nav = MW_BTR;
+		break;
+
+	case 'c':
+	case 'f':
+		Nav = MW_BTC;
+		break;
+
+	case 'e':
+	case 'x':
+		Nav = MW_BTE;
+		break;
+
+	default:
+		Nav = MW_BTNULL;
+	}
+
+	done = FALSE;
+
+	UI.draw();
+
 	//WaitForMessage(Serial, OnMessage);
 }
 
-BYTE percentage = 99;
-
 VOID loop()
 {
-	//RGB_Step();
-	return;
 	if (stopped)
 	{
 		delay(1000);
 		return;
 	}
 
-	LCD->DrawSlider(4, 0, 10, percentage++, LcdSliderOptions::LINE_ENDS);
-	if (percentage == 1)
-		percentage = 99;
-	if (percentage > 100)
-		percentage = 0;
-	delay(2500);
 	return;
+
+	//RGB_Step();
 
 
 #ifdef _DEBUG
@@ -505,6 +570,9 @@ VOID OnMessage(PIMESSAGE message)
 		delete[] state;
 		state = NULL;
 	}
+
+	if (!msgHandled)
+		OnError();
 }
 
 VOID PrintLCDSplash()

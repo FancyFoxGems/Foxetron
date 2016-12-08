@@ -31,9 +31,6 @@
 
 #pragma region INCLUDES
 
-// PROJECT INCLUDES
-#include "Foxetron_common.h"
-
 // PROJECT MODULES
 #include "Foxetron_messages.h"
 
@@ -75,6 +72,13 @@ using namespace IttyBitty;
 #define PROCESS_TIMER_OVERFLOW_uS					((CDWORD)PROCESS_TIMER_PRESCALE_FACTOR * uS_PER_SECOND / F_CPU)
 
 #define CALIBRATION_ANGLE_DEGREES					4500
+
+#pragma endregion
+
+
+#pragma region PROGRAM FUNCTION DECLARATIONS
+
+VOID OnError(PCCHAR = NULL) WEAK;
 
 #pragma endregion
 

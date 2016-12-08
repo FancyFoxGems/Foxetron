@@ -48,8 +48,7 @@
 
 #include <avr/pgmspace.h>
 
-#include <Wire.h>
-#include "BigCrystal_I2C.custom.h"
+#include "../Foxetron_AngleController_LCD.h"
 
 #ifdef BUTTON_SUPPORT
 #include "buttons.h"
@@ -110,11 +109,11 @@ extern const char MW_ver[];
 
 // DEREFERENCING OPERATORS
 // ---------------------------------------------------------------------------
-#define VBOOL(a)    *(boolean*)a
-#define VINT(a)     *(int*)a
-#define VBYTE(a)    *(byte*)a
-#define VFLOAT(a)   *(float*)a
-#define VFUNC(a)    (* a)
+#define CAST_BOOL(a)    *(boolean*)a
+#define CAST_INT(a)     *(int*)a
+#define CAST_BYTE(a)    *(byte*)a
+#define CAST_FLOAT(a)   *(float*)a
+#define CAST_FUNC(a)    (* a)
 
 // FLAGS CLASS MENWIZ
 // ---------------------------------------------------------------------------
@@ -136,7 +135,6 @@ extern const char MW_ver[];
 // ---------------------------------------------------------------------------
 #define MW_EOL_CHAR    0x0A
 #define MW_TYPE        uint8_t
-#define MW_LCD         BigCrystal_I2C   // this could help to change the library: your lcd data type
 #define MW_LABEL       const __FlashStringHelper*
 #define MW_FLAGS       uint8_t
 #define MW_4BTN        0
@@ -231,13 +229,14 @@ class menwiz
 public:
 
 	menwiz();
-	void     begin(void *, int, int);
+	void     begin(int, int);
 	void     addSplash(char *, int);
 	void     addUsrScreen(void(*f)(), unsigned long);
 	void     addUsrNav(int(*f)(), int);
 	void     setBehaviour(MW_FLAGS, boolean);
 	_menu*   addMenu(int, _menu *, MW_LABEL);
 	void     draw();
+	void     drawMenu(_menu *);
 	void     drawUsrScreen(char *);       //draw user screen(s)
 	int      getErrorMessage(boolean); 	//if arg = true, err message is printed to the default Serial terminal, otherwise the function returns error code only
 	int      freeRam();
@@ -255,7 +254,6 @@ public:
 #endif
 
 	MW_FLAGS flags;
-	MW_LCD*  lcd;
 	char*    sbuf;                        //lcd screen buffer (+ 1 for each line)
 	_cback   usrScreen;	        	//callback
 	_cback   usrNav;
@@ -276,7 +274,6 @@ private:
 	unsigned long tm_usrScreen;   	//lap time before usrscreen
 	void     apply2vars(void(*f)(_menu *));
 	int      actNavButtons(int);
-	void     drawMenu(_menu *);
 	void     drawVar(_menu *);
 	void     drawList(_menu *, int);
 	void     actBTU();

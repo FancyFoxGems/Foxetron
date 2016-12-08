@@ -15,9 +15,7 @@
 #pragma region INCLUDES
 
 // ITTY BITTY
-#include "IttyBitty_LCD_chars.h"
 #include "IttyBitty_LCD_I2C.h"
-#include "IttyBitty_LCD_extensions.h"
 
 using namespace IttyBitty;
 
@@ -68,6 +66,13 @@ EXTERN PLCDI2C<LCD_COLS, LCD_ROWS> LCD;
 
 VOID LCD_Initialize();
 VOID LCD_Free();
+
+#pragma endregion
+
+
+#pragma region LCD FUNCTION DECLARATIONS
+
+VOID LCD_ToggleBacklight();
 
 #pragma endregion
 

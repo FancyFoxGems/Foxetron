@@ -28,13 +28,14 @@
 // @author R. Brunialti - roberto_brunialti@tiscali.it
 // ---------------------------------------------------------------------------
 #include "MENWIZ.custom.h"
+#include "IttyBitty_print.h"
 
-#define SCREATE(p, s)     p = (char *)malloc(strlen((char *)s)+1); strcpy((char *)p, (char *)s)
-#define SFORM(b, s, l)     memset(b, 32, l); memcpy(b, s, strlen(s)); b[l] = NULL; lcd->print(b)
-#define TSFORM(b, s, l)    memset(b, 32, l);strcpy_P(b, (PGM_P)(pgm_read_word_near(reinterpret_cast<PGM_VOID_P>(s))));b[strlen(b)] = ' ';itoa(cur_menu->cur_item+1, tmp, 10);strcat(tmp, "/");itoa(cur_menu->idx_o, tmp+strlen(tmp), 10);b[col-strlen(tmp)-1] = 126;memcpy(b+(col-strlen(tmp)), tmp, strlen(tmp));b[l] = NULL;lcd->print(b)
-#define FSFORM(b, s, l)    memset(b, 32, l);strcpy_P(b, (PGM_P)(pgm_read_word_near(reinterpret_cast<PGM_VOID_P>(s))));b[strlen(b)] = ' ';b[l] = NULL;lcd->print(b)
-#define ERROR(a)         MW_error = a
-#define BLANKLINE(b, r, c) memset(b, 32, c);b[c] = NULL; lcd->setCursor(0, r);lcd->print(b)
+#define SCREATE(p, s)		p = (char *)malloc(strlen((char *)s)+1); strcpy((char *)p, (char *)s)
+#define SFORM(b, s, l)		memset(b, 32, l);memcpy(b, s, strlen(s)); b[l] = NULL; LCD->print(b)
+#define TSFORM(b, s, l)		memset(b, 32, l);strcpy_P(b, (PGM_P)s);b[strlen(b)] = ' ';itoa(cur_menu->cur_item+1, tmp, 10);strcat(tmp, "/");itoa(cur_menu->idx_o, tmp+strlen(tmp), 10);b[col-strlen(tmp)-1] = 126;memcpy(b+(col-strlen(tmp)), tmp, strlen(tmp));b[l] = NULL;LCD->print(b)
+#define FSFORM(b, s, l)		memset(b, 32, l);strcpy_P(b, (PGM_P)s);b[strlen(b)] = ' ';b[l] = NULL;LCD->print(b)
+#define ERROR(a)			MW_error = a
+#define BLANKLINE(b, r, c)	memset(b, 32, c);b[c] = NULL; LCD->MoveCursor(0, r);LCD->print(b)
 
 // GLOBAL VARIABLES
 // ---------------------------------------------------------------------------
@@ -188,7 +189,7 @@ void _menu::addVar(MW_TYPE t, int* v)
 		bitWrite(flags, MW_LIST_2COLUMNS, false);
 		var->type = MW_LIST;
 		var->val = v;
-		cur_item = VBYTE(v);
+		cur_item = CAST_BYTE(v);
 	}
 	// ERROR
 	else { ERROR(110); }
@@ -205,10 +206,10 @@ void _menu::addVar(MW_TYPE t, int* v, int low, int up, int incr)
 		var = (_var*)malloc(sizeof(_var)); if (var == NULL) { ERROR(900); return; }
 		var->type = MW_AUTO_INT;
 		var->val = v;
-		var->lower = malloc(sizeof(int)); if (var->lower != NULL) VINT(var->lower) = low; else { ERROR(900); return; }
-		var->upper = malloc(sizeof(int)); if (var->upper != NULL) VINT(var->upper) = up; else { ERROR(900); return; }
-		var->incr = malloc(sizeof(int));  if (var->incr != NULL) VINT(var->incr) = incr; else { ERROR(900); return; }
-		var->old = malloc(sizeof(int));   if (var->old != NULL) VINT(var->old) = VINT(var->val); else { ERROR(900); return; }
+		var->lower = malloc(sizeof(int)); if (var->lower != NULL) CAST_INT(var->lower) = low; else { ERROR(900); return; }
+		var->upper = malloc(sizeof(int)); if (var->upper != NULL) CAST_INT(var->upper) = up; else { ERROR(900); return; }
+		var->incr = malloc(sizeof(int));  if (var->incr != NULL) CAST_INT(var->incr) = incr; else { ERROR(900); return; }
+		var->old = malloc(sizeof(int));   if (var->old != NULL) CAST_INT(var->old) = CAST_INT(var->val); else { ERROR(900); return; }
 	}
 	// ERROR
 	else { ERROR(110); }
@@ -225,10 +226,10 @@ void _menu::addVar(MW_TYPE t, float* v, float low, float up, float incr)
 		var = (_var*)malloc(sizeof(_var)); if (var == NULL) { ERROR(900); return; }
 		var->type = MW_AUTO_FLOAT;
 		var->val = v;
-		var->lower = malloc(sizeof(float)); if (var->lower != NULL) VFLOAT(var->lower) = low; else { ERROR(900); return; }
-		var->upper = malloc(sizeof(float)); if (var->upper != NULL) VFLOAT(var->upper) = up; else { ERROR(900); return; }
-		var->incr = malloc(sizeof(float));  if (var->incr != NULL) VFLOAT(var->incr) = incr; else { ERROR(900); return; }
-		var->old = malloc(sizeof(float));   if (var->old != NULL) VFLOAT(var->old) = VFLOAT(var->val); else { ERROR(900); return; }
+		var->lower = malloc(sizeof(float)); if (var->lower != NULL) CAST_FLOAT(var->lower) = low; else { ERROR(900); return; }
+		var->upper = malloc(sizeof(float)); if (var->upper != NULL) CAST_FLOAT(var->upper) = up; else { ERROR(900); return; }
+		var->incr = malloc(sizeof(float));  if (var->incr != NULL) CAST_FLOAT(var->incr) = incr; else { ERROR(900); return; }
+		var->old = malloc(sizeof(float));   if (var->old != NULL) CAST_FLOAT(var->old) = CAST_FLOAT(var->val); else { ERROR(900); return; }
 	}
 	// ERROR
 	else { ERROR(110); }
@@ -245,10 +246,10 @@ void _menu::addVar(MW_TYPE t, byte* v, byte low, byte up, byte incr)
 		var = (_var*)malloc(sizeof(_var)); if (var == NULL) { ERROR(900); return; }
 		var->type = MW_AUTO_BYTE;
 		var->val = v;
-		var->lower = malloc(sizeof(byte)); if (var->lower != NULL) VBYTE(var->lower) = low; else { ERROR(900); return; }
-		var->upper = malloc(sizeof(byte)); if (var->upper != NULL) VBYTE(var->upper) = up; else { ERROR(900); return; }
-		var->incr = malloc(sizeof(byte));  if (var->incr != NULL) VBYTE(var->incr) = incr; else { ERROR(900); return; }
-		var->old = malloc(sizeof(byte));   if (var->old != NULL) VBYTE(var->old) = VBYTE(var->val); else { ERROR(900); return; }
+		var->lower = malloc(sizeof(byte)); if (var->lower != NULL) CAST_BYTE(var->lower) = low; else { ERROR(900); return; }
+		var->upper = malloc(sizeof(byte)); if (var->upper != NULL) CAST_BYTE(var->upper) = up; else { ERROR(900); return; }
+		var->incr = malloc(sizeof(byte));  if (var->incr != NULL) CAST_BYTE(var->incr) = incr; else { ERROR(900); return; }
+		var->old = malloc(sizeof(byte));   if (var->old != NULL) CAST_BYTE(var->old) = CAST_BYTE(var->val); else { ERROR(900); return; }
 	}
 	// ERROR
 	else { ERROR(110); }
@@ -265,7 +266,7 @@ void _menu::addVar(MW_TYPE t, boolean* v)
 		var = (_var*)malloc(sizeof(_var)); if (var == NULL) { ERROR(900); return; }
 		var->type = MW_BOOLEAN;
 		var->val = v;
-		var->old = malloc(sizeof(boolean));  if (var->old != NULL) VBOOL(var->old) = VBOOL(var->val); else { ERROR(900); return; }
+		var->old = malloc(sizeof(boolean));  if (var->old != NULL) CAST_BOOL(var->old) = CAST_BOOL(var->val); else { ERROR(900); return; }
 	}
 	// ERROR
 	else { ERROR(110); }
@@ -301,20 +302,16 @@ void menwiz::addUsrNav(int(*f)(), int nb)
 		ERROR(130);
 }
 
-void menwiz::begin(void *l, int c, int r)
+void menwiz::begin(int c, int r)
 {
 	ERROR(0);
 	tm_start = millis();
 	row = r;
 	col = c;
-	lcd = (MW_LCD*)l;
-	lcd->begin(c, r);  //  LCD size
-	lcd->setBacklight(HIGH);
-	lcd->noCursor();
-	lcd->createChar(0, (uint8_t*)c0);
-	lcd->createChar(1, (uint8_t*)c1);
-	sbuf = (char*)malloc(r*c + r); if (sbuf == NULL) ERROR(900);
-	buf = (char*)malloc(2 * c);   if (buf == NULL) ERROR(900);
+	//LCD->LoadCustomChar(0, c0);
+	//LCD->LoadCustomChar(1, c1);
+	sbuf = (char*)malloc(r*c + r); if (sbuf == NULL) ERROR(900); // 84
+	buf = (char*)malloc(2 * c);   if (buf == NULL) ERROR(900); // 40
 }
 
 void menwiz::drawUsrScreen(char *scr)
@@ -328,8 +325,8 @@ void menwiz::drawUsrScreen(char *scr)
 		{
 			memset(&buf[min(j, col)], ' ', col - j);
 			buf[col] = 0;
-			lcd->setCursor(0, k);
-			lcd->print(buf);
+			LCD->MoveCursor(0, k);
+			LCD->print(buf);
 			j = 0;
 			k++;
 		}
@@ -363,7 +360,6 @@ void menwiz::draw()
 		last_button = MW_BTNULL;
 		tm_push = millis();
 	}
-	// else run the action associated to selected button
 	else
 		actNavButtons(ret);
 
@@ -408,7 +404,7 @@ void menwiz::drawMenu(_menu *mc)
 	byte l, fl = 0;
 
 	ERROR(0);
-	lcd->setCursor(0, 0);
+	LCD->MoveCursor(0, 0);
 
 	if (bitRead(flags, MW_MENU_INDEX) &&
 		((mc->type == MW_ROOT) || (mc->type == MW_SUBMENU) || (mc->var->type == MW_LIST)))
@@ -430,10 +426,10 @@ void menwiz::drawMenu(_menu *mc)
 		rstop = min((mc->idx_o), (rstart + row));
 
 		for (i = 1, j = rstart; i < row; i++, j++)
-		{ // for all remaining lcd rows
+		{ // for all remaining LCD rows
 			if (j < rstop)
 			{
-				lcd->setCursor(0, i); // POSITION TO LINE TO PRINT
+				LCD->MoveCursor(0, i); // POSITION TO LINE TO PRINT
 				if (bitRead(mc->flags, MW_MENU_COLLAPSED))
 				{
 					op = (_option*)mc->o[j];
@@ -448,15 +444,15 @@ void menwiz::drawMenu(_menu *mc)
 						buf[0] = 165;
 						fl = false;
 					}
-					strcpy_P(&buf[1], (PGM_P)(pgm_read_word_near(reinterpret_cast<PGM_VOID_P>(mn->label))));
+					strcpy_P(&buf[1], (PGM_P)(mn->label));
 					strcpy(sbuf, buf);//@
 					if (mn->type == MW_VAR)
 					{
 						switch (mn->var->type)
 						{
 						case MW_AUTO_INT:
-							if (fl) { strcat(sbuf, ":["); strcat(sbuf, itoa(VINT(mn->var->val), buf, 10)); strcat(sbuf, "]"); }
-							else { strcat(sbuf, ":"); strcat(sbuf, itoa(VINT(mn->var->val), buf, 10)); }
+							if (fl) { strcat(sbuf, ":["); strcat(sbuf, itoa(CAST_INT(mn->var->val), buf, 10)); strcat(sbuf, "]"); }
+							else { strcat(sbuf, ":"); strcat(sbuf, itoa(CAST_INT(mn->var->val), buf, 10)); }
 							break;
 
 						case MW_LIST:
@@ -464,18 +460,18 @@ void menwiz::drawMenu(_menu *mc)
 							break;
 
 						case MW_BOOLEAN:
-							if (fl) { strcat(sbuf, ":["); strcat(sbuf, itoa(VBOOL(mn->var->val), buf, 10)); strcat(sbuf, "]"); }
-							else { strcat(sbuf, ":"); strcat(sbuf, itoa(VBOOL(mn->var->val), buf, 10)); }
+							if (fl) { strcat(sbuf, ":["); strcat(sbuf, itoa(CAST_BOOL(mn->var->val), buf, 10)); strcat(sbuf, "]"); }
+							else { strcat(sbuf, ":"); strcat(sbuf, itoa(CAST_BOOL(mn->var->val), buf, 10)); }
 							break;
 
 						case MW_AUTO_FLOAT:
-							if (fl) { strcat(sbuf, ":["); dtostrf(VFLOAT(mn->var->val), 0, MW_FLOAT_DEC, buf); strcat(sbuf, buf); strcat(sbuf, "]"); }
-							else { strcat(sbuf, ":"); dtostrf(VFLOAT(mn->var->val), 0, MW_FLOAT_DEC, buf); strcat(sbuf, buf); }
+							if (fl) { strcat(sbuf, ":["); dtostrf(CAST_FLOAT(mn->var->val), 0, MW_FLOAT_DEC, buf); strcat(sbuf, buf); strcat(sbuf, "]"); }
+							else { strcat(sbuf, ":"); dtostrf(CAST_FLOAT(mn->var->val), 0, MW_FLOAT_DEC, buf); strcat(sbuf, buf); }
 							break;
 
 						case MW_AUTO_BYTE:
-							if (fl) { strcat(sbuf, ":["); strcat(sbuf, itoa(VBYTE(mn->var->val), buf, 10)); strcat(sbuf, "]"); }
-							else { strcat(sbuf, ":"); strcat(sbuf, itoa(VBYTE(mn->var->val), buf, 10)); }
+							if (fl) { strcat(sbuf, ":["); strcat(sbuf, itoa(CAST_BYTE(mn->var->val), buf, 10)); strcat(sbuf, "]"); }
+							else { strcat(sbuf, ":"); strcat(sbuf, itoa(CAST_BYTE(mn->var->val), buf, 10)); }
 							break;
 
 						case MW_ACTION:
@@ -484,22 +480,22 @@ void menwiz::drawMenu(_menu *mc)
 						}
 						memset(&sbuf[strlen(sbuf)], 32, col - strlen(sbuf));
 						sbuf[col] = 0;
-						//	    lcd->setCursor(0, i);
-						lcd->print(sbuf);
+						//	    LCD->MoveCursor(0, i);
+						LCD->print(sbuf);
 					}
 					else
 					{ // NOT VARS (ROOT OR SUBMENU)
 						op = (_option*)mc->o[j];
-						//	    lcd->setCursor(0, i);
-						lcd->write((j == mc->cur_item) ? 126 : 165);
+						//	    LCD->MoveCursor(0, i);
+						LCD->write((j == mc->cur_item) ? 126 : 165);
 						FSFORM(buf, m[op->sbm].label, (int)col - 1);
 					}
 				}
 				else
 				{ // NOT MENU COLLAPSED
 					op = (_option*)mc->o[j];
-					//	  lcd->setCursor(0, i);
-					lcd->write((j == mc->cur_item) ? 126 : 165);
+					//	  LCD->MoveCursor(0, i);
+					LCD->write((j == mc->cur_item) ? 126 : 165);
 					FSFORM(buf, m[op->sbm].label, (int)col - 1);
 				}
 			}
@@ -524,9 +520,9 @@ void menwiz::drawVar(_menu *mc)
 	case MW_LIST:
 		if (bitRead(mc->flags, MW_SCROLL_HORIZONTAL))
 		{
-			lcd->setCursor(0, 1);
+			LCD->MoveCursor(0, 1);
 			op = (_option*)mc->o[mc->cur_item];
-			strcpy_P(buf, (char*)pgm_read_word(op->label));
+			strcpy_P(buf, (PGM_P)(op->label));
 			strcpy(sbuf, "["); strcat(sbuf, buf); strcat(sbuf, "]");//@
 			SFORM(buf, sbuf, col);
 			for (i = 2; i < row; i++)
@@ -553,8 +549,8 @@ void menwiz::drawVar(_menu *mc)
 					if (j < rstop)
 					{
 						op = (_option*)mc->o[j];
-						lcd->setCursor(0, i);
-						lcd->write((j == mc->cur_item) ? 0 : 165);
+						LCD->MoveCursor(0, i);
+						LCD->write((j == mc->cur_item) ? 0 : 165);
 						FSFORM(buf, op->label, (int)col - 1);
 					}
 					else
@@ -571,23 +567,23 @@ void menwiz::drawVar(_menu *mc)
 		{
 			BLANKLINE(buf, i, col);
 		}
-		lcd->setCursor(0, 1);
+		LCD->MoveCursor(0, 1);
 		if (mc->var->type == MW_AUTO_INT)
 		{
-			strcpy(sbuf, itoa(VINT(mc->var->lower), buf, 10));
+			strcpy(sbuf, itoa(CAST_INT(mc->var->lower), buf, 10));
 			strcat(sbuf, " [");
-			strcat(sbuf, itoa(VINT(mc->var->val), buf, 10));
+			strcat(sbuf, itoa(CAST_INT(mc->var->val), buf, 10));
 			strcat(sbuf, "] ");
-			strcat(sbuf, itoa(VINT(mc->var->upper), buf, 10));
+			strcat(sbuf, itoa(CAST_INT(mc->var->upper), buf, 10));
 
 		}
 		else
 		{
-			strcpy(sbuf, itoa(VBYTE(mc->var->lower), buf, 10));
+			strcpy(sbuf, itoa(CAST_BYTE(mc->var->lower), buf, 10));
 			strcat(sbuf, " [");
-			strcat(sbuf, itoa(VBYTE(mc->var->val), buf, 10));
+			strcat(sbuf, itoa(CAST_BYTE(mc->var->val), buf, 10));
 			strcat(sbuf, "] ");
-			strcat(sbuf, itoa(VBYTE(mc->var->upper), buf, 10));
+			strcat(sbuf, itoa(CAST_BYTE(mc->var->upper), buf, 10));
 
 		}
 		SFORM(buf, sbuf, col);
@@ -597,27 +593,27 @@ void menwiz::drawVar(_menu *mc)
 		{
 			BLANKLINE(buf, i, col);
 		}
-		lcd->setCursor(0, 1);
-		lcd->print(dtostrf(VFLOAT(mc->var->lower), 0, MW_FLOAT_DEC, buf));
-		lcd->print(F(" ["));
-		lcd->print(dtostrf(VFLOAT(mc->var->val), 0, MW_FLOAT_DEC, buf));
-		lcd->print(F("] "));
-		lcd->print(dtostrf(VFLOAT(mc->var->upper), 0, MW_FLOAT_DEC, buf));
+		LCD->MoveCursor(0, 1);
+		LCD->print(dtostrf(CAST_FLOAT(mc->var->lower), 0, MW_FLOAT_DEC, buf));
+		LCD->print(F(" ["));
+		LCD->print(dtostrf(CAST_FLOAT(mc->var->val), 0, MW_FLOAT_DEC, buf));
+		LCD->print(F("] "));
+		LCD->print(dtostrf(CAST_FLOAT(mc->var->upper), 0, MW_FLOAT_DEC, buf));
 		break;
 	case MW_BOOLEAN:
 		for (i = 2; i < row; i++)
 		{
 			BLANKLINE(buf, i, col);
 		}
-		lcd->setCursor(0, 1);
-		SFORM(buf, VBOOL(mc->var->val) ? "ON" : "OFF", (int)col);
+		LCD->MoveCursor(0, 1);
+		SFORM(buf, CAST_BOOL(mc->var->val) ? "ON" : "OFF", (int)col);
 		break;
 	case MW_ACTION:
 		for (i = 2; i < row; i++)
 		{
 			BLANKLINE(buf, i, col);
 		}
-		lcd->setCursor(0, 1);
+		LCD->MoveCursor(0, 1);
 		SFORM(buf, MW_STR_CONFIRM, (int)col);
 		break;
 	default:
@@ -632,17 +628,17 @@ void menwiz::drawList(_menu *mc, int nc)
 	for (int i = 0; i < (row*nc - nc); i++)
 	{
 		int pc = i / nr; int pr = i%nr + 1;
-		lcd->setCursor(pc*cw, pr);
+		LCD->MoveCursor(pc*cw, pr);
 		if (i < mc->idx_o)
 		{
-			lcd->write((i == mc->cur_item) ? 0 : 165);
+			LCD->write((i == mc->cur_item) ? 0 : 165);
 			FSFORM(buf, ((_option*)mc->o[i])->label, (int)cw - 1);
 		}
 		else
 		{
 			memset(buf, 32, cw);
 			buf[cw] = NULL;
-			lcd->print(buf);
+			LCD->print(buf);
 		}
 	}
 }
@@ -832,19 +828,19 @@ void menwiz::actBTL()
 	cm = bitRead(cur_menu->flags, MW_MENU_COLLAPSED) ? &m[oc->sbm] : cur_menu;
 	if (cm->var->type == MW_AUTO_BYTE)
 	{
-		VBYTE(cm->var->val) = max((VBYTE(cm->var->val) - VBYTE(cm->var->incr)), VBYTE(cm->var->lower));
+		CAST_BYTE(cm->var->val) = max((CAST_BYTE(cm->var->val) - CAST_BYTE(cm->var->incr)), CAST_BYTE(cm->var->lower));
 	}
 	else if (cm->var->type == MW_AUTO_INT)
 	{
-		VINT(cm->var->val) = max((VINT(cm->var->val) - VINT(cm->var->incr)), VINT(cm->var->lower));
+		CAST_INT(cm->var->val) = max((CAST_INT(cm->var->val) - CAST_INT(cm->var->incr)), CAST_INT(cm->var->lower));
 	}
 	else if (cm->var->type == MW_AUTO_FLOAT)
 	{
-		VFLOAT(cm->var->val) = max((VFLOAT(cm->var->val) - VFLOAT(cm->var->incr)), VFLOAT(cm->var->lower));
+		CAST_FLOAT(cm->var->val) = max((CAST_FLOAT(cm->var->val) - CAST_FLOAT(cm->var->incr)), CAST_FLOAT(cm->var->lower));
 	}
 	else if (cm->var->type == MW_BOOLEAN)
 	{
-		VBOOL(cm->var->val) = !VBOOL(cm->var->val);
+		CAST_BOOL(cm->var->val) = !CAST_BOOL(cm->var->val);
 	}
 	else if ((cm->var->type == MW_LIST) && MW_invar)
 		cm->cur_item = (cm->cur_item + 1) % (cm->idx_o);
@@ -862,19 +858,19 @@ void menwiz::actBTR()
 	cm = bitRead(cur_menu->flags, MW_MENU_COLLAPSED) ? &m[oc->sbm] : cur_menu;
 	if (cm->var->type == MW_AUTO_INT)
 	{
-		VINT(cm->var->val) = min((VINT(cm->var->val) + VINT(cm->var->incr)), VINT(cm->var->upper));
+		CAST_INT(cm->var->val) = min((CAST_INT(cm->var->val) + CAST_INT(cm->var->incr)), CAST_INT(cm->var->upper));
 	}
 	else if (cm->var->type == MW_AUTO_BYTE)
 	{
-		VBYTE(cm->var->val) = min((VBYTE(cm->var->val) + VBYTE(cm->var->incr)), VBYTE(cm->var->upper));
+		CAST_BYTE(cm->var->val) = min((CAST_BYTE(cm->var->val) + CAST_BYTE(cm->var->incr)), CAST_BYTE(cm->var->upper));
 	}
 	else if (cm->var->type == MW_AUTO_FLOAT)
 	{
-		VFLOAT(cm->var->val) = min((VFLOAT(cm->var->val) + VFLOAT(cm->var->incr)), VFLOAT(cm->var->upper));
+		CAST_FLOAT(cm->var->val) = min((CAST_FLOAT(cm->var->val) + CAST_FLOAT(cm->var->incr)), CAST_FLOAT(cm->var->upper));
 	}
 	else if (cm->var->type == MW_BOOLEAN)
 	{
-		VBOOL(cm->var->val) = !VBOOL(cm->var->val);
+		CAST_BOOL(cm->var->val) = !CAST_BOOL(cm->var->val);
 	}
 	else if ((cm->var->type == MW_LIST) && MW_invar)
 		cm->cur_item = (cm->cur_item - 1) < 0 ? (cm->idx_o - 1) : cm->cur_item - 1;
@@ -892,19 +888,19 @@ void menwiz::actBTE()
 	{
 		if (cm->var->type == MW_AUTO_INT)
 		{
-			VINT(cm->var->val) = VINT(cm->var->old);
+			CAST_INT(cm->var->val) = CAST_INT(cm->var->old);
 		}
 		else if (cm->var->type == MW_AUTO_FLOAT)
 		{
-			VFLOAT(cm->var->val) = VFLOAT(cm->var->old);
+			CAST_FLOAT(cm->var->val) = CAST_FLOAT(cm->var->old);
 		}
 		else if (cm->var->type == MW_AUTO_BYTE)
 		{
-			VBYTE(cm->var->val) = VBYTE(cm->var->old);
+			CAST_BYTE(cm->var->val) = CAST_BYTE(cm->var->old);
 		}
 		else if (cm->var->type == MW_BOOLEAN)
 		{
-			VBOOL(cm->var->val) = VBOOL(cm->var->old);
+			CAST_BOOL(cm->var->val) = CAST_BOOL(cm->var->old);
 		}
 	}
 	cur_menu = &m[cur_menu->parent];
@@ -920,7 +916,7 @@ void menwiz::actBTC()
 	oc = (_option*)cur_menu->o[cur_menu->cur_item];
 	if ((cur_menu->type == MW_SUBMENU) || (cur_menu->type == MW_ROOT))
 	{
-		//    VINT(cur_menu->var->val) = cur_menu->cur_item;  //? commented senza sapere perchè ...
+		//    CAST_INT(cur_menu->var->val) = cur_menu->cur_item;  //? commented senza sapere perchè ...
 		cur_menu = &m[oc->sbm];
 		if (cur_menu->type == MW_VAR)
 		{
@@ -955,23 +951,23 @@ void menwiz::actBTC()
 	{
 		if (cur_menu->var->type == MW_LIST)
 		{
-			VINT(cur_menu->var->val) = cur_menu->cur_item;
+			CAST_INT(cur_menu->var->val) = cur_menu->cur_item;
 		}
 		else if (cur_menu->var->type == MW_AUTO_INT)
 		{
-			VINT(cur_menu->var->old) = VINT(cur_menu->var->val);
+			CAST_INT(cur_menu->var->old) = CAST_INT(cur_menu->var->val);
 		}
 		else if (cur_menu->var->type == MW_AUTO_FLOAT)
 		{
-			VFLOAT(cur_menu->var->old) = VFLOAT(cur_menu->var->val);
+			CAST_FLOAT(cur_menu->var->old) = CAST_FLOAT(cur_menu->var->val);
 		}
 		else if (cur_menu->var->type == MW_AUTO_BYTE)
 		{
-			VBYTE(cur_menu->var->old) = VBYTE(cur_menu->var->val);
+			CAST_BYTE(cur_menu->var->old) = CAST_BYTE(cur_menu->var->val);
 		}
 		else if (cur_menu->var->type == MW_BOOLEAN)
 		{
-			VBOOL(cur_menu->var->old) = VBOOL(cur_menu->var->val);
+			CAST_BOOL(cur_menu->var->old) = CAST_BOOL(cur_menu->var->val);
 		}
 		else if ((cur_menu->var->type == MW_ACTION) && (bitRead(cur_menu->flags, MW_ACTION_CONFIRM)))
 		{
@@ -1061,21 +1057,21 @@ void  menwiz::writeEeprom()
 			{
 			case MW_AUTO_BYTE:
 			{
-				temp.b = VBYTE(m[i].var->val);
+				temp.b = CAST_BYTE(m[i].var->val);
 				EEPROM.write(addr, temp.bytes[0]);
 				addr++;
 			}
 			break;
 			case MW_BOOLEAN:
 			{
-				temp.bl = VBOOL(m[i].var->val);
+				temp.bl = CAST_BOOL(m[i].var->val);
 				EEPROM.write(addr, temp.bytes[0]);
 				addr++;
 			}
 			break;
 			case MW_AUTO_FLOAT:
 			{
-				temp.f = VFLOAT(m[i].var->val);
+				temp.f = CAST_FLOAT(m[i].var->val);
 				for (int i = 0; i < 4; i++)
 				{
 					EEPROM.write(addr + i, temp.bytes[i]);
@@ -1095,7 +1091,7 @@ void  menwiz::writeEeprom()
 			break;
 			case MW_AUTO_INT:
 			{
-				temp.i = VINT(m[i].var->val);
+				temp.i = CAST_INT(m[i].var->val);
 				for (int i = 0; i < 2; i++)
 				{
 					EEPROM.write(addr + i, temp.bytes[i]);
@@ -1123,16 +1119,16 @@ void  menwiz::readEeprom()
 			case MW_AUTO_BYTE:
 			{
 				temp.bytes[0] = EEPROM.read(addr);
-				VBYTE(m[i].var->val) = temp.b;
-				VBYTE(m[i].var->old) = temp.b;
+				CAST_BYTE(m[i].var->val) = temp.b;
+				CAST_BYTE(m[i].var->old) = temp.b;
 				addr++;
 			}
 			break;
 			case MW_BOOLEAN:
 			{
 				temp.bytes[0] = EEPROM.read(addr);
-				VBOOL(m[i].var->val) = temp.bl;
-				VBOOL(m[i].var->old) = temp.bl;
+				CAST_BOOL(m[i].var->val) = temp.bl;
+				CAST_BOOL(m[i].var->old) = temp.bl;
 				addr++;
 			}
 			break;
@@ -1142,8 +1138,8 @@ void  menwiz::readEeprom()
 				{
 					temp.bytes[n] = EEPROM.read(addr + n);
 				}
-				VFLOAT(m[i].var->val) = temp.f;
-				VFLOAT(m[i].var->old) = temp.f;
+				CAST_FLOAT(m[i].var->val) = temp.f;
+				CAST_FLOAT(m[i].var->old) = temp.f;
 				addr = addr + 4;
 			}
 			break;
@@ -1153,8 +1149,8 @@ void  menwiz::readEeprom()
 				{
 					temp.bytes[n] = EEPROM.read(addr + n);
 				}
-				VINT(m[i].var->val) = temp.i;
-				VINT(m[i].var->old) = temp.i;
+				CAST_INT(m[i].var->val) = temp.i;
+				CAST_INT(m[i].var->old) = temp.i;
 				addr = addr + 2;
 			}
 			break;
@@ -1164,8 +1160,8 @@ void  menwiz::readEeprom()
 				{
 					temp.bytes[n] = EEPROM.read(addr + n);
 				}
-				VINT(m[i].var->val) = temp.i;
-				VINT(m[i].var->old) = temp.i;
+				CAST_INT(m[i].var->val) = temp.i;
+				CAST_INT(m[i].var->old) = temp.i;
 				m[i].cur_item = (byte)temp.i;
 				addr = addr + 2;
 			}

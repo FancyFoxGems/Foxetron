@@ -13,16 +13,21 @@
 #pragma region INCLUDES
 
 // ITTY BITTY
-#include "IttyBitty_EEPROM_I2C.h"
+#include "IttyBitty_DB.h"
+#include "IttyBitty_storage_adapters.h"
+
+using namespace IttyBitty;
 
 // ARDUINO LIBS
 //#include <EEPROM.h>			// included by DB 3rd-party library
 
-// 3RD-PARTY LIBS
-//#include "libs/DB.h"
-
 #pragma endregion
 
 
+#pragma region ExtEEPROM GLOBAL VARIABLE DECLARATION
+
+EXTERN EEPROMI2C<> ExtEEPROM;
+
+#pragma endregion
 
 #endif

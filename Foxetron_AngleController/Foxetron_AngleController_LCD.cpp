@@ -33,3 +33,16 @@ VOID LCD_Free()
 }
 
 #pragma endregion
+
+
+#pragma region LCD FUNCTION DEFINITIONS
+
+VOID LCD_ToggleBacklight()
+{
+	if (LCD->IsBacklightOn())
+		LCD->BacklightOff();
+	else
+		LCD->BacklightOn();
+}
+
+#pragma endregion

@@ -509,6 +509,9 @@ VOID OnMessage(PIMESSAGE message)
 		delete[] state;
 		state = NULL;
 	}
+
+	if (!msgHandled)
+		OnError();
 }
 
 VOID CalibrateAngle()

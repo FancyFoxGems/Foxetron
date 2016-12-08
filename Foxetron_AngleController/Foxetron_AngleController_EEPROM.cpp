@@ -6,3 +6,10 @@
 
 
 #include "Foxetron_AngleController_EEPROM.h"
+
+
+#pragma region ExtEEPROM GLOBAL VARIABLE DEFINITION
+
+EEPROMI2C<> ExtEEPROM;
+
+#pragma endregion
