@@ -4,7 +4,7 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-// GCC WARNING SUPPRESSIONS
+
 #pragma GCC diagnostic ignored "-Wdelete-non-virtual-dtor"
 
 

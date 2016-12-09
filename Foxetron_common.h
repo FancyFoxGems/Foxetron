@@ -10,25 +10,6 @@
 #define _FOXETRON_COMMON_H
 
 
-// GCC WARNING SUPPRESSIONS
-
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma GCC diagnostic ignored "-Wunused-function"
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#pragma GCC diagnostic ignored "-Wunused-value"
-#pragma GCC diagnostic ignored "-Wparentheses"
-#pragma GCC diagnostic ignored "-Wreturn-type"
-#pragma GCC diagnostic ignored "-Wconversion-null"
-#pragma GCC diagnostic ignored "-Wchar-subscripts"
-#pragma GCC diagnostic ignored "-Wreorder"
-#pragma GCC diagnostic ignored "-Wsequence-point"
-#pragma GCC diagnostic ignored "-Wsign-compare"
-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
-#pragma GCC diagnostic ignored "-Wpointer-arith"
-#pragma GCC diagnostic ignored "-Wvirtual-move-assign"
-
-
 #pragma region INCLUDES
 
 // PROJECT MODULES
@@ -40,6 +21,27 @@ using namespace Foxetron;
 #include "IttyBitty.h"
 
 using namespace IttyBitty;
+
+#pragma endregion
+
+
+#pragma region GCC WARNING SUPPRESSIONS
+
+IGNORE_WARNING(unknown-pragmas)
+IGNORE_WARNING(unused-function)
+IGNORE_WARNING(unused-variable)
+IGNORE_WARNING(unused-but-set-variable)
+IGNORE_WARNING(unused-value)
+IGNORE_WARNING(parentheses)
+IGNORE_WARNING(return-type)
+IGNORE_WARNING(conversion-null)
+IGNORE_WARNING(char-subscripts)
+IGNORE_WARNING(reorder)
+IGNORE_WARNING(sequence-point)
+IGNORE_WARNING(sign-compare)
+IGNORE_WARNING(strict-aliasing)
+IGNORE_WARNING(pointer-arith)
+IGNORE_WARNING(virtual-move-assign)
 
 #pragma endregion
 

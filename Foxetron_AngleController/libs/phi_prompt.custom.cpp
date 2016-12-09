@@ -86,7 +86,7 @@ _______  .______                 __       __   __    __
 
 http://liudr.wordpress.com
 */
-
+#ifdef asdf
 #include "phi_prompt.custom.h"
 
 const char phi_prompt_lcd_ch0[] PROGMEM ={ 4, 14, 31, 64, 31, 31, 31, 31, 0 }; ///< Custom LCD character: Up triangle with block
@@ -2231,4 +2231,5 @@ byte get_simple_list_item(char msg[], char buf[], byte item_num)
 	}
 	buf[j] = 0;   ///< Terminate the string.
 }
+#endif
 #endif
