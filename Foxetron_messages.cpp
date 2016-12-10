@@ -16,7 +16,7 @@ using namespace Foxetron;
 
 Request::Request(MessageCode messageCode, CBYTE paramCount) : Message((CBYTE)messageCode, paramCount) { }
 
-BOOL Request::Handle(PVOID results, PCVOID state)
+BOOL Request::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("Request::Handle"));
@@ -48,7 +48,7 @@ CSHORT CalibrateRequest::CalibrationSteps() const
 	return (CSHORT)*reinterpret_cast<PCPARAM>(_Params[1]);
 }
 
-BOOL CalibrateRequest::Handle(PVOID results, PCVOID state)
+BOOL CalibrateRequest::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("CalibrateRequest::Handle"));
@@ -72,7 +72,7 @@ BOOL CalibrateRequest::Handle(PVOID results, PCVOID state)
 
 AngleRequest::AngleRequest() : Request(MessageCode::ANGLE_REQUEST, 0) { }
 
-BOOL AngleRequest::Handle(PVOID results, PCVOID state)
+BOOL AngleRequest::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("AngleRequest::Handle"));
@@ -107,7 +107,7 @@ CWORD NewAngleRequest::Degrees() const
 	return (CWORD)*reinterpret_cast<PCPARAM>(_Params[0]);
 }
 
-BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
+BOOL NewAngleRequest::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("NewAngleRequest::Handle"));
@@ -126,7 +126,7 @@ BOOL NewAngleRequest::Handle(PVOID results, PCVOID state)
 
 StatusRequest::StatusRequest() : Request(MessageCode::STATUS_REQUEST, 0) { }
 
-BOOL StatusRequest::Handle(PVOID results, PCVOID state)
+BOOL StatusRequest::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("StatusRequest::Handle"));
@@ -173,7 +173,7 @@ CERROR Response::ErrorCode() const
 	return (CERROR)(CBYTE)*reinterpret_cast<PCPARAM>(_Params[0]);
 }
 
-BOOL Response::Handle(PVOID results, PCVOID state)
+BOOL Response::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("Response::Handle"));
@@ -189,7 +189,7 @@ BOOL Response::Handle(PVOID results, PCVOID state)
 
 CalibrateResponse::CalibrateResponse(CERROR error) : Response(error, MessageCode::CALIBRATE_RESPONSE) { }
 
-BOOL CalibrateResponse::Handle(PVOID results, PCVOID state)
+BOOL CalibrateResponse::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("CalibrateResponse::Handle"));
@@ -213,7 +213,7 @@ CWORD AngleResponse::Degrees() const
 	return (CWORD)*reinterpret_cast<PCPARAM>(_Params[1]);
 }
 
-BOOL AngleResponse::Handle(PVOID results, PCVOID state)
+BOOL AngleResponse::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("AngleResponse::Handle"));
@@ -232,7 +232,7 @@ BOOL AngleResponse::Handle(PVOID results, PCVOID state)
 
 NewAngleResponse::NewAngleResponse(CERROR error) : Response(error, MessageCode::NEWANGLE_RESPONSE) { }
 
-BOOL NewAngleResponse::Handle(PVOID results, PCVOID state)
+BOOL NewAngleResponse::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("NewAngleResponse::Handle"));
@@ -257,7 +257,7 @@ PCCHAR StatusResponse::StatusMessage() const
 	return (PCCHAR)*reinterpret_cast<PCVARLENGTHPARAM>(_Params[1]);
 }
 
-BOOL StatusResponse::Handle(PVOID results, PCVOID state)
+BOOL StatusResponse::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("StatusResponse::Handle"));
@@ -285,7 +285,7 @@ CCONTROLLERSTATUS ControllerStatusResponse::StatusCode() const
 	return reinterpret_cast<RCCONTROLLERSTATUS>((RCBYTE)*reinterpret_cast<PCPARAM>(_Params[2]));
 }
 
-BOOL ControllerStatusResponse::Handle(PVOID results, PCVOID state)
+BOOL ControllerStatusResponse::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("ControllerStatusResponse::Handle"));
@@ -313,7 +313,7 @@ CDRIVERSTATUS DriverStatusResponse::StatusCode() const
 	return reinterpret_cast<RCDRIVERSTATUS>((RCBYTE)*reinterpret_cast<PCPARAM>(_Params[2]));
 }
 
-BOOL DriverStatusResponse::Handle(PVOID results, PCVOID state)
+BOOL DriverStatusResponse::Handle(PTR results, CPTR state)
 {
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("DriverStatusResponse::Handle"));

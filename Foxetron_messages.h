@@ -146,7 +146,7 @@ namespace Foxetron
 
 		Request(MessageCode = MessageCode::REQUEST_TYPE, CBYTE paramCount = 0);
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL);
 	};
 
 
@@ -160,7 +160,7 @@ namespace Foxetron
 
 		CSHORT CalibrationSteps() const;
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL) final;
 	};
 
 
@@ -170,7 +170,7 @@ namespace Foxetron
 
 		AngleRequest();
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL) final;
 	};
 
 
@@ -182,7 +182,7 @@ namespace Foxetron
 
 		CWORD Degrees() const;
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL) final;
 	};
 
 
@@ -192,7 +192,7 @@ namespace Foxetron
 
 		StatusRequest();
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL) final;
 	};
 
 #pragma endregion
@@ -234,7 +234,7 @@ namespace Foxetron
 
 		CERROR ErrorCode() const final;
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL);
 	};
 
 
@@ -244,7 +244,7 @@ namespace Foxetron
 
 		CalibrateResponse(CERROR);
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL) final;
 	};
 
 
@@ -256,7 +256,7 @@ namespace Foxetron
 
 		CWORD Degrees() const;
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL) final;
 	};
 
 
@@ -266,7 +266,7 @@ namespace Foxetron
 
 		NewAngleResponse(CERROR);
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL) final;
 	};
 
 	CLASS StatusResponse : public Response, public IStatusResponse
@@ -277,7 +277,7 @@ namespace Foxetron
 
 		PCCHAR StatusMessage() const final;
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL);
 	};
 
 
@@ -289,7 +289,7 @@ namespace Foxetron
 
 		CCONTROLLERSTATUS StatusCode() const;
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL) final;
 	};
 
 
@@ -301,7 +301,7 @@ namespace Foxetron
 
 		CDRIVERSTATUS StatusCode() const;
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) final;
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL) final;
 	};
 
 #pragma endregion

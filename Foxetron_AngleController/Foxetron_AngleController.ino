@@ -473,15 +473,15 @@ VOID OnMessage(PIMESSAGE message)
 #endif
 
 	BOOL msgHandled = FALSE;
-	PPVOID results = NULL;
-	PPCVOID state = NULL;
+	PPTR results = NULL;
+	PCPTR state = NULL;
 
 	switch (msgCode)
 	{
 	case MessageCode::CALIBRATE_REQUEST:
 
-		state = new PCVOID[1] { &_ControllerError };
-		results = new PVOID[2] { &_AngleMode, &_CalibrationSteps };
+		state = new CPTR[1] { &_ControllerError };
+		results = new PTR[2] { &_AngleMode, &_CalibrationSteps };
 		msgHandled = reinterpret_cast<PCALIBRATEREQUEST>(message)->Handle(results, state);
 
 	#ifdef DEBUG_MESSAGES
@@ -495,7 +495,7 @@ VOID OnMessage(PIMESSAGE message)
 
 	case MessageCode::STATUS_REQUEST:
 
-		state = new PCVOID[4] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus, NULL };
+		state = new CPTR[4] { &_ControllerError, &_ControllerStatusMsg, &_ControllerStatus, NULL };
 		msgHandled = reinterpret_cast<PSTATUSREQUEST>(message)->Handle(NULL, state);
 
 		break;
@@ -503,7 +503,7 @@ VOID OnMessage(PIMESSAGE message)
 
 	case MessageCode::CALIBRATE_RESPONSE:
 
-		results = new PVOID[1] { &_DriverError };
+		results = new PTR[1] { &_DriverError };
 		msgHandled = reinterpret_cast<PCALIBRATERESPONSE>(message)->Handle(results, state);
 
 	#ifdef DEBUG_MESSAGES
@@ -515,7 +515,7 @@ VOID OnMessage(PIMESSAGE message)
 
 	case MessageCode::ANGLE_RESPONSE:
 
-		results = new PVOID[2] { &_DriverError, &_Degrees };
+		results = new PTR[2] { &_DriverError, &_Degrees };
 		msgHandled = reinterpret_cast<PANGLERESPONSE>(message)->Handle(results, state);
 
 	#ifdef DEBUG_MESSAGES
@@ -528,7 +528,7 @@ VOID OnMessage(PIMESSAGE message)
 
 	case MessageCode::NEWANGLE_RESPONSE:
 
-		results = new PVOID[1] { &_DriverError };
+		results = new PTR[1] { &_DriverError };
 		msgHandled = reinterpret_cast<PNEWANGLERESPONSE>(message)->Handle(results);
 
 	#ifdef DEBUG_MESSAGES
@@ -540,7 +540,7 @@ VOID OnMessage(PIMESSAGE message)
 
 	case MessageCode::DRIVER_STATUS:
 
-		results = new PVOID[3] { &_DriverError, &_DriverStatusMsg, &_DriverStatus };
+		results = new PTR[3] { &_DriverError, &_DriverStatusMsg, &_DriverStatus };
 		msgHandled = reinterpret_cast<PDRIVERSTATUSRESPONSE>(message)->Handle(results);
 
 	#ifdef DEBUG_MESSAGES
