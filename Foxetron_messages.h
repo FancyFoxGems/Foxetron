@@ -108,10 +108,10 @@ namespace Foxetron
 
 	// RESPONSES
 
-	class IResponse;
+	interface IResponse;
 	TYPEDEF_CLASS_ALIASES(IResponse, IRESPONSE);
 
-	class IStatusResponse;
+	interface IStatusResponse;
 	TYPEDEF_CLASS_ALIASES(IStatusResponse, ISTATUSRESPONSE);
 
 	class Response;
