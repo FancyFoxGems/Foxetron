@@ -402,15 +402,15 @@ VOID OnMessage(PIMESSAGE message)
 #endif
 
 	BOOL msgHandled = FALSE;
-	PTR results = NULL;
-	CPTR state = NULL;
+	PPTR results = NULL;
+	PCPTR state = NULL;
 
 	switch (msgCode)
 	{
 	case MessageCode::CALIBRATE_REQUEST:
 
-		state = new CPTR[1] { &_DriverError };
 		results = new PTR[2] { &_AngleMode, &_CalibrationSteps };
+		state = new CPTR[1] { &_DriverError };
 		msgHandled = reinterpret_cast<PCALIBRATEREQUEST>(message)->Handle(results, state);
 
 	#ifdef DEBUG_MESSAGES

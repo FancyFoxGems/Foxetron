@@ -47,7 +47,6 @@
 #include "Foxetron_AngleController_EEPROM.h"
 
 // PROJECT LIBS
-#include "libs/MENWIZ.custom.h"
 #include "libs/RTCLib.custom.h"
 
 // 3RD-PARTY LIBS
@@ -189,19 +188,20 @@ VOID DEBUG_DisplayCustomChars();
 
 #pragma region PROGRAM OUTLINE: ENTRY POINT, LOOP, ETC.
 
-menwiz UI;
-int Nav, list, sp=110;
-bool done;
+//#include "libs/MENWIZ.custom.h"
+//menwiz UI;
+//int Nav, list, sp=110;
+//bool done;
 
-INT GetMenuNav()
-{
-	if (done)
-		Nav = MW_BTNULL;
-	else
-		done = TRUE;
-
-	return Nav;
-}
+//INT GetMenuNav()
+//{
+//	if (done)
+//		Nav = MW_BTNULL;
+//	else
+//		done = TRUE;
+//
+//	return Nav;
+//}
 
 VOID setup()
 {
@@ -222,24 +222,24 @@ VOID setup()
 
 	//PrintLCDSplash();
 
-	_menu *menu, *menu1, *menu2;
+	//_menu *menu, *menu1, *menu2;
 
-	UI.addUsrNav(&GetMenuNav, 6);
-	UI.begin(20,4);
+	//UI.addUsrNav(&GetMenuNav, 6);
+	//UI.begin(20,4);
 
-	menu = UI.addMenu(MW_ROOT, NULL, F("Foxetron"));
-		menu1 = UI.addMenu(MW_VAR, menu, F("Backlight"));
-			menu1->addVar(MW_ACTION, LCD_ToggleBacklight);
-		menu1 = UI.addMenu(MW_VAR, menu, F("INT Variable"));
-			menu1->addVar(MW_AUTO_INT, &sp, 0, 120, 10);
-		menu1 = UI.addMenu(MW_SUBMENU, menu, F("Node3"));
-			menu2 = UI.addMenu(MW_VAR, menu1, F("Choice"));
-				menu2->addVar(MW_LIST, &list);
-					menu2->addItem(MW_LIST, F("Option1"));
-					menu2->addItem(MW_LIST, F("Option2"));
-					menu2->addItem(MW_LIST, F("Option3"));
+	//menu = UI.addMenu(MW_ROOT, NULL, F("Foxetron"));
+	//	menu1 = UI.addMenu(MW_VAR, menu, F("Backlight"));
+	//		menu1->addVar(MW_ACTION, LCD_ToggleBacklight);
+	//	menu1 = UI.addMenu(MW_VAR, menu, F("INT Variable"));
+	//		menu1->addVar(MW_AUTO_INT, &sp, 0, 120, 10);
+	//	menu1 = UI.addMenu(MW_SUBMENU, menu, F("Node3"));
+	//		menu2 = UI.addMenu(MW_VAR, menu1, F("Choice"));
+	//			menu2->addVar(MW_LIST, &list);
+	//				menu2->addItem(MW_LIST, F("Option1"));
+	//				menu2->addItem(MW_LIST, F("Option2"));
+	//				menu2->addItem(MW_LIST, F("Option3"));
 
-	UI.draw();
+	//UI.draw();
 
 
 #ifdef _DEBUG
@@ -259,49 +259,49 @@ BOOL stopped = FALSE;
 
 VOID serialEvent()
 {
-	switch (Serial.read())
-	{
-	case '.':
-		stopped = !stopped;
-		break;
+	//switch (Serial.read())
+	//{
+	//case '.':
+	//	stopped = !stopped;
+	//	break;
 
-	case 'u':
-	case 'w':
-		Nav = MW_BTU;
-		break;
+	//case 'u':
+	//case 'w':
+	//	Nav = MW_BTU;
+	//	break;
 
-	case 'd':
-	case 'z':
-		Nav = MW_BTD;
-		break;
+	//case 'd':
+	//case 'z':
+	//	Nav = MW_BTD;
+	//	break;
 
-	case 'l':
-	case 'a':
-		Nav = MW_BTL;
-		break;
+	//case 'l':
+	//case 'a':
+	//	Nav = MW_BTL;
+	//	break;
 
-	case 'r':
-	case 's':
-		Nav = MW_BTR;
-		break;
+	//case 'r':
+	//case 's':
+	//	Nav = MW_BTR;
+	//	break;
 
-	case 'c':
-	case 'f':
-		Nav = MW_BTC;
-		break;
+	//case 'c':
+	//case 'f':
+	//	Nav = MW_BTC;
+	//	break;
 
-	case 'e':
-	case 'x':
-		Nav = MW_BTE;
-		break;
+	//case 'e':
+	//case 'x':
+	//	Nav = MW_BTE;
+	//	break;
 
-	default:
-		Nav = MW_BTNULL;
-	}
+	//default:
+	//	Nav = MW_BTNULL;
+	//}
 
-	done = FALSE;
+	//done = FALSE;
 
-	UI.draw();
+	//UI.draw();
 
 	//WaitForMessage(Serial, OnMessage);
 }
@@ -480,8 +480,8 @@ VOID OnMessage(PIMESSAGE message)
 	{
 	case MessageCode::CALIBRATE_REQUEST:
 
-		state = new CPTR[1] { &_ControllerError };
 		results = new PTR[2] { &_AngleMode, &_CalibrationSteps };
+		state = new CPTR[1] { &_ControllerError };
 		msgHandled = reinterpret_cast<PCALIBRATEREQUEST>(message)->Handle(results, state);
 
 	#ifdef DEBUG_MESSAGES
