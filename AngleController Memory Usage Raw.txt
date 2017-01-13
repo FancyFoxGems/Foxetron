@@ -1,5 +1,5 @@
 cls
-avr-nm -C -S -l -f sysv C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleController\nano_atmega328\Foxetron_AngleController.ino.elf
+avr-nm -C -S -l -f sysv C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\Foxetron_AngleController\mighty-1284p-1_6_3_mighty-1284p-1.6.3_avr_mightymini\Foxetron_AngleController.ino.elf
 
 Name                  Value   Class        Type         Size     Line  Section
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

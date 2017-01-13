@@ -48,7 +48,7 @@ namespace Foxetron
 		DRIVER_STATUS		= STATUS_RESPONSE | 0x2
 	};
 
-	TYPEDEF_ENUM_ALIASES(MessageCode, MESSAGECODE);
+	DECLARE_ENUM_AS_FLAGS(MessageCode, MESSAGECODE);
 
 
 	ENUM AngleMode : BOOL
@@ -230,7 +230,7 @@ namespace Foxetron
 	{
 	public:
 
-		Response(CERROR, MessageCode = MessageCode::RESPONSE_TYPE, CBYTE = 1);
+		Response(CERROR, CMESSAGECODE = MessageCode::RESPONSE_TYPE, CBYTE = 1);
 
 		CERROR ErrorCode() const final;
 
@@ -273,7 +273,7 @@ namespace Foxetron
 	{
 	public:
 
-		StatusResponse(CERROR, PCCHAR, MessageCode = MessageCode::STATUS_RESPONSE, CBYTE = 2);
+		StatusResponse(CERROR, PCCHAR, CMESSAGECODE = MessageCode::STATUS_RESPONSE, CBYTE = 2);
 
 		PCCHAR StatusMessage() const final;
 

@@ -14,7 +14,7 @@ using namespace Foxetron;
 
 // Request
 
-Request::Request(MessageCode messageCode, CBYTE paramCount) : Message((CBYTE)messageCode, paramCount) { }
+Request::Request(CMESSAGECODE messageCode, CBYTE paramCount) : Message((CBYTE)messageCode, paramCount) { }
 
 BOOL Request::Handle(PTR results, CPTR state)
 {
@@ -163,7 +163,7 @@ BOOL StatusRequest::Handle(PTR results, CPTR state)
 
 // Response
 
-Response::Response(CERROR error, MessageCode msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount)
+Response::Response(CERROR error, CMESSAGECODE msgCode, CBYTE paramCount) : Message((CBYTE)msgCode, paramCount)
 {
 	_Params[0] = new PARAM((CBYTE)error);
 }
@@ -247,7 +247,7 @@ BOOL NewAngleResponse::Handle(PTR results, CPTR state)
 
 // StatusResponse
 
-StatusResponse::StatusResponse(CERROR error, PCCHAR statusMsg, MessageCode msgCode, CBYTE paramCount) : Response(error, msgCode, paramCount)
+StatusResponse::StatusResponse(CERROR error, PCCHAR statusMsg, CMESSAGECODE msgCode, CBYTE paramCount) : Response(error, msgCode, paramCount)
 {
 	_Params[1] = new VarLengthParam(statusMsg);
 }
