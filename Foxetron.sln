@@ -4,7 +4,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foxetron_AngleController", "Foxetron_AngleController\Foxetron_AngleController.vcxproj", "{D7A063C4-4996-461E-820C-756798EB5EBC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IttyBitty", "..\IttyBitty\IttyBitty.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IttyBitty", "..\IttyBitty\extras\IttyBitty.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{47FE4012-DE88-45D0-804B-DDB6A3DC3BE3}"
 	ProjectSection(SolutionItems) = preProject
@@ -59,7 +59,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Metadata", "Metadata", "{F5
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foxetron_AngleDriver", "Foxetron_AngleDriver\Foxetron_AngleDriver.vcxproj", "{0FED41EE-9FC8-4C37-B2D8-37C5C754F5B4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HalfStepper", "..\HalfStepper\HalfStepper.vcxproj", "{9D2D59B4-0DC7-408A-9479-C1BC41C903F5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HalfStepper", "..\HalfStepper\extras\HalfStepper.vcxproj", "{9D2D59B4-0DC7-408A-9479-C1BC41C903F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

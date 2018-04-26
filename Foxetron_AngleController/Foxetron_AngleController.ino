@@ -166,6 +166,11 @@ Error _DriverError					= Error::SUCCESS;
 PCCHAR _DriverStatusMsg				= NULL;
 DriverStatus _DriverStatus			= DriverStatus::IDLE;
 
+
+// Menu-driven GUI
+
+MenUI UI;
+
 #pragma endregion
 
 

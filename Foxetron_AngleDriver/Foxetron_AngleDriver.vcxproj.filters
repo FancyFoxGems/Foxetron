@@ -9,30 +9,60 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;inc;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="src\_micro-api-readonly">
-      <UniqueIdentifier>{92c607cd-fe76-4cde-bfd9-a695cff3e61d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_micro-api-readonly\core">
-      <UniqueIdentifier>{be1d5718-d3e7-46a4-8a60-61c3e826066a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_micro-api-readonly\variants">
-      <UniqueIdentifier>{ec45e1c1-2bc5-48fd-8556-80658ce03105}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_micro-api-readonly\variants\eightanaloginputs">
-      <UniqueIdentifier>{427384a0-9e39-458c-a1d6-8df353ccd2ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_micro-api-readonly\libraries">
-      <UniqueIdentifier>{90bf7457-1d1e-4f3d-9200-6a00b9f14fab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="IttyBitty">
       <UniqueIdentifier>{e1395598-fb7c-4ba2-8ec1-6293564d85b7}</UniqueIdentifier>
     </Filter>
     <Filter Include="libs">
       <UniqueIdentifier>{d1395598-fb7c-4ba2-8ec1-6293564d85b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\_micro-api-readonly">
+      <UniqueIdentifier>{d7c51444-7aac-4e7a-b71a-180a22c724d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\core">
+      <UniqueIdentifier>{3a992f4d-aff9-48a9-a561-01bec32fb9c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\variants">
+      <UniqueIdentifier>{c34cfd92-56f5-4363-83c1-4b4bcc91055a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\variants\eightanaloginputs">
+      <UniqueIdentifier>{b5549844-3095-484e-979c-270bad9094f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries">
+      <UniqueIdentifier>{edbca79b-4d8f-491f-8978-bd1fd4487f6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\EEPROM">
+      <UniqueIdentifier>{ba92eecb-c901-4ffc-8e6b-13c981f8d6c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\HalfStepper">
+      <UniqueIdentifier>{72e2f4a4-0d2c-4927-9656-710211938733}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\IttyBitty">
+      <UniqueIdentifier>{49b1504e-6788-43e9-9c63-6f7bec6c47f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\Stepper">
+      <UniqueIdentifier>{432777a6-9d77-4946-be53-d1a947c0b1fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\Wire">
+      <UniqueIdentifier>{2f9440e1-463d-446a-be07-2b84fd91cd69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_micro-api-readonly\libraries\Wire\utility">
+      <UniqueIdentifier>{60fd02b1-7344-4f12-a760-11d3d4d500af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foxetron_AngleDriver.ino" />
+    <None Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_pulse.S">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </None>
+    <None Include="..\..\libraries\HalfStepper\library.properties">
+      <Filter>src\_micro-api-readonly\libraries\HalfStepper</Filter>
+    </None>
+    <None Include="..\..\libraries\IttyBitty\library.properties">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </None>
+    <None Include="..\..\libraries\Wire\library.properties">
+      <Filter>src\_micro-api-readonly\libraries\Wire</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.Foxetron_AngleDriver.vsarduino.h">
@@ -53,8 +83,236 @@
     <ClInclude Include="..\Foxetron_common.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Arduino.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\binary.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Client.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial_private.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\IPAddress.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\new.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\PluggableUSB.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Print.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Printable.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Server.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Stream.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Udp.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBAPI.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBCore.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBDesc.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WCharacter.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_private.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.h">
+      <Filter>src\_micro-api-readonly\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs\pins_arduino.h">
+      <Filter>src\_micro-api-readonly\variants\eightanaloginputs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\EEPROM\EEPROM.h">
+      <Filter>src\_micro-api-readonly\libraries\EEPROM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\avr_cpunames.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_aliases.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_base.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_bits.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_bytes.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_datum.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_DB.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_DB_tables.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_DB_table_defs.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_EEPROM_I2C.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_expressions.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_fields.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_GPIO.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_GPIO_arduino.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_GPIO_portpins.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_info.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_interrupts.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_LCD_big.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_LCD_big_decl.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_LCD_chars.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_LCD_extensions.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_LCD_extensions_decl.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_LCD_I2C.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_LED.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_MenUI.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_messages.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_params.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_print.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_registers.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_signals.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_slim.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_storage.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_storage_adapters.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_storage_adapter_sd.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_timers.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_type_traits.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_UI_display.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_UI_display_adapters.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_UI_elements.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_UI_fields.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_UI_field_decorators.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_UI_menus.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_UI_nav.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_UI_nav_adapters.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_UI_options.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_util.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_values.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\IttyBitty\IttyBitty_wavetables.h">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\Stepper\Stepper.h">
+      <Filter>src\_micro-api-readonly\libraries\Stepper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\Wire\Wire.h">
+      <Filter>src\_micro-api-readonly\libraries\Wire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\Wire\utility\twi.h">
+      <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Foxetron_messages.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\RTCLib\RTCLib.cpp">
+      <Filter>libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\HalfStepper\HalfStepper.cpp">
+      <Filter>libs</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\abi.cpp">
       <Filter>src\_micro-api-readonly\core</Filter>
     </ClCompile>
@@ -127,14 +385,145 @@
     <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.cpp">
       <Filter>src\_micro-api-readonly\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\Foxetron_messages.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\..\libraries\EEPROM\EEPROM.cpp">
+      <Filter>src\_micro-api-readonly\libraries\EEPROM</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libraries\RTCLib\RTCLib.cpp">
-      <Filter>libs</Filter>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libraries\HalfStepper\HalfStepper.cpp">
-      <Filter>libs</Filter>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_bits.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_bytes.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_datum.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_DB.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_DB_tables.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_DB_table_defs.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_EEPROM_I2C.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_fields.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_GPIO.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_info.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_interrupts.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_LCD_big.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_LCD_big_font.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_LCD_chars.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_LCD_extensions.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_LCD_I2C.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_LED.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_MenUI.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_messages.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_params.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_print.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_signals.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_storage.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_storage_adapters.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_storage_adapter_sd.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_timers.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_UI_display.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_UI_display_adapters.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_UI_elements.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_UI_fields.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_UI_field_decorators.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_UI_menus.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_UI_nav.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_UI_nav_adapters.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_UI_options.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\IttyBitty\IttyBitty_values.cpp">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\Stepper\Stepper.cpp">
+      <Filter>src\_micro-api-readonly\libraries\Stepper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\Wire\Wire.cpp">
+      <Filter>src\_micro-api-readonly\libraries\Wire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\Wire\utility\twi.c">
+      <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\libraries\EEPROM\keywords.txt">
+      <Filter>src\_micro-api-readonly\libraries\EEPROM</Filter>
+    </Text>
+    <Text Include="..\..\libraries\HalfStepper\keywords.txt">
+      <Filter>src\_micro-api-readonly\libraries\HalfStepper</Filter>
+    </Text>
+    <Text Include="..\..\libraries\IttyBitty\keywords.txt">
+      <Filter>src\_micro-api-readonly\libraries\IttyBitty</Filter>
+    </Text>
+    <Text Include="..\..\libraries\Stepper\keywords.txt">
+      <Filter>src\_micro-api-readonly\libraries\Stepper</Filter>
+    </Text>
+    <Text Include="..\..\libraries\Wire\keywords.txt">
+      <Filter>src\_micro-api-readonly\libraries\Wire</Filter>
+    </Text>
   </ItemGroup>
 </Project>
