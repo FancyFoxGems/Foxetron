@@ -139,7 +139,7 @@ VBOOL _StatusLed		= LOW;		// Pin 13 / PB5
 
 #ifdef _DEBUG
 
-LONG _MemoryInfoLastMS				= 0;
+LONG _MemoryInfoLastMs				= 0;
 
 #ifdef DEBUG_INPUTS
 LONG _PrintInputsLastMS				= 0;
@@ -251,7 +251,7 @@ VOID setup()
 
 	PrintLine(F("\nREADY!\n"), Serial);
 
-	_MemoryInfoLastMS = millis();
+	_MemoryInfoLastMs = millis();
 
 	#ifdef DEBUG_INPUTS
 		_PrintInputsLastMS = millis();
@@ -326,7 +326,7 @@ VOID loop()
 
 #ifdef _DEBUG
 
-	if (_MemoryInfoLastMS + DEBUG_MEMORY_INFO_INTERVAL_MS <= millis())
+	if (_MemoryInfoLastMs + DEBUG_MEMORY_INFO_INTERVAL_MS <= millis())
 	{
 		PrintString(F("\nRAM: "));
 		PrintLine((CWORD)SramFree());
@@ -335,7 +335,7 @@ VOID loop()
 		_StatusLed = !_StatusLed;
 		WritePin(PIN_OUT_STATUS_LED, _StatusLed);
 
-		_MemoryInfoLastMS = millis();
+		_MemoryInfoLastMs = millis();
 	}
 
 	#ifdef DEBUG_INPUTS
@@ -435,7 +435,7 @@ ISR(PCINT2_vect, ISR_NOBLOCK)
 ISR(TIMER2_COMPA_vect, ISR_NOBLOCK){
 	_MenuEncoderVelocity = (_MenuEncoderStepsLast - _MenuEncoderSteps) * uS_PER_SECOND / PROCESS_TIMER_OVERFLOW_uS / OCR2A;
 	_MenuEncoderStepsLast = _MenuEncoderSteps;
-	_ModeSwitch	= analogRead(PIN_ADC_MODE_SWITCH) > MODE_SWITCH_THRESHOLD;}#pragma endregion
+	_ModeSwitch	= analogRead(PIN_ADC_MODE_SWITCH) > MODE_SWITCH_THRESHOLD;}#pragma endregion
 
 
 #pragma region PROGRAM FUNCTIONS
