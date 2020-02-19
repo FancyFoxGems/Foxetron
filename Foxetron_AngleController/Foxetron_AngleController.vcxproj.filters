@@ -77,9 +77,6 @@
     <ClInclude Include="Foxetron_AngleController_LCD.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="Foxetron_AngleController_pins.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="Foxetron_AngleController_RGB.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -307,6 +304,9 @@
     </ClInclude>
     <ClInclude Include="..\..\libraries\Wire\utility\twi.h">
       <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Foxetron_AngleController_initialize.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

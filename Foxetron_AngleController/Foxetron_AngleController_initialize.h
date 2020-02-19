@@ -12,11 +12,8 @@
 
 #pragma region INCLUDES
 
-//  ITTY BITTY
-#include "IttyBitty_gpio.h"
-
-using namespace IttyBitty;
-
+// PROJECT INCLUDES
+#include "Foxetron_common.h"
 
 #pragma endregion
 
@@ -103,6 +100,36 @@ INLINE VOID InitializePins()
 	SetPinMode(PIN_ADC_6, INPUT_PULLUP);
 
 	// [Pins 18 & 19 - SDA: 18/A4 & SCL: 19/A5 | I2C --> PCF8574T port expander --> RGB HD44780]
+}
+
+INLINE VOID InitializeTimers(CDWORD inputProcessInterval_uS)
+{
+	// Timer 2: Angle adjustment task; CTC mode
+	RESET_SFR(TCCR2A);
+	RESET_SFR(TCCR2B);
+	RESET_SFR(TIMSK2);
+	SET_SFR_BITS(TCCR2B, WITH_BIT(PROCESS_TIMER_PRESCALER_FLAGS, B(WGM21)));
+	OCR2A = (CBYTE)((CDWORD)inputProcessInterval_uS / PROCESS_TIMER_OVERFLOW_uS);
+	SET_SFR_BIT(TIMSK2, OCIE2A);
+}
+
+INLINE VOID InitializeInterrupts()
+{
+	// External interrupts: Angle encoder
+	RESET_SFR(EICRA);
+	RESET_SFR(EIMSK);
+	SET_SFR_BITS(EICRA, B(ISC10) | B(ISC00));
+	SET_SFR_BITS(EIMSK, B(INT1) | B(INT0));
+
+	// Pin change interrupts: LED buttons, menu encoder, and menu buttons (ports B/C/D)
+	RESET_SFR(PCMSK0);
+	RESET_SFR(PCMSK1);
+	RESET_SFR(PCMSK2);
+	RESET_SFR(PCICR);
+	SET_SFR_BITS(PCMSK0, 0b00010001);
+	SET_SFR_BITS(PCMSK1, 0b00001111);
+	SET_SFR_BITS(PCMSK2, 0b11110000);
+	SET_SFR_BITS(PCICR, B(PCIE2) | B(PCIE1) | B(PCIE0));
 }
 
 #pragma endregion

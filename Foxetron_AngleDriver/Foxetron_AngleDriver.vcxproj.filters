@@ -77,9 +77,6 @@
     <ClInclude Include="..\Foxetron_messages.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="Foxetron_AngleDriver_pins.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\Foxetron_common.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -301,6 +298,9 @@
     </ClInclude>
     <ClInclude Include="..\..\libraries\Wire\utility\twi.h">
       <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Foxetron_AngleDriver_initialize.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

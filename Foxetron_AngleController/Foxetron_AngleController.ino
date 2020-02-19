@@ -38,8 +38,7 @@
 #pragma region INCLUDES
 
 // PROJECT INCLUDES
-#include "Foxetron_common.h"
-#include "Foxetron_AngleController_pins.h"
+#include "Foxetron_AngleController_initialize.h"
 
 // PROJECT MODULES
 #include "Foxetron_AngleController_LCD.h"
@@ -99,40 +98,40 @@
 
 // INPUTS
 
-//VBOOL _AngleEncoderA= FALSE;	// Pin 2 / PD2 (INT0) - [UNUSED]
-//VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1) - [UNUSED]
-//VBOOL _AngleEncoderZ	= FALSE;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
-//VBOOL _AngleEncoderU	= FALSE;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
+UNUSED VBOOL _AngleEncoderA	= FALSE;	// Pin 2 / PD2 (INT0)
+UNUSED VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1)
+UNUSED VBOOL _AngleEncoderZ	= FALSE;	// Pin 4 / PD4 (PCINT20)	
+UNUSED VBOOL _AngleEncoderU	= FALSE;	// Pin 5 / PD5 (PCINT21)	
 
-VBOOL _LedButton1		= FALSE;	// Pin 4 / PD4 (PCINT20)
-VBOOL _LedButton2		= FALSE;	// Pin 5 / PD5 (PCINT21)
-VBOOL _LedButton3		= FALSE;	// Pin 6 / PD6 (PCINT22)
-VBOOL _LedButton4		= FALSE;	// Pin 7 / PD7 (PCINT23)
-VBOOL _LedButton5		= FALSE;	// Pin 8 / PB0 (PCINT0)
+VBOOL _LedButton1			= FALSE;	// Pin 4 / PD4 (PCINT20)
+VBOOL _LedButton2			= FALSE;	// Pin 5 / PD5 (PCINT21)
+VBOOL _LedButton3			= FALSE;	// Pin 6 / PD6 (PCINT22)
+VBOOL _LedButton4			= FALSE;	// Pin 7 / PD7 (PCINT23)
+VBOOL _LedButton5			= FALSE;	// Pin 8 / PB0 (PCINT0)
 
 // [FREE PIN: Pin 12 / PB4 (PCINT4)]
 
 // [FREE PIN: Pin A6 / ADC6]
 
-VBOOL _ModeSwitch		= FALSE;	// A7 / ADC7
-VWORD _ModeSwitchVal	= 0;
+VBOOL _ModeSwitch			= FALSE;	// A7 / ADC7
+VWORD _ModeSwitchVal		= 0;
 
 // Menu rotary encoder
-VBOOL _MenuEncoderA		= FALSE;	// Pin 14/A0 / PC0 (PCINT8)
-VBOOL _MenuEncoderB		= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
+VBOOL _MenuEncoderA			= FALSE;	// Pin 14/A0 / PC0 (PCINT8)
+VBOOL _MenuEncoderB			= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
 
-VBOOL _SelectButton		= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
-VBOOL _ShiftButton		= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
+VBOOL _SelectButton			= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
+VBOOL _ShiftButton			= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
 
 // LEDs
-VBYTE _RgbRed			= 0;		// Pin 9 / PB1
-VBYTE _RgbGreen			= 0;		// Pin 10 / PB2
-VBYTE _RgbBlue			= 0;		// Pin 11 / PB3
+VBYTE _RgbRed				= 0;		// Pin 9 / PB1
+VBYTE _RgbGreen				= 0;		// Pin 10 / PB2
+VBYTE _RgbBlue				= 0;		// Pin 11 / PB3
 
-VBOOL _StatusLed		= LOW;		// Pin 13 / PB5
+VBOOL _StatusLed			= LOW;		// Pin 13 / PB5
 
 
 // STATE
@@ -177,16 +176,14 @@ MenUI UI;
 #pragma region PROGRAM FUNCTION DECLARATIONS
 
 VOID CleanUp();
-VOID InitializeTimers();
-VOID InitializeInterrupts();
 
 MESSAGEHANDLER OnMessage;
 
-VOID PrintLCDSplash();
+STATIC INLINE VOID PrintLCDSplash();
 
-VOID DEBUG_PrintInputValues();
+STATIC INLINE VOID DEBUG_PrintInputValues();
+STATIC INLINE VOID DEBUG_DisplayCustomChars();
 VOID DEBUG_DisplayKeyCodes();
-VOID DEBUG_DisplayCustomChars();
 
 #pragma endregion
 
@@ -210,14 +207,14 @@ VOID DEBUG_DisplayCustomChars();
 
 VOID setup()
 {
-	Serial.begin(SERIAL_BAUD_RATE);
-
 	atexit(CleanUp);
+
+	Serial.begin(SERIAL_BAUD_RATE);
 
 	cli();
 
 	InitializePins();
-	InitializeTimers();
+	InitializeTimers(INPUT_PROCESS_INTERVAL_uS);
 	InitializeInterrupts();
 
 	sei();
@@ -365,7 +362,6 @@ VOID loop()
 	if (_MenuEncoder ## channel == _MenuEncoder ## other_channel) _ISR_Encoder_UpdateEncoderSteps();
 
 STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps() ALWAYS_INLINE;
-
 STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps()
 {
 	if (_MenuEncoderUp)
@@ -444,28 +440,6 @@ VOID CleanUp()
 {
 	LCD_Free();
 	RGB_Free();
-}
-
-VOID InitializeTimers()
-{
-	// Timer 2: Angle adjustment task; CTC mode
-	SET_BITS(TCCR2B, B(WGM21) OR B(CS22) OR B(CS21) OR B(CS20));
-	OCR2A = (CBYTE)((CDWORD)INPUT_PROCESS_INTERVAL_uS / PROCESS_TIMER_OVERFLOW_uS);
-	SET_BIT(TIMSK2, OCIE2A);
-}
-
-VOID InitializeInterrupts()
-{
-	// External interrupts: Angle encoder
-	CLEAR_BITS(EICRA, B(ISC11) OR B(ISC01));
-	SET_BITS(EICRA, B(ISC10) OR B(ISC00));
-	SET_BITS(EIMSK, B(INT1) OR B(INT0));
-
-	// Pin change interrupts: LED buttons, menu encoder, and menu buttons (ports B/C/D)
-	SET_BITS(PCICR, B(PCIE2) OR B(PCIE1) OR B(PCIE0));
-	SET_BITS(PCMSK0, 0b00010001);
-	SET_BITS(PCMSK1, 0b00001111);
-	SET_BITS(PCMSK2, 0b11110000);
 }
 
 VOID OnMessage(PIMESSAGE message)
@@ -713,34 +687,6 @@ VOID DEBUG_PrintInputValues()
 	PrintLine();
 }
 
-#define LCD_CHAR_ROWS_TO_DISPLAY	1
-
-VOID DEBUG_DisplayKeyCodes()
-{
-	uint8_t i = 0;
-
-	while (i < LCD_CHAR_ROWS_TO_DISPLAY)
-	{
-		LCD->Clear();
-
-		LCD->print(F("Codes 0x"));
-
-		LCD->print(i, HEX);
-		LCD->print(F("-0x"));
-		LCD->print(i + 16, HEX);
-
-		LCD->MoveCursor(0, 1);
-
-		for (int j = 0; j < 8; j++)
-			LCD->write(i + j);
-
-		i += 16;
-
-		while (!Serial.available()) delay(100);
-		Serial.read();
-	}
-}
-
 VOID DEBUG_DisplayCustomChars()
 {
 	LCD->LoadCustomChar_P(0, LCD_CHAR_FOX);
@@ -777,6 +723,34 @@ VOID DEBUG_DisplayCustomChars()
 	LCD->LoadCustomChar_P(5, LCD_CHAR_ARROW_RIGHT_LARGE);
 
 	DEBUG_DisplayKeyCodes();
+}
+
+#define LCD_CHAR_ROWS_TO_DISPLAY	1
+
+VOID DEBUG_DisplayKeyCodes()
+{
+	uint8_t i = 0;
+
+	while (i < LCD_CHAR_ROWS_TO_DISPLAY)
+	{
+		LCD->Clear();
+
+		LCD->print(F("Codes 0x"));
+
+		LCD->print(i, HEX);
+		LCD->print(F("-0x"));
+		LCD->print(i + 16, HEX);
+
+		LCD->MoveCursor(0, 1);
+
+		for (int j = 0; j < 8; j++)
+			LCD->write(i + j);
+
+		i += 16;
+
+		while (!Serial.available()) delay(100);
+		Serial.read();
+	}
 }
 
 #pragma endregion

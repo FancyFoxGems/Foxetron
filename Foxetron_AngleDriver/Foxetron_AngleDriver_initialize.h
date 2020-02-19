@@ -12,10 +12,8 @@
 
 #pragma region INCLUDES
 
-//  ITTY BITTY
-#include "IttyBitty_GPIO.h"
-
-using namespace IttyBitty;
+// PROJECT INCLUDES
+#include "Foxetron_common.h"
 
 #pragma endregion
 
@@ -76,6 +74,27 @@ INLINE VOID InitializePins()
 	SetPinMode(PIN_BUTTON_ACTION, INPUT_PULLUP);
 	SetPinMode(PIN_BUTTON_ONESHOT, INPUT_PULLUP);
 	SetPinMode(PIN_BUTTON_LATCH, INPUT_PULLUP);
+}
+
+INLINE VOID InitializeTimers(CDWORD inputProcessInterval_uS, CDWORD processTimerOverflow_uS)
+{
+	// Timer 2: Angle adjustment task; CTC mode
+	RESET_SFR(TCCR2A);
+	RESET_SFR(TCCR2B);
+	RESET_SFR(TIMSK2);
+	SET_SFR_BITS(TCCR2B, WITH_BIT(PROCESS_TIMER_PRESCALER_FLAGS, B(WGM21)));
+	OCR2A = (CBYTE)(inputProcessInterval_uS / processTimerOverflow_uS);
+	OCR2B = (CBYTE)(inputProcessInterval_uS / processTimerOverflow_uS);
+	SET_SFR_BITS(TIMSK2, B(OCIE2A) | B(OCIE2B));
+}
+
+INLINE VOID InitializeInterrupts()
+{
+	// External interrupts: Angle encoder
+	RESET_SFR(EICRA);
+	RESET_SFR(EIMSK);
+	SET_SFR_BITS(EICRA, B(ISC10) | B(ISC00));
+	SET_SFR_BITS(EIMSK, B(INT1) | B(INT0));
 }
 
 #pragma endregion

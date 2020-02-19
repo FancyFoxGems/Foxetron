@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Release|Win32">
@@ -134,7 +134,7 @@
     <ClInclude Include="..\..\libraries\Wire\Wire.h" />
     <ClInclude Include="..\Foxetron_common.h" />
     <ClInclude Include="..\Foxetron_messages.h" />
-    <ClInclude Include="Foxetron_AngleDriver_pins.h" />
+    <ClInclude Include="Foxetron_AngleDriver_initialize.h" />
     <ClInclude Include="__vm\.Foxetron_AngleDriver.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>

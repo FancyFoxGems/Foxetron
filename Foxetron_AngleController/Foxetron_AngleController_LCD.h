@@ -18,7 +18,7 @@
 using namespace IttyBitty;
 
 // PROJECT INCLUDES
-#include "Foxetron_AngleController_pins.h"
+#include "Foxetron_AngleController_initialize.h"
 
 // AVR LibC
 //#include <avr/pgmspace.h>						// included by project 3rd-party libs

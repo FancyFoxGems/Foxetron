@@ -35,8 +35,7 @@
 #pragma region INCLUDES
 
 // PROJECT INCLUDES
-#include "Foxetron_common.h"
-#include "Foxetron_AngleDriver_pins.h"
+#include "Foxetron_AngleDriver_initialize.h"
 
 // 3RD-PARTY LIBS
 #include "HalfStepper.h"				// Well...1st-party in this case, really.
@@ -108,25 +107,25 @@ CDWORD ANGLE_MOTOR_CALIBRATED_STEPS			= (CDWORD)CALIBRATION_ANGLE_DEGREES * ANGL
 // INPUTS
 
 // Angle encoder
-VBOOL _AngleEncoderA	= FALSE;	// Pin 2 / PD2 (INT0)
-VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1)
-//VBOOL _AngleEncoderZ	= FALSE;	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
-//VBOOL _AngleEncoderU	= FALSE;	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
+VBOOL _AngleEncoderA		= FALSE;	// Pin 2 / PD2 (INT0)
+VBOOL _AngleEncoderB		= FALSE;	// Pin 3 / PD3 (INT1)
+UNUSED VBOOL _AngleEncoderZ	= FALSE;	// Pin 4 / PD4 (PCINT20)	
+UNUSED VBOOL _AngleEncoderU	= FALSE;	// Pin 5 / PD5 (PCINT21)	
 
 // Mast control inputs
-VBOOL _ActionButton		= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
-VBOOL _OneShotButton	= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
-VBOOL _LatchButton		= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
+VBOOL _ActionButton			= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
+VBOOL _OneShotButton		= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
+VBOOL _LatchButton			= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
 
 // LEDs
-VBOOL _StatusLed		= LOW;
-VBOOL _ActionLed		= HIGH;
+VBOOL _StatusLed			= LOW;
+VBOOL _ActionLed			= HIGH;
 
 // Stepper motor for angle adjustment
-HalfStepper * Motor		= NULL;
+HalfStepper * Motor			= NULL;
 
 
 // STATE
@@ -187,17 +186,14 @@ STATIC CBOOL IsAngleAdjustmentWithinErrorMargin()
 #pragma region PROGRAM FUNCTION DECLARATIONS
 
 VOID CleanUp();
-VOID InitializeTimers();
-VOID InitializeInterrupts();
 
 MESSAGEHANDLER OnMessage;
 
-VOID CalibrateAngle();
-VOID ApplyMotorCalibration();
+STATIC INLINE VOID CalibrateAngle();
+STATIC INLINE VOID ApplyMotorCalibration();
+STATIC INLINE VOID DoAngleAdjustmentStep();
 
-VOID DoAngleAdjustmentStep();
-
-VOID DEBUG_PrintInputValues();
+STATIC INLINE VOID DEBUG_PrintInputValues();
 
 #pragma endregion
 
@@ -206,14 +202,14 @@ VOID DEBUG_PrintInputValues();
 
 VOID setup()
 {
-	Serial.begin(SERIAL_BAUD_RATE);
-
 	atexit(CleanUp);
+
+	Serial.begin(SERIAL_BAUD_RATE);
 
 	cli();
 
 	InitializePins();
-	InitializeTimers();
+	InitializeTimers(INPUT_PROCESS_INTERVAL_uS, ANGLE_ADJUSTMENT_INTERVAL_uS);
 	InitializeInterrupts();
 
 	Motor = new HalfStepper(ANGLE_MOTOR_STEPS_RESOLUTION,
@@ -286,7 +282,6 @@ VOID loop()
 	_ISR_AngleEncoder_UpdateAngleSteps();
 
 STATIC INLINE VOID _ISR_AngleEncoder_UpdateAngleSteps() ALWAYS_INLINE;
-
 STATIC INLINE VOID _ISR_AngleEncoder_UpdateAngleSteps()
 {
 	if (_AngleEncoderUp)
@@ -339,7 +334,7 @@ ISR(TIMER2_COMPA_vect, ISR_NOBLOCK){
 		_AngleModeLast = _AngleMode;
 
 		sendCalibrationReq = TRUE;
-	}			if (sendCalibrationReq)		CalibrateRequest(_AngleMode, _CalibrationSteps).Transmit();}
+	}	if (sendCalibrationReq)		CalibrateRequest(_AngleMode, _CalibrationSteps).Transmit();}
 
 // TIMER 2: COMPARE MATCH B
 ISR(TIMER2_COMPB_vect, ISR_NOBLOCK)
@@ -373,23 +368,6 @@ VOID CleanUp()
 	Motor = NULL;
 
 	PrintString(F("** FATAL ERROR **"));
-}
-
-VOID InitializeTimers()
-{
-	// Timer 2: Angle adjustment task; CTC mode
-	SET_BITS(TCCR2B, B(WGM21) OR B(CS22) OR B(CS21) OR B(CS20));
-	OCR2A = (CBYTE)((CDWORD)INPUT_PROCESS_INTERVAL_uS / PROCESS_TIMER_OVERFLOW_uS);
-	OCR2B = (CBYTE)((CDWORD)ANGLE_ADJUSTMENT_INTERVAL_uS / PROCESS_TIMER_OVERFLOW_uS);
-	SET_BITS(TIMSK2, B(OCIE2A) OR B(OCIE2B));
-}
-
-VOID InitializeInterrupts()
-{
-	// External interrupts: Angle encoder
-	CLEAR_BITS(EICRA, B(ISC11) OR B(ISC01));
-	SET_BITS(EICRA, B(ISC10) OR B(ISC00));
-	SET_BITS(EIMSK, B(INT1) OR B(INT0));
 }
 
 VOID OnMessage(PIMESSAGE message)
