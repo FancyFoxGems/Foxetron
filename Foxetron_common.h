@@ -61,10 +61,20 @@ IGNORE_WARNING(virtual-move-assign)
 
 // PROGRAM OPTIONS
 
-#define SERIAL_BAUD_RATE						115200			// (Debugging) UART baud rate
-#define SERIAL_DELAY_MS							1				// Delay for waiting on serial buffer to flush when printing debug statements
+#define SERIAL_BAUD_RATE						115200			// UART baud rate
 
-#define DEBUG_MEMORY_INFO_INTERVAL_MS			3000			// Period by which available RAM should be printed when debugging
+#define ANGLE_DEGREE_PRECISION_FACTOR			100				// Scaling factor of °s for angle measurement
+#define ANGLE_ACTUAL_DEGRESS_PER_DEGREE_VALUE	ANGLE_DEGREE_PRECISION_FACTOR
+
+
+#ifdef _DEBUG
+
+#define DEBUG_MEMORY							0				// Whether to print available RAM
+#define DEBUG_MEMORY_INTERVAL_MS				3000			// Period by which available RAM should be printed when debugging
+
+#if defined(DEBUG_MEMORY) && DEBUG_MEMORY != 1
+	#undef DEBUG_MEMORY
+#endif
 
 #define DEBUG_INPUTS							0				// Whether to print values of pin input signals
 #define DEBUG_INPUTS_INTERVAL_MS				500				// Period by which input signal values should be printed when debugging
@@ -73,8 +83,7 @@ IGNORE_WARNING(virtual-move-assign)
 	#undef DEBUG_INPUTS
 #endif
 
-#define ANGLE_DEGREE_PRECISION_FACTOR			100				// Scaling factor of °s for angle measurement
-#define ANGLE_ACTUAL_DEGRESS_PER_DEGREE_VALUE	ANGLE_DEGREE_PRECISION_FACTOR
+#endif
 
 #pragma endregion
 

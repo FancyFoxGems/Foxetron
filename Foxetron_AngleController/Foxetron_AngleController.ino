@@ -69,9 +69,9 @@
 
 // PROGRAM OPTIONS
 
-#define INPUT_PROCESS_INTERVAL_uS		5000			// Period by which input state changes should be polled and handled
+#define INPUT_PROCESS_INTERVAL_uS		5000	// Period by which input state changes should be polled and handled
 
-#define MODE_SWITCH_THRESHOLD			500				// ADC value at which >= readings set mode switch state to TRUE
+#define MODE_SWITCH_THRESHOLD			500		// ADC value at which >= readings set mode switch state to TRUE
 
 
 // SPASH SCREEN OPTIONS
@@ -98,11 +98,13 @@
 
 // INPUTS
 
+// Angle measurement encoder (absolute/position)
 UNUSED VBOOL _AngleEncoderA	= FALSE;	// Pin 2 / PD2 (INT0)
 UNUSED VBOOL _AngleEncoderB	= FALSE;	// Pin 3 / PD3 (INT1)
-UNUSED VBOOL _AngleEncoderZ	= FALSE;	// Pin 4 / PD4 (PCINT20)	
-UNUSED VBOOL _AngleEncoderU	= FALSE;	// Pin 5 / PD5 (PCINT21)	
+UNUSED VBOOL _AngleEncoderZ	= FALSE;	// Pin 4 / PD4 (PCINT20)
+UNUSED VBOOL _AngleEncoderU	= FALSE;	// Pin 5 / PD5 (PCINT21)
 
+// Lighted buttons
 VBOOL _LedButton1			= FALSE;	// Pin 4 / PD4 (PCINT20)
 VBOOL _LedButton2			= FALSE;	// Pin 5 / PD5 (PCINT21)
 VBOOL _LedButton3			= FALSE;	// Pin 6 / PD6 (PCINT22)
@@ -113,38 +115,31 @@ VBOOL _LedButton5			= FALSE;	// Pin 8 / PB0 (PCINT0)
 
 // [FREE PIN: Pin A6 / ADC6]
 
+// Mode switch (SPDT)
 VBOOL _ModeSwitch			= FALSE;	// A7 / ADC7
 VWORD _ModeSwitchVal		= 0;
 
-// Menu rotary encoder
+// Menu navigation rotary encoder
 VBOOL _MenuEncoderA			= FALSE;	// Pin 14/A0 / PC0 (PCINT8)
 VBOOL _MenuEncoderB			= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
 
+// Unlit buttons
 VBOOL _SelectButton			= FALSE;	// Pin 16/A2 / PC2 (PCINT10)
 VBOOL _ShiftButton			= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 
 
 // OUTPUTS
 
-// LEDs
+// RGB LED
 VBYTE _RgbRed				= 0;		// Pin 9 / PB1
 VBYTE _RgbGreen				= 0;		// Pin 10 / PB2
 VBYTE _RgbBlue				= 0;		// Pin 11 / PB3
 
+// On-board status LED
 VBOOL _StatusLed			= LOW;		// Pin 13 / PB5
 
 
 // STATE
-
-#ifdef _DEBUG
-
-LONG _MemoryInfoLastMs				= 0;
-
-#ifdef DEBUG_INPUTS
-LONG _PrintInputsLastMS				= 0;
-#endif
-
-#endif
 
 VBOOL _MenuEncoderUp				= FALSE;
 VDWORD _MenuEncoderSteps			= 0;
@@ -166,6 +161,21 @@ PCCHAR _DriverStatusMsg				= NULL;
 DriverStatus _DriverStatus			= DriverStatus::IDLE;
 
 
+// DEBUG
+
+#ifdef _DEBUG
+
+#ifdef DEBUG_MEMORY
+LONG _MemoryInfoLastMs				= 0;
+#endif
+
+#ifdef DEBUG_INPUTS
+LONG _PrintInputsLastMS				= 0;
+#endif
+
+#endif
+
+
 // Menu-driven GUI
 
 MenUI UI;
@@ -175,15 +185,31 @@ MenUI UI;
 
 #pragma region PROGRAM FUNCTION DECLARATIONS
 
-VOID CleanUp();
+STATIC VOID CleanUp();
 
-MESSAGEHANDLER OnMessage;
+STATIC MESSAGEHANDLER OnMessage;
 
 STATIC INLINE VOID PrintLCDSplash();
 
+#pragma endregion
+
+
+#pragma region DEBUG UTILITY FUNCTION DECLARATIONS
+
+#ifdef _DEBUG
+
+#ifdef DEBUG_MEMORY
+STATIC INLINE VOID DEBUG_PrintMemoryInfo();
+#endif
+
+#ifdef DEBUG_INPUTS
 STATIC INLINE VOID DEBUG_PrintInputValues();
+#endif
+
 STATIC INLINE VOID DEBUG_DisplayCustomChars();
-VOID DEBUG_DisplayKeyCodes();
+STATIC VOID DEBUG_DisplayKeyCodes();
+
+#endif
 
 #pragma endregion
 
@@ -243,16 +269,17 @@ VOID setup()
 
 	//UI.draw();
 
-
 #ifdef _DEBUG
 
 	PrintLine(F("\nREADY!\n"), Serial);
 
+#ifdef DEBUG_MEMORY
 	_MemoryInfoLastMs = millis();
+#endif
 
-	#ifdef DEBUG_INPUTS
-		_PrintInputsLastMS = millis();
-	#endif
+#ifdef DEBUG_INPUTS
+	_PrintInputsLastMS = millis();
+#endif
 
 #endif
 }
@@ -320,31 +347,25 @@ VOID loop()
 
 	//RGB_Step();
 
-
 #ifdef _DEBUG
 
-	if (_MemoryInfoLastMs + DEBUG_MEMORY_INFO_INTERVAL_MS <= millis())
+#ifdef DEBUG_MEMORY
+	if (_MemoryInfoLastMs + DEBUG_MEMORY_INTERVAL_MS <= millis())
 	{
-		PrintString(F("\nRAM: "));
-		PrintLine((CWORD)SramFree());
-		PrintLine();
-
-		_StatusLed = !_StatusLed;
-		WritePin(PIN_OUT_STATUS_LED, _StatusLed);
+		DEBUG_PrintMemoryInfo();
 
 		_MemoryInfoLastMs = millis();
 	}
+#endif
 
-	#ifdef DEBUG_INPUTS
-
+#ifdef DEBUG_INPUTS
 	if (_PrintInputsLastMS + DEBUG_INPUTS_INTERVAL_MS <= millis())
 	{
 		DEBUG_PrintInputValues();
 
 		_PrintInputsLastMS = millis();
 	}
-
-	#endif
+#endif
 
 #endif
 }
@@ -588,6 +609,21 @@ VOID PrintLCDSplash()
 
 #pragma region DEBUG UTILITY FUNCTIONS
 
+#ifdef _DEBUG
+
+#ifdef DEBUG_MEMORY
+VOID DEBUG_PrintMemoryInfo()
+{
+	PrintLine();
+	PrintString(F("\nRAM: "));
+	PrintLine((CWORD)SramFree());
+
+	_StatusLed = !_StatusLed;
+	WritePin(PIN_OUT_STATUS_LED, _StatusLed);
+}
+#endif
+
+#ifdef DEBUG_INPUTS
 VOID DEBUG_PrintInputValues()
 {
 	STATIC CHAR valStr[5];
@@ -612,13 +648,15 @@ VOID DEBUG_PrintInputValues()
 	if (_LedButton5)
 		ResetPin(PIN_LED_BUTTON_5);
 
-	_ModeSwitch	= analogRead(PIN_ADC_MODE_SWITCH) > MODE_SWITCH_THRESHOLD;
+	_ModeSwitch		= analogRead(PIN_ADC_MODE_SWITCH) > MODE_SWITCH_THRESHOLD;
 
 	_MenuEncoderA	= CheckPinSet(PIN_MENU_ENCODER_A);
 	_MenuEncoderB	= CheckPinSet(PIN_MENU_ENCODER_B);
 
 	_SelectButton	= CheckPinUnset(PIN_SELECT_BUTTON);
 	_ShiftButton	= CheckPinUnset(PIN_SHIFT_BUTTON);
+
+	PrintLine();
 
 
 	// REAR INPUTS
@@ -683,9 +721,8 @@ VOID DEBUG_PrintInputValues()
 	PrintString(F(" "));
 	PrintBit((BIT)_ShiftButton);
 	PrintLine();
-
-	PrintLine();
 }
+#endif
 
 VOID DEBUG_DisplayCustomChars()
 {
@@ -749,8 +786,11 @@ VOID DEBUG_DisplayKeyCodes()
 		i += 16;
 
 		while (!Serial.available()) delay(100);
+
 		Serial.read();
 	}
 }
+
+#endif
 
 #pragma endregion

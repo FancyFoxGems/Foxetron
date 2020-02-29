@@ -53,14 +53,6 @@
 
 #pragma region DEFINES
 
-// PROGRAM OPTIONS
-
-#define INPUT_PROCESS_INTERVAL_uS				5000			// Period by which input state changes should be polled and handled
-#define ANGLE_ADJUSTMENT_INTERVAL_uS			5000			// Period by which  angle adjustment checks should be polled and corrected for
-
-#define ANGLE_ERROR_CORRECTION_FACTOR			0				// (Additional) correction to apply to the motor's error margin for angle ajustments
-
-
 // PROGRAM CONSTANTS
 
 #define ANGLE_BASE_PRECISION_FACTOR					ANGLE_DEGREE_PRECISION_FACTOR
@@ -74,6 +66,14 @@
 #define ANGLE_ENCODER_STEPS_RESOLUTION				8192		// 2,048 steps(/360°)/channel × 2 channels × 2 (quadrature signal encoding)
 #define ANGLE_MOTOR_STEPS_RESOLUTION				144000		// 200 steps(/revolution) × 2 (half-stepping mode) × 2 (dual phasing) × 180 (revolutions/360°)
 																		// NOTE: Foxetron angle adjustment factor: 2°/revolution --^
+
+
+// PROGRAM OPTIONS
+
+#define INPUT_PROCESS_INTERVAL_uS					5000		// Period by which input state changes should be polled and handled
+#define ANGLE_ADJUSTMENT_INTERVAL_uS				5000		// Period by which  angle adjustment checks should be polled and corrected for
+
+#define ANGLE_ERROR_CORRECTION_FACTOR				0			// (Additional) correction to apply to the motor's error margin for angle ajustments
 
 #pragma endregion
 
@@ -106,11 +106,11 @@ CDWORD ANGLE_MOTOR_CALIBRATED_STEPS			= (CDWORD)CALIBRATION_ANGLE_DEGREES * ANGL
 
 // INPUTS
 
-// Angle encoder
+// Angle measurement encoder (absolute/position)
 VBOOL _AngleEncoderA		= FALSE;	// Pin 2 / PD2 (INT0)
 VBOOL _AngleEncoderB		= FALSE;	// Pin 3 / PD3 (INT1)
-UNUSED VBOOL _AngleEncoderZ	= FALSE;	// Pin 4 / PD4 (PCINT20)	
-UNUSED VBOOL _AngleEncoderU	= FALSE;	// Pin 5 / PD5 (PCINT21)	
+UNUSED VBOOL _AngleEncoderZ	= FALSE;	// Pin 4 / PD4 (PCINT20)
+UNUSED VBOOL _AngleEncoderU	= FALSE;	// Pin 5 / PD5 (PCINT21)
 
 // Mast control inputs
 VBOOL _ActionButton			= FALSE;	// Pin 15/A1 / PC1 (PCINT9)
@@ -120,25 +120,15 @@ VBOOL _LatchButton			= FALSE;	// Pin 17/A3 / PC3 (PCINT11)
 
 // OUTPUTS
 
-// LEDs
-VBOOL _StatusLed			= LOW;
-VBOOL _ActionLed			= HIGH;
+// LEDs: On-board status LED & external activity LED
+VBOOL _StatusLed			= LOW;		// Pin 13 / PB5
+VBOOL _ActionLed			= HIGH;		// Pin 14/A0 / PC0 (PCINT8)
 
 // Stepper motor for angle adjustment
-HalfStepper * Motor			= NULL;
+HalfStepper * Motor			= NULL;		// // Pin 4-7 / PD4-7
 
 
 // STATE
-
-#ifdef _DEBUG
-
-LONG _MemoryInfoLastMs				= 0;
-
-#ifdef DEBUG_INPUTS
-LONG _PrintInputsLastMS				= 0;
-#endif
-
-#endif
 
 VBOOL _AngleEncoderUp				= FALSE;
 VLONG _AngleEncoderSteps			= 0;
@@ -163,6 +153,21 @@ Error _ControllerError				= Error::SUCCESS;
 PCCHAR _ControllerStatusMsg			= NULL;
 ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 
+
+// DEBUG
+
+#ifdef _DEBUG
+
+#ifdef DEBUG_MEMORY
+LONG _MemoryInfoLastMs = 0;
+#endif
+
+#ifdef DEBUG_INPUTS
+LONG _PrintInputsLastMS = 0;
+#endif
+
+#endif
+
 #pragma endregion
 
 
@@ -185,15 +190,30 @@ STATIC CBOOL IsAngleAdjustmentWithinErrorMargin()
 
 #pragma region PROGRAM FUNCTION DECLARATIONS
 
-VOID CleanUp();
+STATIC VOID CleanUp();
 
-MESSAGEHANDLER OnMessage;
+STATIC MESSAGEHANDLER OnMessage;
 
 STATIC INLINE VOID CalibrateAngle();
 STATIC INLINE VOID ApplyMotorCalibration();
 STATIC INLINE VOID DoAngleAdjustmentStep();
+
+#pragma endregion
 
+
+#pragma region DEBUG UTILITY FUNCTION DECLARATIONS
+
+#ifdef _DEBUG
+
+#ifdef DEBUG_MEMORY
+STATIC INLINE VOID DEBUG_PrintMemoryInfo();
+#endif
+
+#ifdef DEBUG_INPUTS
 STATIC INLINE VOID DEBUG_PrintInputValues();
+#endif
+
+#endif
 
 #pragma endregion
 
@@ -217,16 +237,17 @@ VOID setup()
 
 	sei();
 
-
 #ifdef _DEBUG
 
 	PrintLine(F("\nREADY!\n"), Serial);
 
+#ifdef DEBUG_MEMORY
 	_MemoryInfoLastMs = millis();
+#endif
 
-	#ifdef DEBUG_INPUTS
-		_PrintInputsLastMS = millis();
-	#endif
+#ifdef DEBUG_INPUTS
+	_PrintInputsLastMS = millis();
+#endif
 
 #endif
 }
@@ -240,31 +261,23 @@ VOID loop()
 {
 #ifdef _DEBUG
 
-	if (_MemoryInfoLastMs + DEBUG_MEMORY_INFO_INTERVAL_MS <= millis())
+#ifdef DEBUG_MEMORY
+	if (_MemoryInfoLastMs + DEBUG_MEMORY_INTERVAL_MS <= millis())
 	{
-		PrintString(F("\nRAM: "));
-		PrintLine((CWORD)SramFree());
-		PrintLine();
-
-		_ActionLed = !_ActionLed;
-		WritePin(PIN_OUT_ACTION_LED, _ActionLed);
-
-		_StatusLed = !_StatusLed;
-		WritePin(PIN_OUT_STATUS_LED, _StatusLed);
+		DEBUG_PrintMemoryInfo();
 
 		_MemoryInfoLastMs = millis();
 	}
+#endif
 
-	#ifdef DEBUG_INPUTS
-
+#ifdef DEBUG_INPUTS
 	if (_PrintInputsLastMS + DEBUG_INPUTS_INTERVAL_MS <= millis())
 	{
 		DEBUG_PrintInputValues();
 
 		_PrintInputsLastMS = millis();
 	}
-
-	#endif
+#endif
 
 #endif
 }
@@ -530,6 +543,24 @@ VOID DoAngleAdjustmentStep()
 
 #pragma region DEBUG UTILITY FUNCTIONS
 
+#ifdef _DEBUG
+
+#ifdef DEBUG_MEMORY
+VOID DEBUG_PrintMemoryInfo()
+{
+	PrintLine();
+	PrintString(F("\nRAM: "));
+	PrintLine((CWORD)SramFree());
+
+	_ActionLed = !_ActionLed;
+	WritePin(PIN_OUT_ACTION_LED, _ActionLed);
+
+	_StatusLed = !_StatusLed;
+	WritePin(PIN_OUT_STATUS_LED, _StatusLed);
+}
+#endif
+
+#ifdef DEBUG_INPUTS
 VOID DEBUG_PrintInputValues()
 {
 	_AngleEncoderA	= CheckPinSet(PIN_ANGLE_ENCODER_A);
@@ -541,6 +572,8 @@ VOID DEBUG_PrintInputValues()
 
 
 	// REAR INPUTS
+
+	PrintLine();
 
 	PrintBit((BIT)_AngleEncoderA);
 	PrintString(F(" "));
@@ -556,8 +589,9 @@ VOID DEBUG_PrintInputValues()
 	PrintString(F(" "));
 	PrintBit((BIT)_ActionButton);
 	PrintLine();
-
-	PrintLine();
 }
+#endif
+
+#endif
 
 #pragma endregion
