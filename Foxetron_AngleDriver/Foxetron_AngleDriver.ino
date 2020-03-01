@@ -158,12 +158,16 @@ ControllerStatus _ControllerStatus	= ControllerStatus::NONE;
 
 #ifdef _DEBUG
 
-#ifdef DEBUG_MEMORY
-LONG _MemoryInfoLastMs = 0;
+#ifdef DEBUG_MEMORY_INTERVAL_MS
+LONG _LastPrintMemoryMs	= 0;
 #endif
 
-#ifdef DEBUG_INPUTS
-LONG _PrintInputsLastMS = 0;
+#ifdef DEBUG_INPUTS_INTERVAL_MS
+LONG _LastPrintInputsMs	= 0;
+#endif
+
+#ifdef DEBUG_STATE_INTERVAL_MS
+LONG _LastPrintStateMs	= 0;
 #endif
 
 #endif
@@ -194,9 +198,9 @@ STATIC VOID CleanUp();
 
 STATIC MESSAGEHANDLER OnMessage;
 
-STATIC INLINE VOID CalibrateAngle();
-STATIC INLINE VOID ApplyMotorCalibration();
-STATIC INLINE VOID DoAngleAdjustmentStep();
+STATIC INLINE VOID CalibrateAngle() ALWAYS_INLINE;
+STATIC INLINE VOID ApplyMotorCalibration() ALWAYS_INLINE;
+STATIC INLINE VOID DoAngleAdjustmentStep() ALWAYS_INLINE;
 
 #pragma endregion
 
@@ -206,11 +210,15 @@ STATIC INLINE VOID DoAngleAdjustmentStep();
 #ifdef _DEBUG
 
 #ifdef DEBUG_MEMORY
-STATIC INLINE VOID DEBUG_PrintMemoryInfo();
+STATIC INLINE VOID DEBUG_PrintMemory() ALWAYS_INLINE;
 #endif
 
 #ifdef DEBUG_INPUTS
-STATIC INLINE VOID DEBUG_PrintInputValues();
+STATIC INLINE VOID DEBUG_PrintInputs() ALWAYS_INLINE;
+#endif
+
+#ifdef DEBUG_STATE
+STATIC INLINE VOID DEBUG_PrintState() ALWAYS_INLINE;
 #endif
 
 #endif
@@ -241,12 +249,16 @@ VOID setup()
 
 	PrintLine(F("\nREADY!\n"), Serial);
 
-#ifdef DEBUG_MEMORY
-	_MemoryInfoLastMs = millis();
+#ifdef DEBUG_MEMORY_INTERVAL_MS
+	_LastPrintMemoryMs = millis();
 #endif
 
-#ifdef DEBUG_INPUTS
-	_PrintInputsLastMS = millis();
+#ifdef DEBUG_INPUTS_INTERVAL_MS
+	_LastPrintInputsMs = millis();
+#endif
+
+#ifdef DEBUG_STATE_INTERVAL_MS
+	_LastPrintStateMs = millis();
 #endif
 
 #endif
@@ -261,21 +273,30 @@ VOID loop()
 {
 #ifdef _DEBUG
 
-#ifdef DEBUG_MEMORY
-	if (_MemoryInfoLastMs + DEBUG_MEMORY_INTERVAL_MS <= millis())
+#ifdef DEBUG_MEMORY_INTERVAL_MS
+	if (_LastPrintMemoryMs + DEBUG_MEMORY_INTERVAL_MS <= millis())
 	{
-		DEBUG_PrintMemoryInfo();
+		DEBUG_PrintMemory();
 
-		_MemoryInfoLastMs = millis();
+		_LastPrintMemoryMs = millis();
 	}
 #endif
 
-#ifdef DEBUG_INPUTS
-	if (_PrintInputsLastMS + DEBUG_INPUTS_INTERVAL_MS <= millis())
+#ifdef DEBUG_INPUTS_INTERVAL_MS
+	if (_LastPrintInputsMs + DEBUG_INPUTS_INTERVAL_MS <= millis())
 	{
-		DEBUG_PrintInputValues();
+		DEBUG_PrintInputs();
 
-		_PrintInputsLastMS = millis();
+		_LastPrintInputsMs = millis();
+	}
+#endif
+
+#ifdef DEBUG_STATE_INTERVAL_MS
+	if (_LastPrintStateMs + DEBUG_STATE_INTERVAL_MS <= millis())
+	{
+		DEBUG_PrintState();
+
+		_LastPrintStateMs = millis();
 	}
 #endif
 
@@ -546,7 +567,7 @@ VOID DoAngleAdjustmentStep()
 #ifdef _DEBUG
 
 #ifdef DEBUG_MEMORY
-VOID DEBUG_PrintMemoryInfo()
+VOID DEBUG_PrintMemory()
 {
 	PrintLine();
 	PrintString(F("\nRAM: "));
@@ -561,7 +582,7 @@ VOID DEBUG_PrintMemoryInfo()
 #endif
 
 #ifdef DEBUG_INPUTS
-VOID DEBUG_PrintInputValues()
+VOID DEBUG_PrintInputs()
 {
 	_AngleEncoderA	= CheckPinSet(PIN_ANGLE_ENCODER_A);
 	_AngleEncoderB	= CheckPinSet(PIN_ANGLE_ENCODER_B);
@@ -589,6 +610,13 @@ VOID DEBUG_PrintInputValues()
 	PrintString(F(" "));
 	PrintBit((BIT)_ActionButton);
 	PrintLine();
+}
+#endif
+
+#ifdef DEBUG_STATE
+VOID DEBUG_PrintState()
+{
+	// TODO: Implement
 }
 #endif
 

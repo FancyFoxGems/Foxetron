@@ -165,12 +165,16 @@ DriverStatus _DriverStatus			= DriverStatus::IDLE;
 
 #ifdef _DEBUG
 
-#ifdef DEBUG_MEMORY
-LONG _MemoryInfoLastMs				= 0;
+#ifdef DEBUG_MEMORY_INTERVAL_MS
+LONG _LastPrintMemoryMs	= 0;
 #endif
 
-#ifdef DEBUG_INPUTS
-LONG _PrintInputsLastMS				= 0;
+#ifdef DEBUG_INPUTS_INTERVAL_MS
+LONG _LastPrintInputsMs	= 0;
+#endif
+
+#ifdef DEBUG_STATE_INTERVAL_MS
+LONG _LastPrintStateMs	= 0;
 #endif
 
 #endif
@@ -189,7 +193,7 @@ STATIC VOID CleanUp();
 
 STATIC MESSAGEHANDLER OnMessage;
 
-STATIC INLINE VOID PrintLCDSplash();
+STATIC INLINE VOID PrintLCDSplash() ALWAYS_INLINE;
 
 #pragma endregion
 
@@ -199,14 +203,18 @@ STATIC INLINE VOID PrintLCDSplash();
 #ifdef _DEBUG
 
 #ifdef DEBUG_MEMORY
-STATIC INLINE VOID DEBUG_PrintMemoryInfo();
+STATIC INLINE VOID DEBUG_PrintMemory() ALWAYS_INLINE;
 #endif
 
 #ifdef DEBUG_INPUTS
-STATIC INLINE VOID DEBUG_PrintInputValues();
+STATIC INLINE VOID DEBUG_PrintInputs() ALWAYS_INLINE;
 #endif
 
-STATIC INLINE VOID DEBUG_DisplayCustomChars();
+#ifdef DEBUG_STATE
+STATIC INLINE VOID DEBUG_PrintState() ALWAYS_INLINE;
+#endif
+
+STATIC INLINE VOID DEBUG_DisplayCustomChars() ALWAYS_INLINE;
 STATIC VOID DEBUG_DisplayKeyCodes();
 
 #endif
@@ -273,12 +281,16 @@ VOID setup()
 
 	PrintLine(F("\nREADY!\n"), Serial);
 
-#ifdef DEBUG_MEMORY
-	_MemoryInfoLastMs = millis();
+#ifdef DEBUG_MEMORY_INTERVAL_MS
+	_LastPrintMemoryMs = millis();
 #endif
 
-#ifdef DEBUG_INPUTS
-	_PrintInputsLastMS = millis();
+#ifdef DEBUG_INPUTS_INTERVAL_MS
+	_LastPrintInputsMs = millis();
+#endif
+
+#ifdef DEBUG_STATE_INTERVAL_MS
+	_LastPrintStateMs = millis();
 #endif
 
 #endif
@@ -340,30 +352,38 @@ VOID loop()
 	if (stopped)
 	{
 		delay(1000);
-		return;
 	}
-
-	return;
-
-	//RGB_Step();
+	else
+	{
+		//RGB_Step();
+	}
 
 #ifdef _DEBUG
 
-#ifdef DEBUG_MEMORY
-	if (_MemoryInfoLastMs + DEBUG_MEMORY_INTERVAL_MS <= millis())
+#ifdef DEBUG_MEMORY_INTERVAL_MS
+	if (_LastPrintMemoryMs + DEBUG_MEMORY_INTERVAL_MS <= millis())
 	{
-		DEBUG_PrintMemoryInfo();
+		DEBUG_PrintMemory();
 
-		_MemoryInfoLastMs = millis();
+		_LastPrintMemoryMs = millis();
 	}
 #endif
 
-#ifdef DEBUG_INPUTS
-	if (_PrintInputsLastMS + DEBUG_INPUTS_INTERVAL_MS <= millis())
+#ifdef DEBUG_INPUTS_INTERVAL_MS
+	if (_LastPrintInputsMs + DEBUG_INPUTS_INTERVAL_MS <= millis())
 	{
-		DEBUG_PrintInputValues();
+		DEBUG_PrintInputs();
 
-		_PrintInputsLastMS = millis();
+		_LastPrintInputsMs = millis();
+	}
+#endif
+
+#ifdef DEBUG_STATE_INTERVAL_MS
+	if (_LastPrintStateMs + DEBUG_STATE_INTERVAL_MS <= millis())
+	{
+		DEBUG_PrintState();
+
+		_LastPrintStateMs = millis();
 	}
 #endif
 
@@ -612,7 +632,7 @@ VOID PrintLCDSplash()
 #ifdef _DEBUG
 
 #ifdef DEBUG_MEMORY
-VOID DEBUG_PrintMemoryInfo()
+VOID DEBUG_PrintMemory()
 {
 	PrintLine();
 	PrintString(F("\nRAM: "));
@@ -624,7 +644,7 @@ VOID DEBUG_PrintMemoryInfo()
 #endif
 
 #ifdef DEBUG_INPUTS
-VOID DEBUG_PrintInputValues()
+VOID DEBUG_PrintInputs()
 {
 	STATIC CHAR valStr[5];
 
@@ -721,6 +741,13 @@ VOID DEBUG_PrintInputValues()
 	PrintString(F(" "));
 	PrintBit((BIT)_ShiftButton);
 	PrintLine();
+}
+#endif
+
+#ifdef DEBUG_STATE
+VOID DEBUG_PrintState()
+{
+	// TODO: Implement
 }
 #endif
 
