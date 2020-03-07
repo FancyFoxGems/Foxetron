@@ -177,7 +177,7 @@ LONG _LastPrintInputsMs	= 0;
 LONG _LastPrintStateMs	= 0;
 #endif
 
-#endif
+#endif	// _DEBUG
 
 
 // Menu-driven GUI
@@ -217,7 +217,7 @@ STATIC INLINE VOID DEBUG_PrintState() ALWAYS_INLINE;
 STATIC INLINE VOID DEBUG_DisplayCustomChars() ALWAYS_INLINE;
 STATIC VOID DEBUG_DisplayKeyCodes();
 
-#endif
+#endif	// _DEBUG
 
 #pragma endregion
 
@@ -293,7 +293,7 @@ VOID setup()
 	_LastPrintStateMs = millis();
 #endif
 
-#endif
+#endif	// _DEBUG
 }
 
 BOOL stopped = FALSE;
@@ -387,7 +387,7 @@ VOID loop()
 	}
 #endif
 
-#endif
+#endif	// _DEBUG
 }
 
 #pragma endregion
@@ -412,6 +412,7 @@ STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps()
 
 
 #ifdef DEBUG_INPUTS
+	PrintLine();
 	PrintString(F("MENU ENCODER: "));
 	PrintLine((CDWORD)_MenuEncoderSteps);
 #endif
@@ -488,6 +489,7 @@ VOID OnMessage(PIMESSAGE message)
 	CONST MessageCode msgCode = static_cast<CONST MessageCode>(message->GetMessageCode());
 
 #ifdef DEBUG_MESSAGES
+	PrintLine();
 	PrintString(F("NEW MSG - CODE: "));
 	PrintLine(message->GetMessageCode());
 #endif
@@ -641,7 +643,7 @@ VOID DEBUG_PrintMemory()
 	_StatusLed = !_StatusLed;
 	WritePin(PIN_OUT_STATUS_LED, _StatusLed);
 }
-#endif
+#endif	// DEBUG_MEMORY
 
 #ifdef DEBUG_INPUTS
 VOID DEBUG_PrintInputs()
@@ -742,14 +744,14 @@ VOID DEBUG_PrintInputs()
 	PrintBit((BIT)_ShiftButton);
 	PrintLine();
 }
-#endif
+#endif	// DEBUG_INPUTS
 
 #ifdef DEBUG_STATE
 VOID DEBUG_PrintState()
 {
 	// TODO: Implement
 }
-#endif
+#endif	// DEBUG_STATE
 
 VOID DEBUG_DisplayCustomChars()
 {
@@ -818,6 +820,6 @@ VOID DEBUG_DisplayKeyCodes()
 	}
 }
 
-#endif
+#endif	// _DEBUG
 
 #pragma endregion

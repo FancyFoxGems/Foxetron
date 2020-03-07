@@ -108,7 +108,7 @@ IGNORE_WARNING(virtual-move-assign)
 #undef DEBUG_MESSAGES
 #endif
 
-#endif
+#endif	// _DEBUG
 
 #pragma endregion
 
