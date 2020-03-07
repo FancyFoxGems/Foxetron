@@ -72,39 +72,39 @@ IGNORE_WARNING(virtual-move-assign)
 #define DEBUG_MEMORY							0				// Whether to print available RAM
 #define DEBUG_MEMORY_INTERVAL_MS				3000			// Period by which available RAM should be printed when debugging
 
-#if defined(DEBUG_MEMORY) && DEBUG_MEMORY != 1
+#if defined(DEBUG_MEMORY) AND DEBUG_MEMORY != 1
 	#undef DEBUG_MEMORY
 #endif
 
-#if defined(DEBUG_MEMORY_INTERVAL_MS) && (!defined(DEBUG_MEMORY) || defined(DEBUG_MEMORY_INTERVAL_MS) && DEBUG_MEMORY_INTERVAL_MS == 0)
+#if defined(DEBUG_MEMORY_INTERVAL_MS) AND (!defined(DEBUG_MEMORY) OR defined(DEBUG_MEMORY_INTERVAL_MS) AND DEBUG_MEMORY_INTERVAL_MS == 0)
 	#undef DEBUG_MEMORY_INTERVAL_MS
 #endif
 
 #define DEBUG_INPUTS							0				// Whether to print values of pin input signals
 #define DEBUG_INPUTS_INTERVAL_MS				500				// Period by which input signal values should be printed when debugging
 
-#if defined(DEBUG_INPUTS) && DEBUG_INPUTS != 1
+#if defined(DEBUG_INPUTS) AND DEBUG_INPUTS != 1
 	#undef DEBUG_INPUTS
 #endif
 
-#if defined(DEBUG_INPUTS_INTERVAL_MS) && (!defined(DEBUG_INPUTS) || defined(DEBUG_INPUTS_INTERVAL_MS) && DEBUG_INPUTS_INTERVAL_MS == 0)
+#if defined(DEBUG_INPUTS_INTERVAL_MS) AND (!defined(DEBUG_INPUTS) OR defined(DEBUG_INPUTS_INTERVAL_MS) AND DEBUG_INPUTS_INTERVAL_MS == 0)
 	#undef DEBUG_INPUTS_INTERVAL_MS
 #endif
 
 #define DEBUG_STATE								0				// Whether to print values of state variables
 #define DEBUG_STATE_INTERVAL_MS					3000			// Period by which state variable values should be printed when debugging
 
-#if defined(DEBUG_STATE) && DEBUG_STATE != 1
+#if defined(DEBUG_STATE) AND DEBUG_STATE != 1
 	#undef DEBUG_STATE
 #endif
 
-#if defined(DEBUG_STATE_INTERVAL_MS) && (!defined(DEBUG_STATE) || defined(DEBUG_STATE_INTERVAL_MS) && DEBUG_STATE_INTERVAL_MS == 0)
+#if defined(DEBUG_STATE_INTERVAL_MS) AND (!defined(DEBUG_STATE) OR defined(DEBUG_STATE_INTERVAL_MS) AND DEBUG_STATE_INTERVAL_MS == 0)
 	#undef DEBUG_STATE_INTERVAL_MS
 #endif
 
 #define DEBUG_MESSAGES							0				// Whether to print messages received
 
-#if defined(DEBUG_MESSAGES) && DEBUG_MESSAGES != 1
+#if defined(DEBUG_MESSAGES) AND DEBUG_MESSAGES != 1
 #undef DEBUG_MESSAGES
 #endif
 
