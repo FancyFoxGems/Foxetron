@@ -250,14 +250,20 @@ VOID setup()
 	PrintLine(F("\nREADY!\n"), Serial);
 
 #ifdef DEBUG_MEMORY_INTERVAL_MS
+	DEBUG_PrintMemory();
+
 	_LastPrintMemoryMs = millis();
 #endif
 
 #ifdef DEBUG_INPUTS_INTERVAL_MS
+	DEBUG_PrintInputs();
+
 	_LastPrintInputsMs = millis();
 #endif
 
 #ifdef DEBUG_STATE_INTERVAL_MS
+	DEBUG_PrintState();
+
 	_LastPrintStateMs = millis();
 #endif
 
