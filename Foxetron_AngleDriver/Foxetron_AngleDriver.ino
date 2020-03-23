@@ -247,7 +247,9 @@ VOID setup()
 
 #ifdef _DEBUG
 
-	PrintLine(F("\nREADY!\n"), Serial);
+	PrintLine();
+	PrintLine();
+	PrintLine(F("READY!"));
 
 #ifdef DEBUG_MEMORY_INTERVAL_MS
 	DEBUG_PrintMemory();
@@ -577,15 +579,15 @@ VOID DoAngleAdjustmentStep()
 #ifdef DEBUG_MEMORY
 VOID DEBUG_PrintMemory()
 {
+	_StatusLed = NOT _StatusLed;
+	WritePin(PIN_OUT_STATUS_LED, _StatusLed);
+
+	_ActionLed = NOT _ActionLed;
+	WritePin(PIN_OUT_ACTION_LED, _ActionLed);
+	
 	PrintLine();
 	PrintString(F("\nRAM: "));
 	PrintLine((CWORD)SramFree());
-
-	_ActionLed = !_ActionLed;
-	WritePin(PIN_OUT_ACTION_LED, _ActionLed);
-
-	_StatusLed = !_StatusLed;
-	WritePin(PIN_OUT_STATUS_LED, _StatusLed);
 }
 #endif	// DEBUG_MEMORY
 
