@@ -248,8 +248,8 @@ VOID setup()
 	cli();
 
 	InitializePins();
-	InitializeTimers(INPUT_PROCESS_INTERVAL_uS);
 	InitializeInterrupts();
+	InitializeTimers(INPUT_PROCESS_INTERVAL_uS);
 
 	sei();
 
