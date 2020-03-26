@@ -278,30 +278,25 @@ VOID setup()
 	//UI.draw();
 
 #ifdef _DEBUG
-
 	PrintLine();
 	PrintLine();
 	PrintLine(F("READY!"));
+#endif
 
 #ifdef DEBUG_MEMORY_INTERVAL_MS
 	DEBUG_PrintMemory();
-
 	_LastPrintMemoryMs = millis();
 #endif
 
 #ifdef DEBUG_INPUTS_INTERVAL_MS
 	DEBUG_PrintInputs();
-
 	_LastPrintInputsMs = millis();
 #endif
 
 #ifdef DEBUG_STATE_INTERVAL_MS
 	DEBUG_PrintState();
-
 	_LastPrintStateMs = millis();
 #endif
-
-#endif	// _DEBUG
 }
 
 BOOL stopped = FALSE;
@@ -366,36 +361,29 @@ VOID loop()
 		//RGB_Step();
 	}
 
-#ifdef _DEBUG
-
 #ifdef DEBUG_MEMORY_INTERVAL_MS
-	if (_LastPrintMemoryMs + DEBUG_MEMORY_INTERVAL_MS <= millis())
+	if (HAS_INTERVAL_ELAPSED(_LastPrintMemoryMs, DEBUG_MEMORY_INTERVAL_MS, millis()))
 	{
 		DEBUG_PrintMemory();
-
 		_LastPrintMemoryMs = millis();
 	}
 #endif
 
 #ifdef DEBUG_INPUTS_INTERVAL_MS
-	if (_LastPrintInputsMs + DEBUG_INPUTS_INTERVAL_MS <= millis())
+	if (HAS_INTERVAL_ELAPSED(_LastPrintInputsMs, DEBUG_INPUTS_INTERVAL_MS, millis()))
 	{
 		DEBUG_PrintInputs();
-
 		_LastPrintInputsMs = millis();
 	}
 #endif
 
 #ifdef DEBUG_STATE_INTERVAL_MS
-	if (_LastPrintStateMs + DEBUG_STATE_INTERVAL_MS <= millis())
+	if (HAS_INTERVAL_ELAPSED(_LastPrintStateMs, DEBUG_STATE_INTERVAL_MS, millis()))
 	{
 		DEBUG_PrintState();
-
 		_LastPrintStateMs = millis();
 	}
 #endif
-
-#endif	// _DEBUG
 }
 
 #pragma endregion

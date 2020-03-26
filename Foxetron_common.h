@@ -110,6 +110,11 @@ IGNORE_WARNING(virtual-move-assign)
 
 #endif	// _DEBUG
 
+
+// MACROS
+
+#define HAS_INTERVAL_ELAPSED(lastTime, interval, currentTime)	(lastTime + interval <= currentTime)
+
 #pragma endregion
 
 
