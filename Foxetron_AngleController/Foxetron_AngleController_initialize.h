@@ -22,10 +22,13 @@
 
 // INPUT PINS
 
-//#define PIN_ANGLE_ENCODER_A	2	// Pin 2 / PD2 (INT0)	- [UNUSED]
-//#define PIN_ANGLE_ENCODER_B	3	// Pin 3 / PD3 (INT1)	- [UNUSED]
-//#define PIN_ANGLE_ENCODER_Z	4	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
-//#define PIN_ANGLE_ENCODER_U	5	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
+//#define PIN_ANGLE_ENCODER_A		2	// Pin 2 / PD2 (INT0)	- [UNUSED]
+//#define PIN_ANGLE_ENCODER_B		3	// Pin 3 / PD3 (INT1)	- [UNUSED]
+//#define PIN_ANGLE_ENCODER_Z		4	// Pin 4 / PD4 (PCINT20)	- [UNUSED]
+//#define PIN_ANGLE_ENCODER_U		5	// Pin 5 / PD5 (PCINT21)	- [UNUSED]
+
+#define PIN_MENU_ENCODER_A		2	// Pin 2 / PD2 (INT0)
+#define PIN_MENU_ENCODER_B		3	// Pin 3 / PD3 (INT1)
 
 #define PIN_LED_BUTTON_1		4	// Pin 4 / PD4 (PCINT20
 #define PIN_LED_BUTTON_2		5	// Pin 5 / PD5 (PCINT21)
@@ -35,12 +38,12 @@
 
 #define PIN_12					12	// Pin 12 / PB4 (PCINT4)	- [FREE]
 
-#define PIN_ADC_6				6	// A6 / ADC6				- [FREE]
+#define PIN_ADC_6				6	// A6 / ADC6			- [FREE]
 
 #define PIN_ADC_MODE_SWITCH 	7	// A7 / ADC7
 
-#define PIN_MENU_ENCODER_A		14	// Pin 14/A0 / PC0 (PCINT8)
-#define PIN_MENU_ENCODER_B		15	// Pin 15/A1 / PC1 (PCINT9)
+//#define PIN_MENU_ENCODER_A		14	// Pin 14/A0 / PC0 (PCINT8)
+//#define PIN_MENU_ENCODER_B		15	// Pin 15/A1 / PC1 (PCINT9)
 
 #define PIN_SELECT_BUTTON		16	// Pin 16/A2 / PC2 (PCINT10)
 #define PIN_SHIFT_BUTTON		17	// Pin 17/A3 / PC3 (PCINT11)
@@ -107,7 +110,7 @@ INLINE VOID InitializeInterrupts()
 	// External interrupts: Angle encoder
 	RESET_SFR(EICRA);
 	RESET_SFR(EIMSK);
-	SET_SFR_BITS(EICRA, B(ISC10) | B(ISC00));
+	SET_SFR_BITS(EICRA, B(ISC11) | B(ISC01));
 	SET_SFR_BITS(EIMSK, B(INT1) | B(INT0));
 
 	// Pin change interrupts: LED buttons, menu encoder, and menu buttons (ports B/C/D)

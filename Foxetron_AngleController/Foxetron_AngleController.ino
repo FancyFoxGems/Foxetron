@@ -393,13 +393,12 @@ VOID loop()
 
 // INT0/INT1: MENU ENCODER
 
-#define _ISR_MENU_ENCODER_READ_CHANNEL(channel, other_channel, increment_comparison)				\
-	_MenuEncoder ## channel = !_MenuEncoder ## channel;												\
-	_MenuEncoderUp = (_MenuEncoder ## channel increment_comparison _MenuEncoder ## other_channel);	\
-	if (_MenuEncoder ## channel == _MenuEncoder ## other_channel) _ISR_Encoder_UpdateEncoderSteps();
+#define _ISR_MENU_ENCODER_READ_CHANNEL(other_channel_set, up_on_equal)	\
+	_OptionEncoderUp = XOR(up_on_equal, other_channel_set);				\
+	if (NOT other_channel_set) _ISR_UpdateEncoderSteps();
 
-STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps() ALWAYS_INLINE;
-STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps()
+STATIC INLINE VOID _ISR_UpdateEncoderSteps() ALWAYS_INLINE;
+STATIC INLINE VOID _ISR_UpdateEncoderSteps()
 {
 	if (_MenuEncoderUp)
 		++_MenuEncoderSteps;
@@ -417,13 +416,13 @@ STATIC INLINE VOID _ISR_Encoder_UpdateEncoderSteps()
 // CHANNEL A
 ISR(INT0_vect)
 {
-	_ISR_MENU_ENCODER_READ_CHANNEL(A, B, == );
+	_ISR_MENU_ENCODER_READ_CHANNEL(PD3_IS_SET(), TRUE);
 }
 
 // CHANNEL B
 ISR(INT1_vect)
 {
-	_ISR_MENU_ENCODER_READ_CHANNEL(B, A, != );
+	_ISR_MENU_ENCODER_READ_CHANNEL(PD2_IS_SET(), FALSE);
 }
 
 
@@ -438,22 +437,22 @@ ISR(PCINT0_vect, ISR_NOBLOCK)
 // PORT C (PCINT8:14): MENU ENCODER & BUTTONS
 ISR(PCINT1_vect, ISR_NOBLOCK)
 {
-	if (_MenuEncoderA != PC3_IS_SET())
+	/*if (_MenuEncoderA != PC1_IS_SET())
 	{
-		_MenuEncoderA = PC3_IS_SET();
+		_MenuEncoderA = PC1_IS_SET();
 		_MenuEncoderUp = (_MenuEncoderA == _MenuEncoderB);
 		_ISR_Encoder_UpdateEncoderSteps();
 	}
 
-	if (_MenuEncoderB != PC2_IS_SET())
+	if (_MenuEncoderB != PC0_IS_SET())
 	{
-		_MenuEncoderB = PC2_IS_SET();
+		_MenuEncoderB = PC0_IS_SET();
 		_MenuEncoderUp = (_MenuEncoderA != _MenuEncoderB);
 		_ISR_Encoder_UpdateEncoderSteps();
-	}
+	}*/
 
-	_SelectButton = PC1_IS_SET();
-	_ShiftButton = PC0_IS_SET();
+	_SelectButton = PC2_IS_SET();
+	_ShiftButton = PC3_IS_SET();
 }
 
 // PORT D (PCINT16:23): LED BUTTONS 1-4
