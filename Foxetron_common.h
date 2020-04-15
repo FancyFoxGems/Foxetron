@@ -105,7 +105,7 @@ IGNORE_WARNING(virtual-move-assign)
 #define DEBUG_MESSAGES							0				// Whether to print messages received
 
 #if defined(DEBUG_MESSAGES) AND DEBUG_MESSAGES != 1
-#undef DEBUG_MESSAGES
+	#undef DEBUG_MESSAGES
 #endif
 
 #endif	// _DEBUG

@@ -77,9 +77,6 @@
     <ClInclude Include="..\Foxetron_messages.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Foxetron_common.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Arduino.h">
       <Filter>src\_micro-api-readonly\core</Filter>
     </ClInclude>
@@ -300,6 +297,9 @@
       <Filter>src\_micro-api-readonly\libraries\Wire\utility</Filter>
     </ClInclude>
     <ClInclude Include="Foxetron_AngleDriver_initialize.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Foxetron_common.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
